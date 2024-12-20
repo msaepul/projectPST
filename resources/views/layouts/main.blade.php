@@ -27,6 +27,12 @@
     <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
 
+    <!-- Select2 CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0/select2.min.css" rel="stylesheet" />
+
+    <!-- Select2 JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0/select2.min.js"></script>
+
      <!-- Link ke CSS -->
      <link rel="stylesheet" href="{{ asset('css/style.css') }}">
      
@@ -494,12 +500,7 @@
                             body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
                         })
                     });
-            document.addEventListener("DOMContentLoaded", function () {
-            const pageTitle = document.title;
-            const activeBreadcrumb = document.querySelector(".breadcrumb-item.active");
-            if (activeBreadcrumb) {
-                activeBreadcrumb.textContent = pageTitle;
-            }
+
         });
     </script>
 </body>
