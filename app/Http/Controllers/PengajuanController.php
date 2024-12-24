@@ -31,6 +31,24 @@ class PengajuanController extends Controller
         }
 
         // Redirect dengan pesan sukses
-        return redirect()->route('formpst.show')->with('success', 'Pengajuan berhasil disimpan!');
+        return redirect()->route('formpst.list')->with('success', 'Pengajuan berhasil disimpan!');
+    }
+    public function show()
+    {
+        $nama_pegawais = Nama_pegawai::all();
+        $cabang_tujuans = Cabang_tujuan::all();
+    
+        $data = $nama_pegawais->map(function ($pegawai, $index) use ($cabang_tujuans) {
+            return [
+                'nama' => $pegawai->nama,
+                'nik' => $pegawai->nik,
+                'departemen' => $pegawai->departemen,
+                'lama' => $cabang_tujuans[$index]->lama ?? '-',
+                'cabang' => $cabang_tujuans[$index]->cabang ?? '-',
+                'tujuan' => $cabang_tujuans[$index]->tujuan ?? '-',
+            ];
+        });
+    
+        return view('formpst.list', compact('data'));
     }
 }

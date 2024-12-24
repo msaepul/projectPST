@@ -209,6 +209,12 @@
                                         <p>Departemen</p>
                                     </a>
                                 </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('ho.user') }}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>User</p>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
         </aside>
@@ -221,15 +227,6 @@
                     <div class="row mb-2">
                         <div class="col-sm-6">
                             {{-- tambah header --}}
-                        </div><!-- /.col -->
-
-
-                        <div class="col-sm-6">
-                            <ol class="breadcrumb float-sm-right">
-                                <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
-                                <!-- Ubah href menjadi route dashboard -->
-                                <li class="breadcrumb-item active" aria-current="page"></li>
-                            </ol>
                         </div><!-- /.col -->
 
                     </div><!-- /.row -->

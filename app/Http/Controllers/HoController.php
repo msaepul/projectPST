@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Departemen;
 use App\Models\Tujuan;
 use App\Models\cabang;
+use App\Models\User;
 
 
 
@@ -24,14 +25,14 @@ class HoController extends Controller
 
     // Tujuan
 
-    public function cabang()
-    {
-        // Ambil semua data cabang
-        $cabangs = Cabang::all();
+    // public function cabang()
+    // {
+    //     // Ambil semua data cabang
+    //     $cabangs = Cabang::all();
 
-        // Kirimkan ke view
-=======
-    // Cabang
+    //     // Kirimkan ke view
+
+    // // Cabang
     public function cabang(Request $request)
     {
         $cabangs = Cabang::paginate(50);
@@ -196,5 +197,13 @@ class HoController extends Controller
         $departemen->delete();
 
         return redirect()->route('ho.departemen')->with('success', 'Data departemen berhasil dihapus!');
+    }
+
+    //user
+    public function user(Request $request)
+    {
+        $users = User::paginate(50);
+
+        return view('ho.user', compact('users'));
     }
 }
