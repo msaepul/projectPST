@@ -33,18 +33,18 @@
     <!-- Select2 JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0/select2.min.js"></script>
 
-     <!-- Link ke CSS -->
-     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-     
-     {{-- tes --}}
-     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-     
+    <!-- Link ke CSS -->
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
-     {{-- tes1 --}}
-     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-     <!-- iCheck -->
+    {{-- tes --}}
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+
+
+    {{-- tes1 --}}
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- iCheck -->
     <link rel="stylesheet" href="{{ asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
 
     <!-- JQVMap -->
@@ -124,11 +124,11 @@
                 </li>
             </ul>
         </nav>
-        
+
         <!-- /.navbar -->
 
         <!-- Main Sidebar Container -->
-        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+        <aside class="main-sidebar sidebar-dark-navy elevation-4">
             <!-- Brand Logo -->
             <a href="index3.html" class="brand-link">
                 <img src="{{ asset('dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo"
@@ -141,8 +141,7 @@
                 <!-- Sidebar user panel (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
-                        <img src="{{ asset('dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2"
-                            alt="User Image">
+                        <i class="fas fa-user-circle" style="font-size: 35px; color: #80bdc2;"></i>
                     </div>
                     <div class="info">
                         <a href="#" class="d-block">{{ Auth::user()->name }}</a>
@@ -175,17 +174,17 @@
                                     Dashboard
                                 </p>
                             </a>
-                         <li class="nav-item menu-open">
-                                <a href="{{ route('formpst.form') }}" class="nav-link">
-                                    <i class="nav-icon fas fa-copy"></i>
-                                    <p>
-                                        Form PST
-                                    </p>
-                                </a>
+                        <li class="nav-item menu-open">
+                            <a href="{{ route('formpst.form') }}" class="nav-link">
+                                <i class="nav-icon fas fa-copy"></i>
+                                <p>
+                                    Form PST
+                                </p>
+                            </a>
                         </li>
                         <li class="nav-item">
                             <a href="" class="nav-link">
-                                <i class="nav-icon fas fa-copy"></i>
+                                <i class="nav-icon fas fa-building"></i>
                                 <p>
                                     HO
                                     <i class="fas fa-angle-left right"></i>
@@ -212,7 +211,7 @@
                                 </li>
                             </ul>
                         </li>
-                    </aside>
+        </aside>
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
@@ -223,6 +222,16 @@
                         <div class="col-sm-6">
                             {{-- tambah header --}}
                         </div><!-- /.col -->
+
+
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
+                                <!-- Ubah href menjadi route dashboard -->
+                                <li class="breadcrumb-item active" aria-current="page"></li>
+                            </ol>
+                        </div><!-- /.col -->
+
                     </div><!-- /.row -->
                 </div><!-- /.container-fluid -->
             </div>
@@ -345,156 +354,156 @@
 
         // sweet button
         $(function() {
-                    var Toast = Swal.mixin({
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 3000
-                    });
+            var Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
 
-                    $('.swalDefaultSuccess').click(function() {
-                        Toast.fire({
-                            icon: 'success',
-                            title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-                        })
-                    });
-                    $('.swalDefaultInfo').click(function() {
-                        Toast.fire({
-                            icon: 'info',
-                            title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-                        })
-                    });
-                    $('.swalDefaultError').click(function() {
-                        Toast.fire({
-                            icon: 'error',
-                            title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-                        })
-                    });
-                    $('.swalDefaultWarning').click(function() {
-                        Toast.fire({
-                            icon: 'warning',
-                            title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-                        })
-                    });
-                    $('.swalDefaultQuestion').click(function() {
-                        Toast.fire({
-                            icon: 'question',
-                            title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-                        })
-                    });
+            $('.swalDefaultSuccess').click(function() {
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+                })
+            });
+            $('.swalDefaultInfo').click(function() {
+                Toast.fire({
+                    icon: 'info',
+                    title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+                })
+            });
+            $('.swalDefaultError').click(function() {
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+                })
+            });
+            $('.swalDefaultWarning').click(function() {
+                Toast.fire({
+                    icon: 'warning',
+                    title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+                })
+            });
+            $('.swalDefaultQuestion').click(function() {
+                Toast.fire({
+                    icon: 'question',
+                    title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+                })
+            });
 
-                    $('.toastrDefaultSuccess').click(function() {
-                        toastr.success('Lorem ipsum dolor sit amet, consetetur sadipscing elitr.')
-                    });
-                    $('.toastrDefaultInfo').click(function() {
-                        toastr.info('Lorem ipsum dolor sit amet, consetetur sadipscing elitr.')
-                    });
-                    $('.toastrDefaultError').click(function() {
-                        toastr.error('Lorem ipsum dolor sit amet, consetetur sadipscing elitr.')
-                    });
-                    $('.toastrDefaultWarning').click(function() {
-                        toastr.warning('Lorem ipsum dolor sit amet, consetetur sadipscing elitr.')
-                    });
+            $('.toastrDefaultSuccess').click(function() {
+                toastr.success('Lorem ipsum dolor sit amet, consetetur sadipscing elitr.')
+            });
+            $('.toastrDefaultInfo').click(function() {
+                toastr.info('Lorem ipsum dolor sit amet, consetetur sadipscing elitr.')
+            });
+            $('.toastrDefaultError').click(function() {
+                toastr.error('Lorem ipsum dolor sit amet, consetetur sadipscing elitr.')
+            });
+            $('.toastrDefaultWarning').click(function() {
+                toastr.warning('Lorem ipsum dolor sit amet, consetetur sadipscing elitr.')
+            });
 
-                    $('.toastsDefaultDefault').click(function() {
-                        $(document).Toasts('create', {
-                            title: 'Toast Title',
-                            body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-                        })
-                    });
-                    $('.toastsDefaultTopLeft').click(function() {
-                        $(document).Toasts('create', {
-                            title: 'Toast Title',
-                            position: 'topLeft',
-                            body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-                        })
-                    });
-                    $('.toastsDefaultBottomRight').click(function() {
-                        $(document).Toasts('create', {
-                            title: 'Toast Title',
-                            position: 'bottomRight',
-                            body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-                        })
-                    });
-                    $('.toastsDefaultBottomLeft').click(function() {
-                        $(document).Toasts('create', {
-                            title: 'Toast Title',
-                            position: 'bottomLeft',
-                            body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-                        })
-                    });
-                    $('.toastsDefaultAutohide').click(function() {
-                        $(document).Toasts('create', {
-                            title: 'Toast Title',
-                            autohide: true,
-                            delay: 750,
-                            body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-                        })
-                    });
-                    $('.toastsDefaultNotFixed').click(function() {
-                        $(document).Toasts('create', {
-                            title: 'Toast Title',
-                            fixed: false,
-                            body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-                        })
-                    });
-                    $('.toastsDefaultFull').click(function() {
-                        $(document).Toasts('create', {
-                            body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.',
-                            title: 'Toast Title',
-                            subtitle: 'Subtitle',
-                            icon: 'fas fa-envelope fa-lg',
-                        })
-                    });
-                    $('.toastsDefaultFullImage').click(function() {
-                        $(document).Toasts('create', {
-                            body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.',
-                            title: 'Toast Title',
-                            subtitle: 'Subtitle',
-                            image: '../../dist/img/user3-128x128.jpg',
-                            imageAlt: 'User Picture',
-                        })
-                    });
-                    $('.toastsDefaultSuccess').click(function() {
-                        $(document).Toasts('create', {
-                            class: 'bg-success',
-                            title: 'Toast Title',
-                            subtitle: 'Subtitle',
-                            body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-                        })
-                    });
-                    $('.toastsDefaultInfo').click(function() {
-                        $(document).Toasts('create', {
-                            class: 'bg-info',
-                            title: 'Toast Title',
-                            subtitle: 'Subtitle',
-                            body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-                        })
-                    });
-                    $('.toastsDefaultWarning').click(function() {
-                        $(document).Toasts('create', {
-                            class: 'bg-warning',
-                            title: 'Toast Title',
-                            subtitle: 'Subtitle',
-                            body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-                        })
-                    });
-                    $('.toastsDefaultDanger').click(function() {
-                        $(document).Toasts('create', {
-                            class: 'bg-danger',
-                            title: 'Toast Title',
-                            subtitle: 'Subtitle',
-                            body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-                        })
-                    });
-                    $('.toastsDefaultMaroon').click(function() {
-                        $(document).Toasts('create', {
-                            class: 'bg-maroon',
-                            title: 'Toast Title',
-                            subtitle: 'Subtitle',
-                            body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-                        })
-                    });
+            $('.toastsDefaultDefault').click(function() {
+                $(document).Toasts('create', {
+                    title: 'Toast Title',
+                    body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+                })
+            });
+            $('.toastsDefaultTopLeft').click(function() {
+                $(document).Toasts('create', {
+                    title: 'Toast Title',
+                    position: 'topLeft',
+                    body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+                })
+            });
+            $('.toastsDefaultBottomRight').click(function() {
+                $(document).Toasts('create', {
+                    title: 'Toast Title',
+                    position: 'bottomRight',
+                    body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+                })
+            });
+            $('.toastsDefaultBottomLeft').click(function() {
+                $(document).Toasts('create', {
+                    title: 'Toast Title',
+                    position: 'bottomLeft',
+                    body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+                })
+            });
+            $('.toastsDefaultAutohide').click(function() {
+                $(document).Toasts('create', {
+                    title: 'Toast Title',
+                    autohide: true,
+                    delay: 750,
+                    body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+                })
+            });
+            $('.toastsDefaultNotFixed').click(function() {
+                $(document).Toasts('create', {
+                    title: 'Toast Title',
+                    fixed: false,
+                    body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+                })
+            });
+            $('.toastsDefaultFull').click(function() {
+                $(document).Toasts('create', {
+                    body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.',
+                    title: 'Toast Title',
+                    subtitle: 'Subtitle',
+                    icon: 'fas fa-envelope fa-lg',
+                })
+            });
+            $('.toastsDefaultFullImage').click(function() {
+                $(document).Toasts('create', {
+                    body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.',
+                    title: 'Toast Title',
+                    subtitle: 'Subtitle',
+                    image: '../../dist/img/user3-128x128.jpg',
+                    imageAlt: 'User Picture',
+                })
+            });
+            $('.toastsDefaultSuccess').click(function() {
+                $(document).Toasts('create', {
+                    class: 'bg-success',
+                    title: 'Toast Title',
+                    subtitle: 'Subtitle',
+                    body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+                })
+            });
+            $('.toastsDefaultInfo').click(function() {
+                $(document).Toasts('create', {
+                    class: 'bg-info',
+                    title: 'Toast Title',
+                    subtitle: 'Subtitle',
+                    body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+                })
+            });
+            $('.toastsDefaultWarning').click(function() {
+                $(document).Toasts('create', {
+                    class: 'bg-warning',
+                    title: 'Toast Title',
+                    subtitle: 'Subtitle',
+                    body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+                })
+            });
+            $('.toastsDefaultDanger').click(function() {
+                $(document).Toasts('create', {
+                    class: 'bg-danger',
+                    title: 'Toast Title',
+                    subtitle: 'Subtitle',
+                    body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+                })
+            });
+            $('.toastsDefaultMaroon').click(function() {
+                $(document).Toasts('create', {
+                    class: 'bg-maroon',
+                    title: 'Toast Title',
+                    subtitle: 'Subtitle',
+                    body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+                })
+            });
 
         });
         

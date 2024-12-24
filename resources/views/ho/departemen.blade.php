@@ -10,37 +10,38 @@
         <strong>Info:</strong> Pastikan semua data departemen terisi dengan lengkap dan benar.
     </div>
 
+    <div class="card-header">
+        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#tambahDepartemenModal">
+            <img src="{{ asset('icons/duplicate-outline.svg') }}" alt="Tambah"
+                style="width: 20px; height: 20px; margin-right: 4px">Tambah Departemen Baru
+        </button>
+    </div>
+
     <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">Master Data Departemen</h3>
-            <div class="d-flex justify-content-end">
-                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#tambahDepartemenModal">
-                    <i class="fas fa-plus"></i> Tambah Departemen Baru
-                </button>
-            </div>
-        </div>
         <div class="card-body">
-            <table class="table table-bordered table-striped" style="background-color: #f0f8ff; color: #000;">
-                <thead style="background-color: #ffffff;">
+            <table id="example1" class="table table-bordered table-striped" style="border-spacing: 0; width: 100%;">
+                <thead style="background-color: #b3e0ff;">
                     <tr>
-                        <th style="width: 20%;">Nama Departemen</th>
-                        <th style="width: 20%;">Kode Departemen</th>
-                        <th style="width: 30%;">Keterangan</th>
-                        <th style="width: 10%;">Aksi</th>
+                        <th style="padding: 8px;">No</th>
+                        <th style="padding: 8px;">Nama Departemen</th>
+                        <th style="padding: 8px;">Kode Departemen</th>
+                        <th style="padding: 8px;">Keterangan</th>
+                        <th style="padding: 8px; width: 120px;">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($departemens as $item)
-                        <tr id="departemen-{{ $item->id }}">
-                            <td>{{ $item->nama_departemen }}</td>
-                            <td>{{ $item->kode_departemen }}</td>
-                            <td>{{ $item->keterangan }}</td>
-                            <td>
-                                <div class="d-flex" style="gap: 8px;">
-                                    <!-- Button untuk Edit Modal -->
-                                    <button type="button" class="btn btn-sm btn-primary me-3" data-toggle="modal"
+                    @foreach ($departemens as $key => $item)
+                        <tr style="background-color: {{ $key % 2 == 0 ? '#ffffff' : '#e6f7ff' }};">
+                            <td style="padding: 8px;">{{ $key + 1 }}</td>
+                            <td style="padding: 8px;">{{ $item->nama_departemen }}</td>
+                            <td style="padding: 8px;">{{ $item->kode_departemen }}</td>
+                            <td style="padding: 8px;">{{ $item->keterangan }}</td>
+                            <td style="padding: 8px;">
+                                <div class="d-flex gap-2" style="gap: 10px;">
+                                    <button type="button" class="btn btn-sm btn-warning" data-toggle="modal"
                                         data-target="#editModal-{{ $item->id }}">
-                                        <i class="fas fa-edit"></i>
+                                        <img src="{{ asset('icons/create-outline.svg') }}" alt="Edit"
+                                            style="width: 20px; height: 20px; margin-right: 4px">
                                     </button>
 
                                     <!-- Modal Edit -->
@@ -53,8 +54,8 @@
                                                     @csrf
                                                     @method('PUT')
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="editModalLabel-{{ $item->id }}">Edit
-                                                            Departemen</h5>
+                                                        <h5 class="modal-title" id="editModalLabel-{{ $item->id }}">
+                                                            Edit Departemen</h5>
                                                         <button type="button" class="close" data-dismiss="modal"
                                                             aria-label="Close">
                                                             <span aria-hidden="true">&times;</span>
@@ -64,26 +65,29 @@
                                                         <div class="form-group">
                                                             <label for="nama_departemen">Nama Departemen:</label>
                                                             <input type="text" class="form-control" id="nama_departemen"
-                                                                name="nama_departemen" value="{{ $item->nama_departemen }}"
-                                                                required>
+                                                                name="nama_departemen"
+                                                                value="{{ $item->nama_departemen }} " required>
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="kode_departemen">Kode Departemen:</label>
                                                             <input type="text" class="form-control" id="kode_departemen"
-                                                                name="kode_departemen" value="{{ $item->kode_departemen }}"
-                                                                required>
+                                                                name="kode_departemen"
+                                                                value="{{ $item->kode_departemen }} " required>
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="keterangan">Keterangan:</label>
                                                             <input type="text" class="form-control" id="keterangan"
-                                                                name="keterangan" value="{{ $item->keterangan }}" required>
+                                                                name="keterangan" value="{{ $item->keterangan }} "
+                                                                required>
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary"
                                                             data-dismiss="modal">Tutup</button>
                                                         <button type="submit" class="btn btn-primary">
-                                                            <i class="fas fa-save"></i> Simpan Perubahan
+                                                            <img src="{{ asset('icons/save-outline.svg') }}" alt="Save"
+                                                                style="width: 20px; height: 20px; margin-right: 4px"> Simpan
+                                                            Perubahan
                                                         </button>
                                                     </div>
                                                 </form>
@@ -97,17 +101,14 @@
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-danger">
-                                            <i class="fas fa-trash"></i>
+                                            <img src="{{ asset('icons/trash-outline.svg') }}" alt="Delete"
+                                                style="width: 20px; height: 20px; margin-right: 4px">
                                         </button>
                                     </form>
                                 </div>
                             </td>
                         </tr>
-                    @empty
-                        <tr>
-                            <td colspan="4">Tidak ada data departemen</td>
-                        </tr>
-                    @endforelse
+                    @endforeach
                 </tbody>
             </table>
         </div>
@@ -118,15 +119,15 @@
         aria-labelledby="tambahDepartemenModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="tambahDepartemenModalLabel">Tambah Departemen Baru</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form method="POST" action="{{ route('ho.departemen.store') }}">
-                        @csrf
+                <form method="POST" action="{{ route('ho.departemen.store') }}">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="tambahDepartemenModalLabel">Tambah Departemen Baru</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
                         <div class="form-group">
                             <label for="nama_departemen">Nama Departemen</label>
                             <input type="text" class="form-control" id="nama_departemen" name="nama_departemen"
@@ -141,10 +142,34 @@
                             <label for="keterangan">Keterangan</label>
                             <input type="text" class="form-control" id="keterangan" name="keterangan" required>
                         </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                         <button type="submit" class="btn btn-primary">Simpan</button>
-                    </form>
-                </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+@endsection
+
+@section('style')
+    <style>
+        .table th,
+        .table td {
+            padding: 10px 12px;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #ffffff;
+        }
+
+        .table-striped tbody tr:nth-of-type(even) {
+            background-color: #e6f7ff;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: #b3e0ff !important;
+        }
+    </style>
 @endsection
