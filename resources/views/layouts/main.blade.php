@@ -175,6 +175,42 @@
                                 <p>Dashboard</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="" class="nav-link">
+                                <i class="nav-icon fas fa-building"></i>
+                                <p>
+                                    HO
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{{ route('ho.cabang') }}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Cabang</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('ho.tujuan') }}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Tujuan</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('ho.departemen') }}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Departemen</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('ho.user') }}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>User</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
 
                         <!-- Form PST Menu -->
                         @if (auth()->user()->role === 'admin' || auth()->user()->role === 'user')
@@ -224,6 +260,7 @@
                         @endif
                     </ul>
                 </nav>
+
         </aside>
 
         <!-- Content Wrapper. Contains page content -->
@@ -234,15 +271,6 @@
                     <div class="row mb-2">
                         <div class="col-sm-6">
                             {{-- tambah header --}}
-                        </div><!-- /.col -->
-
-
-                        <div class="col-sm-6">
-                            <ol class="breadcrumb float-sm-right">
-                                <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
-                                <!-- Ubah href menjadi route dashboard -->
-                                <li class="breadcrumb-item active" aria-current="page"></li>
-                            </ol>
                         </div><!-- /.col -->
 
                     </div><!-- /.row -->
