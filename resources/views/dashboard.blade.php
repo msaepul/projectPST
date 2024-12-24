@@ -1,6 +1,9 @@
 @extends('layouts.main')
+
 @section('content')
-    <<div class="container-fluid mt-4">
+{{ Breadcrumbs::render('dashboard') }}
+
+    <div class="container-fluid mt-4">
         <div class="row">
             <div class="col-md-12 mb-4">
                 <div class="card shadow-sm border-0 rounded-lg" style="background-color: #e1e3e4;">

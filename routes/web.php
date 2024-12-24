@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HoController;
 use App\Http\Controllers\FormController;
+use App\Http\Controllers\PengajuanController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -53,12 +54,15 @@ Route::middleware('auth')->group(function () {
 
 
     // form
-    Route::get('/formpst/form', [formController::class, 'form'])->name('formpst.form');
+    Route::get('/formpst/form', [FormController::class, 'form'])->name('formpst.form');
+    Route::get('/formpst/show', [FormController::class, 'show'])->name('formpst.show');
     Route::delete('/formpst/delete/{id}', [FormController::class, 'destroy'])->name('formpst.destroy');
     Route::post('/formpst/store', [FormController::class, 'store'])->name('formpst.store');
     Route::get('/formpst/edit/{id}', [FormController::class, 'edit'])->name('formpst.edit');
     Route::put('/formpst/update/{id}', [FormController::class, 'update'])->name('formpst.update');
-    Route::get('/formpst/batch/{batchId}', [FormController::class, 'showBatch'])->name('formpst.batch');
+
+    //pengajuan
+    Route::post('/pengajuans/store', [PengajuanController::class, 'store'])->name('pengajuans.store');
 
 });
 

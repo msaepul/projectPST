@@ -11,15 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('forms', function (Blueprint $table) {
+        Schema::create('nama_pegawais', function (Blueprint $table) {
             $table->id();
-            $table->string('batch_id')->nullable(); 
-            $table->string('cabang');
-            $table->string('tujuan');
             $table->string('nama')->unique(); 
             $table->string('nik');
             $table->string('departemen');
-            $table->string('lama');
             $table->timestamps();
         });
     }
@@ -29,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('forms'); // Menghapus tabel forms saat rollback
+        Schema::dropIfExists('nama_pegawais');
     }
 };

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Departemen;
 use App\Models\Tujuan;
-=======
 
 use App\Models\cabang;
 
@@ -22,14 +21,8 @@ class HoController extends Controller
     }
 
 
-    // Cabang
-    public function cabang(Request $request)
-    {
-        return view('ho.cabang');
-    }
-
     // Tujuan
-=======
+
     public function cabang()
     {
         // Ambil semua data cabang

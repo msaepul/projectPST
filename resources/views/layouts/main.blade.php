@@ -223,12 +223,6 @@
                         <div class="col-sm-6">
                             {{-- tambah header --}}
                         </div><!-- /.col -->
-                        <div class="col-sm-6">
-                            <ol class="breadcrumb float-sm-right">
-                                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active" aria-current="page"></li>
-                            </ol>
-                        </div><!-- /.col -->
                     </div><!-- /.row -->
                 </div><!-- /.container-fluid -->
             </div>
@@ -327,6 +321,7 @@
     <!-- AdminLTE App -->
     <script src="{{ asset('dist/js/adminlte.js') }}"></script>
     <script>
+        
         $(function() {
             $('#example1').DataTable({
                 "responsive": true,
@@ -502,6 +497,7 @@
                     });
 
         });
+        
     </script>
 </body>
 

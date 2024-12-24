@@ -1,6 +1,7 @@
 @extends('layouts.main')
 
 @section('content_header')
+{{ Breadcrumbs::render('tujuan') }}
     <h1 class="card-title">List Tujuan Penugasan</h1>
 @endsection
 

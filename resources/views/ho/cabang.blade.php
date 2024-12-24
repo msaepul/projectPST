@@ -1,5 +1,6 @@
 @extends('layouts.main')
 @section('content')
+{{ Breadcrumbs::render('cabang') }}
     <div class="card-header">
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModal">
             <img src="{{ asset('icons/duplicate-outline.svg') }}" alt="Tambah" style="width: 20px; height: 20px; margin-right: 4px" >Tambah Data</button>
