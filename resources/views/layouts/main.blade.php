@@ -118,7 +118,7 @@
                         <i class="fa fa-caret-down"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <a href="{{ route('userprofile.show', auth()->id()) }}" class="dropdown-item">Show
+                        <a href="#" class="dropdown-item">Show
                             Profile</a>
                         <a href="{{ url('logout') }}" class="dropdown-item">Logout</a>
                     </div>
@@ -177,7 +177,7 @@
                         </li>
 
                         <!-- Form PST Menu -->
-                        @if (auth()->user()->role === 'admin' || auth()->user()->role === 'user')
+                        @if (auth()->user()->role === 'admin' || auth()->user()->role === 'User')
                             <li class="nav-item menu-open">
                                 <a href="{{ route('formpst.form') }}"
                                     class="nav-link {{ request()->is('formpst/form') ? 'active' : '' }}">

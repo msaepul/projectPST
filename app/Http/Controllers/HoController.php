@@ -30,10 +30,7 @@ class HoController extends Controller
         $cabangs = Cabang::all();
 
         // Kirimkan ke view
-=======
-    // Cabang
-    public function cabang(Request $request)
-    {
+
         $cabangs = Cabang::paginate(50);
 
         return view('ho.cabang', compact('cabangs'));

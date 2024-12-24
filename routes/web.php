@@ -85,5 +85,5 @@ Route::middleware('auth')->group(function () {
     Route::get('/formpst/batch/{batchId}', [FormController::class, 'showBatch'])->middleware('role:user')->name('formpst.batch');
 
 
-
+});
 require __DIR__.'/auth.php';
