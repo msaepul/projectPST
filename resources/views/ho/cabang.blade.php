@@ -1,9 +1,13 @@
 @extends('layouts.main')
 
 @section('content')
+
+{{ Breadcrumbs::render('cabang') }}
+
     <div class="alert alert-info" role="alert">
         <strong>Info:</strong> Pastikan semua data departemen terisi dengan lengkap dan benar.
     </div>
+
     <div class="card-header">
         <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addModal">
             <img src="{{ asset('icons/duplicate-outline.svg') }}" alt="Tambah"

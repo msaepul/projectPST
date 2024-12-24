@@ -1,6 +1,9 @@
 @extends('layouts.main')
 
-@section('content')
+@section('content_header')
+{{ Breadcrumbs::render('tujuan') }}
+    <h1 class="card-title">List Tujuan Penugasan</h1>
+    
     <div class="card-header">
         <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#tambahPenugasanModal">
             <img src="{{ asset('icons/duplicate-outline.svg') }}" alt="Tambah"

@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Departemen;
 use App\Models\Tujuan;
-use App\Models\Cabang;
+use App\Models\cabang;
+
+
 
 class HoController extends Controller
 {
@@ -18,10 +20,22 @@ class HoController extends Controller
         return view('dashboard', compact('jumlahCabang', 'jumlahDepartemen'));
     }
 
+
+
+    // Tujuan
+
+    public function cabang()
+    {
+        // Ambil semua data cabang
+        $cabangs = Cabang::all();
+
+        // Kirimkan ke view
+=======
     // Cabang
     public function cabang(Request $request)
     {
         $cabangs = Cabang::paginate(50);
+
         return view('ho.cabang', compact('cabangs'));
     }
 

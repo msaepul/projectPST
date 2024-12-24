@@ -1,6 +1,7 @@
 @extends('layouts.main')
 
 @section('content_header')
+{{ Breadcrumbs::render('departemen') }}
     <h1 class="card-title">Master Data Departemen</h1>
 @endsection
 

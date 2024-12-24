@@ -1,5 +1,10 @@
 @extends('layouts.main')
+
 @section('content')
+
+{{ Breadcrumbs::render('dashboard') }}
+
+
     <div class="container-fluid mt-4">
         <div class="row">
             <div class="col-md-12 mb-4">
