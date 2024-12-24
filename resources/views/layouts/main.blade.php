@@ -163,57 +163,11 @@
                 </div>
 
                 <!-- Sidebar Menu -->
-                <!-- Sidebar Menu -->
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
-                        <!-- Dashboard Menu -->
-                        <li class="nav-item menu-open">
-                            <a href="{{ route('dashboard') }}"
-                                class="nav-link {{ request()->is('dashboard') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-tachometer-alt"></i>
-                                <p>Dashboard</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="" class="nav-link">
-                                <i class="nav-icon fas fa-building"></i>
-                                <p>
-                                    HO
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="{{ route('ho.cabang') }}" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Cabang</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('ho.tujuan') }}" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Tujuan</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('ho.departemen') }}" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Departemen</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('ho.user') }}" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>User</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-
-
                         <!-- Form PST Menu -->
-                        @if (auth()->user()->role === 'admin' || auth()->user()->role === 'User')
+                        @if (auth()->user()->role === 'admin' || auth()->user()->role === 'user')
                             <li class="nav-item menu-open">
                                 <a href="{{ route('formpst.form') }}"
                                     class="nav-link {{ request()->is('formpst/form') ? 'active' : '' }}">
@@ -253,6 +207,13 @@
                                             class="nav-link {{ request()->is('ho/departemen') ? 'active' : '' }}">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Departemen</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('ho.user') }}"
+                                            class="nav-link {{ request()->is('ho/user') ? 'active' : '' }}">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>User</p>
                                         </a>
                                     </li>
                                 </ul>
