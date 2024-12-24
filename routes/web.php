@@ -77,12 +77,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/ho/departemen/delete/{id}', [HoController::class, 'destroyDepartemen'])->middleware('role:admin')->name('ho.departemen.destroy');
 
     // Form
-    Route::get('/formpst/form', [FormController::class, 'form'])->middleware('role:user')->name('formpst.form');
+    Route::get('/formpst/form', [FormController::class, 'form'])->middleware(['auth', 'role:admin,user'])->name('formpst.form');
     Route::delete('/formpst/delete/{id}', [FormController::class, 'destroy'])->middleware('role:admin')->name('formpst.destroy');
     Route::post('/formpst/store', [FormController::class, 'store'])->middleware('role:user')->name('formpst.store');
     Route::get('/formpst/edit/{id}', [FormController::class, 'edit'])->middleware('role:user')->name('formpst.edit');
     Route::put('/formpst/update/{id}', [FormController::class, 'update'])->middleware('role:user')->name('formpst.update');
     Route::get('/formpst/batch/{batchId}', [FormController::class, 'showBatch'])->middleware('role:user')->name('formpst.batch');
+
 
 
 require __DIR__.'/auth.php';
