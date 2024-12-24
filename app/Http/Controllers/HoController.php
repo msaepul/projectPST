@@ -5,14 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Departemen;
 use App\Models\Tujuan;
-use App\Models\cabang;
-
-
+use App\Models\Cabang;
+use App\Models\User;
 
 class HoController extends Controller
 {
     // Dashboard
-    public function dashboard(Request $request)
+    public function dashboard()
     {
         $jumlahCabang = Cabang::count();
         $jumlahDepartemen = Departemen::count();
@@ -20,23 +19,14 @@ class HoController extends Controller
         return view('dashboard', compact('jumlahCabang', 'jumlahDepartemen'));
     }
 
-
-
-    // Tujuan
-
+    // Cabang
     public function cabang()
     {
-        // Ambil semua data cabang
-        $cabangs = Cabang::all();
-
-        // Kirimkan ke view
-
         $cabangs = Cabang::paginate(50);
 
         return view('ho.cabang', compact('cabangs'));
     }
 
-    // Store Cabang
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -50,21 +40,18 @@ class HoController extends Controller
         return redirect()->route('ho.cabang')->with('success', 'Data cabang berhasil ditambahkan!');
     }
 
-    // Add Cabang
-    public function add(Request $request)
+    public function add()
     {
         return view('ho.add_cabang');
     }
 
-    // Edit Cabang
     public function edit($id)
     {
-        $data = Cabang::findOrFail($id);
+        $cabang = Cabang::findOrFail($id);
 
-        return view('ho.cabang.edit', compact('data'));
+        return view('ho.cabang.edit', compact('cabang'));
     }
 
-    // Update Cabang
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
@@ -79,7 +66,6 @@ class HoController extends Controller
         return redirect()->route('ho.cabang')->with('success', 'Data cabang berhasil diubah!');
     }
 
-    // Destroy Cabang
     public function destroy($id)
     {
         $cabang = Cabang::findOrFail($id);
@@ -93,13 +79,12 @@ class HoController extends Controller
     {
         $search = $request->input('search');
         $tujuans = Tujuan::when($search, function ($query, $search) {
-            $query->where('tujuan_penugasan', 'like', "%{$search}%");
+            return $query->where('tujuan_penugasan', 'like', "%{$search}%");
         })->paginate(50);
 
         return view('ho.tujuan', compact('tujuans', 'search'));
     }
 
-    // Store Tujuan
     public function storeTujuan(Request $request)
     {
         $validated = $request->validate([
@@ -111,15 +96,13 @@ class HoController extends Controller
         return redirect()->route('ho.tujuan')->with('success', 'Tujuan baru berhasil ditambahkan!');
     }
 
-    // Edit Tujuan
     public function editTujuan($id)
     {
         $tujuan = Tujuan::findOrFail($id);
 
-        return view('ho.tujuan.edit', compact('tujuans'));
+        return view('ho.tujuan.edit', compact('tujuan'));
     }
 
-    // Update Tujuan
     public function updateTujuan(Request $request, $id)
     {
         $validated = $request->validate([
@@ -132,7 +115,6 @@ class HoController extends Controller
         return redirect()->route('ho.tujuan')->with('success', 'Data tujuan berhasil diubah!');
     }
 
-    // Destroy Tujuan
     public function destroyTujuan($id)
     {
         $tujuan = Tujuan::findOrFail($id);
@@ -142,14 +124,13 @@ class HoController extends Controller
     }
 
     // Departemen
-    public function departemen(Request $request)
+    public function departemen()
     {
         $departemens = Departemen::paginate(50);
 
         return view('ho.departemen', compact('departemens'));
     }
 
-    // Store Departemen
     public function storeDepartemen(Request $request)
     {
         $validated = $request->validate([
@@ -163,7 +144,6 @@ class HoController extends Controller
         return redirect()->route('ho.departemen')->with('success', 'Departemen baru berhasil ditambahkan!');
     }
 
-    // Edit Departemen
     public function editDepartemen($id)
     {
         $departemen = Departemen::findOrFail($id);
@@ -171,7 +151,6 @@ class HoController extends Controller
         return view('ho.departemen.edit', compact('departemen'));
     }
 
-    // Update Departemen
     public function updateDepartemen(Request $request, $id)
     {
         $validated = $request->validate([
@@ -186,12 +165,19 @@ class HoController extends Controller
         return redirect()->route('ho.departemen')->with('success', 'Data departemen berhasil diubah!');
     }
 
-    // Destroy Departemen
     public function destroyDepartemen($id)
     {
         $departemen = Departemen::findOrFail($id);
         $departemen->delete();
 
         return redirect()->route('ho.departemen')->with('success', 'Data departemen berhasil dihapus!');
+    }
+
+    // User
+    public function user()
+    {
+        $users = User::paginate(50);
+
+        return view('ho.user', compact('users'));
     }
 }
