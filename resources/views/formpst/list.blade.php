@@ -5,7 +5,7 @@
 <div class="card mb-4">
     <div class="card-header">
         <i class="fas fa-list me-1"></i>
-        Data Pengajuan
+       Hasil Persetujuan
     </div>
     <div class="card-body">
         <table class="table table-bordered">
@@ -20,7 +20,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($data as $index => $row)
+                @foreach ($pengajuan as $index => $row)
                 <tr>
                     <td>{{ $row['nama'] }}
                         <input type="hidden" name="pengajuans[{{ $index }}][nama]" value="{{ $row['nama'] }}"></td>

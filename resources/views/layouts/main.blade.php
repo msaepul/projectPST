@@ -8,7 +8,7 @@
 
     <!-- Link ke file CSS -->
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
-
+    
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -83,12 +83,6 @@
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
                             class="fas fa-bars"></i></a>
                 </li>
-                <li class="nav-item d-none d-sm-inline-block">
-                    <a href="{{ route('dashboard') }}" class="nav-link">Home</a>
-                </li>
-                <li class="nav-item d-none d-sm-inline-block">
-                    <a href="#" class="nav-link">Contact</a>
-                </li>
             </ul>
 
             <!-- Right navbar links -->
@@ -100,25 +94,10 @@
                 <!-- Notifications Dropdown Menu -->
                 <li class="nav-item dropdown">
                     <a class="nav-link" data-toggle="dropdown" href="#">
-                        <i class="far fa-bell"></i>
-                        <span class="badge badge-warning navbar-badge">15</span>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <span class="dropdown-item dropdown-header">Notifications</span>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-envelope mr-2"></i> 4 surat baru masuk
-                            <span class="float-right text-muted text-sm">3 mins</span>
-                        </a>
-                        <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link" data-toggle="dropdown" href="#">
                         <i class="fa fa-caret-down"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <a href="#" class="dropdown-item">Show
+                        <a href="{{ route('data_diri.biodata') }}" class="dropdown-item">Show
                             Profile</a>
                         <a href="{{ url('logout') }}" class="dropdown-item">Logout</a>
                     </div>
@@ -207,6 +186,13 @@
                                             class="nav-link {{ request()->is('ho/departemen') ? 'active' : '' }}">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Departemen</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('formpst.list') }}"
+                                            class="nav-link {{ request()->is('formpst/list') ? 'active' : '' }}">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>List yang disetujui</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">

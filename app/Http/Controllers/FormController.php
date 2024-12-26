@@ -8,6 +8,7 @@ use App\Models\Nama_pegawai;
 use App\Models\Cabang_tujuan;
 use App\Models\Tujuan;
 use App\Models\Departemen;
+use App\Models\Pengajuan;
 use App\Models\Form;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
@@ -91,40 +92,56 @@ class FormController extends Controller
     
     public function show()
     {
-        $nama_pegawais = Nama_pegawai::all();
-        $cabang_tujuans = Cabang_tujuan::all();
+        
+        $idsInPengajuan = Pengajuan::pluck('nama'); 
+        
+        $nama_pegawais = Nama_pegawai::whereNotIn('nama', $idsInPengajuan)->get();
     
+       
+        $cabang_tujuans = Cabang_tujuan::whereNotIn('id', $idsInPengajuan)->get(); 
+    
+
         $data = $nama_pegawais->map(function ($pegawai, $index) use ($cabang_tujuans) {
+            $cabangTujuan = $cabang_tujuans->get($index); 
+    
             return [
                 'nama' => $pegawai->nama,
                 'nik' => $pegawai->nik,
                 'departemen' => $pegawai->departemen,
-                'lama' => $cabang_tujuans[$index]->lama ?? '-',
-                'cabang' => $cabang_tujuans[$index]->cabang ?? '-',
-                'tujuan' => $cabang_tujuans[$index]->tujuan ?? '-',
+                'lama' => $cabangTujuan->lama ?? '-', 
+                'cabang' => $cabangTujuan->cabang ?? '-',
+                'tujuan' => $cabangTujuan->tujuan ?? '-',
             ];
         });
     
         return view('formpst.show', compact('data'));
     }
-
-    public function list()
+    
+    public function edit_show($id)
     {
-        $nama_pegawais = Nama_pegawai::all();
-        $cabang_tujuans = Cabang_tujuan::all();
-    
-        $data = $nama_pegawais->map(function ($pegawai, $index) use ($cabang_tujuans) {
-            return [
-                'nama' => $pegawai->nama,
-                'nik' => $pegawai->nik,
-                'departemen' => $pegawai->departemen,
-                'lama' => $cabang_tujuans[$index]->lama ?? '-',
-                'cabang' => $cabang_tujuans[$index]->cabang ?? '-',
-                'tujuan' => $cabang_tujuans[$index]->tujuan ?? '-',
-            ];
-        });
-    
-        return view('formpst.list', compact('data'));
+        $nama_pegawais = Nama_pegawai::findOrFail($id);
+        // $cabang_tujuans = Cabang_tujuan::findOrFail($id);
+
+        return view('formpst.edit', compact('nama_pegawai'));
+    }
+
+    public function update_show(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'nama_pegawai' => 'required|string|max:255',
+            'nik' => 'required|string|max:255',
+        ]);
+
+        $nama_pegawais = Nama_pegawai::findOrFail($id);
+        $nama_pegawais->update($validated);
+
+        return redirect()->route('formpst.show')->with('success', 'Data diri berhasil diubah!');
+    }
+
+    public function list(Pengajuan $post)
+    {
+        $pengajuan = Pengajuan::all();
+        return view('formpst.list', compact('pengajuan'));
     }
     
 
