@@ -66,20 +66,8 @@
                                         <input type="text" class="form-control" id="nik-{{ $index }}" value="{{ $row['nik'] }}">
                                     </div>
                                     <div class="form-group">
-                                        <label for="departemen-{{ $index }}">Departemen</label>
-                                        <input type="text" class="form-control" id="departemen-{{ $index }}" value="{{ $row['departemen'] }}">
-                                    </div>
-                                    <div class="form-group">
                                         <label for="lama-{{ $index }}">Lama</label>
                                         <input type="text" class="form-control" id="lama-{{ $index }}" value="{{ $row['lama'] }}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="cabang-{{ $index }}">Cabang</label>
-                                        <input type="text" class="form-control" id="cabang-{{ $index }}" value="{{ $row['cabang'] }}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="tujuan-{{ $index }}">Tujuan</label>
-                                        <input type="text" class="form-control" id="tujuan-{{ $index }}" value="{{ $row['tujuan'] }}">
                                     </div>
                                 </form>
                             </div>

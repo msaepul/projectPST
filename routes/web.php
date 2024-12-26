@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HoController;
 use App\Http\Controllers\PengajuanController;
 use App\Http\Controllers\FormController;
+use App\Http\Controllers\Data_diriController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -54,8 +55,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/formpst/edit/{id}', [FormController::class, 'edit'])->middleware('role:admin, user')->name('formpst.edit');
     Route::put('/formpst/update/{id}', [FormController::class, 'update'])->middleware('role:admin, user')->name('formpst.update');
     
+    //pengajuan routes
     Route::post('/pengajuans/store', [PengajuanController::class, 'store'])->middleware('role:admin, user')->name('pengajuans.store');
     
+     // Data_diri Routes
+     Route::get('/data_diri/biodata', [Data_diriController::class, 'biodata'])->name('data_diri.biodata');
 
 });
 

@@ -180,4 +180,32 @@ class HoController extends Controller
 
         return view('ho.user', compact('users'));
     }
+    public function edituser($id)
+    {
+        $user = User::findOrFail($id);
+
+        return view('ho.user.edit', compact('user'));
+    }
+
+    public function updateuser(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'nullable|string|max:100',
+            'role' => 'nullable|string',
+        ]);
+
+        $user = User::findOrFail($id);
+        $user->update($validated);
+
+        return redirect()->route('ho.user')->with('success', 'Data user berhasil diubah!');
+    }
+
+    public function destroyuser($id)
+    {
+        $user = User::findOrFail($id);
+        $user->delete();
+
+        return redirect()->route('ho.user')->with('success', 'Data user berhasil dihapus!');
+    }
 }
