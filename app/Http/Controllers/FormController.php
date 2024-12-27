@@ -116,27 +116,32 @@ class FormController extends Controller
     
         return view('formpst.show', compact('data'));
     }
-    
-    public function edit_show($id)
-    {
-        $nama_pegawais = Nama_pegawai::findOrFail($id);
-        // $cabang_tujuans = Cabang_tujuan::findOrFail($id);
 
-        return view('formpst.edit', compact('nama_pegawai'));
+    public function edit($id)
+    {
+        // Mencari data berdasarkan ID yang diberikan
+        $data = DB::table('nama_pegawais')->select('id', 'nama', 'nik', 'departemen', 'lama', 'cabang', 'tujuan')->get();
+        return view('your-view', ['data' => $data]);
     }
-
-    public function update_show(Request $request, $id)
+    public function update(Request $request, $id)
     {
+ 
+
         $validated = $request->validate([
-            'nama_pegawai' => 'required|string|max:255',
+            'nama' => 'required|string|max:255',
             'nik' => 'required|string|max:255',
+            'departemen' => 'required|string|max:255',
+            'lama' => 'nullable|string|max:255',
+            'cabang' => 'nullable|string|max:255',
+            'tujuan' => 'nullable|string|max:255',
         ]);
 
-        $nama_pegawais = Nama_pegawai::findOrFail($id);
-        $nama_pegawais->update($validated);
+        $pengajuan = Nama_pegawai::findOrFail($id);
+        $pengajuan->update($validated);
 
-        return redirect()->route('formpst.show')->with('success', 'Data diri berhasil diubah!');
+        return redirect()->back()->with('success', 'Data berhasil diperbarui!');
     }
+
 
     public function list(Pengajuan $post)
     {

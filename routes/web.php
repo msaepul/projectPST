@@ -49,6 +49,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/formpst/form', [FormController::class, 'form'])->middleware(['auth', 'role:admin,user'])->name('formpst.form');
     Route::get('/formpst/show', [FormController::class, 'show'])->middleware(['auth', 'role:admin,user'])->name('formpst.show');
     Route::get('/formpst/list', [FormController::class, 'list'])->middleware(['auth', 'role:admin,user'])->name('formpst.list');
+    Route::get('/formpst/edit/{id}', [FormController::class, 'edit'])->middleware(['auth', 'role:admin,user'])->name('formpst.edit');
+    Route::get('/formpst/{id}', [FormController::class, 'show'])->name('formpst.show');
+    Route::post('/formpst/update/{id}', [FormController::class, 'update'])->name('formpst.update');
+
 
     Route::delete('/formpst/delete/{id}', [FormController::class, 'destroy'])->middleware('role:admin')->name('formpst.destroy');
     Route::post('/formpst/store', [FormController::class, 'store'])->middleware('role:admin, user')->name('formpst.store');
