@@ -10,22 +10,12 @@ class cabang_tujuan extends Model
     use HasFactory;
     protected $fillable = [
     'tujuan',
-    'lama',
     'cabang',
+    'form_id',
     ];
-    public function cabang()
+    public function form()
     {
-        return $this->belongsTo(Cabang::class, 'cabang'); // Menghubungkan dengan model Cabang
-    }
-
-    public function tujuan()
-    {
-        return $this->belongsTo(Tujuan::class, 'tujuan'); // Menghubungkan dengan model Tujuan
-    }
-
-    public function departemen()
-    {
-        return $this->belongsTo(Departemen::class, 'departemen');
+        return $this->belongsTo(Form::class);
     }
 
 }

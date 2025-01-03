@@ -1,45 +1,18 @@
 @extends('layouts.main')
-@section('content')
-{{-- {{ Breadcrumbs::render('Show') }} --}}
 
+@section('content')
 <div class="card mb-4">
     <div class="card-header">
-        <i class="fas fa-list me-1"></i>
-       Hasil Persetujuan
+        <i class="fas fa-table me-1"></i> List yang di setujui
     </div>
     <div class="card-body">
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Nama</th>
-                    <th>NIK</th>
-                    <th>Departemen</th>
-                    <th>Lama</th>
-                    <th>Cabang</th>
-                    <th>Tujuan</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($pengajuan as $index => $row)
-                <tr>
-                    <td>{{ $row['nama'] }}
-                        <input type="hidden" name="pengajuans[{{ $index }}][nama]" value="{{ $row['nama'] }}"></td>
-                    <td>{{ $row['nik'] }}
-                        <input type="hidden" name="pengajuans[{{ $index }}][nik]" value="{{ $row['nik'] }}"></td>
-                    <td>{{ $row['departemen'] }}
-                        <input type="hidden" name="pengajuans[{{ $index }}][departemen]" value="{{ $row['departemen'] }}"></td>
-                    <td> {{ $row['lama'] }}
-                        <input type="hidden" name="pengajuans[{{ $index }}][lama]" value="{{ $row['lama'] }}"></td>
-                    <td>{{ $row['cabang'] }}
-                        <input type="hidden" name="pengajuans[{{ $index }}][cabang]" value="{{ $row['cabang'] }}"></td>
-                    <td> {{ $row['tujuan'] }}
-                        <input type="hidden" name="pengajuans[{{ $index }}][tujuan]" value="{{ $row['tujuan'] }}"></td>
-                </tr>
-                @endforeach
-            </tbody>   
-        </table>
-        </form>
+        <div class="list-group">
+            @foreach ($grouped_pegawais as $form_id => $pegawai_group)
+                <a href="{{ route('formpst.show_pegawai', $form_id) }}" class="list-group-item list-group-item-action">
+                    Nomor Surat: {{ $loop->iteration }} ({{ count($pegawai_group) }} Pegawai)
+                </a>
+            @endforeach
+        </div>
     </div>
 </div>
-
 @endsection

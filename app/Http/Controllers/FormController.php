@@ -10,144 +10,147 @@ use App\Models\Tujuan;
 use App\Models\Departemen;
 use App\Models\Pengajuan;
 use App\Models\Form;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
+// use Illuminate\Support\Facades\DB;
 
 class FormController extends Controller
 {
     public function form()
     {
         $cabangs = Cabang::all();
-        $nama_pegawais = Nama_pegawai::all();
-        $cabang_tujuans = Cabang_tujuan::all();
         $tujuans = Tujuan::all();
         $departemens = Departemen::all();
-    
+        $nama_pegawais = Nama_pegawai::all();
+        $cabang_tujuans = Cabang_tujuan::all();
+
         return view('formpst.form', compact('cabangs', 'tujuans', 'departemens', 'nama_pegawais', 'cabang_tujuans'));
     }
-    
 
-     public function store(Request $request)
+    public function store(Request $request)
     {
-        // Validasi input
-        $validatedData = $request->validate([
-            'cabang' => 'required|string|max:255',
-            'tujuan' => 'required|string',
-            'nama' => 'required|array', 
-            'nik' => 'required|array',
-            'departemen' => 'required|array',
-            'lama' => 'required|array',
+        $request->validate([
+            'cabang' => 'required|exists:cabangs,id',
+            'tujuan' => 'required|exists:tujuans,id',
+            'nama' => 'required|array|min:1',
+            'nik' => 'required|array|min:1',
+            'departemen' => 'required|array|min:1',
+            'lama' => 'required|array|min:1',
         ]);
+        $nama_cabang = Cabang::where('id', $request->cabang)->value('nama_cabang');
+        $tujuan = Tujuan::where('id', $request->tujuan)->value('tujuan_penugasan');
 
-        // Ambil nama cabang berdasarkan ID cabang
-        $cabang = Cabang::find($request->input('cabang'));
-        if ($cabang) {
-            $cabangNama = $cabang->nama_cabang; // Ambil nama cabang
-        } else {
-            return redirect()->back()->withErrors(['cabang' => 'Cabang tidak ditemukan!']);
-        }
 
-        $tujuan = Tujuan::find($request->input('tujuan'));
-        if ($tujuan) {
-            $tujuanNama = $tujuan->tujuan_penugasan; // Ambil nama tujuan
-        } else {
-            return redirect()->back()->withErrors(['tujuan' => 'Tujuan tidak ditemukan!']);
-        }
-        
-        
-        // // Menyimpan data form
-        // foreach ($request->input('nama') as $index => $nama) {
-        //     Form::create([
-        //         'cabang' => $cabangNama, // Simpan nama cabang
-        //         'tujuan' => $tujuanNama, // Simpan nama tujuan
-        //         'nama' => $nama,
-        //         'nik' => $request->input('nik')[$index],
-        //         'departemen' => $request->input('departemen')[$index],
-        //         'lama' => $request->input('lama')[$index],
-        //     ]);
-        // }
+    $form = Form::create([
+        'cabang' => $nama_cabang,   
+        'tujuan' => $tujuan,
+    ]);
 
-        foreach ($request->input('nama') as $index => $nama) {
-
-            DB::table('nama_pegawais')->insert([
+        foreach ($request->nama as $index => $nama) {
+            Nama_pegawai::create([
                 'nama' => $nama,
-                'nik' => $request->input('nik')[$index],
-                'departemen' => $request->input('departemen')[$index],
-                'created_at' => now(),
-                'updated_at' => now(),
+                'nik' => $request->nik[$index],
+                'departemen' => $request->departemen[$index],
+                'lama' => $request->lama[$index],
+                'form_id' => $form->id,  
             ]);
-    
-            DB::table('cabang_tujuans')->insert([
-                'cabang' => $cabangNama, 
-                'tujuan' => $tujuanNama, 
-                'lama' => $request->input('lama')[$index],
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+            
         }
 
-        return redirect()->route('formpst.show')->with('success', 'Data berhasil ditambahkan!');
+        return redirect()->route('formpst.show')->with('success', 'Data berhasil disimpan');
     }
 
-    
-    public function show()
-    {
+    // public function show()
+    // {
+    //     $idsInPengajuan = Pengajuan::pluck('nama');
         
-        $idsInPengajuan = Pengajuan::pluck('nama'); 
+    //     $nama_pegawais = Nama_pegawai::whereNotIn('nama', $idsInPengajuan)->get();
         
-        $nama_pegawais = Nama_pegawai::whereNotIn('nama', $idsInPengajuan)->get();
-    
-       
-        $cabang_tujuans = Cabang_tujuan::whereNotIn('id', $idsInPengajuan)->get(); 
-    
+    //     $forms = Form::whereNotIn('id', $idsInPengajuan)->get();
+        
+    //     $data = $nama_pegawais->map(function ($pegawai, $index) use ($forms) {
+    //         $cabangTujuan = $forms->get($index); 
+            
+    //         return [
+    //             'id' => $pegawai->id,
+    //             'form.id' => $pegawai->form_id,
+    //             'nama' => $pegawai->nama,
+    //             'nik' => $pegawai->nik,
+    //             'departemen' => $pegawai->departemen,
+    //             'lama' => $pegawai->lama,
+    //             'cabang' => $cabangTujuan->cabang ?? '-',
+    //             'tujuan' => $cabangTujuan->tujuan ?? '-',
+    //         ];
+    //     });
 
-        $data = $nama_pegawais->map(function ($pegawai, $index) use ($cabang_tujuans) {
-            $cabangTujuan = $cabang_tujuans->get($index); 
-    
-            return [
-                'nama' => $pegawai->nama,
-                'nik' => $pegawai->nik,
-                'departemen' => $pegawai->departemen,
-                'lama' => $cabangTujuan->lama ?? '-', 
-                'cabang' => $cabangTujuan->cabang ?? '-',
-                'tujuan' => $cabangTujuan->tujuan ?? '-',
-            ];
-        });
-    
+    public function show()
+{
+    // Ambil data pengajuan untuk filter
+    $idsInPengajuan = Pengajuan::pluck('nama');
+
+    $nama_pegawais = Nama_pegawai::whereNotIn('nama', $idsInPengajuan)->get();
+
+    // Ambil data form berdasarkan form_id pada pegawai
+    $forms = Form::whereIn('id', $nama_pegawais->pluck('form_id'))->get()->keyBy('id');
+
+    $data = $nama_pegawais->map(function ($pegawai) use ($forms) {
+        $form = $forms->get($pegawai->form_id); // Ambil form berdasarkan form_id
+
+        return [
+            'id' => $pegawai->id,
+            'form_id' => $pegawai->form_id,
+            'nama' => $pegawai->nama,
+            'nik' => $pegawai->nik,
+            'departemen' => $pegawai->departemen,
+            'lama' => $pegawai->lama,
+            'cabang' => $form->cabang ?? '-', 
+            'tujuan' => $form->tujuan ?? '-', 
+        ];
+    });
+
         return view('formpst.show', compact('data'));
     }
 
     public function edit($id)
     {
-        // Mencari data berdasarkan ID yang diberikan
-        $data = DB::table('nama_pegawais')->select('id', 'nama', 'nik', 'departemen', 'lama', 'cabang', 'tujuan')->get();
-        return view('your-view', ['data' => $data]);
+        $data = Nama_pegawai::find($id);
+    
+        if (!$data) {
+            return redirect()->route('formpst.show')->with('error', 'Data pegawai tidak ditemukan!');
+        }
+    
+        $departemens = Departemen::all();
+    
+        return view('formpst.edit', compact('data', 'departemens'));
     }
+
     public function update(Request $request, $id)
     {
- 
-
-        $validated = $request->validate([
+        $request->validate([
             'nama' => 'required|string|max:255',
             'nik' => 'required|string|max:255',
             'departemen' => 'required|string|max:255',
-            'lama' => 'nullable|string|max:255',
-            'cabang' => 'nullable|string|max:255',
-            'tujuan' => 'nullable|string|max:255',
+            'lama' => 'required|string|max:255',
         ]);
 
-        $pengajuan = Nama_pegawai::findOrFail($id);
-        $pengajuan->update($validated);
+        $data = Nama_pegawai::findOrFail($id);
 
-        return redirect()->back()->with('success', 'Data berhasil diperbarui!');
+        $data->update([
+            'nama' => $request->nama,
+            'nik' => $request->nik,
+            'departemen' => $request->departemen,
+            'lama' => $request->lama,
+        ]);
+
+        return redirect()->route('formpst.show')->with('success', 'Data berhasil diperbarui!');
     }
-
 
     public function list(Pengajuan $post)
     {
-        $pengajuan = Pengajuan::all();
-        return view('formpst.list', compact('pengajuan'));
-    }
-    
+        $nama_pegawais = Nama_pegawai::all();
 
-}
+        $grouped_pegawais = $nama_pegawais->groupBy('form_id');
+
+    return view('formpst.list', compact('grouped_pegawais'));
+    }
+
+
+    }

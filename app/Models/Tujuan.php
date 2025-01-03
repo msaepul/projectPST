@@ -12,4 +12,9 @@ class Tujuan extends Model
 
     // Tentukan kolom yang boleh diisi
     protected $fillable = ['tujuan_penugasan'];
+    
+    public function pegawais()
+    {
+        return $this->hasMany(Nama_pegawai::class);
+    }
 }

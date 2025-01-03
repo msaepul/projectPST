@@ -15,7 +15,6 @@ class PengajuanController extends Controller
     }
     public function store(Request $request)
     {
-        // Validasi data jika diperlukan
         $validated = $request->validate([
             'pengajuans.*.nama' => 'required|string|max:255',
             'pengajuans.*.nik' => 'required|string|max:255',
@@ -25,12 +24,10 @@ class PengajuanController extends Controller
             'pengajuans.*.tujuan' => 'required|string|max:255',
         ]);
 
-        // Iterasi data dan simpan ke tabel `pengajuans`
         foreach ($validated['pengajuans'] as $pengajuan) {
             Pengajuan::create($pengajuan);
         }
 
-        // Redirect dengan pesan sukses
         return redirect()->route('formpst.list')->with('success', 'Pengajuan berhasil disimpan!');
     }
     public function show()

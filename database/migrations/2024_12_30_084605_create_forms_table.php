@@ -11,14 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cabang_tujuans', function (Blueprint $table) {
+        Schema::create('forms', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('form_id');
-            $table->string('cabang');
-            $table->string('tujuan');
+            $table->string('tujuan')->nullable(false);
+            $table->string('cabang')->nullable(false);
             $table->timestamps();
-
-            $table->foreign('form_id')->references('id')->on('forms')->onDelete('cascade');
         });
     }
 
@@ -27,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cabang_tujuans');
+        Schema::dropIfExists('forms');
     }
 };

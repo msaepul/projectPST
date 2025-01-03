@@ -66,8 +66,8 @@
                                                     <div class="form-group">
                                                         <label for="role">Role :</label>
                                                         <select class="form-control" id="role" name="role" value="{{ $user->role }} " required>
-                                                            <option value="Admin">admin</option>
-                                                            <option value="User">user</option>
+                                                            <option value="admin">admin</option>
+                                                            <option value="user">user</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -120,8 +120,8 @@
                     <div class="form-group">
                         <label for="role">Role:</label>
                         <select class="form-control" id="role" name="role" required>
-                            <option value="Admin">admin</option>
-                            <option value="User">user</option>
+                            <option value="admin">admin</option>
+                            <option value="user">user</option>
                         </select>
                     </div>
                 </div>
