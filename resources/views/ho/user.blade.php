@@ -74,11 +74,18 @@
                                                             </select>
                                                         </div>
                                                     </div>
+
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary"
                                                             data-dismiss="modal">Tutup</button>
                                                         <button type="submit" class="btn btn-primary">Simpan
                                                             Perubahan</button>
+                                                    <div class="form-group">
+                                                        <label for="role">Role :</label>
+                                                        <select class="form-control" id="role" name="role" value="{{ $user->role }} " required>
+                                                            <option value="admin">admin</option>
+                                                            <option value="user">user</option>
+                                                        </select>
                                                     </div>
                                                 </form>
                                             </div>
@@ -140,6 +147,12 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                         <button type="submit" class="btn btn-primary">Tambah</button>
+                    <div class="form-group">
+                        <label for="role">Role:</label>
+                        <select class="form-control" id="role" name="role" required>
+                            <option value="admin">admin</option>
+                            <option value="user">user</option>
+                        </select>
                     </div>
                 </form>
             </div>

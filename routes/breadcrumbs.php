@@ -26,8 +26,8 @@ Breadcrumbs::for('Form', function ($trail) {
     $trail->push('Form', route('formpst.form'));
 });
 
-Breadcrumbs::for('Show', function ($trail) {
-    $trail->parent('Form');
-    $trail->push('Show', route('formpst.show'));
-});
+// // Breadcrumbs::for('Show', function ($trail) {
+// //     $trail->parent('Form');
+// //     $trail->push('Show', route('formpst.show'));
+// });
 

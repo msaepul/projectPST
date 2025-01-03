@@ -13,4 +13,9 @@ class cabang extends Model
     'kode_cabang',
     'alamat_cabang',
     ];
+    public function pegawais()
+    {
+        return $this->hasMany(Nama_pegawai::class);
+    }
 }
+
