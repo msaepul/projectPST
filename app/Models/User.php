@@ -43,6 +43,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function setRoleAttribute($value)
+    {
+        $this->attributes['role'] = strtolower($value);
+    }
+
     public function profile()
     {
         return $this->hasOne(Profile::class);

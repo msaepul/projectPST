@@ -199,6 +199,7 @@ class HoController extends Controller
         ]);
 
         $user = User::findOrFail($id);
+        $user->role = strtolower($request->role);
         $user->update($validated);
 
         return redirect()->route('ho.user')->with('success', 'Data user berhasil diubah!');

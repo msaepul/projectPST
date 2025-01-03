@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->string('role')->default('user');
         });
+        DB::table('users')->update(['role' => DB::raw('LOWER(role)')]);
     }
 
     /**

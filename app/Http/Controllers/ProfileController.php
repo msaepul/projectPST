@@ -1,6 +1,8 @@
 <?php
 
+
 namespace App\Http\Controllers;
+
 
 use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
@@ -11,11 +13,15 @@ use Illuminate\View\View;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
+
 class ProfileController extends Controller
 {
-    /**
-     * Display the user's profile form.
-     */
+    public function logout(): RedirectResponse
+    {
+        Auth::logout(); // Logout pengguna
+        return redirect('/login')->with('status', 'Anda telah berhasil logout.');
+    }
+
 
     public function store(Request $request)
     {
@@ -26,6 +32,7 @@ class ProfileController extends Controller
             'role' => 'required|string'
         ]);
 
+
         User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -33,61 +40,48 @@ class ProfileController extends Controller
             'role' => $request->role,
         ]);
 
+
         return redirect()->route('ho.user')->with('success', 'User berhasil ditambahkan!');
 
+
     }
-    public function edit(Request $request): View
+    public function edit($id): View
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
+        $user = User::findOrFail($id); // Mengambil data user berdasarkan ID
+        return view('profile.edit', compact('user'));
     }
 
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(Request $request, $id): RedirectResponse
     {
-        $request->user()->fill($request->validated());
-
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        // Validasi input data
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $id,
+            'role' => 'required|in:Admin,User',
+        ]);
+        $user = User::findOrFail($id); // Mengambil data user berdasarkan ID
+        // Mengisi data baru ke model user
+        $user->fill($validatedData);
+        // Reset email verification jika email berubah
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
         }
-
-        $request->user()->save();
-
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        // Simpan perubahan
+        $user->save();
+        // Redirect dengan pesan sukses
+        return Redirect::route('ho.user')->with('status', 'Profile updated successfully!');
     }
-
     /**
      * Delete the user's account.
      */
-    public function destroy(Request $request): RedirectResponse
+    public function destroy(Request $request, $id): RedirectResponse
     {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
-        ]);
-
-        $user = $request->user();
-
-        Auth::logout();
-
+        \Log::info("Menghapus user dengan ID: {$id}");
+        $user = User::findOrFail($id);
         $user->delete();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
-    }
-
-    public function logout(Request $request)
-    {
-        Auth::logout();
-
-        $request->session()->invalidate();
-
-        $request->session()->regenerateToken();
-
-        return redirect('/login');
+        return Redirect::route('ho.user')->with('status', 'User berhasil dihapus!');
     }
 }
