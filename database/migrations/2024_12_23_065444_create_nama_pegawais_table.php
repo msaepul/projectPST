@@ -13,10 +13,15 @@ return new class extends Migration
     {
         Schema::create('nama_pegawais', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('form_id');
             $table->string('nama')->unique(); 
             $table->string('nik');
             $table->string('departemen');
+            $table->string('lama');
             $table->timestamps();
+
+            $table->foreign('form_id')->references('id')->on('forms')->onDelete('cascade');
+
         });
     }
 

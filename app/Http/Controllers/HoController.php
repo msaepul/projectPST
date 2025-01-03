@@ -7,6 +7,9 @@ use App\Models\Departemen;
 use App\Models\Tujuan;
 use App\Models\Cabang;
 use App\Models\User;
+use App\Models\Pengajuan;
+use App\Models\Nama_pegawai;
+use App\Models\Form;
 
 class HoController extends Controller
 {
@@ -208,4 +211,15 @@ class HoController extends Controller
 
         return redirect()->route('ho.user')->with('success', 'Data user berhasil dihapus!');
     }
+
+    public function show_pegawai($form_id)
+{
+        // Ambil data pegawai dengan relasi cabang dan tujuan berdasarkan form_id
+        $nama_pegawais = Nama_pegawai::with(['cabang', 'tujuan'])->where('form_id', $form_id)->get();
+
+
+    // Kirimkan form_id dan data pegawai ke view
+    return view('formpst.show_pegawai', compact('nama_pegawais', 'form_id'));
+}
+
 }

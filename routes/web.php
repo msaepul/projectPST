@@ -43,23 +43,25 @@ Route::middleware('auth')->group(function () {
 
     //routes for user
     Route::get('/ho/user', [HoController::class, 'user'])->middleware('role:admin')->name('ho.user');
+    Route::get('/formpst/show_pegawai/{form_id}', [HoController::class, 'show_pegawai'])->middleware(['auth', 'role:admin,user'])->name('formpst.show_pegawai');
 
 
     // Form
     Route::get('/formpst/form', [FormController::class, 'form'])->middleware(['auth', 'role:admin,user'])->name('formpst.form');
     Route::get('/formpst/show', [FormController::class, 'show'])->middleware(['auth', 'role:admin,user'])->name('formpst.show');
     Route::get('/formpst/list', [FormController::class, 'list'])->middleware(['auth', 'role:admin,user'])->name('formpst.list');
-
-    Route::delete('/formpst/delete/{id}', [FormController::class, 'destroy'])->middleware('role:admin')->name('formpst.destroy');
     Route::post('/formpst/store', [FormController::class, 'store'])->middleware('role:admin, user')->name('formpst.store');
-    Route::get('/formpst/edit/{id}', [FormController::class, 'edit'])->middleware('role:admin, user')->name('formpst.edit');
+    Route::get('formpst/edit/{id}', [FormController::class, 'edit'])->name('formpst.edit');
     Route::put('/formpst/update/{id}', [FormController::class, 'update'])->middleware('role:admin, user')->name('formpst.update');
+    Route::delete('/formpst/delete/{id}', [FormController::class, 'destroy'])->middleware('role:admin')->name('formpst.destroy');
     
     //pengajuan routes
     Route::post('/pengajuans/store', [PengajuanController::class, 'store'])->middleware('role:admin, user')->name('pengajuans.store');
     
      // Data_diri Routes
      Route::get('/data_diri/biodata', [Data_diriController::class, 'biodata'])->name('data_diri.biodata');
+
+     Route::get('/forms', [FormController::class, 'index']);
 
 });
 

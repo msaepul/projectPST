@@ -13,6 +13,7 @@ class Pengajuan extends Model
         'cabang',
         'tujuan',
         'nama',
+        'form_id',
         'nik',
         'departemen',
         'lama',
@@ -30,5 +31,9 @@ class Pengajuan extends Model
     public function departemen()
     {
         return $this->belongsTo(Departemen::class, 'departemen');
+    }
+    public function form()
+    {
+        return $this->belongsTo(Form::class);
     }
 }

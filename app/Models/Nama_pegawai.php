@@ -12,20 +12,22 @@ class nama_pegawai extends Model
     'nama',
     'nik',
     'departemen',
+    'lama',
+    'form_id',
     ];
+    public function form()
+    {
+        return $this->belongsTo(Form::class);
+    }
     public function cabang()
     {
-        return $this->belongsTo(Cabang::class, 'cabang'); // Menghubungkan dengan model Cabang
+        return $this->belongsTo(Cabang::class); // misal memiliki foreign key 'cabang_id'
     }
 
+    // Relasi ke tabel tujuan
     public function tujuan()
     {
-        return $this->belongsTo(Tujuan::class, 'tujuan'); // Menghubungkan dengan model Tujuan
-    }
-
-    public function departemen()
-    {
-        return $this->belongsTo(Departemen::class, 'departemen');
+        return $this->belongsTo(Tujuan::class); // misal memiliki foreign key 'tujuan_id'
     }
 
 }
