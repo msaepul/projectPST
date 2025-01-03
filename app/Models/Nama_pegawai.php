@@ -21,13 +21,13 @@ class nama_pegawai extends Model
     }
     public function cabang()
     {
-        return $this->belongsTo(Cabang::class); // misal memiliki foreign key 'cabang_id'
+        return $this->belongsTo(Cabang::class); 
     }
 
     // Relasi ke tabel tujuan
     public function tujuan()
     {
-        return $this->belongsTo(Tujuan::class); // misal memiliki foreign key 'tujuan_id'
+        return $this->belongsTo(Tujuan::class); 
     }
 
 }
