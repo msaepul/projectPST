@@ -188,6 +188,31 @@
                                             <p>Departemen</p>
                                         </a>
                                     </li>
+                                    {{-- <li class="nav-item">
+                                        <a href="{{ route('formpst.list') }}"
+                                            class="nav-link {{ request()->is('formpst/list') ? 'active' : '' }}">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>List yang disetujui</p>
+                                        </a>
+                                    </li> --}}
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="fas fa-user nav-icon"></i>
+                                    <p>
+                                        HRD
+                                        <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href="{{ route('formpst.show') }}"
+                                            class="nav-link {{ request()->is('formpst/show') ? 'active' : '' }}">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Draft Persetujuan</p>
+                                        </a>
+                                    </li>
                                     <li class="nav-item">
                                         <a href="{{ route('formpst.list') }}"
                                             class="nav-link {{ request()->is('formpst/list') ? 'active' : '' }}">
@@ -241,11 +266,11 @@
         </div>
         <!-- /.content-wrapper -->
         <footer class="main-footer">
-            <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io"></a>.</strong>
+            {{-- <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io"></a>.</strong>
             All rights reserved.
             <div class="float-right d-none d-sm-inline-block">
                 <b>Version</b> 3.2.0
-            </div>
+            </div> --}}
         </footer>
 
         <!-- Control Sidebar -->

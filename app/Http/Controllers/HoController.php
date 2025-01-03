@@ -215,7 +215,7 @@ class HoController extends Controller
     public function show_pegawai($form_id)
 {
         // Ambil data pegawai dengan relasi cabang dan tujuan berdasarkan form_id
-        $nama_pegawais = Nama_pegawai::with(['cabang', 'tujuan'])->where('form_id', $form_id)->get();
+        $nama_pegawais = Nama_pegawai::with(['form'])->where('form_id', $form_id)->get();
 
 
     // Kirimkan form_id dan data pegawai ke view

@@ -10,10 +10,10 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Nama</th>
                     <th>NIK</th>
+                    <th>Nama</th>
                     <th>Departemen</th>
-                    <th>Lama</th>
+                    <th>Lama Tugas</th>
                     <th>Cabang</th>
                     <th>Tujuan</th>
                 </tr>
@@ -22,12 +22,12 @@
                 @foreach ($nama_pegawais as $key => $data)
                     <tr>
                         <td>{{ $key + 1 }}</td>
-                        <td>{{ $data->nama }}</td>
                         <td>{{ $data->nik }}</td>
+                        <td>{{ $data->nama }}</td>
                         <td>{{ $data->departemen }}</td>
                         <td>{{ $data->lama }}</td>
-                        <td>{{ $data->cabang }}</td>
-                        <td>{{ $data->tujuan }}</td>
+                        <td>{{ $data->form->cabang ?? 'Tidak ada' }}</td>
+                        <td>{{ $data->form->tujuan ?? 'Tidak ada' }}</td>
                     </tr>
                 @endforeach
             </tbody>
