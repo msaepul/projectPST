@@ -63,13 +63,13 @@
                                             <img src="{{ asset('icons/create-outline.svg') }}" alt="Tambah" style="width: 20px; height: 20px; margin-right: 4px">
                                             Edit
                                         </a>
-                                        <form action="#" method="POST" style="display:inline;">
+                                        {{-- <form action="{{ route('formpst.destroy', $row['id']) }}" method="POST" style="display:inline;">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus item ini?')">
                                                 <i class="fas fa-trash-alt"></i> Hapus
                                             </button>
-                                        </form>
+                                        </form> --}}
                                     </div>
                                 </td>
                             </tr>

@@ -61,7 +61,7 @@
                             
 
                             <div class="col-md-3">
-                                <label for="lama">Lama:</label>
+                                <label for="lama">Lama :</label>
                                 <div class="d-flex align-items-center">
                                     <input type="date" class="form-control" name="lama[]" required>
                                     <button type="button" class="btn btn-danger btn-sm ml-2" onclick="removeField(this)">
