@@ -4,10 +4,11 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AdminLTE 3 | Dashboard</title>
+    <title>Form Persetujuan</title>
 
     <!-- Link ke file CSS -->
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/css/select2.min.css" rel="stylesheet" />
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -32,6 +33,13 @@
 
     <!-- Select2 JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/js/select2.min.js"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <!-- Link ke CSS -->
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
@@ -67,6 +75,8 @@
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
+
+
     <div class="wrapper">
 
         <!-- Preloader -->
@@ -113,7 +123,7 @@
             <a href="index3.html" class="brand-link">
                 <img src="{{ asset('dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo"
                     class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">AdminLTE 3</span>
+                <span class="brand-text font-weight-light">FormPST</span>
             </a>
 
             <!-- Sidebar -->
@@ -333,6 +343,9 @@
     <script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
     <script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/js/select2.min.js"></script>
+
     <!-- overlayScrollbars -->
     <script src="{{ asset('plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
 
@@ -517,6 +530,29 @@
                 })
             });
 
+            $(document).ready(function() {
+                $('#tujuan').select2({
+                    placeholder: "Pilih Tujuan",
+                    allowClear: true, 
+                    width: '100%' 
+                });
+            });
+
+            $(document).ready(function() {
+                $('#cabang').select2({
+                    placeholder: "Pilih cabang",
+                    allowClear: true, 
+                    width: '100%' 
+                });
+            });
+            
+            $(document).ready(function() {
+                $('#departemen').select2({
+                    placeholder: "Pilih departemen",
+                    allowClear: true, 
+                    width: '100%' 
+                });
+            });
         });
     </script>
 </body>

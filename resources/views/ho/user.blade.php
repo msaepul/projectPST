@@ -62,7 +62,7 @@
                                                             <input type="email" class="form-control" name="email"
                                                                 value="{{ old('email', $user->email) }}" required>
                                                         </div>
-                                                        <div class="form-group">
+                                                        {{-- <div class="form-group">
                                                             <label>Role:</label>
                                                             <select class="form-control" name="role" required>
                                                                 <option value="Admin"
@@ -72,6 +72,14 @@
                                                                     {{ $user->role == 'User' ? 'selected' : '' }}>User
                                                                 </option>
                                                             </select>
+                                                        </div> --}}
+                                                        <div class="form-group">
+                                                            <label for="role">Role :</label>
+                                                            <select class="form-control" id="role" name="role"
+                                                                value="{{ $user->role }} " required>
+                                                                <option value="admin">admin</option>
+                                                                <option value="user">user</option>
+                                                            </select>
                                                         </div>
                                                     </div>
 
@@ -80,29 +88,24 @@
                                                             data-dismiss="modal">Tutup</button>
                                                         <button type="submit" class="btn btn-primary">Simpan
                                                             Perubahan</button>
-                                                    <div class="form-group">
-                                                        <label for="role">Role :</label>
-                                                        <select class="form-control" id="role" name="role" value="{{ $user->role }} " required>
-                                                            <option value="admin">admin</option>
-                                                            <option value="user">user</option>
-                                                        </select>
-                                                    </div>
+
                                                 </form>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <!-- Button Hapus -->
-                                    <form action="{{ route('profile.destroy', $user->id) }}" method="POST"
-                                        onsubmit="return confirm('Apakah Anda yakin ingin menghapus user ini?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger">
-                                            <img src="{{ asset('icons/trash-outline.svg') }}" alt="Delete"
-                                                style="width: 20px; height: 20px; margin-right: 4px">
-                                        </button>
-                                    </form>
+
                                 </div>
+                                <!-- Button Hapus -->
+                                <form action="{{ route('profile.destroy', $user->id) }}" method="POST"
+                                    onsubmit="return confirm('Apakah Anda yakin ingin menghapus user ini?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger">
+                                        <img src="{{ asset('icons/trash-outline.svg') }}" alt="Delete"
+                                            style="width: 20px; height: 20px; margin-right: 4px">
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     @endforeach
@@ -147,13 +150,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                         <button type="submit" class="btn btn-primary">Tambah</button>
-                    <div class="form-group">
-                        <label for="role">Role:</label>
-                        <select class="form-control" id="role" name="role" required>
-                            <option value="admin">admin</option>
-                            <option value="user">user</option>
-                        </select>
-                    </div>
+
                 </form>
             </div>
         </div>

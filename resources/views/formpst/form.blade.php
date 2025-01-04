@@ -30,6 +30,7 @@
                             @endforeach
                         </select>
                     </div>
+                                   
                 </div>
 
                 <div style="border: 2px solid #ccc; padding: 20px; margin-top: 20px; border-radius: 5px;">
@@ -45,17 +46,19 @@
                                 <label for="nik">NIK:</label>
                                 <input type="text" class="form-control" name="nik[]" required>
                             </div>
-
+                            
                             <div class="col-md-3">
                                 <label for="departemen">Departemen:</label>
-                                <select class="form-control searchable-dropdown" name="departemen[]" required>
+                                <select class="form-control searchable-dropdown" name="departemen[]" id="departemen" required>
                                     <option value="" disabled selected>Pilih Departemen</option>
                                     @foreach ($departemens as $departemen)
                                         <option value="{{ $departemen->nama_departemen }}">
-                                            {{ $departemen->nama_departemen }}</option>
+                                            {{ $departemen->nama_departemen }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
+                            
 
                             <div class="col-md-3">
                                 <label for="lama">Lama:</label>
@@ -126,4 +129,5 @@
             button.closest('.form-group').remove();
         }
     </script>
+    
 @endsection
