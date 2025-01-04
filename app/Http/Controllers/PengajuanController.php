@@ -48,4 +48,11 @@ class PengajuanController extends Controller
     
         return view('formpst.list', compact('data'));
     }
+    public function destroy($id)
+    {
+        $nama_pegawais = Nama_pegawai::findOrFail($id);
+        $nama_pegawais->delete();
+
+        return redirect()->route('formpst.show')->with('success', 'Data berhasil dihapus!');
+    }
 }
