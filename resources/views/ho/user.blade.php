@@ -62,7 +62,7 @@
                                                             <input type="email" class="form-control" name="email"
                                                                 value="{{ old('email', $user->email) }}" required>
                                                         </div>
-                                                        <div class="form-group">
+                                                        {{-- <div class="form-group">
                                                             <label>Role:</label>
                                                             <select class="form-control" name="role" required>
                                                                 <option value="Admin"
@@ -71,6 +71,14 @@
                                                                 <option value="User"
                                                                     {{ $user->role == 'User' ? 'selected' : '' }}>user
                                                                 </option>
+                                                            </select>
+                                                        </div> --}}
+                                                        <div class="form-group">
+                                                            <label for="role">Role :</label>
+                                                            <select class="form-control" id="role" name="role"
+                                                                value="{{ $user->role }} " required>
+                                                                <option value="admin">admin</option>
+                                                                <option value="user">user</option>
                                                             </select>
                                                         </div>
                                                     </div>
