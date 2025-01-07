@@ -1,8 +1,7 @@
 @extends('layouts.main')
 
 @section('content')
-
-{{ Breadcrumbs::render('cabang') }}
+    {{ Breadcrumbs::render('cabang') }}
 
     <div class="alert alert-info" role="alert">
         <strong>Info:</strong> Pastikan semua data cabang terisi dengan lengkap dan benar.

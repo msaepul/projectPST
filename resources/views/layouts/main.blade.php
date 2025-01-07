@@ -129,14 +129,39 @@
             <!-- Sidebar -->
             <div class="sidebar">
                 <!-- Sidebar user panel (optional) -->
-                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                    <div class="image">
-                        <i class="fas fa-user-circle" style="font-size: 35px; color: #80bdc2;"></i>
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex align-items-center">
+                    <div class="image me-3">
+                        <div class="profile-initials"
+                            style="width: 35px; height: 35px; background-color: #80bdc2; color: white; font-size: 18px; display: flex; align-items: center; justify-content: center; border-radius: 50%; text-transform: uppercase;">
+                            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                            <!-- Menampilkan huruf pertama dari nama pengguna -->
+                        </div>
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block">{{ Auth::user()->name }}</a>
+                        <a href="#" class="d-block"
+                            style="font-size: 16px; font-weight: bold; color: #ffffff;">{{ Auth::user()->name }}</a>
+                        <p class="status" style="font-size: 12px; color: #dcefff; margin-bottom: 5px;">
+                            {{ Auth::user()->email }}</p>
+                        <span class="badge badge-success" style="font-size: 12px;">Online</span>
                     </div>
                 </div>
+
+                <style>
+                    /* Animasi efek muncul */
+                    .profile-initials {
+                        animation: fadeIn 0.5s ease-in-out;
+                    }
+
+                    @keyframes fadeIn {
+                        0% {
+                            opacity: 0;
+                        }
+
+                        100% {
+                            opacity: 1;
+                        }
+                    }
+                </style>
 
                 <!-- SidebarSearch Form -->
                 <div class="form-inline">
