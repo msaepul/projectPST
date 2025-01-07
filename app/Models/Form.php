@@ -20,7 +20,7 @@ class Form extends Model
     {
         return $this->hasMany(Cabang_tujuan::class);
     }
-    public function pengajuan()
+    public function pengajuans()
     {
         return $this->hasMany(Pengajuan::class);
     }

@@ -19,6 +19,7 @@ class PengajuanController extends Controller
             'pengajuans.*.nama' => 'required|string|max:255',
             'pengajuans.*.nik' => 'required|string|max:255',
             'pengajuans.*.departemen' => 'required|string|max:255',
+            // 'pengajuans.*.form_id' => 'required|string|max:255',
             'pengajuans.*.lama' => 'required|string|max:255',
             'pengajuans.*.cabang' => 'required|string|max:255',
             'pengajuans.*.tujuan' => 'required|string|max:255',

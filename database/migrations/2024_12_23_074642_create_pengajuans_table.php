@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('forms', function (Blueprint $table) {
             $table->id();
+            $table->string('form_id');
             $table->string('cabang');
             $table->string('tujuan');
             $table->string('nama')->unique(); 

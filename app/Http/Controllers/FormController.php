@@ -25,38 +25,86 @@ class FormController extends Controller
         return view('formpst.form', compact('cabangs', 'tujuans', 'departemens', 'nama_pegawais', 'cabang_tujuans'));
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'cabang' => 'required|exists:cabangs,id',
-            'tujuan' => 'required|exists:tujuans,id',
-            'nama' => 'required|array|min:1',
-            'nik' => 'required|array|min:1',
-            'departemen' => 'required|array|min:1',
-            'lama' => 'required|array|min:1',
-        ]);
-        $nama_cabang = Cabang::where('id', $request->cabang)->value('nama_cabang');
-        $tujuan = Tujuan::where('id', $request->tujuan)->value('tujuan_penugasan');
+    // public function store(Request $request)
+    // {
+    //     $request->validate([
+    //         'cabang' => 'required|exists:cabangs,id',
+    //         'ct' => 'required|array|min:1',
+    //         'tujuan' => 'required|exists:tujuans,id',
+    //         'tp' => 'required|array|min:1',
+    //         'nama' => 'required|array|min:1',
+    //         'nik' => 'required|array|min:1',
+    //         'departemen' => 'required|array|min:1',
+    //         'lama' => 'required|array|min:1',
+    //     ]);
+    //     $nama_cabang = Cabang::where('id', $request->cabang)->value('nama_cabang');
+    //     // $cabang_tujuan = Cabang_tujuan::where('id', $request->ct)->value('nama_cabang');
+    //     $tujuan = Tujuan::where('id', $request->tujuan)->value('tujuan_penugasan');
+    //     // $tujuan_penugasan = Cabang_tujuan::where('id', $request->tp)->value('tujuan_penugasan');
 
+
+    // $form = Form::create([
+    //     'cabang' => $nama_cabang,   
+    //     'tujuan' => $tujuan,
+    // ]);
+    // // $cabang_tujuan = Cabang_tujuan::create([
+    // //     'ct' => $cabang_tujuan,       
+    // //     'tp' => $tujuan_penugasan,    
+    // // ]);
+
+    //     foreach ($request->nama as $index => $nama) {
+    //         Nama_pegawai::create([
+    //             'nama' => $nama,
+    //             'nik' => $request->nik[$index],
+    //             'departemen' => $request->departemen[$index],
+    //             'lama' => $request->lama[$index],
+    //             'form_id' => $form->id,  
+    //         ]);
+            
+    //     }
+
+    //     return redirect()->route('formpst.show')->with('success', 'Data berhasil disimpan');
+    // }
+
+    public function store(Request $request)
+{
+    $request->validate([
+        'cabang' => 'required|exists:cabangs,id',
+        'tujuan' => 'required|exists:tujuans,id',
+        'nama' => 'required|array|min:1',
+        'nik' => 'required|array|min:1',
+        'departemen' => 'required|array|min:1',
+        'lama' => 'required|array|min:1',
+        // 'ct' => 'required|array|min:1',
+        // 'tp' => 'required|array|min:1',
+    ]);
+
+    $nama_cabang = Cabang::where('id', $request->cabang)->value('nama_cabang');
+    $tujuan = Tujuan::where('id', $request->tujuan)->value('tujuan_penugasan');
 
     $form = Form::create([
-        'cabang' => $nama_cabang,   
+        'cabang' => $nama_cabang,
         'tujuan' => $tujuan,
     ]);
 
-        foreach ($request->nama as $index => $nama) {
-            Nama_pegawai::create([
-                'nama' => $nama,
-                'nik' => $request->nik[$index],
-                'departemen' => $request->departemen[$index],
-                'lama' => $request->lama[$index],
-                'form_id' => $form->id,  
-            ]);
-            
-        }
-
-        return redirect()->route('formpst.show')->with('success', 'Data berhasil disimpan');
+    foreach ($request->nama as $index => $nama) {
+        Nama_pegawai::create([
+            'nama' => $nama,
+            'nik' => $request->nik[$index],
+            'departemen' => $request->departemen[$index],
+            'lama' => $request->lama[$index],
+            'ct' => $nama_cabang,
+            'tp' => $tujuan,
+            'form_id' => $form->id,
+        ]);
     }
+
+
+    return redirect()->route('formpst.show')->with('success', 'Data berhasil disimpan');
+}
+
+    
+
 
     // public function show()
     // {
@@ -151,6 +199,16 @@ class FormController extends Controller
 
     return view('formpst.list', compact('grouped_pegawais'));
     }
-
+    // public function list(Pengajuan $post)
+    // {
+    //     // Ambil hanya data pegawai yang terkait dengan form pengajuan tertentu
+    //     $nama_pegawais = Nama_pegawai::where('nama', $post->id)->get();
+    
+    //     // Group data pegawai berdasarkan 'form_id'
+    //     $grouped_pegawais = $nama_pegawais->groupBy('form_id');
+    
+    //     return view('formpst.list', compact('grouped_pegawais'));
+    // }
+    
 
     }
