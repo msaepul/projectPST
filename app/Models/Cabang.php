@@ -17,5 +17,10 @@ class cabang extends Model
     {
         return $this->hasMany(Nama_pegawai::class);
     }
+    public function tujuans()
+    {
+        return $this->hasMany(Cabang_tujuan::class);
+    }
 }
+
 
