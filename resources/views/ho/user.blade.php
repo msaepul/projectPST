@@ -66,10 +66,10 @@
                                                             <label>Role:</label>
                                                             <select class="form-control" name="role" required>
                                                                 <option value="Admin"
-                                                                    {{ $user->role == 'Admin' ? 'selected' : '' }}>Admin
+                                                                    {{ $user->role == 'Admin' ? 'selected' : '' }}>admin
                                                                 </option>
                                                                 <option value="User"
-                                                                    {{ $user->role == 'User' ? 'selected' : '' }}>User
+                                                                    {{ $user->role == 'User' ? 'selected' : '' }}>user
                                                                 </option>
                                                             </select>
                                                         </div> --}}
@@ -88,13 +88,10 @@
                                                             data-dismiss="modal">Tutup</button>
                                                         <button type="submit" class="btn btn-primary">Simpan
                                                             Perubahan</button>
-
                                                 </form>
                                             </div>
                                         </div>
                                     </div>
-
-
                                 </div>
                                 <!-- Button Hapus -->
                                 <form action="{{ route('profile.destroy', $user->id) }}" method="POST"
@@ -150,7 +147,6 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                         <button type="submit" class="btn btn-primary">Tambah</button>
-
                 </form>
             </div>
         </div>
