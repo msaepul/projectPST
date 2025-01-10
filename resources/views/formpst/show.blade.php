@@ -3,7 +3,7 @@
 @section('content')
     {{-- {{ Breadcrumbs::render('Show') }} --}}
 
-    <div class="card mb-4">
+    <div class="card mb-4" style="width: 1500px; height: 1000px; max-width: 100%; margin: 0 auto;">
         <div class="card-header">
             <i class="fas fa-list me-1"></i>
             Data Pengajuan
@@ -80,4 +80,5 @@
             </form>
         </div>
     </div>
+    
 @endsection

@@ -31,6 +31,9 @@
     <!-- Select2 CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/css/select2.min.css" rel="stylesheet">
 
+
+    <link href="https://unpkg.com/nice-forms.css/nice-forms.css" rel="stylesheet">
+
     <!-- Bootstrap CSS (one version only) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -94,164 +97,191 @@
                     class="brand-image img-circle elevation-3" style="opacity: .8">
                 <span class="brand-text font-weight-light">FormPST</span>
             </a>
-
+            {{-- 
             <div class="sidebar">
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
-                        <i class="fas fa-user-circle" style="font-size: 35px; color: #80bdc2;"></i>
-                <!-- Sidebar user panel (optional) -->
-                <div class="user-panel mt-3 pb-3 mb-3 d-flex align-items-center">
-                    <div class="image me-3">
-                        <div class="profile-initials"
-                            style="width: 35px; height: 35px; background-color: #80bdc2; color: white; font-size: 18px; display: flex; align-items: center; justify-content: center; border-radius: 50%; text-transform: uppercase;">
-                            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                            <!-- Menampilkan huruf pertama dari nama pengguna -->
-                        </div>
-                    </div>
-                    <div class="info">
-                        <a href="#" class="d-block"
-                            style="font-size: 16px; font-weight: bold; color: #ffffff;">{{ Auth::user()->name }}</a>
-                        <p class="status" style="font-size: 12px; color: #dcefff; margin-bottom: 5px;">
-                            {{ Auth::user()->email }}</p>
-                        <span class="badge badge-success" style="font-size: 12px;">Online</span>
+                        <i class="fas fa-user-circle" style="font-size: 35px; color: #80bdc2;"></i> --}}
+            <!-- Sidebar user panel (optional) -->
+            <div class="user-panel mt-3 pb-3 mb-3 d-flex align-items-center">
+                <div class="image me-3">
+                    <div class="profile-initials"
+                        style="width: 35px; height: 35px; background-color: #80bdc2; color: white; font-size: 18px; display: flex; align-items: center; justify-content: center; border-radius: 50%; text-transform: uppercase;">
+                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                        <!-- Menampilkan huruf pertama dari nama pengguna -->
                     </div>
                 </div>
-                
-                <style>
-                    /* Animasi efek muncul */
-                    .profile-initials {
-                        animation: fadeIn 0.5s ease-in-out;
-                    }
-
-                    @keyframes fadeIn {
-                        0% {
-                            opacity: 0;
-                        }
-
-                        100% {
-                            opacity: 1;
-                        }
-                    }
-                </style>
-
-                <!-- SidebarSearch Form -->
-                <div class="form-inline">
-                    <div class="input-group" data-widget="sidebar-search">
-                        <input class="form-control form-control-sidebar" type="search" placeholder="Search"
-                            aria-label="Search">
-                        <div class="input-group-append">
-                            <button class="btn btn-sidebar">
-                                <i class="fas fa-search fa-fw"></i>
-                            </button>
-                        </div>
-                    </div>
+                <div class="info">
+                    <a href="#" class="d-block"
+                        style="font-size: 16px; font-weight: bold; color: #ffffff;">{{ Auth::user()->name }}</a>
+                    <p class="status" style="font-size: 12px; color: #dcefff; margin-bottom: 5px;">
+                        {{ Auth::user()->email }}</p>
+                    <span class="badge badge-success" style="font-size: 12px;">Online</span>
                 </div>
-
-                <!-- Sidebar Menu -->
-                <nav class="mt-2">
-                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
-                        data-accordion="false">
-                        @if (auth()->user()->role === 'admin' || auth()->user()->role === 'user')
-                            <li class="nav-item menu-open">
-                                <a href="{{ route('formpst.form') }}"
-                                    class="nav-link {{ request()->is('formpst/form') ? 'active' : '' }}">
-                                    <i class="nav-icon fas fa-copy"></i>
-                                    <p>Form PST</p>
-                                </a>
-                            </li>
-                        @endif
-
-                        @if (auth()->user()->role === 'admin')
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <i class="nav-icon fas fa-building"></i>
-                                    <p>HO<i class="fas fa-angle-left right"></i></p>
-                                </a>
-                                <ul class="nav nav-treeview">
-                                    <li class="nav-item">
-                                        <a href="{{ route('ho.cabang') }}"
-                                            class="nav-link {{ request()->is('ho/cabang') ? 'active' : '' }}">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Cabang</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="{{ route('ho.tujuan') }}"
-                                            class="nav-link {{ request()->is('ho/tujuan') ? 'active' : '' }}">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Tujuan</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="{{ route('ho.departemen') }}"
-                                            class="nav-link {{ request()->is('ho/departemen') ? 'active' : '' }}">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Departemen</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="{{ route('formpst.show') }}"
-                                            class="nav-link {{ request()->is('formpst/show') ? 'active' : '' }}">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Draft Persetujuan</p>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <i class="fas fa-user nav-icon"></i>
-                                    <p>HRD<i class="fas fa-angle-left right"></i></p>
-                                </a>
-                                <ul class="nav nav-treeview">
-                                    <li class="nav-item">
-                                        <a href="{{ route('formpst.list') }}"
-                                            class="nav-link {{ request()->is('formpst/list') ? 'active' : '' }}">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>List yang disetujui</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="{{ route('ho.user') }}"
-                                            class="nav-link {{ request()->is('ho/user') ? 'active' : '' }}">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>User</p>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        @endif
-                    </ul>
-                </nav>
             </div>
-        </aside>
 
-        <!-- Content Wrapper -->
-        <div class="content-wrapper">
-            <div class="content-header">
-                <div class="container-fluid">
-                    <div class="row mb-2">
-                        <div class="col-sm-6"></div>
+            <style>
+                /* Animasi efek muncul */
+                .profile-initials {
+                    animation: fadeIn 0.5s ease-in-out;
+                }
+
+                @keyframes fadeIn {
+                    0% {
+                        opacity: 0;
+                    }
+
+                    100% {
+                        opacity: 1;
+                    }
+                }
+            </style>
+
+            <!-- SidebarSearch Form -->
+            <div class="form-inline">
+                <div class="input-group" data-widget="sidebar-search">
+                    <input class="form-control form-control-sidebar" type="search" placeholder="Search"
+                        aria-label="Search">
+                    <div class="input-group-append">
+                        <button class="btn btn-sidebar">
+                            <i class="fas fa-search fa-fw"></i>
+                        </button>
                     </div>
                 </div>
             </div>
 
-            @if (session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
-            @endif
+            <!-- Sidebar Menu -->
+            <nav class="mt-2">
+                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                    data-accordion="false">
 
-            <!-- Main content -->
-            <section class="content">
-                @yield('content')
-            </section>
+                    @if (auth()->user()->role === 'admin' || auth()->user()->role === 'user')
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-copy"></i>
+                                <p>Pelatihan<i class="fas fa-angle-left right"></i></p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{{ route('formpst.form') }}"
+                                        class="nav-link {{ request()->is('formpst/form') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Buat Permintaan</p>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a href="{{ route('formpst.list') }}"
+                                        class="nav-link {{ request()->is('formpst/list') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>List Keseluruhan</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    @endif
+
+                    @if (auth()->user()->role === 'admin')
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-building"></i>
+                                <p>HO<i class="fas fa-angle-left right"></i></p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{{ route('ho.cabang') }}"
+                                        class="nav-link {{ request()->is('ho/cabang') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Cabang</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('ho.tujuan') }}"
+                                        class="nav-link {{ request()->is('ho/tujuan') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Tujuan</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('ho.departemen') }}"
+                                        class="nav-link {{ request()->is('ho/departemen') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Departemen</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('formpst.show') }}"
+                                        class="nav-link {{ request()->is('formpst/show') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Draft Persetujuan</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-user nav-icon"></i>
+                                <p>HRD<i class="fas fa-angle-left right"></i></p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                
+                                <li class="nav-item">
+                                    <a href="{{ route('ho.user') }}"
+                                        class="nav-link {{ request()->is('ho/user') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>User</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-user nav-icon"></i>
+                                <p>BM<i class="fas fa-angle-left right"></i></p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{{ route('hrd.list_bm') }}"
+                                        class="nav-link {{ request()->is('hrd/list_bm') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>List yang disetujui</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    @endif
+                </ul>
+            </nav>
+    </div>
+    </aside>
+
+    <!-- Content Wrapper -->
+    <div class="content-wrapper">
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6"></div>
+                </div>
+            </div>
         </div>
 
-        <!-- Footer -->
-        <footer class="main-footer">
-            {{-- <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io"></a>.</strong> --}}
-        </footer>
+        @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        <!-- Main content -->
+        <section class="content">
+            @yield('content')
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        {{-- <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io"></a>.</strong> --}}
+    </footer>
     </div>
     <!-- jQuery -->
     <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
@@ -496,7 +526,6 @@
                 $('#tujuan').select2({
                     placeholder: "Pilih Tujuan",
                     allowClear: true,
-                    width: '100%'
                 });
             });
 
@@ -504,17 +533,18 @@
                 $('#cabang').select2({
                     placeholder: "Pilih cabang",
                     allowClear: true,
-                    width: '100%'
+                });
+
+            });
+            $(document).ready(function() {
+                $('#cabang_asal').select2({
+                    placeholder: "Pilih cabang",
+                    allowClear: true,
+                    width: 'auto'
                 });
             });
 
-            $(document).ready(function() {
-                $('#departemen').select2({
-                    placeholder: "Pilih departemen",
-                    allowClear: true,
-                    width: '100%'
-                });
-            });
+
         });
     </script>
 </body>

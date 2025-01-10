@@ -16,14 +16,25 @@ class FormController extends Controller
 {
     public function form()
     {
+        // Ambil data dari tabel terkait
         $cabangs = Cabang::all();
         $tujuans = Tujuan::all();
         $departemens = Departemen::all();
         $nama_pegawais = Nama_pegawai::all();
         $cabang_tujuans = Cabang_tujuan::all();
-
-        return view('formpst.form', compact('cabangs', 'tujuans', 'departemens', 'nama_pegawais', 'cabang_tujuans'));
+    
+        // Ambil nomor surat terakhir
+        $lastForm = Form::latest()->first();
+        $lastNumber = $lastForm ? intval(substr($lastForm->nomor_surat, -4)) : 0;
+    
+        // Buat nomor surat baru
+        $newNumber = str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
+        $nomorSurat = 'HRD/' . date('Y') . '/' . $newNumber;
+    
+        // Kirim data ke view
+        return view('formpst.form', compact('nomorSurat', 'cabangs', 'tujuans', 'departemens', 'nama_pegawais', 'cabang_tujuans'));
     }
+    
 
     // public function store(Request $request)
     // {
@@ -191,14 +202,18 @@ class FormController extends Controller
         return redirect()->route('formpst.show')->with('success', 'Data berhasil diperbarui!');
     }
 
-    public function list(Pengajuan $post)
-    {
-        $nama_pegawais = Nama_pegawai::all();
+    public function list()
+{
+    // Ambil semua data Nama_pegawai
+    $nama_pegawais = Nama_pegawai::select('form_id', 'ct', 'id')->get();
 
-        $grouped_pegawais = $nama_pegawais->groupBy('form_id');
+    // Kelompokkan data berdasarkan form_id
+    $grouped_pegawais = $nama_pegawais->groupBy('form_id');
 
+    // Kirim data ke view
     return view('formpst.list', compact('grouped_pegawais'));
-    }
+}
+
     // public function list(Pengajuan $post)
     // {
     //     // Ambil hanya data pegawai yang terkait dengan form pengajuan tertentu
@@ -209,6 +224,15 @@ class FormController extends Controller
     
     //     return view('formpst.list', compact('grouped_pegawais'));
     // }
-    
+    public function verify($id)
+{
+    // Lakukan logika verifikasi di sini, misalnya mengupdate status di database
+    $form = Form::findOrFail($id);
+    $form->status_verifikasi = 'submitted';
+    $form->save();
+
+    return redirect()->route('formpst.list')->with('success', 'Data berhasil diverifikasi!');
+}
+
 
     }
