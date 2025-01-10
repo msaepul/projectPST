@@ -11,6 +11,7 @@ class Form extends Model
     protected $fillable = [
         'cabang',
         'tujuan',
+        'status_verifikasi',
         ];
     public function Nama_pegawais()
     {

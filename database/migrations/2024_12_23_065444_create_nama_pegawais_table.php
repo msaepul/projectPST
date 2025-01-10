@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('lama');
             $table->string('ct');
             $table->string('tp');
+            $table->string('status_verifikasi');
             $table->timestamps();
 
             $table->foreign('form_id')->references('id')->on('forms')->onDelete('cascade');
