@@ -2,6 +2,9 @@
 
 @section('content')
     <div class="card mb-4">
+    {{-- {{ Breadcrumbs::render('Show') }} --}}
+
+    <div class="card mb-4" style="width: 1500px; height: 1000px; max-width: 100%; margin: 0 auto;">
         <div class="card-header">
             <i class="fas fa-list me-1"></i>
             Data Pengajuan
@@ -64,6 +67,17 @@
                                             class="btn btn-sm btn-primary mr-2">
                                             <img src="{{ asset('icons/create-outline.svg') }}" alt="Tambah"
                                                 style="width: 20px; height: 20px; margin-right: 4px"> Edit</a>
+
+                                            <img src="{{ asset('icons/create-outline.svg') }}" alt="Tambah" style="width: 20px; height: 20px; margin-right: 4px">
+                                            Edit
+                                        </a>
+                                        {{-- <form action="{{ route('formpst.destroy', $row['id']) }}" method="POST" style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus item ini?')">
+                                                <i class="fas fa-trash-alt"></i> Hapus
+                                            </button>
+                                        </form> --}}
                                     </div>
                                 </td>
                             </tr>
@@ -144,4 +158,5 @@
             }, 1000); // Simulasikan proses pengajuan
         });
     </script>
+    
 @endsection

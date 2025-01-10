@@ -11,6 +11,7 @@ class Form extends Model
     protected $fillable = [
         'cabang',
         'tujuan',
+        'status_verifikasi',
         ];
     public function Nama_pegawais()
     {
@@ -20,7 +21,7 @@ class Form extends Model
     {
         return $this->hasMany(Cabang_tujuan::class);
     }
-    public function pengajuan()
+    public function pengajuans()
     {
         return $this->hasMany(Pengajuan::class);
     }

@@ -13,6 +13,8 @@ class nama_pegawai extends Model
     'nik',
     'departemen',
     'lama',
+    'ct',
+    'tp',
     'form_id',
     ];
     public function form()
@@ -23,8 +25,6 @@ class nama_pegawai extends Model
     {
         return $this->belongsTo(Cabang::class); 
     }
-
-    // Relasi ke tabel tujuan
     public function tujuan()
     {
         return $this->belongsTo(Tujuan::class); 

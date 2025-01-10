@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('tujuan')->nullable(false);
             $table->string('cabang')->nullable(false);
+            $table->string('status_verifikasi')->nullable(false);
             $table->timestamps();
         });
     }
