@@ -40,7 +40,7 @@ class FormController extends Controller
 
 
     $form = Form::create([
-        'cabang' => $nama_cabang,   
+        'cabang' => $nama_cabang,
         'tujuan' => $tujuan,
     ]);
 
@@ -50,9 +50,9 @@ class FormController extends Controller
                 'nik' => $request->nik[$index],
                 'departemen' => $request->departemen[$index],
                 'lama' => $request->lama[$index],
-                'form_id' => $form->id,  
+                'form_id' => $form->id,
             ]);
-            
+
         }
 
         return redirect()->route('formpst.show')->with('success', 'Data berhasil disimpan');
@@ -61,14 +61,14 @@ class FormController extends Controller
     // public function show()
     // {
     //     $idsInPengajuan = Pengajuan::pluck('nama');
-        
+
     //     $nama_pegawais = Nama_pegawai::whereNotIn('nama', $idsInPengajuan)->get();
-        
+
     //     $forms = Form::whereNotIn('id', $idsInPengajuan)->get();
-        
+
     //     $data = $nama_pegawais->map(function ($pegawai, $index) use ($forms) {
-    //         $cabangTujuan = $forms->get($index); 
-            
+    //         $cabangTujuan = $forms->get($index);
+
     //         return [
     //             'id' => $pegawai->id,
     //             'form.id' => $pegawai->form_id,
@@ -101,8 +101,8 @@ class FormController extends Controller
             'nik' => $pegawai->nik,
             'departemen' => $pegawai->departemen,
             'lama' => $pegawai->lama,
-            'cabang' => $form->cabang ?? '-', 
-            'tujuan' => $form->tujuan ?? '-', 
+            'cabang' => $form->cabang ?? '-',
+            'tujuan' => $form->tujuan ?? '-',
         ];
     });
 
@@ -112,13 +112,13 @@ class FormController extends Controller
     public function edit($id)
     {
         $data = Nama_pegawai::find($id);
-    
+
         if (!$data) {
             return redirect()->route('formpst.show')->with('error', 'Data pegawai tidak ditemukan!');
         }
-    
+
         $departemens = Departemen::all();
-    
+
         return view('formpst.edit', compact('data', 'departemens'));
     }
 
@@ -145,12 +145,19 @@ class FormController extends Controller
 
     public function list(Pengajuan $post)
     {
+        // Ambil semua pegawai
         $nama_pegawais = Nama_pegawai::all();
 
+        // Ambil form berdasarkan form_id
+        $forms = Form::all()->keyBy('id'); // KeyBy agar memudahkan pencarian berdasarkan form_id
+
+        // Kelompokkan pegawai berdasarkan form_id
         $grouped_pegawais = $nama_pegawais->groupBy('form_id');
 
-    return view('formpst.list', compact('grouped_pegawais'));
+        // Kirim data forms ke tampilan
+        return view('formpst.list', compact('grouped_pegawais', 'forms'));
     }
+
 
 
     }

@@ -2,128 +2,206 @@
 @section('content')
     {{ Breadcrumbs::render('Form') }}
 
-    <div class="card mb-4">
-        <div class="card-header">
-            <i class="fas fa-copy me-1"></i>
-            FORM PENGAJUAN
-        </div>
-        <div class="card-body">
-            <form action="{{ route('formpst.store') }}" method="POST">
-                @csrf
-                <div class="form-group row">
-                    <div class="col-md-6">
-                        <label for="cabang">Cabang:</label>
-                        <select class="form-control searchable-dropdown" name="cabang" id="cabang" required>
-                            <option value="" disabled selected>Pilih Cabang</option>
-                            @foreach ($cabangs as $cabang)
-                                <option value="{{ $cabang->id }}">{{ $cabang->nama_cabang }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+    <div class="container" style="max-width: 950px;">
+        <h2>Form Pengajuan Surat Tugas</h2>
+        <form id="suratTugasForm" action="{{ route('formpst.store') }}" method="POST" enctype="multipart/form-data"
+            style="border: 1px solid #ccc; padding: 20px; border-radius: 5px; box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);">
+            @csrf
 
-                    <div class="col-md-6">
-                        <label for="tujuan">Tujuan:</label>
-                        <select class="form-control searchable-dropdown" name="tujuan" id="tujuan" required>
-                            <option value="" disabled selected>Pilih Tujuan</option>
-                            @foreach ($tujuans as $tujuan)
-                                <option value="{{ $tujuan->id }}">{{ $tujuan->tujuan_penugasan }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+            <div class="form-group row">
+                <label for="noSurat" class="col-md-3 col-form-label">No. Surat</label>
+                <div class="col-md-9">
+                    <input type="text" id="noSurat" name="noSurat" class="form-control" required>
                 </div>
+            </div>
 
-                <div style="border: 2px solid #ccc; padding: 20px; margin-top: 20px; border-radius: 5px;">
-                    <div id="dynamic-fields">
-                        <div class="form-group row">
-
-                            <div class="col-md-3">
-                                <label for="nama">Nama:</label>
-                                <input type="text" class="form-control" name="nama[]" required>
-                            </div>
-
-                            <div class="col-md-3">
-                                <label for="nik">NIK:</label>
-                                <input type="text" class="form-control" name="nik[]" required>
-                            </div>
-
-                            <div class="col-md-3">
-                                <label for="departemen">Departemen:</label>
-                                <select class="form-control searchable-dropdown" name="departemen[]" required>
-                                    <option value="" disabled selected>Pilih Departemen</option>
-                                    @foreach ($departemens as $departemen)
-                                        <option value="{{ $departemen->nama_departemen }}">
-                                            {{ $departemen->nama_departemen }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div class="col-md-3">
-                                <label for="lama">Lama:</label>
-                                <div class="d-flex align-items-center">
-                                    <input type="date" class="form-control" name="lama[]" required>
-                                    <button type="button" class="btn btn-danger btn-sm ml-2" onclick="removeField(this)">
-                                        <img src="{{ asset('icons/trash-outline.svg') }}" alt="Hapus"
-                                            style="width: 20px; height: 20px;">
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button type="button" class="btn btn-secondary mt-3" id="add-field">Tambah Nama</button>
+            <div class="form-group row">
+                <label for="namaPemohon" class="col-md-3 col-form-label">Nama Pemohon</label>
+                <div class="col-md-9">
+                    <input type="text" id="namaPemohon" name="namaPemohon" class="form-control" required>
                 </div>
+            </div>
 
-                <button type="submit" class="btn btn-primary mt-4">Submit</button>
-            </form>
-        </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="cabangAsal">Cabang Asal</label>
+                    <select class="form-control" name="cabang_asal" id="cabangAsal" required>
+                        <option value="" disabled selected>Pilih Cabang</option>
+                        @foreach ($cabangs as $cabang)
+                            <option value="{{ $cabang->id }}">{{ $cabang->nama_cabang }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="cabangTujuan">Cabang Tujuan</label>
+                    <select class="form-control" name="cabang_tujuan" id="cabangTujuan" required>
+                        <option value="" disabled selected>Pilih Cabang</option>
+                        @foreach ($cabangs as $cabang)
+                            <option value="{{ $cabang->id }}">{{ $cabang->nama_cabang }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="tujuanPenugasan">Tujuan Penugasan</label>
+                <select class="form-control" name="tujuan" id="tujuan" required>
+                    <option value="" disabled selected>Pilih Tujuan</option>
+                    @foreach ($tujuans as $tujuan)
+                        <option value="{{ $tujuan->id }}">{{ $tujuan->tujuan_penugasan }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="tanggalKeberangkatan">Tanggal Keberangkatan</label>
+                <input type="date" id="tanggalKeberangkatan" name="tanggalKeberangkatan" class="form-control" required>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    Daftar Pegawai yang Berangkat
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="pegawaiTable" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="col-nama">Nama</th>
+                                    <th class="col-departemen">Departemen</th>
+                                    <th class="col-nik">NIK</th>
+                                    <th class="col-file">Upload File</th>
+                                    <th class="col-lama">Lama Keberangkatan</th>
+                                    <th class="col-aksi">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr id="rowToClone">
+                                    <td><input type="text" name="namaPegawai[]" class="form-control" required></td>
+                                    <td>
+                                        <select class="form-control" name="departemen[]" required>
+                                            <option value="" disabled selected>Pilih Departemen</option>
+                                            @foreach ($departemens as $departemen)
+                                                <option value="{{ $departemen->nama_departemen }}">
+                                                    {{ $departemen->nama_departemen }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td><input type="number" name="nik[]" class="form-control" minlength="16"
+                                            maxlength="16" required></td>
+                                    <td><input type="file" name="uploadFile[]" class="form-control"></td>
+                                    <td><input type="date" name="lamaKeberangkatan[]" class="form-control" required></td>
+                                    <td style="text-align: center; vertical-align: middle;">
+                                        <button type="button" class="btn btn-danger btn-sm remove-item"
+                                            style="margin: 2px; padding: 0.25rem 0.5rem;">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <button type="button" class="btn btn-primary mt-3" id="add-field">Tambah Pegawai</button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-success mt-4">Submit Form</button>
+            <button type="reset" class="btn btn-secondary mt-4">Reset Form</button>
+        </form>
     </div>
+
+    <style>
+        /* Styles tetap sama */
+        .card {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 20px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            font-weight: bold;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: -5px;
+            margin-left: -5px;
+        }
+
+        .form-row>[class*="col-"] {
+            padding-right: 5px;
+            padding-left: 5px;
+        }
+
+        .form-group.row {
+            margin-bottom: 1rem;
+        }
+
+        .col-form-label {
+            padding-top: calc(.375rem + 1px);
+            padding-bottom: calc(.375rem + 1px);
+            margin-bottom: 0;
+            font-size: inherit;
+            line-height: 1.5;
+        }
+
+        .col-nama {
+            width: 22%;
+        }
+
+        .col-departemen {
+            width: 20%;
+        }
+
+        .col-nik {
+            width: 30%;
+        }
+
+        .col-file {
+            width: 25%;
+        }
+
+        .col-lama {
+            width: 15%;
+        }
+
+        .col-aksi {
+            width: 4%;
+            text-align: center;
+        }
+    </style>
 
     <script>
         document.getElementById('add-field').addEventListener('click', function() {
-            const newField = `
-                <div class="form-group row mt-3">
-                    <div class="col-md-3">
-                        <label for="nama">Nama:</label>
-                        <input type="text" class="form-control" name="nama[]" required>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="nik">NIK:</label>
-                        <input type="text" class="form-control" name="nik[]" required>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="departemen">Departemen:</label>
-                        <select class="form-control searchable-dropdown" name="departemen[]" required>
-                            <option value="" disabled selected>Pilih Departemen</option>
-                            @foreach ($departemens as $departemen)
-                                <option value="{{ $departemen->nama_departemen }}">{{ $departemen->nama_departemen }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                                <label for="lama">Lama:</label>
-                                <div class="d-flex align-items-center">
-                                    <input type="date" class="form-control" name="lama[]" required>
-                                    <button type="button" class="btn btn-danger btn-sm ml-2" onclick="removeField(this)">
-                                        <img src="{{ asset('icons/trash-outline.svg') }}" alt="Hapus"
-                                            style="width: 20px; height: 20px;">
-                                    </button>
-                                </div>
-                    </div>        
-                </div>
-            `;
-            document.getElementById('dynamic-fields').insertAdjacentHTML('beforeend', newField);
-        });
+            let rowToClone = document.getElementById('rowToClone');
+            if (rowToClone) {
+                let newRow = rowToClone.cloneNode(true);
+                newRow.removeAttribute('id');
 
-        document.getElementById('delete-field').addEventListener('click', function() {
-            const dynamicFieldsContainer = document.getElementById('dynamic-fields');
-            if (dynamicFieldsContainer.children.length > 0) {
-                dynamicFieldsContainer.removeChild(dynamicFieldsContainer.children[0]);
+                let inputs = newRow.querySelectorAll('input, select');
+                inputs.forEach(input => {
+                    input.value = '';
+                });
+                document.querySelector('#pegawaiTable tbody').appendChild(newRow);
+            } else {
+                console.error("Elemen dengan ID 'rowToClone' tidak ditemukan.");
             }
         });
 
-        function removeField(button) {
-            // Menghapus elemen parent dari tombol hapus
-            button.closest('.form-group').remove();
-        }
+        document.querySelector('#pegawaiTable').addEventListener('click', function(event) {
+            if (event.target.classList.contains('remove-item')) {
+                event.target.closest('tr').remove();
+            }
+        });
     </script>
 @endsection

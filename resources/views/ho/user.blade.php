@@ -17,6 +17,10 @@
                         <th>No</th>
                         <th>Nama</th>
                         <th>Email</th>
+                        <th>NIK</th>
+                        <th>Departemen</th>
+                        <th>Cabang Asal</th>
+                        <th>No HP</th>
                         <th>Role</th>
                         <th style="width: 120px;">Action</th>
                     </tr>
@@ -27,6 +31,10 @@
                             <td style="padding: 8px;">{{ $key + 1 }}</td>
                             <td style="padding: 8px;">{{ $user->name }}</td>
                             <td style="padding: 8px;">{{ $user->email }}</td>
+                            <td style="padding: 8px;">{{ $user->nik }}</td>
+                            <td style="padding: 8px;">{{ $user->departemen }}</td>
+                            <td style="padding: 8px;">{{ $user->cabang_asal }}</td>
+                            <td style="padding: 8px;">{{ $user->no_hp }}</td>
                             <td style="padding: 8px;">{{ $user->role }}</td>
                             <td style="padding: 8px;">
                                 <div class="d-flex" style="gap: 8px;">
@@ -38,8 +46,9 @@
                                     </button>
 
                                     <!-- Modal Edit User -->
-                                    <div class="modal fade" id="editModal-{{ $user->id }}" tabindex="-1" role="dialog"
-                                        aria-labelledby="editModalLabel-{{ $user->id }}" aria-hidden="true">
+                                    <div class="modal fade" id="editModal-{{ $user->id }}" tabindex="-1"
+                                        role="dialog" aria-labelledby="editModalLabel-{{ $user->id }}"
+                                        aria-hidden="true">
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <form action="{{ route('profile.update', $user->id) }}" method="POST">
@@ -61,6 +70,28 @@
                                                             <label>Email:</label>
                                                             <input type="email" class="form-control" name="email"
                                                                 value="{{ old('email', $user->email) }}" required>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>NIK:</label>
+                                                            <input type="text" class="form-control" name="nik"
+                                                                value="{{ old('nik', $user->nik) }}" required>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Departemen:</label>
+                                                            <input type="text" class="form-control" name="departemen"
+                                                                value="{{ old('departemen', $user->departemen) }}"
+                                                                required>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Cabang Asal:</label>
+                                                            <input type="text" class="form-control" name="cabang_asal"
+                                                                value="{{ old('cabang_asal', $user->cabang_asal) }}"
+                                                                required>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>No HP:</label>
+                                                            <input type="text" class="form-control" name="no_hp"
+                                                                value="{{ old('no_hp', $user->no_hp) }}" required>
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Role:</label>
@@ -127,6 +158,22 @@
                         <div class="form-group">
                             <label>Password:</label>
                             <input type="password" class="form-control" name="password" required>
+                        </div>
+                        <div class="form-group">
+                            <label>NIK:</label>
+                            <input type="text" class="form-control" name="nik" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Departemen:</label>
+                            <input type="text" class="form-control" name="departemen" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Cabang Asal:</label>
+                            <input type="text" class="form-control" name="cabang_asal" required>
+                        </div>
+                        <div class="form-group">
+                            <label>No HP:</label>
+                            <input type="text" class="form-control" name="no_hp" required>
                         </div>
                         <div class="form-group">
                             <label>Role:</label>
