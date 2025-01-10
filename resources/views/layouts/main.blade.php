@@ -97,11 +97,6 @@
                     class="brand-image img-circle elevation-3" style="opacity: .8">
                 <span class="brand-text font-weight-light">FormPST</span>
             </a>
-            {{-- 
-            <div class="sidebar">
-                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                    <div class="image">
-                        <i class="fas fa-user-circle" style="font-size: 35px; color: #80bdc2;"></i> --}}
             <!-- Sidebar user panel (optional) -->
             <div class="user-panel mt-3 pb-3 mb-3 d-flex align-items-center">
                 <div class="image me-3">
