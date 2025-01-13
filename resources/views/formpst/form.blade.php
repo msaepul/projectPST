@@ -25,22 +25,22 @@
                 <div class="form-group row">
                     <label for="noSurat" class="col-md-3 col-form-label">No. Surat</label>
                     <div class="col-md-9">
-                        <input type="text" class="form-control form-control-sm d-inline-block" name="nomor_surat" id="nomor_surat"
-                        value="{{ $nomorSurat }}" readonly style="width: 110px;">
+                        <input type="text" class="form-control form-control-sm d-inline-block" name="no_surat" id="no_surat"
+                        value="{{ $nomorSurat }}" readonly style="width: 110px;" required>
                     </div>
                 </div>
 
                 <div class="form-group row">
                     <label for="namaPemohon" class="col-md-3 col-form-label">Nama Pemohon</label>
                     <div class="col-md-9">
-                        <input type="text" id="namaPemohon" name="namaPemohon" class="form-control" >
+                        <input type="text" id="namaPemohon" name="namaPemohon" class="form-control" required>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="cabangAsal">Cabang Asal</label>
-                        <select class="form-control" name="cabang_asal" id="cabangAsal" >
+                        <select class="form-control" name="cabang_asal" id="cabangAsal" required>
                             <option value="" disabled selected>Pilih Cabang</option>
                             @foreach ($cabangs as $cabang)
                                 <option value="{{ $cabang->id }}">{{ $cabang->nama_cabang }}</option>
@@ -49,7 +49,7 @@
                     </div>
                     <div class="form-group col-md-6">
                         <label for="cabangTujuan">Cabang Tujuan</label>
-                        <select class="form-control" name="cabang_tujuan" id="cabangTujuan" >
+                        <select class="form-control" name="cabang_tujuan" id="cabangTujuan" required>
                             <option value="" disabled selected>Pilih Cabang</option>
                             @foreach ($cabangs as $cabang)
                                 <option value="{{ $cabang->id }}">{{ $cabang->nama_cabang }}</option>
@@ -109,7 +109,7 @@
                     
                 <div class="form-group">
                     <label for="tujuanPenugasan">Tujuan Penugasan</label>
-                    <select class="form-control" name="tujuan" id="tujuan" >
+                    <select class="form-control" name="tujuan" id="tujuan" required>
                         <option value="" disabled selected>Pilih Tujuan</option>
                         @foreach ($tujuans as $tujuan)
                             <option value="{{ $tujuan->id }}">{{ $tujuan->tujuan_penugasan }}</option>
@@ -119,7 +119,7 @@
 
                 <div class="form-group">
                     <label for="tanggalKeberangkatan">Tanggal Keberangkatan</label>
-                    <input type="date" id="tanggalKeberangkatan" name="tanggalKeberangkatan" class="form-control" >
+                    <input type="date" id="tanggalKeberangkatan" name="tanggalKeberangkatan" class="form-control" required>
                 </div>
 
                 <div class="card" style="margin-top: 20px; border: 1px solid #ccc; border-radius: 5px;">

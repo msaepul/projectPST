@@ -9,9 +9,16 @@ class Form extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'cabang',
+        'no_surat',
+        'nama_pemohon',
+        'cabang_asal',
+        'cabang_tujuan',
         'tujuan',
-        'status_verifikasi',
+        'tanggal_keberangkatan',
+        'acc_bm',
+        'acc_hrd',
+        'acc_nm',
+        'acc_cabang',
         ];
     public function Nama_pegawais()
     {
@@ -25,4 +32,5 @@ class Form extends Model
     {
         return $this->hasMany(Pengajuan::class);
     }
+    
 }

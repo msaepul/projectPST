@@ -1,162 +1,192 @@
 @extends('layouts.main')
 
 @section('content')
-    <div class="card mb-4">
-    {{-- {{ Breadcrumbs::render('Show') }} --}}
+    <div class="container pt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="card mb-4 mt-3">
+                    <div class="card-header bg-primary text-white py-2">
+                        <h4 class="mb-0">Form Persetujuan BM</h4>
+                    </div>
+                    <div class="card-body">
+                        <!-- Menampilkan informasi form -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="d-flex">
+                                    <label class="form-label fw-bold me-2" style="width: 150px;">Nomor Surat:</label>
+                                    <span>{{ $form->no_surat }}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex">
+                                    <label class="form-label fw-bold me-2" style="width: 150px;">Cabang Asal:</label>
+                                    <span>{{ $form->cabang_asal }}</span>
+                                </div>
+                            </div>
+                        </div>
 
-    <div class="card mb-4" style="width: 1500px; height: 1000px; max-width: 100%; margin: 0 auto;">
-        <div class="card-header">
-            <i class="fas fa-list me-1"></i>
-            Data Pengajuan
-        </div>
-        <div class="card-body">
-            <form action="{{ route('pengajuans.store') }}" method="POST" id="formPengajuan">
-                @csrf
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Pilih</th>
-                            <th>Nama</th>
-                            <th>NIK</th>
-                            <th>Departemen</th>
-                            <th>Lama</th>
-                            <th>Cabang</th>
-                            <th>Tujuan</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($data as $index => $row)
-                            <tr>
-                                <td>
-                                    <input type="checkbox" name="selected[{{ $index }}]" value="{{ $row['id'] }}">
-                                </td>
-                                <td>
-                                    {{ $row['nama'] }}
-                                    <input type="hidden" name="pengajuans[{{ $index }}][nama]"
-                                        value="{{ $row['nama'] }}">
-                                </td>
-                                <td>
-                                    {{ $row['nik'] }}
-                                    <input type="hidden" name="pengajuans[{{ $index }}][nik]"
-                                        value="{{ $row['nik'] }}">
-                                </td>
-                                <td>
-                                    {{ $row['departemen'] }}
-                                    <input type="hidden" name="pengajuans[{{ $index }}][departemen]"
-                                        value="{{ $row['departemen'] }}">
-                                </td>
-                                <td>
-                                    {{ $row['lama'] }}
-                                    <input type="hidden" name="pengajuans[{{ $index }}][lama]"
-                                        value="{{ $row['lama'] }}">
-                                </td>
-                                <td>
-                                    {{ $row['cabang'] }}
-                                    <input type="hidden" name="pengajuans[{{ $index }}][cabang]"
-                                        value="{{ $row['cabang'] }}">
-                                </td>
-                                <td>
-                                    {{ $row['tujuan'] }}
-                                    <input type="hidden" name="pengajuans[{{ $index }}][tujuan]"
-                                        value="{{ $row['tujuan'] }}">
-                                </td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <a href="{{ route('formpst.edit', $row['id']) }}"
-                                            class="btn btn-sm btn-primary mr-2">
-                                            <img src="{{ asset('icons/create-outline.svg') }}" alt="Tambah"
-                                                style="width: 20px; height: 20px; margin-right: 4px"> Edit</a>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="d-flex">
+                                    <label class="form-label fw-bold me-2" style="width: 150px;">Cabang Tujuan:</label>
+                                    <span>{{ $form->cabang_tujuan }}</span>
+                                </div>
+                            </div>
+                        </div>
 
-                                            <img src="{{ asset('icons/create-outline.svg') }}" alt="Tambah" style="width: 20px; height: 20px; margin-right: 4px">
-                                            Edit
-                                        </a>
-                                        {{-- <form action="{{ route('formpst.destroy', $row['id']) }}" method="POST" style="display:inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus item ini?')">
-                                                <i class="fas fa-trash-alt"></i> Hapus
-                                            </button>
-                                        </form> --}}
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-                <button type="submit" class="btn btn-danger" id="submitPengajuan">
-                    Submit Pengajuan
-                </button>
-            </form>
-        </div>
-    </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="d-flex">
+                                    <label class="form-label fw-bold me-2" style="width: 150px;">Tanggal Keberangkatan:</label>
+                                    <span>{{ $form->tanggal_keberangkatan }}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex">
+                                    <label class="form-label fw-bold me-2" style="width: 150px;">Tujuan Penugasan:</label>
+                                    <span>{{ $form->tujuan }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-    <!-- Modal untuk menampilkan status -->
-    <div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="statusModalLabel">Status Pengajuan</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" id="statusMessage">
-                    <!-- Pesan akan ditampilkan di sini -->
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <div class="package-container">
+                        <div class="item-table">
+                            <table class="table table-bordered">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Nama</th>
+                                        <th>NIK</th>
+                                        <th>Departemen</th>
+                                        <th>Lama Keberangkatan</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse ($data as $item)
+                                        <tr>
+                                            <td>{{ $item->nama_pegawai }}</td>
+                                            <td>{{ $item->nik }}</td>
+                                            <td>{{ $item->departemen }}</td>
+                                            <td>{{ $item->lama_keberangkatan }}</td>
+                                            <td class="text-center">
+                                                <button class="btn btn-success btn-sm">Setuju</button>
+                                                <button class="btn btn-danger btn-sm">Tolak</button>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="5" class="text-center">Tidak ada data untuk Form ID: {{ $targetFormId }}.</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Tombol Simpan -->
+                    <div class="d-flex justify-content-end mt-4">
+                        <button type="button" class="btn btn-primary" id="saveButton">
+                            Simpan Persetujuan
+                        </button>
+                    </div>
+
+                    <!-- 4 Kolom Stempel "APPROVED" -->
+                    <div class="stamps-container row mt-4">
+                        <div class="col-md-3">
+                            <div class="stamp" id="stamp1" style="display: none;">APPROVED</div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stamp" id="stamp2" style="display: none;">APPROVED</div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stamp" id="stamp3" style="display: none;">APPROVED</div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stamp" id="stamp4" style="display: none;">APPROVED</div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
 
     <style>
-        /* Animasi untuk ceklis yang berputar */
-        .spin-icon {
-            animation: spin 1s linear infinite;
-            font-size: 30px;
-            color: green;
+        .form-control-plaintext {
+            border: none;
+            padding: 0.5rem;
+            display: inline;
         }
 
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
+        .package-container {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        }
 
-            100% {
-                transform: rotate(360deg);
-            }
+        .item-table table {
+            width: 100%;
+            margin-bottom: 0;
+        }
+
+        .item-table th,
+        .item-table td {
+            padding: 10px;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        .item-table th {
+            background-color: #f8f9fa;
+        }
+
+        td.text-center {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        /* Styling for Stamps */
+        .stamp {
+            font-size: 24px;
+            font-weight: bold;
+            color: green;
+            border: 3px solid green;
+            padding: 10px;
+            width: 150px;
+            margin: 10px auto;
+            border-radius: 10px;
+            background-color: white;
+            text-align: center;
+            display: none;
+        }
+
+        .stamps-container {
+            display: flex;
+            justify-content: space-between;
         }
     </style>
 
     <script>
-        document.getElementById('formPengajuan').addEventListener('submit', function(e) {
-            e.preventDefault(); // Mencegah reload halaman
+        // Inisialisasi variabel untuk mengatur urutan stempel
+        var stampIndex = 0;
 
-            var button = document.getElementById('submitPengajuan');
-            button.disabled = true;
-            button.innerHTML = 'Mengajukan...';
-            button.classList.remove('btn-danger');
-            button.classList.add('btn-success');
-            button.innerHTML = 'Pengajuan Berhasil <i class="fas fa-check"></i>';
+        // Menampilkan stempel "APPROVED" satu per satu saat tombol "Simpan Persetujuan" ditekan
+        document.getElementById("saveButton").addEventListener("click", function() {
+            // Mengambil semua stempel
+            var stamps = document.querySelectorAll(".stamp");
 
-            var form = this;
-
-            // Menampilkan modal dengan animasi ceklis yang berputar
-            setTimeout(function() {
-                var statusMessage = document.getElementById('statusMessage');
-                statusMessage.innerHTML =
-                    '<div class="text-center"><i class="fas fa-check-circle spin-icon"></i><br>Pengajuan berhasil dikirim!</div>';
-                document.getElementById('statusModal').classList.add('show');
-                document.getElementById('statusModal').style.display = 'block';
-
-                // Setelah 2 detik, form dikirim dan modal ditutup
-                setTimeout(function() {
-                    // Menutup modal otomatis setelah 2 detik
-                    $('#statusModal').modal('hide');
-                    form.submit();
-                }, 2000); // Modal menutup setelah 2 detik
-            }, 1000); // Simulasikan proses pengajuan
+            // Mengecek jika ada stempel yang belum ditampilkan
+            if (stampIndex < stamps.length) {
+                // Menampilkan stempel sesuai urutan
+                stamps[stampIndex].style.display = "block";
+                // Meningkatkan indeks untuk menampilkan stempel berikutnya pada klik berikutnya
+                stampIndex++;
+            }
         });
     </script>
-    
+
 @endsection

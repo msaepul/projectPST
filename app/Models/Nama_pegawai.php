@@ -9,13 +9,12 @@ class nama_pegawai extends Model
 {
     use HasFactory;
     protected $fillable = [
-    'nama',
-    'nik',
-    'departemen',
-    'lama',
-    'ct',
-    'tp',
-    'form_id',
+        'form_id',
+        'nama_pegawai',
+        'departemen',
+        'nik',
+        'upload_file',
+        'lama_keberangkatan',       
     ];
     public function form()
     {
