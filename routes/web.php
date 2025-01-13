@@ -85,9 +85,9 @@ Route::middleware('auth')->group(function () {
     Route::get('formpst/edit/{id}', [FormController::class, 'edit'])->name('formpst.edit');
     Route::put('/formpst/update/{id}', [FormController::class, 'update'])->middleware('role:admin, user')->name('formpst.update');
     Route::delete('/formpst/delete/{id}', [FormController::class, 'destroy'])->middleware('role:admin')->name('formpst.destroy');
-    
     //pengajuan routes
     Route::post('/pengajuans/store', [PengajuanController::class, 'store'])->middleware('role:admin, user')->name('pengajuans.store');
+
     Route::delete('/pengajuans/delete/{id}', [FormController::class, 'destroy'])->middleware('role:admin, user')->name('pengajuans.destroy');
 
     

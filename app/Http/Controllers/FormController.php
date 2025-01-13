@@ -102,6 +102,8 @@ public function index(Request $request)
 
     if ($request->filled('tujuan')) {
         $query->where('tujuan', $request->tujuan); 
+
+   
     }
 
     $data = $query->get();
@@ -124,19 +126,16 @@ public function show($id)
 }
 
 
-
-
-
     public function edit($id)
     {
         $data = Nama_pegawai::find($id);
-    
+
         if (!$data) {
             return redirect()->route('formpst.show')->with('error', 'Data pegawai tidak ditemukan!');
         }
-    
+
         $departemens = Departemen::all();
-    
+
         return view('formpst.edit', compact('data', 'departemens'));
     }
 
@@ -161,6 +160,22 @@ public function show($id)
         return redirect()->route('formpst.show')->with('success', 'Data berhasil diperbarui!');
     }
 
+
+    public function list(Pengajuan $post)
+    {
+        // Ambil semua pegawai
+        $nama_pegawais = Nama_pegawai::all();
+
+        // Ambil form berdasarkan form_id
+        $forms = Form::all()->keyBy('id'); // KeyBy agar memudahkan pencarian berdasarkan form_id
+
+        // Kelompokkan pegawai berdasarkan form_id
+        $grouped_pegawais = $nama_pegawais->groupBy('form_id');
+
+        // Kirim data forms ke tampilan
+        return view('formpst.list', compact('grouped_pegawais', 'forms'));
+    }
+
     public function list()
 {
     $nama_pegawais = Nama_pegawai::select('form_id', 'ct', 'id')->get();
@@ -178,6 +193,7 @@ public function show($id)
 
     return redirect()->route('formpst.list')->with('success', 'Data berhasil diverifikasi!');
 }
+
 
 
     }
