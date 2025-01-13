@@ -11,11 +11,30 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Schema::create('forms', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->string('tujuan_penugasan')->nullable(false);
+        //     $table->string('cabang_tujuan')->nullable(false);
+        //     $table->string('cabang_asal')->nullable(false);
+        //     $table->string('no_surat')->nullable(false);
+        //     $table->string('pembuat')->nullable(false);
+        //     $table->string('berangkat')->nullable(false);
+        //     $table->string('status_verifikasi')->nullable(false);
+        //     $table->timestamps();
+        // });
+
         Schema::create('forms', function (Blueprint $table) {
             $table->id();
-            $table->string('tujuan')->nullable(false);
-            $table->string('cabang')->nullable(false);
-            $table->string('status_verifikasi')->nullable(false);
+            $table->string('no_surat')->unique();
+            $table->string('nama_pemohon');
+            $table->string('cabang_asal');
+            $table->string('cabang_tujuan');
+            $table->string('tujuan');
+            $table->string('acc_bm');
+            $table->string('acc_hrd');
+            $table->string('acc_nm');
+            $table->string('acc_cabang');
+            $table->date('tanggal_keberangkatan');
             $table->timestamps();
         });
     }

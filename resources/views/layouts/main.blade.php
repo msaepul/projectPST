@@ -166,8 +166,8 @@
                                 </li>
 
                                 <li class="nav-item">
-                                    <a href="{{ route('formpst.list') }}"
-                                        class="nav-link {{ request()->is('formpst/list') ? 'active' : '' }}">
+                                    <a href="{{ route('formpst.index') }}"
+                                        class="nav-link {{ request()->is('formpst/index') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>List Keseluruhan</p>
                                     </a>
@@ -205,12 +205,20 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ route('formpst.show') }}"
-                                        class="nav-link {{ request()->is('formpst/show') ? 'active' : '' }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Draft Persetujuan</p>
-                                    </a>
+                                    @if(isset($form) && !empty($form->id))
+                                        <a href="{{ route('formpst.show', ['id' => $form->id]) }}"
+                                            class="nav-link {{ request()->routeIs('formpst.show') ? 'active' : '' }}">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Draft Persetujuan</p>
+                                        </a>
+                                    @else
+                                        <a href="#" class="nav-link disabled">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Draft Persetujuan</p>
+                                        </a>
+                                    @endif
                                 </li>
+                                
                             </ul>
                         </li>
                         <li class="nav-item">

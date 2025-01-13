@@ -13,16 +13,15 @@ return new class extends Migration
     {
         Schema::create('nama_pegawais', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('form_id');
-            $table->string('nama')->unique(); 
-            $table->string('nik');
+            $table->unsignedBigInteger('form_id'); // Foreign key ke tabel forms
+            $table->string('nama_pegawai');
             $table->string('departemen');
-            $table->string('lama');
-            $table->string('ct');
-            $table->string('tp');
-            $table->string('status_verifikasi');
+            $table->string('nik');
+            $table->string('upload_file')->nullable(); // File yang diupload
+            $table->date('lama_keberangkatan');
             $table->timestamps();
-
+    
+            // Definisi foreign key
             $table->foreign('form_id')->references('id')->on('forms')->onDelete('cascade');
 
         });
