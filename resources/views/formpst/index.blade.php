@@ -37,7 +37,7 @@
                             <th>Cabang Tujuan</th>
                             <th>Tujuan Pelatihan</th>
                             <th>Status</th>
-                            <th>Action</th> <!-- Kolom Action untuk tombol verifikasi -->
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -48,22 +48,15 @@
                                 <td>{{ $item->cabang_asal }}</td>
                                 <td>{{ $item->cabang_tujuan }}</td>
                                 <td>{{ $item->tujuan }}</td>
-                                <td>                                  
+                                <td>
                                     <button id="verify-button-{{ $item->id }}" class="not-verified" onclick="toggleVerifikasi({{ $item->id }})">
                                         Belum Diverifikasi
                                     </button>
                                 </td>
-                                <td> 
-                                    @if(isset($form) && !empty($form->id))
-                                        <a href="{{ route('formpst.show', ['id' => $form->id]) }}"
-                                            class="btn btn-primary btn-sm {{ request()->routeIs('formpst.show') ? 'active' : '' }}">
-                                            Lihat Detail
-                                        </a>
-                                    @else
-                                        <a href="#" class="btn btn-primary btn-sm disabled">
-                                            Lihat Detail
-                                        </a>
-                                    @endif
+                                <td>
+                                    <a href="{{ route('formpst.show', ['id' => $item->id]) }}" class="btn btn-primary btn-sm">
+                                        Lihat Detail
+                                    </a>
                                 </td>
                             </tr>
                         @empty

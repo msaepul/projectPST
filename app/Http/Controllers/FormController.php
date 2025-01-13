@@ -10,10 +10,10 @@ use App\Models\Tujuan;
 use App\Models\Departemen;
 use App\Models\Pengajuan;
 use App\Models\Form;
+// use Illuminate\Support\Facades\DB;
 
 class FormController extends Controller
 {
-    // Menampilkan Form Input
     public function form()
     {
         $cabangs = Cabang::all();
@@ -21,100 +21,128 @@ class FormController extends Controller
         $departemens = Departemen::all();
         $nama_pegawais = Nama_pegawai::all();
         $cabang_tujuans = Cabang_tujuan::all();
-
+    
         $lastForm = Form::latest()->first();
         $lastNumber = $lastForm ? intval(substr($lastForm->no_surat, -4)) : 0;
-
+    
         $newNumber = str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
         $nomorSurat = 'HRD/' . date('Y') . '/' . $newNumber;
-
+    
         return view('formpst.form', compact('nomorSurat', 'cabangs', 'tujuans', 'departemens', 'nama_pegawais', 'cabang_tujuans'));
     }
+    
 
-    // Menyimpan Data Form
-    public function store(Request $request)
-    {
-        $validatedData = $request->validate([
-            'no_surat' => 'required|string|max:255',
-            'namaPemohon' => 'required|string|max:255',
-            'cabang_asal' => 'required|exists:cabangs,id',
-            'cabang_tujuan' => 'required|exists:cabangs,id',
-            'tujuan' => 'required|exists:tujuans,id',
-            'tanggalKeberangkatan' => 'required|date',
-            'namaPegawai.*' => 'required|string|max:255',
-            'departemen.*' => 'required|string|max:255',
-            'nik.*' => 'required|string|max:255',
-            'uploadFile.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'lamaKeberangkatan.*' => 'required|date',
-        ]);
-
-        $form = Form::create([
-            'no_surat' => $validatedData['no_surat'],
-            'nama_pemohon' => $validatedData['namaPemohon'],
-            'cabang_asal' => Cabang::findOrFail($validatedData['cabang_asal'])->nama_cabang,
-            'cabang_tujuan' => Cabang::findOrFail($validatedData['cabang_tujuan'])->nama_cabang,
-            'tujuan' => Tujuan::findOrFail($validatedData['tujuan'])->tujuan_penugasan,
-            'tanggal_keberangkatan' => $validatedData['tanggalKeberangkatan'],
-        ]);
-
-        foreach ($request->namaPegawai as $index => $namaPegawai) {
-            $uploadFilePath = null;
-            if ($request->hasFile("uploadFile.$index")) {
-                $uploadFilePath = $request->file("uploadFile.$index")->store('uploads', 'public');
-            }
-
-            Nama_pegawai::create([
-                'form_id' => $form->id,
-                'nama_pegawai' => $namaPegawai,
-                'departemen' => $request->departemen[$index],
-                'nik' => $request->nik[$index],
-                'upload_file' => $uploadFilePath,
-                'lama_keberangkatan' => $request->lamaKeberangkatan[$index],
-            ]);
-        }
-
-        return redirect()->route('formpst.index')->with('success', 'Data berhasil disimpan.');
-    }
-
-    // Menampilkan Data Form
-    public function index(Request $request)
-    {
-        $query = Form::query();
-
-        if ($request->filled('namaPemohon')) {
-            $query->where('nama_pemohon', 'like', '%' . $request->namaPemohon . '%');
-        }
-
-        if ($request->filled('tujuan')) {
-            $query->where('tujuan', $request->tujuan);
-        }
-
-        $data = $query->get();
-        $tujuans = Tujuan::all();
-
-        return view('formpst.index', compact('data', 'tujuans'));
-    }
-
-    public function show($id)
+public function store(Request $request)
 {
-    $form = Form::findOrFail($id); // Ambil data form berdasarkan ID
-    return view('formpst.show', compact('form'));
+    $validatedData = $request->validate([
+        'no_surat' => 'required|string|max:255',
+        'namaPemohon' => 'required|string|max:255',
+        'cabang_asal' => 'required|exists:cabangs,id',
+        'cabang_tujuan' => 'required|exists:cabangs,id',
+        'tujuan' => 'required|exists:tujuans,id',
+        'tanggalKeberangkatan' => 'required|date',
+
+        'namaPegawai.*' => 'required|string|max:255',
+        'departemen.*' => 'required|string|max:255',
+        'nik.*' => 'required|string|max:255',
+        'uploadFile.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+        'lamaKeberangkatan.*' => 'required|date',
+    ]);
+
+    $cabangAsal = Cabang::findOrFail($validatedData['cabang_asal'])->nama_cabang;
+    $cabangTujuan = Cabang::findOrFail($validatedData['cabang_tujuan'])->nama_cabang;
+    $tujuanPenugasan = Tujuan::findOrFail($validatedData['tujuan'])->tujuan_penugasan;
+
+    // Simpan data ke tabel forms
+    $form = Form::create([
+        'no_surat' => $validatedData['no_surat'],
+        'nama_pemohon' => $validatedData['namaPemohon'],
+        'cabang_asal' => $cabangAsal, 
+        'cabang_tujuan' => $cabangTujuan, 
+        'tujuan' => $tujuanPenugasan,
+        'tanggal_keberangkatan' => $validatedData['tanggalKeberangkatan'],
+    ]);
+
+$namaPegawais = [];
+
+foreach ($request->namaPegawai as $index => $namaPegawai) {
+    $uploadFilePath = null;
+
+    if ($request->hasFile("uploadFile.$index")) {
+        $uploadFilePath = $request->file("uploadFile.$index")->store('uploads', 'public');
+    }
+
+    // Menambahkan data ke dalam array
+    $namaPegawais[] = [
+        'form_id' => $form->id,
+        'nama_pegawai' => $namaPegawai,
+        'departemen' => $request->departemen[$index],
+        'nik' => $request->nik[$index],
+        'upload_file' => $uploadFilePath,
+        'lama_keberangkatan' => $request->lamaKeberangkatan[$index],
+        'created_at' => now(), 
+        'updated_at' => now(), 
+    ];
+}
+
+// Menyimpan semua data sekaligus
+Nama_pegawai::insert($namaPegawais);
+
+    return redirect()->route('formpst.index', ['form' => $form->id])
+        ->with('success', 'Data berhasil disimpan.');
+}
+
+public function index(Request $request)
+{
+    $query = Form::query();
+
+    if ($request->filled('namaPemohon')) {
+        $query->where('nama_pemohon', 'like', '%' . $request->namaPemohon . '%');
+    }
+
+    if ($request->filled('tujuan')) {
+        $query->where('tujuan', $request->tujuan); 
+    }
+
+    $data = $query->get();
+    $tujuans = Tujuan::all();
+    $forms = Form::all();
+
+    return view('formpst.index', compact('data', 'tujuans','forms'));
+}
+
+public function show($id)
+{
+    // Mengambil form berdasarkan ID
+    $form = Form::findOrFail($id); 
+    
+    // Mengambil data pegawai terkait dengan form_id
+    $data = Nama_pegawai::where('form_id', $form->id)->get();
+
+    // Kirim data ke view
+    return view('formpst.show', compact('form', 'data'));
 }
 
 
-    // Menampilkan Form Edit
+
+
+
     public function edit($id)
     {
-        $data = Nama_pegawai::findOrFail($id);
+        $data = Nama_pegawai::find($id);
+    
+        if (!$data) {
+            return redirect()->route('formpst.show')->with('error', 'Data pegawai tidak ditemukan!');
+        }
+    
         $departemens = Departemen::all();
-
+    
         return view('formpst.edit', compact('data', 'departemens'));
     }
 
-    // Memperbarui Data Pegawai
     public function update(Request $request, $id)
     {
-        $validatedData = $request->validate([
+        $request->validate([
             'nama' => 'required|string|max:255',
             'nik' => 'required|string|max:255',
             'departemen' => 'required|string|max:255',
@@ -124,30 +152,32 @@ class FormController extends Controller
         $data = Nama_pegawai::findOrFail($id);
 
         $data->update([
-            'nama_pegawai' => $validatedData['nama'],
-            'nik' => $validatedData['nik'],
-            'departemen' => $validatedData['departemen'],
-            'lama_keberangkatan' => $validatedData['lama'],
+            'nama' => $request->nama,
+            'nik' => $request->nik,
+            'departemen' => $request->departemen,
+            'lama' => $request->lama,
         ]);
 
-        return redirect()->route('formpst.show', $data->form_id)->with('success', 'Data berhasil diperbarui!');
+        return redirect()->route('formpst.show')->with('success', 'Data berhasil diperbarui!');
     }
 
-    // Menampilkan Daftar Pegawai
     public function list()
-    {
-        $nama_pegawais = Nama_pegawai::select('form_id', 'nama_pegawai', 'id')->get();
-        $grouped_pegawais = $nama_pegawais->groupBy('form_id');
+{
+    $nama_pegawais = Nama_pegawai::select('form_id', 'ct', 'id')->get();
 
-        return view('formpst.list', compact('grouped_pegawais'));
-    }
+    $grouped_pegawais = $nama_pegawais->groupBy('form_id');
 
-    // Verifikasi Form
-    public function verify($id)
-    {
-        $form = Form::findOrFail($id);
-        $form->update(['status_verifikasi' => 'submitted']);
-
-        return redirect()->route('formpst.list')->with('success', 'Data berhasil diverifikasi!');
-    }
+    return view('formpst.list', compact('grouped_pegawais'));
 }
+
+    public function verify($id)
+{
+    $form = Form::findOrFail($id);
+    $form->status_verifikasi = 'submitted';
+    $form->save();
+
+    return redirect()->route('formpst.list')->with('success', 'Data berhasil diverifikasi!');
+}
+
+
+    }
