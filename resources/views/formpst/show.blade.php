@@ -29,7 +29,7 @@
                             </form>
                         </div>
 
-                        <h5 class="text-center mb-8">Form Persetujuan BM</h5>
+                        <h5 class="text-center mb-8">Form Persetujuan Pelatihan</h5>
                         <div class="form-details">
                             <div class="detail-group">
                                 <label class="detail-label">No Surat:</label>
