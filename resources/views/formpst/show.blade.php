@@ -1,24 +1,24 @@
 @extends('layouts.main')
 
 @section('content')
-    <div class="container-fluid pt-4">
+    <div class="container pt-4">
         <div class="row justify-content-center">
-            <div class="col-md-12">
+            <div class="col-md-10">
                 <div class="card mb-4 mt-3">
-                    <div class="card-header bg-primary text-white py-2" style="position: sticky; top: 0; z-index: 100;"></div>
+                    <div class="card-header bg-primary text-white py-2"></div>
 
                     <div class="card-body">
-                        <div class="mb-4">
+                        <div class="d-flex gap-2 mb-4">
                             <!-- Form Handle (Submit / Reject) -->
                             <form action="{{ route('form.submit', $form->id) }}" method="POST">
                                 @csrf
-                                @if ($form->acc_hrd == 'oke' || ($form->acc_hrd == 'reject' && $form->acc_hrd == 'reject'))
+                                @if ($form->acc_hrd == 'oke' ||$form->acc_hrd == 'reject' || $form->acc_bm == 'reject')
                                     <a href="{{ route('formpst.index') }}" class="btn btn-success">
                                         Selesai
                                     </a>
                                 @else
                                     <!-- Submit Button -->
-                                    <button type="submit" name="action" value="submit" class="btn btn-primary mr-2">
+                                    <button type="submit" name="action" value="submit" class="btn btn-primary">
                                         Submit
                                     </button>
                                     <!-- Reject Button -->
@@ -29,7 +29,7 @@
                             </form>
                         </div>
 
-                        <h5 class="text-center mb-8">Form Persetujuan Pelatihan</h5>
+                        <h5 class="text-center mb-8">Form Persetujuan BM</h5>
                         <div class="form-details">
                             <div class="detail-group">
                                 <label class="detail-label">No Surat:</label>
@@ -78,17 +78,17 @@
                                                 <td>
                                                     @if ($form->acc_bm == 'oke' && $form->acc_hrd != 'oke' && $form->acc_bm != 'reject' && $item->acc_nm == null)
                                                         <div class="mb-2">
-                                                            <button class="btn btn-success btn-sm w-100" onclick="updateStatus({{ $item->id }}, 'oke')">
+                                                            <button class="btn btn-success btn-sm" onclick="updateStatus({{ $item->id }}, 'oke')">
                                                                 Setuju
                                                             </button>
                                                         </div>
                                                         <div>
-                                                            <button class="btn btn-danger btn-sm w-100" onclick="openRejectModal({{ $item->id }})">
+                                                            <button class="btn btn-danger btn-sm" onclick="openRejectModal({{ $item->id }})">
                                                                 Tolak
                                                             </button>
                                                         </div>
                                                     @endif
-                                                
+                                                    
                                                     @if ($item->acc_nm == 'oke')
                                                         <span class="text-success ml-2">Diterima</span>
                                                     @elseif ($item->acc_nm == 'tolak')
@@ -97,7 +97,6 @@
                                                         <span class="text-warning ml-2">Menunggu</span>
                                                     @endif
                                                 </td>
-                                                
                                                 
                                                 <td>
                                                     @if ($item->acc_nm == 'oke')
