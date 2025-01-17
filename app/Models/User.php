@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -22,6 +21,10 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'nik',
+        'departemen',
+        'cabang_asal',
+        'no_hp',
     ];
 
     /**
@@ -44,14 +47,13 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    /**
+     * Mutator for setting the role attribute in lowercase.
+     *
+     * @param string $value
+     */
     public function setRoleAttribute($value)
     {
         $this->attributes['role'] = strtolower($value);
     }
-
-    public function profile()
-    {
-        return $this->hasOne(Profile::class);
-    }
-
 }

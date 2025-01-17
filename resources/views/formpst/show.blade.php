@@ -6,121 +6,134 @@
             <div class="col-md-10">
                 <div class="card mb-4 mt-3">
                     <div class="card-header bg-primary text-white py-2">
-                        <h4 class="mb-0">Form Persetujuan BM</h4>
                     </div>
+
                     <div class="card-body">
-                        <!-- Menampilkan informasi form -->
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <div class="d-flex">
-                                    <label class="form-label fw-bold me-2" style="width: 150px;">Nomor Surat:</label>
-                                    <span>{{ $form->no_surat }}</span>
-                                </div>
+                        <h5 class="text-center mb-8">Form Persetujuan BM</h5>
+
+                        <div class="form-details mt-4">
+                            <div class="detail-group">
+                                <label class="detail-label">No Surat:</label>
+                                <div class="detail-value">{{ $form->no_surat }}</div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="d-flex">
-                                    <label class="form-label fw-bold me-2" style="width: 150px;">Cabang Asal:</label>
-                                    <span>{{ $form->cabang_asal }}</span>
-                                </div>
+                            <div class="detail-group">
+                                <label class="detail-label">Cabang Asal:</label>
+                                <div class="detail-value">{{ $form->cabang_asal }}</div>
+                            </div>
+                            <div class="detail-group">
+                                <label class="detail-label">Cabang Tujuan:</label>
+                                <div class="detail-value">{{ $form->cabang_tujuan }}</div>
+                            </div>
+                            <div class="detail-group">
+                                <label class="detail-label">Tujuan Penugasan:</label>
+                                <div class="detail-value">{{ $form->tujuan }}</div>
+                            </div>
+                            <div class="detail-group">
+                                <label class="detail-label">Tanggal Keberangkatan:</label>
+                                <div class="detail-value">{{ $form->tanggal_keberangkatan }}</div>
                             </div>
                         </div>
 
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <div class="d-flex">
-                                    <label class="form-label fw-bold me-2" style="width: 150px;">Cabang Tujuan:</label>
-                                    <span>{{ $form->cabang_tujuan }}</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <div class="d-flex">
-                                    <label class="form-label fw-bold me-2" style="width: 150px;">Tanggal Keberangkatan:</label>
-                                    <span>{{ $form->tanggal_keberangkatan }}</span>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="d-flex">
-                                    <label class="form-label fw-bold me-2" style="width: 150px;">Tujuan Penugasan:</label>
-                                    <span>{{ $form->tujuan }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="package-container">
-                        <div class="item-table">
-                            <table class="table table-bordered">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Nama</th>
-                                        <th>NIK</th>
-                                        <th>Departemen</th>
-                                        <th>Lama Keberangkatan</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse ($data as $item)
+                        <div class="package-container">
+                            <div class="item-table">
+                                <table class="table table-bordered">
+                                    <thead class="table-light">
                                         <tr>
-                                            <td>{{ $item->nama_pegawai }}</td>
-                                            <td>{{ $item->nik }}</td>
-                                            <td>{{ $item->departemen }}</td>
-                                            <td>{{ $item->lama_keberangkatan }}</td>
-                                            <td class="text-center">
-                                                <button class="btn btn-success btn-sm">Setuju</button>
-                                                <button class="btn btn-danger btn-sm">Tolak</button>
-                                            </td>
+                                            <th>Nama</th>
+                                            <th>NIK</th>
+                                            <th>Departemen</th>
+                                            <th>Lama Keberangkatan</th>
+                                            <th>Status</th>
                                         </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="5" class="text-center">Tidak ada data untuk Form ID: {{ $targetFormId }}.</td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        @forelse ($data as $item)
+                                            <tr>
+                                                <td>{{ $item->nama_pegawai }}</td>
+                                                <td>{{ $item->nik }}</td>
+                                                <td>{{ $item->departemen }}</td>
+                                                <td>{{ $item->lama_keberangkatan }}</td>
+                                                <td class="text-center">
+                                                    <button class="btn btn-success btn-sm">Setuju</button>
+                                                    <button class="btn btn-danger btn-sm">Tolak</button>
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="5" class="text-center">Tidak ada data untuk Form ID:
+                                                    {{ $targetFormId }}.</td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end mt-4">
+                            <button type="button" class="btn btn-primary" id="saveButton">
+                                Simpan Persetujuan
+                            </button>
+                        </div>
+
+                        <div class="stamps-container row mt-4 justify-content-around">
+                            <div class="col-md-2 text-center">
+                                <div class="stamp" id="stamp1" style="display: none;">
+                                    APPROVED
+                                    <div class="bm-name mt-2" style="display: none;">Nama BM: {{ $form->bm_name }}</div>
+                                </div>
+                            </div>
+                            <div class="col-md-2 text-center">
+                                <div class="stamp" id="stamp2" style="display: none;">
+                                    APPROVED
+                                    <div class="bm-name mt-2" style="display: none;">Nama BM: {{ $form->bm_name }}</div>
+                                </div>
+                            </div>
+                            <div class="col-md-2 text-center">
+                                <div class="stamp" id="stamp3" style="display: none;">
+                                    APPROVED
+                                    <div class="bm-name mt-2" style="display: none;">Nama BM: {{ $form->bm_name }}</div>
+                                </div>
+                            </div>
+                            <div class="col-md-2 text-center">
+                                <div class="stamp" id="stamp4" style="display: none;">
+                                    APPROVED
+                                    <div class="bm-name mt-2" style="display: none;">Nama BM: {{ $form->bm_name }}</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-
-                    <!-- Tombol Simpan -->
-                    <div class="d-flex justify-content-end mt-4">
-                        <button type="button" class="btn btn-primary" id="saveButton">
-                            Simpan Persetujuan
-                        </button>
-                    </div>
-
-                    <!-- 4 Kolom Stempel "APPROVED" -->
-                    <div class="stamps-container row mt-4">
-                        <div class="col-md-3">
-                            <div class="stamp" id="stamp1" style="display: none;">APPROVED</div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="stamp" id="stamp2" style="display: none;">APPROVED</div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="stamp" id="stamp3" style="display: none;">APPROVED</div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="stamp" id="stamp4" style="display: none;">APPROVED</div>
-                        </div>
-                    </div>
-
                 </div>
             </div>
         </div>
     </div>
 
     <style>
-        .form-control-plaintext {
-            border: none;
-            padding: 0.5rem;
-            display: inline;
+        .form-details {
+            border: 1px solid #000;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #f8f9fa;
+        }
+
+        .detail-group {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: baseline;
+        }
+
+        .detail-label {
+            font-weight: bold;
+            width: 150px;
+        }
+
+        .detail-value {
+            flex-grow: 1;
+            border-bottom: 1px dotted #ccc;
+            padding-bottom: 3px;
         }
 
         .package-container {
-            border: 1px solid #ddd;
+            border: 1px solid #000;
             border-radius: 8px;
             padding: 20px;
             margin-bottom: 20px;
@@ -130,6 +143,7 @@
         .item-table table {
             width: 100%;
             margin-bottom: 0;
+            border-collapse: collapse;
         }
 
         .item-table th,
@@ -137,10 +151,11 @@
             padding: 10px;
             text-align: left;
             vertical-align: middle;
+            border: 1px solid #000;
         }
 
         .item-table th {
-            background-color: #f8f9fa;
+            background-color: #e9ecef;
         }
 
         td.text-center {
@@ -149,7 +164,32 @@
             gap: 10px;
         }
 
-        /* Styling for Stamps */
+        .btn {
+            padding: 5px 10px;
+            margin: 0 3px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        .btn-success {
+            background-color: #dff0d8;
+            border-color: #d6e9c6;
+            color: #3c763d;
+        }
+
+        .btn-danger {
+            background-color: #f2dede;
+            border-color: #ebccd1;
+            color: #a94442;
+        }
+
+        .stamps-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
         .stamp {
             font-size: 24px;
             font-weight: bold;
@@ -164,29 +204,38 @@
             display: none;
         }
 
-        .stamps-container {
+        .bm-name {
+            font-size: 16px;
+            color: black;
+        }
+
+        .progress {
+            height: 25px;
+            background-color: #e9ecef;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
             display: flex;
-            justify-content: space-between;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
         }
     </style>
 
     <script>
-        // Inisialisasi variabel untuk mengatur urutan stempel
         var stampIndex = 0;
 
-        // Menampilkan stempel "APPROVED" satu per satu saat tombol "Simpan Persetujuan" ditekan
         document.getElementById("saveButton").addEventListener("click", function() {
-            // Mengambil semua stempel
             var stamps = document.querySelectorAll(".stamp");
+            var bmNames = document.querySelectorAll(".bm-name");
 
-            // Mengecek jika ada stempel yang belum ditampilkan
             if (stampIndex < stamps.length) {
-                // Menampilkan stempel sesuai urutan
                 stamps[stampIndex].style.display = "block";
-                // Meningkatkan indeks untuk menampilkan stempel berikutnya pada klik berikutnya
+                bmNames[stampIndex].style.display = "block";
                 stampIndex++;
             }
         });
     </script>
-
 @endsection
