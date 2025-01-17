@@ -21,16 +21,15 @@ class FormController extends Controller
         $departemens = Departemen::all();
         $nama_pegawais = Nama_pegawai::all();
         $cabang_tujuans = Cabang_tujuan::all();
-    
+
         $lastForm = Form::latest()->first();
         $lastNumber = $lastForm ? intval(substr($lastForm->no_surat, -4)) : 0;
-    
+
         $newNumber = str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
         $nomorSurat = 'HRD/' . date('Y') . '/' . $newNumber;
-    
+
         return view('formpst.form', compact('nomorSurat', 'cabangs', 'tujuans', 'departemens', 'nama_pegawais', 'cabang_tujuans'));
     }
-    
 
     public function store(Request $request)
     {
@@ -103,7 +102,7 @@ public function index(Request $request)
     }
 
     if ($request->filled('tujuan')) {
-        $query->where('tujuan', $request->tujuan); 
+        $query->where('tujuan', $request->tujuan);
     }
 
     $data = $query->get();
@@ -116,8 +115,8 @@ public function index(Request $request)
 public function show($id)
 {
     // Mengambil form berdasarkan ID
-    $form = Form::findOrFail($id); 
-    
+    $form = Form::findOrFail($id);
+
     // Mengambil data pegawai terkait dengan form_id
     $data = Nama_pegawai::where('form_id', $form->id)->get();
 
@@ -128,13 +127,13 @@ public function show($id)
     public function edit($id)
     {
         $data = Nama_pegawai::find($id);
-    
+
         if (!$data) {
             return redirect()->route('formpst.show')->with('error', 'Data pegawai tidak ditemukan!');
         }
-    
+
         $departemens = Departemen::all();
-    
+
         return view('formpst.edit', compact('data', 'departemens'));
     }
 
@@ -199,10 +198,6 @@ public function submitForm(Request $request, $formId)
 
 
 
-
-
-
-
 public function updateStatus($itemId, $status, Request $request)
 {
     // Menemukan item berdasarkan itemId
@@ -232,6 +227,7 @@ public function updateStatus($itemId, $status, Request $request)
             'message' => 'Status berhasil diperbarui.',
             'status' => $status
         ]);
+
     }
 
     return response()->json([

@@ -205,7 +205,7 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    @if(isset($form) && !empty($form->id))
+                                    @if (isset($form) && !empty($form->id))
                                         <a href="{{ route('formpst.show', ['id' => $form->id]) }}"
                                             class="nav-link {{ request()->routeIs('formpst.show') ? 'active' : '' }}">
                                             <i class="far fa-circle nav-icon"></i>
@@ -218,7 +218,7 @@
                                         </a>
                                     @endif
                                 </li>
-                                
+
                             </ul>
                         </li>
                         <li class="nav-item">
@@ -227,7 +227,7 @@
                                 <p>HRD<i class="fas fa-angle-left right"></i></p>
                             </a>
                             <ul class="nav nav-treeview">
-                                
+
                                 <li class="nav-item">
                                     <a href="{{ route('ho.user') }}"
                                         class="nav-link {{ request()->is('ho/user') ? 'active' : '' }}">
