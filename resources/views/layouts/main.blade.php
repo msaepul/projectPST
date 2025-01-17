@@ -143,112 +143,6 @@
                         </button>
                     </div>
                 </div>
-                <!-- Sidebar Menu -->
-                <nav class="mt-2">
-                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
-                        data-accordion="false">
-                        <!-- Form PST Menu -->
-                        @if (auth()->user()->role === 'admin' || auth()->user()->role === 'user')
-                            <li class="nav-item menu-open">
-                                <a href="{{ route('formpst.form') }}"
-                                    class="nav-link {{ request()->is('formpst/form') ? 'active' : '' }}">
-                                    <i class="nav-icon fas fa-copy"></i>
-                                    <p>Form PST</p>
-                                </a>
-                            </li>
-                        @endif
-
-                        <!-- HO Menu (Admin Only) -->
-                        @if (auth()->user()->role === 'admin')
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <i class="nav-icon fas fa-building"></i>
-                                    <p>
-                                        HO
-                                        <i class="fas fa-angle-left right"></i>
-                                    </p>
-                                </a>
-                                <ul class="nav nav-treeview">
-                                    <li class="nav-item">
-                                        <a href="{{ route('ho.cabang') }}"
-                                            class="nav-link {{ request()->is('ho/cabang') ? 'active' : '' }}">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Cabang</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="{{ route('ho.tujuan') }}"
-                                            class="nav-link {{ request()->is('ho/tujuan') ? 'active' : '' }}">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Daftar Penugasan</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="{{ route('ho.departemen') }}"
-                                            class="nav-link {{ request()->is('ho/departemen') ? 'active' : '' }}">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Departemen</p>
-                                        </a>
-                                    </li>
-                                    {{-- <li class="nav-item">
-                                        <a href="{{ route('formpst.list') }}"
-                                            class="nav-link {{ request()->is('formpst/list') ? 'active' : '' }}">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>List yang disetujui</p>
-                                        </a>
-                                    </li> --}}
-                                </ul>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <i class="fas fa-user nav-icon"></i>
-                                    <p>
-                                        HRD
-                                        <i class="fas fa-angle-left right"></i>
-                                    </p>
-                                </a>
-                                <ul class="nav nav-treeview">
-                                    <li class="nav-item">
-                                        <a href="{{ route('formpst.show') }}"
-                                            class="nav-link {{ request()->is('formpst/show') ? 'active' : '' }}">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Draft Persetujuan</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="{{ route('formpst.list') }}"
-                                            class="nav-link {{ request()->is('formpst/list') ? 'active' : '' }}">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>List yang disetujui</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="{{ route('ho.user') }}"
-                                            class="nav-link {{ request()->is('ho/user') ? 'active' : '' }}">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>User</p>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        @endif
-                    </ul>
-                </nav>
-
-        </aside>
-
-        <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
-            <div class="content-header">
-                <div class="container-fluid">
-                    <div class="row mb-2">
-                        <div class="col-sm-6">
-                            {{-- tambah header --}}
-                        </div><!-- /.col -->
-
-                    </div><!-- /.row -->
-                </div><!-- /.container-fluid -->
             </div>
 
             <!-- Sidebar Menu -->
@@ -311,7 +205,7 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    @if(isset($form) && !empty($form->id))
+                                    @if (isset($form) && !empty($form->id))
                                         <a href="{{ route('formpst.show', ['id' => $form->id]) }}"
                                             class="nav-link {{ request()->routeIs('formpst.show') ? 'active' : '' }}">
                                             <i class="far fa-circle nav-icon"></i>
@@ -324,7 +218,7 @@
                                         </a>
                                     @endif
                                 </li>
-                                
+
                             </ul>
                         </li>
                         <li class="nav-item">
@@ -333,7 +227,7 @@
                                 <p>HRD<i class="fas fa-angle-left right"></i></p>
                             </a>
                             <ul class="nav nav-treeview">
-                                
+
                                 <li class="nav-item">
                                     <a href="{{ route('ho.user') }}"
                                         class="nav-link {{ request()->is('ho/user') ? 'active' : '' }}">

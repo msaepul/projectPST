@@ -21,16 +21,15 @@ class FormController extends Controller
         $departemens = Departemen::all();
         $nama_pegawais = Nama_pegawai::all();
         $cabang_tujuans = Cabang_tujuan::all();
-    
+
         $lastForm = Form::latest()->first();
         $lastNumber = $lastForm ? intval(substr($lastForm->no_surat, -4)) : 0;
-    
+
         $newNumber = str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
         $nomorSurat = 'HRD/' . date('Y') . '/' . $newNumber;
-    
+
         return view('formpst.form', compact('nomorSurat', 'cabangs', 'tujuans', 'departemens', 'nama_pegawais', 'cabang_tujuans'));
     }
-    
 
     public function store(Request $request)
     {
@@ -103,9 +102,7 @@ public function index(Request $request)
     }
 
     if ($request->filled('tujuan')) {
-        $query->where('tujuan', $request->tujuan); 
-
-   
+        $query->where('tujuan', $request->tujuan);
     }
 
     $data = $query->get();
@@ -118,8 +115,8 @@ public function index(Request $request)
 public function show($id)
 {
     // Mengambil form berdasarkan ID
-    $form = Form::findOrFail($id); 
-    
+    $form = Form::findOrFail($id);
+
     // Mengambil data pegawai terkait dengan form_id
     $data = Nama_pegawai::where('form_id', $form->id)->get();
 
@@ -161,22 +158,6 @@ public function show($id)
         return redirect()->route('formpst.show')->with('success', 'Data berhasil diperbarui!');
     }
 
-
-    public function list(Pengajuan $post)
-    {
-        // Ambil semua pegawai
-        $nama_pegawais = Nama_pegawai::all();
-
-        // Ambil form berdasarkan form_id
-        $forms = Form::all()->keyBy('id'); // KeyBy agar memudahkan pencarian berdasarkan form_id
-
-        // Kelompokkan pegawai berdasarkan form_id
-        $grouped_pegawais = $nama_pegawais->groupBy('form_id');
-
-        // Kirim data forms ke tampilan
-        return view('formpst.list', compact('grouped_pegawais', 'forms'));
-    }
-
     public function list()
 {
     $nama_pegawais = Nama_pegawai::select('form_id', 'ct', 'id')->get();
@@ -214,6 +195,7 @@ public function submitForm(Request $request, $formId)
     // Kembalikan response dengan pesan sukses
     return redirect()->back()->with('success', 'Form berhasil disubmit!');
 }
+
 
 
 public function updateStatus($itemId, $status, Request $request)

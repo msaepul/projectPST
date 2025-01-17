@@ -44,6 +44,15 @@ Route::middleware('auth')->group(function () {
         Route::get('/ho/departemen/edit/{id}', [HoController::class, 'editDepartemen'])->name('ho.departemen.edit');
         Route::put('/ho/departemen/update/{id}', [HoController::class, 'updateDepartemen'])->name('ho.departemen.update');
         Route::delete('/ho/departemen/delete/{id}', [HoController::class, 'destroyDepartemen'])->name('ho.departemen.destroy');
+        //routes for user
+        Route::get('/ho/user', [HoController::class, 'user'])->name('ho.user');
+        Route::get('/ho/user/add', [HoController::class, 'addUser'])->name('ho.user.add');
+        Route::post('/ho/user', [HoController::class, 'storeUser'])->name('ho.user.store');
+        Route::get('/ho/user/edit/{id}', [HoController::class, 'editUser'])->name('ho.user.edit');
+        Route::put('/ho/user/update/{id}', [HoController::class, 'updateUser'])->name('ho.user.update');
+        Route::delete('/ho/user/delete/{id}', [HoController::class, 'destroyUser'])->name('ho.user.destroy');
+
+        Route::get('/formpst/show_pegawai/{form_id}', [HoController::class, 'show_pegawai'])->middleware(['auth', 'role:admin,user'])->name('formpst.show_pegawai');
 
         // User Routes
         Route::get('/ho/user', [HoController::class, 'user'])->name('ho.user');
@@ -88,7 +97,7 @@ Route::middleware('auth')->group(function () {
 
     Route::delete('/pengajuans/delete/{id}', [FormController::class, 'destroy'])->middleware('role:admin, user')->name('pengajuans.destroy');
 
-    
+
      // Data_diri Routes
      Route::get('/data_diri/biodata', [Data_diriController::class, 'biodata'])->name('data_diri.biodata');
      Route::get('/forms', [FormController::class, 'index']);
