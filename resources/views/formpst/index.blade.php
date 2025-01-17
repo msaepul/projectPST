@@ -41,8 +41,12 @@
                                     <td class="text-center">
                                         @if ($item->acc_hrd == 'oke')
                                             <span class="badge bg-success">Sudah Diverifikasi</span>
+                                        @elseif ($item->acc_hrd == 'reject')
+                                            <span class="badge bg-warning bg-danger">Verifikasi Di tolak hrd</span>
                                         @elseif ($item->acc_bm == 'oke')
-                                            <span class="badge bg-warning text-dark">Menunggu Verifikasi</span>
+                                            <span class="badge bg-warning text-dark">Menunggu Verifikasi HRD</span>
+                                        @elseif ($item->acc_bm == 'reject')
+                                            <span class="badge bg-warning bg-danger">Verifikasi Di tolak BM</span>
                                         @else
                                             <span class="badge bg-danger">Belum Diverifikasi</span>
                                         @endif

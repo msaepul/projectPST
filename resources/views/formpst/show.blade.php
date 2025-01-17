@@ -1,24 +1,24 @@
 @extends('layouts.main')
 
 @section('content')
-    <div class="container pt-4">
+    <div class="container-fluid pt-4">
         <div class="row justify-content-center">
-            <div class="col-md-10">
+            <div class="col-md-12">
                 <div class="card mb-4 mt-3">
-                    <div class="card-header bg-primary text-white py-2"></div>
+                    <div class="card-header bg-primary text-white py-2" style="position: sticky; top: 0; z-index: 100;"></div>
 
                     <div class="card-body">
-                        <div class="d-flex gap-2 mb-4">
+                        <div class="mb-4">
                             <!-- Form Handle (Submit / Reject) -->
                             <form action="{{ route('form.submit', $form->id) }}" method="POST">
                                 @csrf
-                                @if ($form->acc_hrd == 'oke' || $form->acc_bm == 'reject')
+                                @if ($form->acc_hrd == 'oke' || ($form->acc_hrd == 'reject' && $form->acc_hrd == 'reject'))
                                     <a href="{{ route('formpst.index') }}" class="btn btn-success">
                                         Selesai
                                     </a>
                                 @else
                                     <!-- Submit Button -->
-                                    <button type="submit" name="action" value="submit" class="btn btn-primary">
+                                    <button type="submit" name="action" value="submit" class="btn btn-primary mr-2">
                                         Submit
                                     </button>
                                     <!-- Reject Button -->
@@ -62,8 +62,9 @@
                                             <th>NIK</th>
                                             <th>Departemen</th>
                                             <th>Lama Keberangkatan</th>
+                                            <th>File</th>
                                             <th>Status</th>
-                                            <th>Ket</th>
+                                            <th>Keterangan</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -73,32 +74,36 @@
                                                 <td>{{ $item->nik }}</td>
                                                 <td>{{ $item->departemen }}</td>
                                                 <td>{{ $item->lama_keberangkatan }}</td>
+                                                <td>{{ $item->upload_file }}</td>
                                                 <td>
-                                                    @if ($form->acc_bm == 'oke' && $form->acc_hrd != 'oke' && $form->acc_bm != 'reject')
-                                                        <button
-                                                            class="btn btn-success btn-sm @if ($item->acc_nm == 'oke') disabled @endif"
-                                                            onclick="updateStatus({{ $item->id }}, 'oke')">
-                                                            Setuju
-                                                        </button>
-                                                        <button
-                                                            class="btn btn-danger btn-sm @if ($item->acc_nm == 'tolak') disabled @endif"
-                                                            onclick="openRejectModal({{ $item->id }})">
-                                                            Tolak
-                                                        </button>
-                                                    @elseif ($item->acc_nm == 'oke')
-                                                        <span class="text-success">Diterima</span>
+                                                    @if ($form->acc_bm == 'oke' && $form->acc_hrd != 'oke' && $form->acc_bm != 'reject' && $item->acc_nm == null)
+                                                        <div class="mb-2">
+                                                            <button class="btn btn-success btn-sm w-100" onclick="updateStatus({{ $item->id }}, 'oke')">
+                                                                Setuju
+                                                            </button>
+                                                        </div>
+                                                        <div>
+                                                            <button class="btn btn-danger btn-sm w-100" onclick="openRejectModal({{ $item->id }})">
+                                                                Tolak
+                                                            </button>
+                                                        </div>
+                                                    @endif
+                                                
+                                                    @if ($item->acc_nm == 'oke')
+                                                        <span class="text-success ml-2">Diterima</span>
                                                     @elseif ($item->acc_nm == 'tolak')
-                                                        <span class="text-danger">Ditolak</span>
-                                                    @elseif ($item->acc_nm == '' || $item->acc_nm == null)
-                                                        <span class="text-warning">Menunggu</span>
+                                                        <span class="text-danger ml-2">Ditolak</span>
+                                                    @elseif ($form->acc_bm == '')
+                                                        <span class="text-warning ml-2">Menunggu</span>
                                                     @endif
                                                 </td>
+                                                
+                                                
                                                 <td>
                                                     @if ($item->acc_nm == 'oke')
                                                         <span class="badge bg-success">Diterima</span>
                                                     @elseif ($item->acc_nm == 'tolak')
                                                         <span class="badge bg-danger">{{ $item->alasan }}</span>
-                                                        <!-- Menampilkan alasan jika ditolak -->
                                                     @elseif ($item->acc_nm == '' || $item->acc_nm == null)
                                                         <span class="badge bg-warning">Menunggu</span>
                                                     @endif
@@ -106,8 +111,7 @@
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="6" class="text-center">Tidak ada data untuk Form ID:
-                                                    {{ $targetFormId }}.</td>
+                                                <td colspan="7" class="text-center">Tidak ada data untuk Form ID: {{ $targetFormId }}.</td>
                                             </tr>
                                         @endforelse
                                     </tbody>
@@ -116,11 +120,11 @@
                         </div>
 
                         <!-- Bar Status -->
-                        <div class="status-bar mb-4">
+                        <div class="status-bar mb-4" style="position: sticky; top: 70px;">
                             <!-- ACC BM -->
                             <div class="status-step">
                                 <img src="{{ $form->acc_bm == 'oke' ? asset('dist/img/oke.png') : ($form->acc_bm == 'reject' ? asset('dist/img/reject.png') : asset('dist/img/no.png')) }}"
-                                     alt="Status BM" class="thumb-icon" width="50">
+                                    alt="Status BM" class="thumb-icon" width="50">
                                 <div class="status-name">
                                     @if ($form->acc_bm == 'oke')
                                         BM - Setuju
@@ -134,7 +138,7 @@
                             <!-- ACC HRD -->
                             <div class="status-step">
                                 <img src="{{ $form->acc_hrd == 'oke' ? asset('dist/img/oke.png') : ($form->acc_hrd == 'reject' ? asset('dist/img/reject.png') : asset('dist/img/no.png')) }}"
-                                     alt="Status HRD" class="thumb-icon" width="50">
+                                    alt="Status HRD" class="thumb-icon" width="50">
                                 <div class="status-name">
                                     @if ($form->acc_hrd == 'oke')
                                         HRD - Setuju
@@ -238,6 +242,28 @@
 
     <style>
         .form-details {
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .package-container {
+            width: 100%;
+        }
+
+        .item-table table {
+            width: 100%;
+        }
+
+        .card {
+            max-width: 100%;
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-evenly;
+        }
+
+        .form-details {
             border: 1px solid #000;
             padding: 15px;
             margin-bottom: 20px;
@@ -288,9 +314,7 @@
         }
 
         td.text-center {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
+            text-align: center;
         }
 
         .btn {

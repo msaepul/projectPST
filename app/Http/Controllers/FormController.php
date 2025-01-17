@@ -32,65 +32,66 @@ class FormController extends Controller
     }
     
 
-public function store(Request $request)
-{
-    $validatedData = $request->validate([
-        'no_surat' => 'required|string|max:255',
-        'namaPemohon' => 'required|string|max:255',
-        'cabang_asal' => 'required|exists:cabangs,id',
-        'cabang_tujuan' => 'required|exists:cabangs,id',
-        'tujuan' => 'required|exists:tujuans,id',
-        'tanggalKeberangkatan' => 'required|date',
-
-        'namaPegawai.*' => 'required|string|max:255',
-        'departemen.*' => 'required|string|max:255',
-        'nik.*' => 'required|string|max:255',
-        'uploadFile.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-        'lamaKeberangkatan.*' => 'required|date',
-    ]);
-
-    $cabangAsal = Cabang::findOrFail($validatedData['cabang_asal'])->nama_cabang;
-    $cabangTujuan = Cabang::findOrFail($validatedData['cabang_tujuan'])->nama_cabang;
-    $tujuanPenugasan = Tujuan::findOrFail($validatedData['tujuan'])->tujuan_penugasan;
-
-    // Simpan data ke tabel forms
-    $form = Form::create([
-        'no_surat' => $validatedData['no_surat'],
-        'nama_pemohon' => $validatedData['namaPemohon'],
-        'cabang_asal' => $cabangAsal, 
-        'cabang_tujuan' => $cabangTujuan, 
-        'tujuan' => $tujuanPenugasan,
-        'tanggal_keberangkatan' => $validatedData['tanggalKeberangkatan'],
-    ]);
-
-$namaPegawais = [];
-
-foreach ($request->namaPegawai as $index => $namaPegawai) {
-    // $uploadFilePath = null;
-
-    // if ($request->hasFile("uploadFile.$index")) {
-    //     $uploadFilePath = $request->file("uploadFile.$index")->store('uploads', 'public');
-    // }
-
-    // Menambahkan data ke dalam array
-    $namaPegawais[] = [
-        'form_id' => $form->id,
-        'nama_pegawai' => $namaPegawai,
-        'departemen' => $request->departemen[$index],
-        'nik' => $request->nik[$index],
-        // 'upload_file' => $uploadFilePath,
-        'lama_keberangkatan' => $request->lamaKeberangkatan[$index],
-        'created_at' => now(), 
-        'updated_at' => now(), 
-    ];
-}
-
-// Menyimpan semua data sekaligus
-Nama_pegawai::insert($namaPegawais);
-
-    return redirect()->route('formpst.index', ['form' => $form->id])
-        ->with('success', 'Data berhasil disimpan.');
-}
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate([
+            'no_surat' => 'required|string|max:255',
+            'namaPemohon' => 'required|string|max:255',
+            'cabang_asal' => 'required|exists:cabangs,id',
+            'cabang_tujuan' => 'required|exists:cabangs,id',
+            'tujuan' => 'required|exists:tujuans,id',
+            'tanggalKeberangkatan' => 'required|date',
+    
+            'namaPegawai.*' => 'required|string|max:255',
+            'departemen.*' => 'required|string|max:255',
+            'nik.*' => 'required|string|max:255',
+            'uploadFile.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'lamaKeberangkatan.*' => 'required|date',
+        ]);
+    
+        $cabangAsal = Cabang::findOrFail($validatedData['cabang_asal'])->nama_cabang;
+        $cabangTujuan = Cabang::findOrFail($validatedData['cabang_tujuan'])->nama_cabang;
+        $tujuanPenugasan = Tujuan::findOrFail($validatedData['tujuan'])->tujuan_penugasan;
+    
+        // Simpan data ke tabel forms
+        $form = Form::create([
+            'no_surat' => $validatedData['no_surat'],
+            'nama_pemohon' => $validatedData['namaPemohon'],
+            'cabang_asal' => $cabangAsal,
+            'cabang_tujuan' => $cabangTujuan,
+            'tujuan' => $tujuanPenugasan,
+            'tanggal_keberangkatan' => $validatedData['tanggalKeberangkatan'],
+        ]);
+    
+    $namaPegawais = [];
+    
+    foreach ($request->namaPegawai as $index => $namaPegawai) {
+        $uploadFilePath = null;
+    
+            if ($request->hasFile("uploadFile.$index")) {
+                $originalName = $request->file("uploadFile.$index")->getClientOriginalName();
+                $uploadFilePath = $request->file("uploadFile.$index")->storeAs('uploads', $originalName, 'public');
+        }
+    
+        // Menambahkan data ke dalam array
+        $namaPegawais[] = [
+            'form_id' => $form->id,
+            'nama_pegawai' => $namaPegawai,
+            'departemen' => $request->departemen[$index],
+            'nik' => $request->nik[$index],
+            'upload_file' => $uploadFilePath,
+            'lama_keberangkatan' => $request->lamaKeberangkatan[$index],
+            'created_at' => now(),
+            'updated_at' => now(),
+        ];
+    }
+    
+    // Menyimpan semua data sekaligus
+    Nama_pegawai::insert($namaPegawais);
+    
+        return redirect()->route('formpst.index', ['form' => $form->id])
+            ->with('success', 'Data berhasil disimpan.');
+    }
 
 public function index(Request $request)
 {
