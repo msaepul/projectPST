@@ -183,11 +183,14 @@ class HoController extends Controller
 
         return view('ho.user', compact('users'));
     }
+
     public function edituser($id)
     {
         $user = User::findOrFail($id);
+        $departemens = Departemen::all();
+        $cabangs = Cabang::all();
 
-        return view('ho.user.edit', compact('user'));
+        return view('ho.user.edit', compact('user', 'departemens', 'cabangs'));
     }
 
     public function updateuser(Request $request, $id)
@@ -196,11 +199,22 @@ class HoController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'nullable|string|max:100',
             'role' => 'nullable|string',
+            'nik' => 'required|string|max:20',
+            'departemen' => 'required|string|max:255',
+            'cabang_asal' => 'required|string|max:255',
+            'no_hp' => 'required|string|max:15',
         ]);
 
         $user = User::findOrFail($id);
-        $user->role = strtolower($request->role);
-        $user->update($validated);
+        $user->update([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'role' => strtolower($validated['role']),
+            'nik' => $validated['nik'],
+            'departemen' => $validated['departemen'],
+            'cabang_asal' => $validated['cabang_asal'],
+            'no_hp' => $validated['no_hp'],
+        ]);
 
         return redirect()->route('ho.user')->with('success', 'Data user berhasil diubah!');
     }
@@ -212,15 +226,4 @@ class HoController extends Controller
 
         return redirect()->route('ho.user')->with('success', 'Data user berhasil dihapus!');
     }
-
-    public function show_pegawai($form_id)
-{
-        // Ambil data pegawai dengan relasi cabang dan tujuan berdasarkan form_id
-        $nama_pegawais = Nama_pegawai::with(['form'])->where('form_id', $form_id)->get();
-
-
-    // Kirimkan form_id dan data pegawai ke view
-    return view('formpst.show_pegawai', compact('nama_pegawais', 'form_id'));
-}
-
 }
