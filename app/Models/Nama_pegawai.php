@@ -15,6 +15,8 @@ class nama_pegawai extends Model
         'nik',
         'upload_file',
         'lama_keberangkatan',       
+        'acc_nm',       
+        'alasan',       
     ];
     public function form()
     {

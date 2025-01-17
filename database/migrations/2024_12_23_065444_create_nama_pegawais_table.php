@@ -17,8 +17,11 @@ return new class extends Migration
             $table->string('nama_pegawai');
             $table->string('departemen');
             $table->string('nik');
-            $table->string('upload_file')->nullable(); // File yang diupload
+            $table->string('upload_file')->default('');
             $table->date('lama_keberangkatan');
+            $table->string('acc_nm')->default('');
+            $table->string('alasan')->default('');
+
             $table->timestamps();
     
             // Definisi foreign key

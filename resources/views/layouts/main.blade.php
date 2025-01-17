@@ -343,22 +343,6 @@
                                 </li>
                             </ul>
                         </li>
-
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-user nav-icon"></i>
-                                <p>BM<i class="fas fa-angle-left right"></i></p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="{{ route('hrd.list_bm') }}"
-                                        class="nav-link {{ request()->is('hrd/list_bm') ? 'active' : '' }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>List yang disetujui</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
                     @endif
                 </ul>
             </nav>

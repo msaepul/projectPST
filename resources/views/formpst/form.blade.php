@@ -134,7 +134,6 @@
                                         <th>Nama</th>
                                         <th>Departemen</th>
                                         <th>NIK</th>
-                                        <th>Upload File</th>
                                         <th>Lama Keberangkatan</th>
                                         <th>Aksi</th>
                                     </tr>
@@ -151,7 +150,6 @@
                                             </select>
                                         </td>
                                         <td><input type="text" name="nik[]" class="form-control" ></td>
-                                        <td><input type="file" name="uploadFile[]" class="form-control"></td>
                                         <td><input type="date" name="lamaKeberangkatan[]" class="form-control" ></td>
                                         <td><button type="button" class="btn btn-danger btn-sm remove-item">Hapus</button></td>
                                     </tr>
