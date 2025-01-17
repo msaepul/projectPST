@@ -56,11 +56,11 @@ Route::middleware('auth')->group(function () {
 
         // User Routes
         Route::get('/ho/user', [HoController::class, 'user'])->name('ho.user');
+        Route::get('/formpst/show_pegawai/{form_id}', [HoController::class, 'show_pegawai'])->name('formpst.show_pegawai');
         Route::get('/hrd/list_hrd', [HrdController::class, 'list_hrd'])->name('hrd.list_hrd');
         Route::get('/hrd/list_bm', [HrdController::class, 'list_bm'])->name('hrd.list_bm');
         Route::get('/hrd/list_nm', [HrdController::class, 'list_nm'])->name('hrd.list_nm');
-
-     });
+    });
 
     // Admin and User Routes
     Route::middleware('role:admin,user')->group(function () {
@@ -74,15 +74,16 @@ Route::middleware('auth')->group(function () {
         Route::get('/formpst/edit/{id}', [FormController::class, 'edit'])->name('formpst.edit');
         Route::put('/formpst/update/{id}', [FormController::class, 'update'])->name('formpst.update');
         Route::delete('/formpst/delete/{id}', [FormController::class, 'destroy'])->name('formpst.destroy');
-        Route::post('/formpst/verify/{id}', [FormController::class, 'verify'])->name('formpst.verify');
+        Route::post('/form/submit/{formId}', [FormController::class, 'submitForm'])->name('form.submit');
+        Route::post('/form/reject/{formId}', [FormController::class, 'rejectForm'])->name('form.reject');
 
-
-        // Pengajuan Routes
-        Route::post('/pengajuans/store', [PengajuanController::class, 'store'])->name('pengajuans.store');
+        Route::post('/update-status/{itemId}/{status}', [FormController::class, 'updateStatus'])->name('update.status');
+        
     });
 
-    // Data Diri Routes (Accessible by Authenticated Users)
+    // Data Diri Routes
     Route::get('/data_diri/biodata', [Data_diriController::class, 'biodata'])->name('data_diri.biodata');
+
     // Form
     Route::get('/formpst/form', [FormController::class, 'form'])->middleware(['auth', 'role:admin,user'])->name('formpst.form');
     Route::get('/formpst/show', [FormController::class, 'show'])->middleware(['auth', 'role:admin,user'])->name('formpst.show');
@@ -99,9 +100,11 @@ Route::middleware('auth')->group(function () {
 
      // Data_diri Routes
      Route::get('/data_diri/biodata', [Data_diriController::class, 'biodata'])->name('data_diri.biodata');
-
      Route::get('/forms', [FormController::class, 'index']);
 
+    // Pengajuan Routes
+    Route::post('/pengajuans/store', [PengajuanController::class, 'store'])->name('pengajuans.store');
+    Route::delete('/pengajuans/delete/{id}', [PengajuanController::class, 'destroy'])->name('pengajuans.destroy');
 });
 
 require __DIR__.'/auth.php';

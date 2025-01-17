@@ -3,7 +3,6 @@
     {{ Breadcrumbs::render('Form') }}
 
     <div class="container" style="max-width: 950px;">
-        <h2>Form Pengajuan Surat Tugas</h2>
         <div class="card mb-6"
             style="border: 1px solid #ccc; border-radius: 5px; box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);">
             <div class="card-header" style="background-color: #6A64F1; color: white; padding: 10px;">
