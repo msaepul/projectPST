@@ -66,11 +66,11 @@ public function store(Request $request)
 $namaPegawais = [];
 
 foreach ($request->namaPegawai as $index => $namaPegawai) {
-    $uploadFilePath = null;
+    // $uploadFilePath = null;
 
-    if ($request->hasFile("uploadFile.$index")) {
-        $uploadFilePath = $request->file("uploadFile.$index")->store('uploads', 'public');
-    }
+    // if ($request->hasFile("uploadFile.$index")) {
+    //     $uploadFilePath = $request->file("uploadFile.$index")->store('uploads', 'public');
+    // }
 
     // Menambahkan data ke dalam array
     $namaPegawais[] = [
@@ -78,7 +78,7 @@ foreach ($request->namaPegawai as $index => $namaPegawai) {
         'nama_pegawai' => $namaPegawai,
         'departemen' => $request->departemen[$index],
         'nik' => $request->nik[$index],
-        'upload_file' => $uploadFilePath,
+        // 'upload_file' => $uploadFilePath,
         'lama_keberangkatan' => $request->lamaKeberangkatan[$index],
         'created_at' => now(), 
         'updated_at' => now(), 
@@ -95,6 +95,7 @@ Nama_pegawai::insert($namaPegawais);
 public function index(Request $request)
 {
     $query = Form::query();
+    
 
     if ($request->filled('namaPemohon')) {
         $query->where('nama_pemohon', 'like', '%' . $request->namaPemohon . '%');
@@ -122,10 +123,6 @@ public function show($id)
     // Kirim data ke view
     return view('formpst.show', compact('form', 'data'));
 }
-
-
-
-
 
     public function edit($id)
     {
@@ -170,14 +167,76 @@ public function show($id)
     return view('formpst.list', compact('grouped_pegawais'));
 }
 
-    public function verify($id)
+
+
+public function submitForm(Request $request, $formId)
 {
-    $form = Form::findOrFail($id);
-    $form->status_verifikasi = 'submitted';
+    $form = Form::findOrFail($formId);
+
+    // Ambil aksi yang dikirimkan (submit atau reject)
+    $action = $request->input('action');
+
+    // Cek apakah form sudah disetujui atau ditolak sepenuhnya
+    if ($form->acc_bm == 'oke' || $form->acc_bm == 'reject') {
+        if ($form->acc_hrd == 'oke' || $form->acc_hrd == 'reject') {
+            return redirect()->back()->with('info', 'Form sudah disetujui sepenuhnya.');
+        } else {
+            // Jika HRD belum disetujui, sesuaikan statusnya berdasarkan aksi
+            $form->acc_hrd = $action == 'submit' ? 'oke' : 'reject';
+        }
+    } else {
+        // Jika BM belum disetujui, sesuaikan statusnya berdasarkan aksi
+        $form->acc_bm = $action == 'submit' ? 'oke' : 'reject';
+    }
+
+    // Simpan perubahan ke database
     $form->save();
 
-    return redirect()->route('formpst.list')->with('success', 'Data berhasil diverifikasi!');
+    // Kembalikan response dengan pesan sukses
+    return redirect()->back()->with('success', 'Form berhasil disubmit!');
 }
 
 
+
+
+
+
+
+public function updateStatus($itemId, $status, Request $request)
+{
+    // Menemukan item berdasarkan itemId
+    $item = Nama_pegawai::find($itemId);
+
+    if ($item) {
+        // Memperbarui status acc_nm
+        $item->acc_nm = $status;
+
+        // Jika status adalah 'tolak', simpan alasan penolakan
+        if ($status == 'tolak') {
+            $request->validate([
+                'alasan' => 'required|string|max:255',
+            ]);
+        
+            // Menyimpan alasan penolakan
+            $item->alasan = $request->alasan;
+        } elseif ($status == 'oke') {
+            // Jika status adalah "oke", set alasan menjadi "Diterima"
+            $item->alasan = 'Diterima';
+        }
+        
+        // Menyimpan perubahan
+        $item->save();
+        
+        return response()->json([
+            'message' => 'Status berhasil diperbarui.',
+            'status' => $status
+        ]);
     }
+
+    return response()->json([
+        'message' => 'Data pegawai tidak ditemukan.'
+    ], 404);
+}
+
+
+}

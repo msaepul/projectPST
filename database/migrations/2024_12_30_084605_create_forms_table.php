@@ -30,10 +30,10 @@ return new class extends Migration
             $table->string('cabang_asal');
             $table->string('cabang_tujuan');
             $table->string('tujuan');
-            $table->string('acc_bm');
-            $table->string('acc_hrd');
-            $table->string('acc_nm');
-            $table->string('acc_cabang');
+            $table->string('acc_bm')->default('');
+            $table->string('acc_hrd')->default('');
+            $table->string('acc_nm')->default('');
+            $table->string('acc_cabang')->default('');
             $table->date('tanggal_keberangkatan');
             $table->timestamps();
         });
