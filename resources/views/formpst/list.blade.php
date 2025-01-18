@@ -49,7 +49,7 @@
 
 <div class="card mb-4">
     <div class="card-header">
-        <i class="fas fa-table me-1"></i> List yang di setujui
+        <i class="fas fa-table me-1"></i> List yang di setujui 
     </div>
     <div class="card-body">
         <table class="table table-bordered">

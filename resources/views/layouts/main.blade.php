@@ -169,7 +169,7 @@
                                     <a href="{{ route('formpst.index') }}"
                                         class="nav-link {{ request()->is('formpst/index') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>List Keseluruhan</p>
+                                        <p>List Permintaan</p>
                                     </a>
                                 </li>
                             </ul>
@@ -204,21 +204,6 @@
                                         <p>Departemen</p>
                                     </a>
                                 </li>
-                                <li class="nav-item">
-                                    @if (isset($form) && !empty($form->id))
-                                        <a href="{{ route('formpst.show', ['id' => $form->id]) }}"
-                                            class="nav-link {{ request()->routeIs('formpst.show') ? 'active' : '' }}">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Draft Persetujuan</p>
-                                        </a>
-                                    @else
-                                        <a href="#" class="nav-link disabled">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Draft Persetujuan</p>
-                                        </a>
-                                    @endif
-                                </li>
-
                             </ul>
                         </li>
                         <li class="nav-item">

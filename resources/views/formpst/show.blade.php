@@ -12,7 +12,7 @@
                             <!-- Form Handle (Submit / Reject) -->
                             <form action="{{ route('form.submit', $form->id) }}" method="POST">
                                 @csrf
-                                @if ($form->acc_hrd == 'oke' || $form->acc_hrd == 'reject' || $form->acc_bm == 'reject')
+                                @if ($form->acc_hrd == 'oke' || $form->acc_hrd == 'reject' || $form->acc_bm == 'reject' )
                                     <a href="{{ route('formpst.index') }}" class="btn btn-success">
                                         Selesai
                                     </a>
@@ -91,12 +91,12 @@
                                                             </button>
                                                         </div>
                                                         <div>
-                                                            <button class="btn btn-danger btn-sm w-100"
-                                                                onclick="openRejectModal({{ $item->id }})">
+                                                            <button class="btn btn-danger btn-sm w-100" onclick="openRejectModal({{ $item->id }})">
                                                                 Tolak
                                                             </button>
                                                         </div>
                                                     @endif
+
 
                                                     @if ($item->acc_nm == 'oke')
                                                         <span class="text-success ml-2">Diterima</span>
@@ -106,22 +106,19 @@
                                                         <span class="text-warning ml-2">Menunggu</span>
                                                     @endif
                                                 </td>
-
-
                                                 <td>
                                                     @if ($item->acc_nm == 'oke')
                                                         <span class="badge bg-success">Diterima</span>
                                                     @elseif ($item->acc_nm == 'tolak')
                                                         <span class="badge bg-danger">{{ $item->alasan }}</span>
-                                                    @elseif ($item->acc_nm == '' || $item->acc_nm == null)
+                                                    @elseif ($item->acc_nm == '' || $item->acc_nm == null )
                                                         <span class="badge bg-warning">Menunggu</span>
                                                     @endif
                                                 </td>
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="7" class="text-center">Tidak ada data untuk Form ID:
-                                                    {{ $targetFormId }}.</td>
+                                                <td colspan="7" class="text-center">Tidak ada data untuk Form ID: {{ $targetFormId }}.</td>
                                             </tr>
                                         @endforelse
                                     </tbody>
