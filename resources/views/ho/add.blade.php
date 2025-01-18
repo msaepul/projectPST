@@ -2,6 +2,7 @@
 
 @section('content')
     <style>
+        /* General Styling */
         body {
             font-family: 'Arial', sans-serif;
             background: #f8f9fa;
@@ -12,6 +13,7 @@
             margin: 0;
         }
 
+        /* Container Styling */
         .container {
             background-color: white;
             padding: 30px;
@@ -28,6 +30,7 @@
             color: #343a40;
         }
 
+        /* Form Styling */
         .form-group {
             margin-bottom: 20px;
             position: relative;
@@ -114,6 +117,8 @@
         <h2>Tambah User Baru</h2>
         <form method="POST" action="{{ route('ho.user.store') }}">
             @csrf
+
+            <!-- Row 1: Name and Email -->
             <div class="form-row">
                 <div class="form-group">
                     <label for="name">Nama User:</label>
@@ -130,6 +135,8 @@
                     @enderror
                 </div>
             </div>
+
+            <!-- Row 2: Password and NIK -->
             <div class="form-row">
                 <div class="form-group">
                     <label for="password">Password:</label>
@@ -147,6 +154,8 @@
                     @enderror
                 </div>
             </div>
+
+            <!-- Departemen Selection -->
             <div class="form-group">
                 <label>Departemen:</label>
                 <select class="form-control" name="departemen" required>
@@ -162,6 +171,7 @@
                 @enderror
             </div>
 
+            <!-- Cabang Asal Selection -->
             <div class="form-group">
                 <label>Cabang Asal:</label>
                 <select class="form-control" name="cabang_asal" required>
@@ -176,6 +186,8 @@
                     <span class="error-message">{{ $message }}</span>
                 @enderror
             </div>
+
+            <!-- Row 3: No HP and Role -->
             <div class="form-row">
                 <div class="form-group">
                     <label for="no_hp">No HP:</label>
@@ -193,6 +205,7 @@
                 </div>
             </div>
 
+            <!-- Submit Button -->
             <button type="submit">Tambah</button>
         </form>
     </div>

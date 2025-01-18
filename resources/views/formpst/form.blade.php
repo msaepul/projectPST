@@ -121,4 +121,23 @@
             </div>
         </div>
     </div>
+    <script>
+        document.getElementById('add-field').addEventListener('click', function() {
+            const rowToClone = document.getElementById('rowToClone');
+            if (rowToClone) {
+                const newRow = rowToClone.cloneNode(true);
+                newRow.removeAttribute('id');
+                newRow.querySelectorAll('input, select').forEach(input => input.value = '');
+                document.querySelector('#pegawaiTable tbody').appendChild(newRow);
+            } else {
+                console.error("Element 'rowToClone' tidak ditemukan.");
+            }
+        });
+
+        document.querySelector('#pegawaiTable').addEventListener('click', function(event) {
+            if (event.target.classList.contains('remove-item')) {
+                event.target.closest('tr').remove();
+            }
+        });
+    </script>
 @endsection
