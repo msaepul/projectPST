@@ -74,8 +74,14 @@
                                                 <td>{{ $item->nik }}</td>
                                                 <td>{{ $item->departemen }}</td>
                                                 <td>{{ $item->lama_keberangkatan }}</td>
-                                                <td>{{ $item->upload_file }}</td>
                                                 <td>
+                                                    @if ($item->upload_file)
+                                                        <a href="{{ asset('storage/' . $item->upload_file) }}"
+                                                            target="_blank">Lihat File</a>
+                                                    @else
+                                                        Tidak ada file
+                                                    @endif
+                                                </td>                                                <td>
                                                     @if ($form->acc_bm == 'oke' && $form->acc_hrd != 'reject' && $form->acc_bm != 'reject' && $item->acc_nm == null)
                                                         <button class="btn btn-success btn-sm"
                                                             onclick="updateStatus({{ $item->id }}, 'oke')">
