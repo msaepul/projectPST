@@ -74,7 +74,6 @@
                                                 <td>{{ $item->nik }}</td>
                                                 <td>{{ $item->departemen }}</td>
                                                 <td>{{ $item->lama_keberangkatan }}</td>
-                                                <td>{{ $item->upload_file }}</td>
                                                 <td>
                                                     @if ($form->acc_bm == 'oke' && $form->acc_hrd != 'reject' && $form->acc_bm != 'reject' && $item->acc_nm == null)
                                                         <button class="btn btn-success btn-sm"
@@ -87,16 +86,13 @@
                                                         </button>
                                                     @endif
 
+
                                                     @if ($item->acc_nm == 'oke')
-                                                        <span class="text-success">Diterima</span>
-                                                    @endif
-
-                                                    @if ($item->acc_nm == 'tolak' || $form->acc_bm == 'reject' || $form->acc_hrd == 'reject')
-                                                        <span class="text-danger">Ditolak</span>
-                                                    @endif
-
-                                                    @if ($form->acc_bm == '')
-                                                        <span class="text-warning">Menunggu</span>
+                                                        <span class="text-success ml-2">Diterima</span>
+                                                    @elseif ($item->acc_nm == 'tolak' || $form->acc_hrd == 'reject' || $form->acc_bm == 'reject')
+                                                        <span class="text-danger ml-2">Ditolak</span>
+                                                    @elseif ($form->acc_bm == '')
+                                                        <span class="text-warning ml-2">Menunggu</span>
                                                     @endif
                                                 </td>
                                                 <td>
