@@ -124,51 +124,6 @@ public function show($id)
     return view('formpst.show', compact('form', 'data'));
 }
 
-    public function edit($id)
-    {
-        $data = Nama_pegawai::find($id);
-
-        if (!$data) {
-            return redirect()->route('formpst.show')->with('error', 'Data pegawai tidak ditemukan!');
-        }
-
-        $departemens = Departemen::all();
-
-        return view('formpst.edit', compact('data', 'departemens'));
-    }
-
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'nik' => 'required|string|max:255',
-            'departemen' => 'required|string|max:255',
-            'lama' => 'required|string|max:255',
-        ]);
-
-        $data = Nama_pegawai::findOrFail($id);
-
-        $data->update([
-            'nama' => $request->nama,
-            'nik' => $request->nik,
-            'departemen' => $request->departemen,
-            'lama' => $request->lama,
-        ]);
-
-        return redirect()->route('formpst.show')->with('success', 'Data berhasil diperbarui!');
-    }
-
-    public function list()
-{
-    $nama_pegawais = Nama_pegawai::select('form_id', 'ct', 'id')->get();
-
-    $grouped_pegawais = $nama_pegawais->groupBy('form_id');
-
-    return view('formpst.list', compact('grouped_pegawais'));
-}
-
-
-
 public function submitForm(Request $request, $formId)
 {
     $form = Form::findOrFail($formId);

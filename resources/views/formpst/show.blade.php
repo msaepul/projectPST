@@ -12,7 +12,7 @@
                             <!-- Form Handle (Submit / Reject) -->
                             <form action="{{ route('form.submit', $form->id) }}" method="POST">
                                 @csrf
-                                @if ($form->acc_hrd == 'oke' || $form->acc_hrd == 'reject' || $form->acc_bm == 'reject' )
+                                @if ($form->acc_hrd == 'oke' || $form->acc_hrd == 'reject' || $form->acc_bm == 'reject')
                                     <a href="{{ route('formpst.index') }}" class="btn btn-success">
                                         Selesai
                                     </a>
@@ -81,29 +81,28 @@
                                                     @else
                                                         Tidak ada file
                                                     @endif
-                                                </td>
-                                                <td>
-                                                    @if ($form->acc_bm == 'oke' && $form->acc_hrd != 'oke' && $form->acc_bm != 'reject' && $form->acc_hrd != 'reject')
-                                                        <div class="mb-2">
-                                                            <button class="btn btn-success btn-sm w-100"
-                                                                onclick="updateStatus({{ $item->id }}, 'oke')">
-                                                                Setuju
-                                                            </button>
-                                                        </div>
-                                                        <div>
-                                                            <button class="btn btn-danger btn-sm w-100" onclick="openRejectModal({{ $item->id }})">
-                                                                Tolak
-                                                            </button>
-                                                        </div>
+                                                </td>                                                <td>
+                                                    @if ($form->acc_bm == 'oke' && $form->acc_hrd != 'reject' && $form->acc_bm != 'reject' && $item->acc_nm == null)
+                                                        <button class="btn btn-success btn-sm"
+                                                            onclick="updateStatus({{ $item->id }}, 'oke')">
+                                                            Setuju
+                                                        </button>
+                                                        <button class="btn btn-danger btn-sm"
+                                                            onclick="openRejectModal({{ $item->id }})">
+                                                            Tolak
+                                                        </button>
                                                     @endif
 
-
                                                     @if ($item->acc_nm == 'oke')
-                                                        <span class="text-success ml-2">Diterima</span>
-                                                    @elseif ($item->acc_nm == 'tolak' || $form->acc_hrd == 'reject' || $form->acc_bm == 'reject')
-                                                        <span class="text-danger ml-2">Ditolak</span>
-                                                    @elseif ($form->acc_bm == '')
-                                                        <span class="text-warning ml-2">Menunggu</span>
+                                                        <span class="text-success">Diterima</span>
+                                                    @endif
+
+                                                    @if ($item->acc_nm == 'tolak' || $form->acc_bm == 'reject' || $form->acc_hrd == 'reject')
+                                                        <span class="text-danger">Ditolak</span>
+                                                    @endif
+
+                                                    @if ($form->acc_bm == '')
+                                                        <span class="text-warning">Menunggu</span>
                                                     @endif
                                                 </td>
                                                 <td>
@@ -111,14 +110,17 @@
                                                         <span class="badge bg-success">Diterima</span>
                                                     @elseif ($item->acc_nm == 'tolak')
                                                         <span class="badge bg-danger">{{ $item->alasan }}</span>
-                                                    @elseif ($item->acc_nm == '' || $item->acc_nm == null )
+                                                    @elseif ($form->acc_hrd == 'reject' || $form->acc_hrd == 'reject')
+                                                        <span class="badge bg-danger">Ditolak</span>
+                                                    @elseif ($item->acc_nm == '' || $form->acc_hrd != 'reject' || $form->acc_bm != 'reject')
                                                         <span class="badge bg-warning">Menunggu</span>
                                                     @endif
                                                 </td>
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="7" class="text-center">Tidak ada data untuk Form ID: {{ $targetFormId }}.</td>
+                                                <td colspan="7" class="text-center">Tidak ada data untuk Form ID:
+                                                    {{ $targetFormId }}.</td>
                                             </tr>
                                         @endforelse
                                     </tbody>

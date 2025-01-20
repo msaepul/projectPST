@@ -69,7 +69,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/formpst/show', [FormController::class, 'show'])->name('formpst.show');
         Route::get('/formpst/show/{id}', [FormController::class, 'show'])->name('formpst.show');
         Route::get('/formpst/index', [FormController::class, 'index'])->name('formpst.index');
-        Route::get('/formpst/list', [FormController::class, 'list'])->name('formpst.list');
+        Route::get('/formpst/edit', [FormController::class, 'edit'])->name('formpst.edit');
         Route::post('/formpst/store', [FormController::class, 'store'])->name('formpst.store');
         Route::get('/formpst/edit/{id}', [FormController::class, 'edit'])->name('formpst.edit');
         Route::put('/formpst/update/{id}', [FormController::class, 'update'])->name('formpst.update');
