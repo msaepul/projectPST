@@ -3,15 +3,15 @@
 @section('content')
     <style>
         /* General Styling */
-        body {
-            font-family: 'Arial', sans-serif;
-            background: #f8f9fa;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
+        /* body {
+                        font-family: 'Arial', sans-serif;
+                        background: #f8f9fa;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        min-height: 100vh;
+                        margin: 0;
+                    } */
 
         /* Container Styling */
         .container {
@@ -119,6 +119,15 @@
             @csrf
 
             <!-- Row 1: Name and Email -->
+
+            <div class="form-group">
+                <label for="nama_lengkap">Nama Lengkap:</label>
+                <input type="text" id="nama_lengkap" name="nama_lengkap" value="{{ old('nama_lengkap') }}" required>
+                @error('nama_lengkap')
+                    <span class="error-message">{{ $message }}</span>
+                @enderror
+            </div>
+
             <div class="form-row">
                 <div class="form-group">
                     <label for="name">Nama User:</label>
@@ -161,7 +170,8 @@
                 <select class="form-control" name="departemen" required>
                     <option value="">Pilih Departemen</option>
                     @foreach ($departemens as $departemen)
-                        <option value="{{ $departemen->id }}" {{ old('departemen') == $departemen->id ? 'selected' : '' }}>
+                        <option value="{{ $departemen->id }}"
+                            {{ old('departemen') == $departemen->id ? 'selected' : '' }}>
                             {{ $departemen->nama_departemen }}
                         </option>
                     @endforeach

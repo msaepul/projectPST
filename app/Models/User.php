@@ -25,6 +25,7 @@ class User extends Authenticatable
         'departemen',
         'cabang_asal',
         'no_hp',
+        'nama_lengkap',
     ];
 
     /**

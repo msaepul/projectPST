@@ -19,7 +19,8 @@
                         <thead>
                             <tr class="table-primary text-white">
                                 <th scope="col" style="text-align: center;">No</th>
-                                <th scope="col">Nama</th>
+                                <th scope="col">Nama Lengkap</th>
+                                <th scope="col">Nama User</th>
                                 <th scope="col">Email</th>
                                 <th scope="col">NIK</th>
                                 <th scope="col">Departemen</th>
@@ -33,6 +34,7 @@
                             @foreach ($users as $key => $user)
                                 <tr>
                                     <td class="text-center">{{ $key + 1 }}</td>
+                                    <td>{{ $user->nama_lengkap }}</td>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
                                     <td>{{ $user->nik }}</td>

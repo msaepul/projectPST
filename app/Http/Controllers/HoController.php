@@ -214,6 +214,7 @@ public function editUser($id)
          'cabang_asal' => 'required|exists:cabangs,nama_cabang',
          'no_hp' => 'required|string',
          'role' => 'required|in:admin,user',
+         'nama_lengkap' => 'required|string|max:255',
      ]);
 
      // Cek jika password ada di request dan enkripsi password
@@ -230,6 +231,7 @@ public function editUser($id)
          'cabang_asal' => $request->cabang_asal,
          'no_hp' => $request->no_hp,
          'role' => $request->role,
+         'nama_lengkap' => $request->nama_lengkap,
      ]);
 
      // Redirect dengan pesan sukses setelah berhasil update
@@ -249,6 +251,7 @@ public function editUser($id)
             'cabang_asal' => 'required|exists:cabangs,id',
             'no_hp' => 'required|string',
             'role' => 'required|in:admin,user',
+            'nama_lengkap' => 'required|string|max:255',
         ]);
 
         // Ambil nama cabang dan departemen berdasarkan ID yang divalidasi
@@ -265,13 +268,12 @@ public function editUser($id)
             'cabang_asal' => $cabangAsal,
             'no_hp' => $request->no_hp,
             'role' => $request->role,
+            'nama_lengkap' => $request->nama_lengkap,
         ]);
 
         // Redirect dengan pesan sukses setelah user berhasil ditambahkan
         return redirect()->route('ho.user')->with('success', 'User berhasil ditambahkan!');
     }
-
-
 
     // Fungsi untuk menghapus user
     public function destroyuser($id)
