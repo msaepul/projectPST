@@ -271,7 +271,6 @@ public function edit($id)
 
 public function update(Request $request, $id)
 {
-
     $form = Form::findOrFail($id);
 
     $request->validate([
@@ -281,17 +280,25 @@ public function update(Request $request, $id)
         'tanggal_keberangkatan' => 'required|date',
     ]);
 
+    // Ambil nama cabang berdasarkan ID
+    $cabangAsal = Cabang::findOrFail($request->cabang_asal)->nama_cabang;
+    $cabangTujuan = Cabang::findOrFail($request->cabang_tujuan)->nama_cabang;
+
+    // Ambil tujuan penugasan
+    $tujuanPenugasan = Tujuan::findOrFail($request->tujuan)->tujuan_penugasan;
+
+    // Update form dengan nama cabang
     $form->update([
-        'cabang_asal' => $request->cabang_asal,
-        'cabang_tujuan' => $request->cabang_tujuan,
-        'tujuan_id' => $request->tujuan,
+        'cabang_asal' => $cabangAsal,
+        'cabang_tujuan' => $cabangTujuan,
+        'tujuan_id' => $tujuanPenugasan,
         'tanggal_keberangkatan' => $request->tanggal_keberangkatan,
     ]);
 
+    // Update nama pegawai
     foreach ($request->nama as $key => $value) {
         $nama_pegawais = Nama_pegawai::find($key);
         if ($nama_pegawais) {
-
             $nama_pegawais->update([
                 'nama_pegawai' => $value,
                 'nik' => $request->nik[$key],
@@ -310,7 +317,6 @@ public function update(Request $request, $id)
 
     return redirect()->route('formpst.index')->with('success', 'Data berhasil diperbarui');
 }
-
 
 
 
