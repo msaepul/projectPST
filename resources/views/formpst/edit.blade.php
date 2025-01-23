@@ -14,7 +14,7 @@
                                 @csrf
                                 @method('PUT')
 
-                                {{-- Pesan error untuk validasi --}}
+
                                 @if ($errors->any())
                                     <div class="alert alert-danger">
                                         <ul>
