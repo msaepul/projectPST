@@ -24,13 +24,17 @@ class Form extends Model
     {
         return $this->hasMany(Nama_pegawai::class);
     }
-    public function Cabang_tujuans()
+    public function cabangAsal()
     {
-        return $this->hasMany(Cabang_tujuan::class);
+        return $this->belongsTo(Cabang::class, 'cabang_asal');
+    }
+    public function cabangTujuan()
+    {
+        return $this->belongsTo(Cabang::class, 'cabang_tujuan');
     }
     public function pengajuans()
     {
         return $this->hasMany(Pengajuan::class);
     }
-    
+
 }

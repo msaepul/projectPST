@@ -74,6 +74,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/formpst/index_masuk', [FormController::class, 'index_masuk'])->name('formpst.index_masuk');
         Route::get('/formpst/index_surat', [FormController::class, 'index_surat'])->name('formpst.index_surat');
         Route::get('/formpst/edit', [FormController::class, 'edit'])->name('formpst.edit');
+
         Route::post('/formpst/store', [FormController::class, 'store'])->name('formpst.store');
         Route::get('/formpst/edit/{id}', [FormController::class, 'edit'])->name('formpst.edit');
         Route::put('/formpst/update/{id}', [FormController::class, 'update'])->name('formpst.update');
@@ -84,8 +85,13 @@ Route::middleware('auth')->group(function () {
     
         // Add the PDF generation route here
         Route::get('/surat-tugas/pdf/{id}', [FormController::class, 'surat_tugas'])->name('surat-tugas.pdf');
+
     });
     
+
+    Route::get('/hrd/form_nm', function () {
+        return view('hrd.form_nm');
+    })->name('hrd.form_nm');
 
     // Data Diri Routes
     Route::get('/data_diri/biodata', [Data_diriController::class, 'biodata'])->name('data_diri.biodata');
