@@ -27,7 +27,6 @@
 
                                 <div class="d-flex justify-content-end gap-2 mt-4">
                                     <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-                                    <button type="reset" class="btn btn-secondary">Reset</button>
                                     <a href="{{ route('formpst.index') }}" class="btn btn-danger">Kembali</a>
                                 </div>
 
@@ -43,7 +42,7 @@
                                             @foreach ($cabangs as $cabang)
                                                 <option value="{{ $cabang->id }}"
                                                     @if ($cabang->id == $form->cabang_asal) selected @endif>
-                                                    {{ $cabang->nama_cabang }} <!-- Menampilkan nama_cabang -->
+                                                    {{ $cabang->nama_cabang }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -54,7 +53,7 @@
                                             @foreach ($cabangs as $cabang)
                                                 <option value="{{ $cabang->id }}"
                                                     @if ($cabang->id == $form->cabang_tujuan) selected @endif>
-                                                    {{ $cabang->nama_cabang }} <!-- Menampilkan nama_cabang -->
+                                                    {{ $cabang->nama_cabang }}
                                                 </option>
                                             @endforeach
                                         </select>
