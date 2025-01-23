@@ -3,111 +3,48 @@
 @section('content')
     <div class="container-fluid pt-4">
         <!-- Breadcrumb Section -->
-
-
-
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ route('formpst.index') }}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Draft</li>
+                @if ($form->acc_bm == 'oke' || $form->acc_hrd == 'oke' )
+                    <li class="breadcrumb-item">Cabang Disetujui</li>
+                @elseif ($form->acc_bm == 'reject')
+                    <li class="breadcrumb-item">BM - Ditolak</li>
+                @else
+                    <li class="breadcrumb-item">BM - Menunggu</li>
+                @endif
+            </ol>
+        </nav>
 
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card mb-4 mt-3">
-                    <div class="card-header style="position: sticky; top: 0; z-index: 100;>
-                        <ol class="breadcrumb">
-                            {{-- <li class="breadcrumb-item">
-                                <span class="breadcrumb-step @if ($form->acc_bm === '' || $form->acc_hrd === '') text-primary @endif">
-                                    Draft
-                                </span>
-                            </li> --}}
-                            <li class="breadcrumb-item">
-                                <span class="breadcrumb-step @if (($form->acc_bm === '' || $form->acc_hrd === '') && ($form->acc_bm !== 'oke' || $form->acc_hrd !== 'oke')) text-primary @endif">
-                                    Pengajuan Cabang
-                                </span>
-                            </li>
-                            <li class="breadcrumb-item">
-                                <span class="breadcrumb-step @if (($form->acc_bm === 'oke' && $form->acc_hrd === 'oke') && ($form->acc_ho === '' || $form->acc_ho !== 'oke')) text-primary @endif">
-                                    Diperiksa HO
-                                </span>
-                            </li>
-                            <li class="breadcrumb-item">
-                                <span class="breadcrumb-step @if ($form->acc_ho === 'oke' && ($form->acc_cabang === '' || $form->acc_cabang !== 'oke')) text-primary @endif">
-                                    Diperiksa Cabang Tujuan
-                                </span>
-                            </li>
-                            <li class="breadcrumb-item">
-                                <span class="breadcrumb-step @if ($form->acc_cabang === 'oke') text-primary @endif">
-                                    Selesai
-                                </span>
-                            </li>
-                            <li class="breadcrumb-item">
-                                <span class="breadcrumb-step text-danger">
-                                    Ditolak
-                                </span>
-                            </li>
-                            
-                        </ol>
-                    </div>
+                    <div class="card-header bg-primary text-white py-2" style="position: sticky; top: 0; z-index: 100;"></div>
 
                     <div class="card-body">
-
                         <div class="mb-4">
-                            <!-- Form Handle (Submit or Reject for BM, HRD, HO) -->
+                            <!-- Form Handle (Submit / Reject) -->
                             <form action="{{ route('form.submit', $form->id) }}" method="POST">
                                 @csrf
-
-                                <!-- Tombol untuk ACC atau Tolak BM -->
-                                @if ($form->acc_bm == null)
-                                    <button type="submit" name="action" value="acc_bm" class="btn btn-primary mr-2">
-                                        Submit BM
+                                @if ($form->acc_hrd == 'oke' || $form->acc_hrd == 'reject' || $form->acc_bm == 'reject')
+                                    <a href="{{ route('formpst.index') }}" class="btn btn-success">
+                                        Selesai
+                                    </a>
+                                @else
+                                    <!-- Submit Button -->
+                                    <button type="submit" name="action" value="submit" class="btn btn-primary mr-2">
+                                        Submit
                                     </button>
-                                    <button type="submit" name="action" value="reject_bm" class="btn btn-danger">
-                                        Tolak BM
-                                    </button>
-                                @endif
-
-                                <!-- Tombol untuk ACC atau Tolak HRD -->
-                                @if ($form->acc_hrd == null && $form->acc_bm == 'oke')
-                                    <button type="submit" name="action" value="acc_hrd" class="btn btn-primary mr-2">
-                                        Submit HRD
-                                    </button>
-                                    <button type="submit" name="action" value="reject_hrd" class="btn btn-danger">
-                                        Tolak HRD
+                                    <!-- Reject Button -->
+                                    <button type="submit" name="action" value="reject" class="btn btn-danger">
+                                        Tolak
                                     </button>
                                 @endif
-
-                                <!-- Tombol untuk ACC atau Tolak HO -->
-                                @if ($form->acc_ho == null && $form->acc_hrd == 'oke')
-                                    <button type="submit" id="submitHoButton" name="action" value="acc_ho"
-                                        class="btn btn-primary mr-2" disabled>
-                                        Submit HO
-                                    </button>
-                                    <button type="submit" name="action" value="reject_ho" class="btn btn-danger">
-                                        Tolak HO
-                                    </button>
-                                @endif
-
-                                @if ($form->acc_cabang == null && $form->acc_ho == 'oke')
-                                    <button type="submit" name="action" value="acc_cabang" class="btn btn-primary mr-2">
-                                        Submit cabang
-                                    </button>
-                                    <button type="submit" name="action" value="reject_cabang" class="btn btn-danger">
-                                        Tolak cabang
-                                    </button>
-                                @endif
-
                             </form>
                         </div>
 
-
-
-                        <h5 class="text-center mb-8">
-                            @if ($form->acc_ho == 'oke')
-                                Form Persetujuan Cabang
-                            @elseif ($form->acc_bm == 'oke' && $form->acc_hrd == 'oke')
-                                Form Persetujuan HO
-                            @else
-                                Form Persetujuan
-                            @endif
-                        </h5>
-
+                        <h5 class="text-center mb-8">Form Persetujuan HO</h5>
                         <div class="form-details">
                             <div class="detail-group">
                                 <label class="detail-label">No Surat:</label>
@@ -154,20 +91,17 @@
                                                 <td>{{ $item->lama_keberangkatan }}</td>
                                                 <td>
                                                     @if ($item->upload_file)
-                                                        <a href="{{ asset('storage/' . $item->upload_file) }}"
-                                                            target="_blank">Lihat File</a>
+                                                        <a href="{{ asset('storage/' . $item->upload_file) }}" target="_blank">Lihat File</a>
                                                     @else
                                                         Tidak ada file
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    @if ($form->acc_hrd == 'oke' && $form->acc_hrd != 'reject' && $form->acc_bm != 'reject' && $item->acc_nm == null)
-                                                        <button class="btn btn-success btn-sm"
-                                                            onclick="updateStatus({{ $item->id }}, 'oke')">
+                                                    @if ($form->acc_bm == 'oke' && $form->acc_hrd != 'reject' && $form->acc_bm != 'reject' && $item->acc_nm == null)
+                                                        <button class="btn btn-success btn-sm" onclick="updateStatus({{ $item->id }}, 'oke')">
                                                             Setuju
                                                         </button>
-                                                        <button class="btn btn-danger btn-sm"
-                                                            onclick="openRejectModal({{ $item->id }})">
+                                                        <button class="btn btn-danger btn-sm" onclick="openRejectModal({{ $item->id }})">
                                                             Tolak
                                                         </button>
                                                     @endif
@@ -180,7 +114,7 @@
                                                         <span class="text-danger">Ditolak</span>
                                                     @endif
 
-                                                    @if ($form->acc_bm == '' || $form->acc_hrd == '')
+                                                    @if ($form->acc_bm == '')
                                                         <span class="text-warning">Menunggu</span>
                                                     @endif
                                                 </td>
@@ -198,8 +132,7 @@
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="7" class="text-center">Tidak ada data untuk Form ID:
-                                                    {{ $targetFormId }}.</td>
+                                                <td colspan="7" class="text-center">Tidak ada data untuk Form ID: {{ $targetFormId }}.</td>
                                             </tr>
                                         @endforelse
                                     </tbody>
@@ -237,39 +170,7 @@
                                     @endif
                                 </div>
                             </div>
-                            {{-- ACC HO  --}}
-                            @if ($form->acc_hrd == 'oke')
-                                <div class="status-step">
-                                    <img src="{{ $form->acc_ho == 'oke' ? asset('dist/img/oke.png') : ($form->acc_ho == 'reject' ? asset('dist/img/reject.png') : asset('dist/img/no.png')) }}"
-                                        alt="Status HO" class="thumb-icon" width="50">
-                                    <div class="status-name">
-                                        @if ($form->acc_ho == 'oke')
-                                            HRD HO - Setuju
-                                        @elseif ($form->acc_ho == 'reject')
-                                            HRD HO - Ditolak
-                                        @else
-                                            HRD HO - Menunggu
-                                        @endif
-                                    </div>
-                                </div>
-                            @endif
-                            {{-- ACC CABANG --}}
-                            @if ($form->acc_ho == 'oke')
-                                <div class="status-step">
-                                    <img src="{{ $form->acc_cabang == 'oke' ? asset('dist/img/oke.png') : ($form->acc_cabang == 'reject' ? asset('dist/img/reject.png') : asset('dist/img/no.png')) }}"
-                                        alt="Status CABANG" class="thumb-icon" width="50">
-                                    <div class="status-name">
-                                        @if ($form->acc_cabang == 'oke')
-                                            CABANG - Setuju
-                                        @elseif ($form->acc_cabang == 'reject')
-                                            CABANG- Ditolak
-                                        @else
-                                            CABANG- Menunggu
-                                        @endif
-                                    </div>
-                                </div>
                         </div>
-                        @endif
 
                     </div>
                 </div>
@@ -358,31 +259,6 @@
                 }
             });
         }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            function updateSubmitHoButton() {
-                const submitHoButton = document.getElementById('submitHoButton');
-                const rows = document.querySelectorAll('.item-table tbody tr');
-                let allReviewed = true;
-
-                rows.forEach(row => {
-                    const statusCell = row.querySelector('td span.badge');
-                    if (statusCell && statusCell.classList.contains('bg-warning')) {
-                        allReviewed = false;
-                    }
-                });
-
-                submitHoButton.disabled = !allReviewed;
-            }
-
-            // Periksa status awal saat halaman dimuat
-            updateSubmitHoButton();
-
-            // Tangkap event AJAX untuk memperbarui tombol
-            $(document).ajaxSuccess(function() {
-                updateSubmitHoButton();
-            });
-        });
     </script>
 
     <style>
@@ -501,7 +377,6 @@
             font-size: 14px;
             color: #555;
         }
-
         /* Breadcrumb styles */
         .breadcrumb {
             background-color: transparent;
@@ -512,7 +387,6 @@
         .breadcrumb-item a {
             color: #007bff;
         }
-
         .breadcrumb-item.active {
             color: #6c757d;
         }

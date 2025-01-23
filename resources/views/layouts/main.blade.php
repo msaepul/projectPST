@@ -169,10 +169,23 @@
                                     <a href="{{ route('formpst.index') }}"
                                         class="nav-link {{ request()->is('formpst/index') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>List Permintaan</p>
+                                        <p>Surat Keluar</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('formpst.index_masuk') }}"
+                                        class="nav-link {{ request()->is('formpst/index_masuk') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Surat Masuk</p>
                                     </a>
                                 </li>
                             </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('formpst.index_surat') }}" class="nav-link">
+                                <i class="nav-icon fas fa-envelope"></i>
+                                <p>Surat Tugas</p>
+                            </a>
                         </li>
                     @endif
 
@@ -180,7 +193,7 @@
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-building"></i>
-                                <p>HO<i class="fas fa-angle-left right"></i></p>
+                                <p>Master Data<i class="fas fa-angle-left right"></i></p>
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
@@ -218,6 +231,13 @@
                                         class="nav-link {{ request()->is('ho/user') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>User</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('hrd.index_hrd') }}"
+                                        class="nav-link {{ request()->is('ho/user') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>List Pengajuan</p>
                                     </a>
                                 </li>
                             </ul>

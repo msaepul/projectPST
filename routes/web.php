@@ -57,8 +57,10 @@ Route::middleware('auth')->group(function () {
         // User Routes
         Route::get('/ho/user', [HoController::class, 'user'])->name('ho.user');
         Route::get('/formpst/show_pegawai/{form_id}', [HoController::class, 'show_pegawai'])->name('formpst.show_pegawai');
-        Route::get('/hrd/list_hrd', [HrdController::class, 'list_hrd'])->name('hrd.list_hrd');
-        Route::get('/hrd/list_bm', [HrdController::class, 'list_bm'])->name('hrd.list_bm');
+        Route::get('/hrd/show_hrd', [HrdController::class, 'show_hrd'])->name('hrd.show_hrd');
+        Route::get('/hrd/show/{id}', [HrdController::class, 'show_hrd'])->name('hrd.show_hrd');
+
+        Route::get('/hrd/index_hrd', [HrdController::class, 'index_hrd'])->name('hrd.index_hrd');
         Route::get('/hrd/list_nm', [HrdController::class, 'list_nm'])->name('hrd.list_nm');
     });
 
@@ -69,17 +71,21 @@ Route::middleware('auth')->group(function () {
         Route::get('/formpst/show', [FormController::class, 'show'])->name('formpst.show');
         Route::get('/formpst/show/{id}', [FormController::class, 'show'])->name('formpst.show');
         Route::get('/formpst/index', [FormController::class, 'index'])->name('formpst.index');
+        Route::get('/formpst/index_masuk', [FormController::class, 'index_masuk'])->name('formpst.index_masuk');
+        Route::get('/formpst/index_surat', [FormController::class, 'index_surat'])->name('formpst.index_surat');
         Route::get('/formpst/edit', [FormController::class, 'edit'])->name('formpst.edit');
         Route::post('/formpst/store', [FormController::class, 'store'])->name('formpst.store');
         Route::get('/formpst/edit/{id}', [FormController::class, 'edit'])->name('formpst.edit');
         Route::put('/formpst/update/{id}', [FormController::class, 'update'])->name('formpst.update');
         Route::delete('/formpst/delete/{id}', [FormController::class, 'destroy'])->name('formpst.destroy');
-        Route::post('/form/submit/{formId}', [FormController::class, 'submitForm'])->name('form.submit');
-        Route::post('/form/reject/{formId}', [FormController::class, 'rejectForm'])->name('form.reject');
-
+        Route::post('/formpst/{id}/submit', [FormController::class, 'submit'])->name('form.submit');
+        Route::get('/formpst/surat_tugas/{id}', [FormController::class, 'surat_tugas'])->name('formpst.surat_tugas');
         Route::post('/update-status/{itemId}/{status}', [FormController::class, 'updateStatus'])->name('update.status');
-        
+    
+        // Add the PDF generation route here
+        Route::get('/surat-tugas/pdf/{id}', [FormController::class, 'surat_tugas'])->name('surat-tugas.pdf');
     });
+    
 
     // Data Diri Routes
     Route::get('/data_diri/biodata', [Data_diriController::class, 'biodata'])->name('data_diri.biodata');

@@ -3,7 +3,7 @@
 @section('content')
     <style>
         /* General Styling */
-        body {
+        /* body {
             font-family: 'Arial', sans-serif;
             background: #f8f9fa;
             display: flex;
@@ -11,7 +11,7 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-        }
+        } */
 
         /* Container Styling */
         .container {
