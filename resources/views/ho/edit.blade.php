@@ -109,6 +109,16 @@
                                 @method('PUT')
 
                                 <div class="form-group">
+                                    <label for="nama_lengkap">Nama Lengkap:</label>
+                                    <input type="text" id="nama_lengkap" name="nama_lengkap"
+                                        value="{{ old('nama_lengkap', $user->nama_lengkap) }}"
+                                        class="form-control @error('nama_lengkap') is-invalid @enderror" required>
+                                    @error('nama_lengkap')
+                                        <span class="error-message text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                <div class="form-group">
                                     <label for="name">Nama User:</label>
                                     <input type="text" id="name" name="name" value="{{ $user->name }}"
                                         class="form-control" required>

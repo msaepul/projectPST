@@ -40,18 +40,18 @@ class FormController extends Controller
             'cabang_tujuan' => 'required|exists:cabangs,id',
             'tujuan' => 'required|exists:tujuans,id',
             'tanggalKeberangkatan' => 'required|date',
-    
+
             'namaPegawai.*' => 'required|string|max:255',
             'departemen.*' => 'required|string|max:255',
             'nik.*' => 'required|string|max:255',
             'uploadFile.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'lamaKeberangkatan.*' => 'required|date',
         ]);
-    
+
         $cabangAsal = Cabang::findOrFail($validatedData['cabang_asal'])->nama_cabang;
         $cabangTujuan = Cabang::findOrFail($validatedData['cabang_tujuan'])->nama_cabang;
         $tujuanPenugasan = Tujuan::findOrFail($validatedData['tujuan'])->tujuan_penugasan;
-    
+
         // Simpan data ke tabel forms
         $form = Form::create([
             'no_surat' => $validatedData['no_surat'],
@@ -61,17 +61,17 @@ class FormController extends Controller
             'tujuan' => $tujuanPenugasan,
             'tanggal_keberangkatan' => $validatedData['tanggalKeberangkatan'],
         ]);
-    
+
     $namaPegawais = [];
-    
+
     foreach ($request->namaPegawai as $index => $namaPegawai) {
         $uploadFilePath = null;
-    
+
             if ($request->hasFile("uploadFile.$index")) {
                 $originalName = $request->file("uploadFile.$index")->getClientOriginalName();
                 $uploadFilePath = $request->file("uploadFile.$index")->storeAs('uploads', $originalName, 'public');
         }
-    
+
         // Menambahkan data ke dalam array
         $namaPegawais[] = [
             'form_id' => $form->id,
@@ -84,10 +84,10 @@ class FormController extends Controller
             'updated_at' => now(),
         ];
     }
-    
+
     // Menyimpan semua data sekaligus
     Nama_pegawai::insert($namaPegawais);
-    
+
         return redirect()->route('formpst.index', ['form' => $form->id])
             ->with('success', 'Data berhasil disimpan.');
     }
@@ -95,7 +95,7 @@ class FormController extends Controller
 public function index(Request $request)
 {
     $query = Form::query();
-    
+
 
     if ($request->filled('namaPemohon')) {
         $query->where('nama_pemohon', 'like', '%' . $request->namaPemohon . '%');
@@ -151,33 +151,82 @@ public function submitForm(Request $request, $formId)
     return redirect()->back()->with('success', 'Form berhasil disubmit!');
 }
 
+public function edit($id)
+{
+
+    $form = Form::with(['cabangAsal:id,nama_cabang', 'cabangTujuan:id,nama_cabang'])->findOrFail($id);
+
+    $nama_pegawais = Nama_pegawai::where('form_id', $form->id)->get();
+    $cabangs = Cabang::all();
+    $tujuans = Tujuan::all();
+    $departemens = Departemen::all();
+
+    return view('formpst.edit', compact('form', 'nama_pegawais', 'cabangs', 'tujuans', 'departemens'));
+}
+
+public function update(Request $request, $id)
+{
+
+    $form = Form::findOrFail($id);
+
+    $request->validate([
+        'cabang_asal' => 'required|exists:cabangs,id',
+        'cabang_tujuan' => 'required|exists:cabangs,id',
+        'tujuan' => 'required|exists:tujuans,id',
+        'tanggal_keberangkatan' => 'required|date',
+    ]);
+
+    $form->update([
+        'cabang_asal' => $request->cabang_asal,
+        'cabang_tujuan' => $request->cabang_tujuan,
+        'tujuan_id' => $request->tujuan,
+        'tanggal_keberangkatan' => $request->tanggal_keberangkatan,
+    ]);
+
+    foreach ($request->nama as $key => $value) {
+        $nama_pegawais = Nama_pegawai::find($key);
+        if ($nama_pegawais) {
+
+            $nama_pegawais->update([
+                'nama_pegawai' => $value,
+                'nik' => $request->nik[$key],
+                'departemen' => $request->departemen[$key],
+                'lama_keberangkatan' => $request->lama_keberangkatan[$key],
+                'status' => $request->status[$key],
+                'keterangan' => $request->keterangan[$key],
+            ]);
+
+            if ($request->hasFile("file.$key")) {
+                $filePath = $request->file("file.$key")->store('uploads', 'public');
+                $nama_pegawais->update(['upload_file' => $filePath]);
+            }
+        }
+    }
+
+    return redirect()->route('formpst.index')->with('success', 'Data berhasil diperbarui');
+}
 
 
 public function updateStatus($itemId, $status, Request $request)
 {
-    // Menemukan item berdasarkan itemId
     $item = Nama_pegawai::find($itemId);
 
     if ($item) {
-        // Memperbarui status acc_nm
         $item->acc_nm = $status;
-
-        // Jika status adalah 'tolak', simpan alasan penolakan
         if ($status == 'tolak') {
             $request->validate([
                 'alasan' => 'required|string|max:255',
             ]);
-        
-            // Menyimpan alasan penolakan
+
             $item->alasan = $request->alasan;
         } elseif ($status == 'oke') {
-            // Jika status adalah "oke", set alasan menjadi "Diterima"
+
             $item->alasan = 'Diterima';
         }
-        
+
         // Menyimpan perubahan
         $item->save();
-        
+
         return response()->json([
             'message' => 'Status berhasil diperbarui.',
             'status' => $status

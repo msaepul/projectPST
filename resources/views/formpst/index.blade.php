@@ -84,6 +84,8 @@
                                 <td class="text-center">
                                     <a href="{{ route('formpst.show', ['id' => $item->id]) }}"
                                         class="btn btn-sm btn-outline-primary">Lihat Detail</a>
+                                    <a href="{{ route('formpst.edit', ['id' => $item->id]) }}"
+                                        class="btn btn-sm btn-outline-primary">Edit</a>
                                 </td>
                             </tr>
                         @empty
