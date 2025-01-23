@@ -9,12 +9,26 @@
 
                     <div class="card-body">
                         <div class="mb-4">
-                            <form action="#" method="POST" enctype="multipart/form-data">
+                            <form action="{{ route('formpst.update', $form->id) }}" method="POST"
+                                enctype="multipart/form-data">
                                 @csrf
+                                @method('PUT')
+
+                                {{-- Pesan error untuk validasi --}}
+                                @if ($errors->any())
+                                    <div class="alert alert-danger">
+                                        <ul>
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @endif
+
                                 <div class="d-flex justify-content-end gap-2 mt-4">
                                     <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                                     <button type="reset" class="btn btn-secondary">Reset</button>
-                                    <a href="index.php" class="btn btn-danger">Kembali</a>
+                                    <a href="{{ route('formpst.index') }}" class="btn btn-danger">Kembali</a>
                                 </div>
 
                                 <h5 class="text-center mb-8">Form Surat Penugasan</h5>
@@ -27,7 +41,10 @@
                                         <label class="detail-label">Cabang Asal:</label>
                                         <select name="cabang_asal" class="form-control">
                                             @foreach ($cabangs as $cabang)
-                                                <option value="{{ $cabang->id }}">{{ $cabang->nama_cabang }}</option>
+                                                <option value="{{ $cabang->id }}"
+                                                    @if ($cabang->id == $form->cabang_asal) selected @endif>
+                                                    {{ $cabang->nama_cabang }} <!-- Menampilkan nama_cabang -->
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -35,7 +52,10 @@
                                         <label class="detail-label">Cabang Tujuan:</label>
                                         <select name="cabang_tujuan" class="form-control">
                                             @foreach ($cabangs as $cabang)
-                                                <option value="{{ $cabang->id }}">{{ $cabang->nama_cabang }}</option>
+                                                <option value="{{ $cabang->id }}"
+                                                    @if ($cabang->id == $form->cabang_tujuan) selected @endif>
+                                                    {{ $cabang->nama_cabang }} <!-- Menampilkan nama_cabang -->
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -43,13 +63,17 @@
                                         <label class="detail-label">Tujuan Penugasan:</label>
                                         <select name="tujuan" class="form-control">
                                             @foreach ($tujuans as $tujuan)
-                                                <option value="{{ $tujuan->id }}">{{ $tujuan->tujuan_penugasan }}</option>
+                                                <option value="{{ $tujuan->id }}"
+                                                    @if ($tujuan->id == $form->tujuan_id) selected @endif>
+                                                    {{ $tujuan->tujuan_penugasan }}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>
                                     <div class="detail-group">
                                         <label class="detail-label">Tanggal Keberangkatan:</label>
-                                        <div class="detail-value">{{ $form->tanggal_keberangkatan }}</div>
+                                        <input type="date" name="tanggal_keberangkatan" class="form-control"
+                                            value="{{ $form->tanggal_keberangkatan }}">
                                     </div>
                                 </div>
 
@@ -68,24 +92,27 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @forelse ($nama_pegawais as $item)
+                                                @foreach ($nama_pegawais as $item)
                                                     <tr>
                                                         <td>
                                                             <input type="text" name="nama[{{ $item->id }}]"
-                                                                value="{{ $item->nama_pegawai }}" class="form-control">
+                                                                value="{{ old('nama.' . $item->id, $item->nama_pegawai) }}"
+                                                                class="form-control">
                                                         </td>
                                                         <td>
                                                             <input type="text" name="nik[{{ $item->id }}]"
-                                                                value="{{ $item->nik }}" class="form-control">
+                                                                value="{{ old('nik.' . $item->id, $item->nik) }}"
+                                                                class="form-control">
                                                         </td>
                                                         <td>
                                                             <input type="text" name="departemen[{{ $item->id }}]"
-                                                                value="{{ $item->departemen }}" class="form-control">
+                                                                value="{{ old('departemen.' . $item->id, $item->departemen) }}"
+                                                                class="form-control">
                                                         </td>
                                                         <td>
                                                             <input type="date"
                                                                 name="lama_keberangkatan[{{ $item->id }}]"
-                                                                value="{{ $item->lama_keberangkatan }}"
+                                                                value="{{ old('lama_keberangkatan.' . $item->id, $item->lama_keberangkatan) }}"
                                                                 class="form-control">
                                                         </td>
                                                         <td>
@@ -100,20 +127,17 @@
                                                         </td>
                                                         <td>
                                                             <input type="text" name="status[{{ $item->id }}]"
-                                                                value="{{ $item->status }}" class="form-control">
+                                                                value="{{ old('status.' . $item->id, $item->status) }}"
+                                                                class="form-control">
                                                         </td>
                                                         <td>
                                                             <input type="text" name="keterangan[{{ $item->id }}]"
-                                                                value="{{ $item->keterangan }}" class="form-control">
+                                                                value="{{ old('keterangan.' . $item->id, $item->keterangan) }}"
+                                                                class="form-control">
                                                         </td>
                                                     </tr>
-                                                @empty
-                                                    <tr>
-                                                        <td colspan="7" class="text-center">Tidak ada data</td>
-                                                    </tr>
-                                                @endforelse
+                                                @endforeach
                                             </tbody>
-
                                         </table>
                                     </div>
                                 </div>

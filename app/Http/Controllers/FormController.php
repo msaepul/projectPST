@@ -151,107 +151,76 @@ public function submitForm(Request $request, $formId)
     return redirect()->back()->with('success', 'Form berhasil disubmit!');
 }
 
-   public function edit($id)
-    {
-        // Menemukan form berdasarkan ID
-        $form = Form::findOrFail($id);
-        $cabangs = Cabang::all();
-        $tujuans = Tujuan::all();
-        $departemens = Departemen::all();
-        $nama_pegawais = Nama_pegawai::where('form_id', $id)->get();
-        $cabang_tujuans = Cabang_tujuan::all();
+public function edit($id)
+{
 
-        return view('formpst.edit', compact('form', 'cabangs', 'tujuans', 'departemens', 'nama_pegawais', 'cabang_tujuans'));
-    }
+    $form = Form::with(['cabangAsal:id,nama_cabang', 'cabangTujuan:id,nama_cabang'])->findOrFail($id);
 
-    public function update(Request $request, $id)
-    {
-        // Validasi input dari form edit
-        $validatedData = $request->validate([
-            'no_surat' => 'required|string|max:255',
-            'namaPemohon' => 'required|string|max:255',
-            'cabang_asal' => 'required|exists:cabangs,id',
-            'cabang_tujuan' => 'required|exists:cabangs,id',
-            'tujuan' => 'required|exists:tujuans,id',
-            'tanggalKeberangkatan' => 'required|date',
-            'namaPegawai.*' => 'required|string|max:255',
-            'departemen.*' => 'required|string|max:255',
-            'nik.*' => 'required|string|max:255',
-            'uploadFile.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'lamaKeberangkatan.*' => 'required|date',
-        ]);
+    $nama_pegawais = Nama_pegawai::where('form_id', $form->id)->get();
+    $cabangs = Cabang::all();
+    $tujuans = Tujuan::all();
+    $departemens = Departemen::all();
 
-        // Temukan form yang ingin diupdate
-        $form = Form::findOrFail($id);
+    return view('formpst.edit', compact('form', 'nama_pegawais', 'cabangs', 'tujuans', 'departemens'));
+}
 
-        // Ambil data cabang asal, cabang tujuan, dan tujuan penugasan
-        $cabangAsal = Cabang::findOrFail($validatedData['cabang_asal'])->nama_cabang;
-        $cabangTujuan = Cabang::findOrFail($validatedData['cabang_tujuan'])->nama_cabang;
-        $tujuanPenugasan = Tujuan::findOrFail($validatedData['tujuan'])->tujuan_penugasan;
+public function update(Request $request, $id)
+{
 
-        // Update data form
-        $form->update([
-            'no_surat' => $validatedData['no_surat'],
-            'nama_pemohon' => $validatedData['namaPemohon'],
-            'cabang_asal' => $cabangAsal,
-            'cabang_tujuan' => $cabangTujuan,
-            'tujuan' => $tujuanPenugasan,
-            'tanggal_keberangkatan' => $validatedData['tanggalKeberangkatan'],
-        ]);
+    $form = Form::findOrFail($id);
 
-        // Update data pegawai yang terkait
-        $namaPegawais = [];
-        foreach ($request->namaPegawai as $index => $namaPegawai) {
-            $uploadFilePath = null;
+    $request->validate([
+        'cabang_asal' => 'required|exists:cabangs,id',
+        'cabang_tujuan' => 'required|exists:cabangs,id',
+        'tujuan' => 'required|exists:tujuans,id',
+        'tanggal_keberangkatan' => 'required|date',
+    ]);
 
-            if ($request->hasFile("uploadFile.$index")) {
-                $originalName = $request->file("uploadFile.$index")->getClientOriginalName();
-                $uploadFilePath = $request->file("uploadFile.$index")->storeAs('uploads', $originalName, 'public');
+    $form->update([
+        'cabang_asal' => $request->cabang_asal,
+        'cabang_tujuan' => $request->cabang_tujuan,
+        'tujuan_id' => $request->tujuan,
+        'tanggal_keberangkatan' => $request->tanggal_keberangkatan,
+    ]);
+
+    foreach ($request->nama as $key => $value) {
+        $nama_pegawais = Nama_pegawai::find($key);
+        if ($nama_pegawais) {
+
+            $nama_pegawais->update([
+                'nama_pegawai' => $value,
+                'nik' => $request->nik[$key],
+                'departemen' => $request->departemen[$key],
+                'lama_keberangkatan' => $request->lama_keberangkatan[$key],
+                'status' => $request->status[$key],
+                'keterangan' => $request->keterangan[$key],
+            ]);
+
+            if ($request->hasFile("file.$key")) {
+                $filePath = $request->file("file.$key")->store('uploads', 'public');
+                $nama_pegawais->update(['upload_file' => $filePath]);
             }
-
-            // Menambahkan data pegawai yang telah diperbarui
-            $namaPegawais[] = [
-                'form_id' => $form->id,
-                'nama_pegawai' => $namaPegawai,
-                'departemen' => $request->departemen[$index],
-                'nik' => $request->nik[$index],
-                'upload_file' => $uploadFilePath,
-                'lama_keberangkatan' => $request->lamaKeberangkatan[$index],
-                'updated_at' => now(),
-            ];
         }
-
-        // Memperbarui data pegawai yang terkait
-        foreach ($namaPegawais as $namaPegawaiData) {
-            Nama_pegawai::updateOrCreate(
-                ['form_id' => $form->id, 'nama_pegawai' => $namaPegawaiData['nama_pegawai']],
-                $namaPegawaiData
-            );
-        }
-
-        return redirect()->route('formpst.index', ['form' => $form->id])
-            ->with('success', 'Data berhasil diperbarui.');
     }
+
+    return redirect()->route('formpst.index')->with('success', 'Data berhasil diperbarui');
+}
+
 
 public function updateStatus($itemId, $status, Request $request)
 {
-    // Menemukan item berdasarkan itemId
     $item = Nama_pegawai::find($itemId);
 
     if ($item) {
-        // Memperbarui status acc_nm
         $item->acc_nm = $status;
-
-        // Jika status adalah 'tolak', simpan alasan penolakan
         if ($status == 'tolak') {
             $request->validate([
                 'alasan' => 'required|string|max:255',
             ]);
 
-            // Menyimpan alasan penolakan
             $item->alasan = $request->alasan;
         } elseif ($status == 'oke') {
-            // Jika status adalah "oke", set alasan menjadi "Diterima"
+
             $item->alasan = 'Diterima';
         }
 
