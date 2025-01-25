@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Barryvdh\DomPDF\Facade as PDF;
 
 use Illuminate\Http\Request;
 use App\Models\Cabang;
@@ -23,10 +24,20 @@ class FormController extends Controller
         $cabang_tujuans = Cabang_tujuan::all();
 
         $lastForm = Form::latest()->first();
-        $lastNumber = $lastForm ? intval(substr($lastForm->no_surat, -4)) : 0;
-
-        $newNumber = str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
-        $nomorSurat = 'HRD/' . date('Y') . '/' . $newNumber;
+        $lastNumber = $lastForm ? intval(substr($lastForm->no_surat, 0, 3)) : 0; 
+        
+        $newNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
+        
+        $month = date('n'); 
+        $romanMonths = [
+            1 => 'I', 2 => 'II', 3 => 'III', 4 => 'IV', 5 => 'V', 
+            6 => 'VI', 7 => 'VII', 8 => 'VIII', 9 => 'IX', 10 => 'X', 
+            11 => 'XI', 12 => 'XII'
+        ];
+        $romanMonth = $romanMonths[$month];
+        
+        $nomorSurat = "{$newNumber}/PST/HO/HRD/{$romanMonth}/" . date('Y');
+        
 
         return view('formpst.form', compact('nomorSurat', 'cabangs', 'tujuans', 'departemens', 'nama_pegawais', 'cabang_tujuans'));
     }
@@ -52,7 +63,6 @@ class FormController extends Controller
         $cabangTujuan = Cabang::findOrFail($validatedData['cabang_tujuan'])->nama_cabang;
         $tujuanPenugasan = Tujuan::findOrFail($validatedData['tujuan'])->tujuan_penugasan;
 
-        // Simpan data ke tabel forms
         $form = Form::create([
             'no_surat' => $validatedData['no_surat'],
             'nama_pemohon' => $validatedData['namaPemohon'],
@@ -72,7 +82,6 @@ class FormController extends Controller
                 $uploadFilePath = $request->file("uploadFile.$index")->storeAs('uploads', $originalName, 'public');
         }
 
-        // Menambahkan data ke dalam array
         $namaPegawais[] = [
             'form_id' => $form->id,
             'nama_pegawai' => $namaPegawai,
@@ -85,7 +94,6 @@ class FormController extends Controller
         ];
     }
 
-    // Menyimpan semua data sekaligus
     Nama_pegawai::insert($namaPegawais);
 
         return redirect()->route('formpst.index', ['form' => $form->id])
@@ -112,43 +120,140 @@ public function index(Request $request)
     return view('formpst.index', compact('data', 'tujuans','forms'));
 }
 
+public function index_masuk(Request $request)
+{
+    $query = Form::where('acc_ho', 'oke');
+    
+
+    if ($request->filled('namaPemohon')) {
+        $query->where('nama_pemohon', 'like', '%' . $request->namaPemohon . '%');
+    }
+
+    if ($request->filled('tujuan')) {
+        $query->where('tujuan', $request->tujuan);
+    }
+
+    $data = $query->get();
+    $tujuans = Tujuan::all();
+    $forms = Form::all();
+
+    return view('formpst.index_masuk', compact('data', 'tujuans','forms'));
+}
+
+public function index_surat(Request $request)
+{
+    $query = Form::where('acc_cabang', 'oke');
+    
+
+    if ($request->filled('namaPemohon')) {
+        $query->where('nama_pemohon', 'like', '%' . $request->namaPemohon . '%');
+    }
+
+    if ($request->filled('tujuan')) {
+        $query->where('tujuan', $request->tujuan);
+    }
+
+    $data = $query->get();
+    $tujuans = Tujuan::all();
+    $forms = Form::all();
+
+    return view('formpst.index_surat', compact('data', 'tujuans','forms'));
+}
+
 public function show($id)
 {
-    // Mengambil form berdasarkan ID
     $form = Form::findOrFail($id);
 
-    // Mengambil data pegawai terkait dengan form_id
     $data = Nama_pegawai::where('form_id', $form->id)->get();
 
-    // Kirim data ke view
     return view('formpst.show', compact('form', 'data'));
 }
 
-public function submitForm(Request $request, $formId)
+public function surat_tugas($id)
 {
-    $form = Form::findOrFail($formId);
+    $form = Form::findOrFail($id);
 
-    // Ambil aksi yang dikirimkan (submit atau reject)
-    $action = $request->input('action');
+    $data = Nama_pegawai::where('form_id', $form->id)->get();
 
-    // Cek apakah form sudah disetujui atau ditolak sepenuhnya
-    if ($form->acc_bm == 'oke' || $form->acc_bm == 'reject') {
-        if ($form->acc_hrd == 'oke' || $form->acc_hrd == 'reject') {
-            return redirect()->back()->with('info', 'Form sudah disetujui sepenuhnya.');
-        } else {
-            // Jika HRD belum disetujui, sesuaikan statusnya berdasarkan aksi
-            $form->acc_hrd = $action == 'submit' ? 'oke' : 'reject';
-        }
-    } else {
-        // Jika BM belum disetujui, sesuaikan statusnya berdasarkan aksi
-        $form->acc_bm = $action == 'submit' ? 'oke' : 'reject';
+    return view('formpst.surat_tugas', compact('form', 'data'));
+}
+
+public function submit(Request $request, $id)
+{
+    $form = Form::findOrFail($id);
+
+    switch ($request->action) {
+        case 'acc_bm':
+            $form->acc_bm = 'oke';
+            $message = 'Persetujuan BM berhasil disimpan.';
+            break;
+
+        case 'reject_bm':
+            $form->acc_bm = 'reject';
+            $message = 'Persetujuan BM ditolak.';
+            break;
+
+            case 'acc_hrd':
+                if ($form->acc_bm !== 'oke') {
+                    return redirect()->back()->with('error', 'BM belum menyetujui.');
+                }
+                $form->acc_hrd = 'oke';
+                $form->save(); 
+                $message = 'Persetujuan HRD berhasil disimpan.';
+                return redirect()->route('hrd.index_hrd')->with('success', $message);
+                break;
+            
+
+        case 'reject_hrd':
+            if ($form->acc_bm !== 'oke') {
+                return redirect()->back()->with('error', 'BM belum menyetujui.');
+            }
+            $form->acc_hrd = 'reject';
+            $message = 'Persetujuan HRD ditolak.';
+            break;
+
+        case 'acc_ho':
+            if ($form->acc_hrd !== 'oke') {
+                return redirect()->back()->with('error', 'HRD belum menyetujui.');
+            }
+            $form->acc_ho = 'oke';
+            $form->save();
+            $message = 'Persetujuan HO berhasil disimpan.';
+            return redirect()->route('formpst.index_masuk')->with('success', $message);
+
+            break;
+
+        case 'reject_ho':
+            if ($form->acc_hrd !== 'oke') {
+                return redirect()->back()->with('error', 'HRD belum menyetujui.');
+            }
+            $form->acc_ho = 'reject';
+            $message = 'Persetujuan HO ditolak.';
+            break;
+
+            case 'acc_cabang':
+                if ($form->acc_ho !== 'oke') {
+                    return redirect()->back()->with('error', 'HRD belum menyetujui.');
+                }
+                $form->acc_cabang = 'oke';
+                $message = 'Persetujuan HO berhasil disimpan.';
+                break;
+    
+            case 'reject_cabang':
+                if ($form->acc_ho !== 'oke') {
+                    return redirect()->back()->with('error', 'HRD belum menyetujui.');
+                }
+                $form->acc_cabang = 'reject';
+                $message = 'Persetujuan HO ditolak.';
+                break;
+
+        default:
+            return redirect()->back()->with('error', 'Aksi tidak valid.');
     }
 
-    // Simpan perubahan ke database
     $form->save();
 
-    // Kembalikan response dengan pesan sukses
-    return redirect()->back()->with('success', 'Form berhasil disubmit!');
+    return redirect()->back()->with('success', $message);
 }
 
 public function edit($id)
@@ -219,18 +324,20 @@ public function updateStatus($itemId, $status, Request $request)
 
     if ($item) {
         $item->acc_nm = $status;
+
         if ($status == 'tolak') {
             $request->validate([
                 'alasan' => 'required|string|max:255',
             ]);
 
+        
             $item->alasan = $request->alasan;
         } elseif ($status == 'oke') {
             $item->alasan = 'Diterima';
         }
 
-        // Menyimpan perubahan
         $item->save();
+
         return response()->json([
             'message' => 'Status berhasil diperbarui.',
             'status' => $status
@@ -242,6 +349,7 @@ public function updateStatus($itemId, $status, Request $request)
         'message' => 'Data pegawai tidak ditemukan.'
     ], 404);
 }
+
 
 
 }

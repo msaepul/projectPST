@@ -17,7 +17,7 @@ class Form extends Model
         'tanggal_keberangkatan',
         'acc_bm',
         'acc_hrd',
-        'acc_nm',
+        'acc_ho',
         'acc_cabang',
         ];
     public function Nama_pegawais()
