@@ -237,7 +237,7 @@
                                     <a href="{{ route('ho.tujuan') }}"
                                         class="nav-link {{ request()->is('ho/tujuan') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Tujuan</p>
+                                        <p>Daftar Penugasan</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">

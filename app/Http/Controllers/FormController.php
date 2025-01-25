@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-use Barryvdh\DomPDF\Facade as PDF;
 
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Illuminate\Http\Request;
 use App\Models\Cabang;
 use App\Models\Nama_pegawai;
@@ -11,6 +12,7 @@ use App\Models\Tujuan;
 use App\Models\Departemen;
 use App\Models\Pengajuan;
 use App\Models\Form;
+
 use App\Models\User;
 // use Illuminate\Support\Facades\DB;
 
@@ -26,20 +28,20 @@ class FormController extends Controller
         $users = User::all();
 
         $lastForm = Form::latest()->first();
-        $lastNumber = $lastForm ? intval(substr($lastForm->no_surat, 0, 3)) : 0; 
-        
+        $lastNumber = $lastForm ? intval(substr($lastForm->no_surat, 0, 3)) : 0;
+
         $newNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
-        
-        $month = date('n'); 
+
+        $month = date('n');
         $romanMonths = [
-            1 => 'I', 2 => 'II', 3 => 'III', 4 => 'IV', 5 => 'V', 
-            6 => 'VI', 7 => 'VII', 8 => 'VIII', 9 => 'IX', 10 => 'X', 
+            1 => 'I', 2 => 'II', 3 => 'III', 4 => 'IV', 5 => 'V',
+            6 => 'VI', 7 => 'VII', 8 => 'VIII', 9 => 'IX', 10 => 'X',
             11 => 'XI', 12 => 'XII'
         ];
         $romanMonth = $romanMonths[$month];
-        
+
         $nomorSurat = "{$newNumber}/PST/HO/HRD/{$romanMonth}/" . date('Y');
-        
+
 
         return view('formpst.form', compact('nomorSurat','users', 'cabangs', 'tujuans', 'departemens', 'nama_pegawais', 'cabang_tujuans'));
     }
@@ -134,7 +136,7 @@ public function index_keluar(Request $request)
 public function index_masuk(Request $request)
 {
     $query = Form::where('acc_ho', 'oke');
-    
+
 
     if ($request->filled('namaPemohon')) {
         $query->where('nama_pemohon', 'like', '%' . $request->namaPemohon . '%');
@@ -154,7 +156,7 @@ public function index_masuk(Request $request)
 public function index_surat(Request $request)
 {
     $query = Form::where('acc_cabang', 'oke');
-    
+
 
     if ($request->filled('namaPemohon')) {
         $query->where('nama_pemohon', 'like', '%' . $request->namaPemohon . '%');
@@ -188,6 +190,51 @@ public function surat_tugas($id)
 
     return view('formpst.surat_tugas', compact('form', 'data'));
 }
+public function generatePdf($targetFormId)
+    {
+        try {
+            // Ambil data form berdasarkan ID
+            $form = Form::findOrFail($targetFormId);
+
+            // Ambil data pegawai yang ditugaskan (pastikan relasi di model sudah benar)
+            $data = Nama_pegawai::where('form_id', $targetFormId)->get();
+
+            if (!$form || $data->isEmpty()) {
+                // Log jika data tidak ditemukan
+                Log::error("Data form atau data pegawai tidak ditemukan untuk form ID: {$targetFormId}");
+                abort(404, 'Data tidak ditemukan.');
+            }
+
+            // Set options untuk DOMPDF (opsional, tapi disarankan)
+            $options = new Options();
+            $options->set('isHtml5ParserEnabled', true);
+            $options->set('isPhpEnabled', true); // Aktifkan jika view PDF menggunakan kode PHP
+            $options->set('chroot', public_path()); // Penting untuk path gambar relatif
+
+            // Inisialisasi DOMPDF dengan options
+            $dompdf = new \Dompdf\Dompdf($options);
+
+            // Load HTML dari view dan kirimkan data
+            $html = View::make('formpst.surat_tugas_pdf', compact('form', 'data', 'targetFormId'))->render(); //gunakan view::make agar bisa di render dengan benar
+
+            // Load HTML ke DOMPDF
+            $dompdf->loadHtml($html);
+
+            // Set ukuran kertas dan orientasi
+            $dompdf->setPaper('A4', 'portrait');
+
+            // Render PDF
+            $dompdf->render();
+
+            // Stream PDF ke browser untuk preview atau download
+            return $dompdf->stream('surat_tugas_' . $form->no_surat . '.pdf', ['Attachment' => 0]); // Nama file lebih deskriptif
+        } catch (\Exception $e) {
+            // Log error lengkap untuk debugging
+            Log::error("Error saat generate PDF untuk form ID: {$targetFormId}. Error: " . $e->getMessage() . "\n" . $e->getTraceAsString());
+            // Berikan pesan error yang lebih umum ke user (jangan tampilkan detail teknis)
+            return back()->with('error', 'Terjadi kesalahan saat membuat PDF. Silakan coba lagi.'); // atau tampilkan view error khusus
+        }
+    }
 
 public function submit(Request $request, $id)
 {
@@ -254,6 +301,7 @@ public function submit(Request $request, $id)
             $form->acc_ho = 'reject';
             $form->save();
             $message = 'Persetujuan HO ditolak.';
+
             return redirect()->route('hrd.index_hrd')->with('success', $message);
 
         case 'acc_cabang':
@@ -361,7 +409,7 @@ public function updateStatus($itemId, $status, Request $request)
                 'alasan' => 'required|string|max:255',
             ]);
 
-        
+
             $item->alasan = $request->alasan;
         } elseif ($status == 'oke') {
             $item->alasan = 'Diterima';
