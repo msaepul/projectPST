@@ -4,26 +4,19 @@
     <div class="container-fluid pt-4">
         <!-- Breadcrumb Section -->
 
-
-
-
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card mb-4 mt-3">
                     <div class="card-header style="position: sticky; top: 0; z-index: 100;>
                         <ol class="breadcrumb">
-                            {{-- <li class="breadcrumb-item">
-                                <span class="breadcrumb-step @if ($form->acc_bm === '' || $form->acc_hrd === '') text-primary @endif">
-                                    Draft
-                                </span>
-                            </li> --}}
+
                             <li class="breadcrumb-item">
                                 <span class="breadcrumb-step @if (($form->acc_bm === '' || $form->acc_hrd === '') && ($form->acc_bm !== 'oke' || $form->acc_hrd !== 'oke')) text-primary @endif">
                                     Pengajuan Cabang
                                 </span>
                             </li>
                             <li class="breadcrumb-item">
-                                <span class="breadcrumb-step @if (($form->acc_bm === 'oke' && $form->acc_hrd === 'oke') && ($form->acc_ho === '' || $form->acc_ho !== 'oke')) text-primary @endif">
+                                <span class="breadcrumb-step @if ($form->acc_bm === 'oke' && $form->acc_hrd === 'oke' && ($form->acc_ho === '' || $form->acc_ho !== 'oke')) text-primary @endif">
                                     Diperiksa HO
                                 </span>
                             </li>
@@ -37,12 +30,11 @@
                                     Selesai
                                 </span>
                             </li>
-                            <li class="breadcrumb-item">
+                            <li class="breadcrumb-item" @if ($form->acc_bm === 'reject' && $form->acc_hrd === 'reject' && $form->acc_ho === 'reject' && $form->acc_cabang === 'reject' ) text-primary @endif>
                                 <span class="breadcrumb-step text-danger">
                                     Ditolak
                                 </span>
                             </li>
-                            
                         </ol>
                     </div>
 
@@ -56,20 +48,20 @@
                                 <!-- Tombol untuk ACC atau Tolak BM -->
                                 @if ($form->acc_bm == null)
                                     <button type="submit" name="action" value="acc_bm" class="btn btn-primary mr-2">
-                                        Submit BM
+                                        Submit 
                                     </button>
                                     <button type="submit" name="action" value="reject_bm" class="btn btn-danger">
-                                        Tolak BM
+                                        Tolak 
                                     </button>
                                 @endif
 
                                 <!-- Tombol untuk ACC atau Tolak HRD -->
                                 @if ($form->acc_hrd == null && $form->acc_bm == 'oke')
                                     <button type="submit" name="action" value="acc_hrd" class="btn btn-primary mr-2">
-                                        Submit HRD
+                                        Submit 
                                     </button>
                                     <button type="submit" name="action" value="reject_hrd" class="btn btn-danger">
-                                        Tolak HRD
+                                        Tolak 
                                     </button>
                                 @endif
 
@@ -77,26 +69,26 @@
                                 @if ($form->acc_ho == null && $form->acc_hrd == 'oke')
                                     <button type="submit" id="submitHoButton" name="action" value="acc_ho"
                                         class="btn btn-primary mr-2" disabled>
-                                        Submit HO
+                                        Submit 
                                     </button>
                                     <button type="submit" name="action" value="reject_ho" class="btn btn-danger">
-                                        Tolak HO
+                                        Tolak 
                                     </button>
                                 @endif
 
                                 @if ($form->acc_cabang == null && $form->acc_ho == 'oke')
                                     <button type="submit" name="action" value="acc_cabang" class="btn btn-primary mr-2">
-                                        Submit cabang
+                                        Submit 
                                     </button>
                                     <button type="submit" name="action" value="reject_cabang" class="btn btn-danger">
-                                        Tolak cabang
+                                        Tolak 
                                     </button>
                                 @endif
-
+                                <button type="submit" name="action" value="cancel" class="btn btn-danger">
+                                    Cancel
+                                </button>
                             </form>
                         </div>
-
-
 
                         <h5 class="text-center mb-8">
                             @if ($form->acc_ho == 'oke')
@@ -162,7 +154,6 @@
                                                 </td>
                                                 <td>
                                                     @if ($form->acc_hrd == 'oke' && $form->acc_hrd != 'reject' && $form->acc_bm != 'reject' && $item->acc_nm == null)
-
                                                         <button class="btn btn-success btn-sm"
                                                             onclick="updateStatus({{ $item->id }}, 'oke')">
                                                             Setuju
@@ -225,19 +216,22 @@
                                 </div>
                             </div>
                             <!-- ACC HRD -->
-                            <div class="status-step">
-                                <img src="{{ $form->acc_hrd == 'oke' ? asset('dist/img/oke.png') : ($form->acc_hrd == 'reject' ? asset('dist/img/reject.png') : asset('dist/img/no.png')) }}"
-                                    alt="Status HRD" class="thumb-icon" width="50">
-                                <div class="status-name">
-                                    @if ($form->acc_hrd == 'oke')
-                                        HRD - Setuju
-                                    @elseif ($form->acc_hrd == 'reject')
-                                        HRD - Ditolak
-                                    @else
-                                        HRD - Menunggu
-                                    @endif
+                            @if ($form->acc_bm == 'oke')
+                                <div class="status-step">
+                                    <img src="{{ $form->acc_hrd == 'oke' ? asset('dist/img/oke.png') : ($form->acc_hrd == 'reject' ? asset('dist/img/reject.png') : asset('dist/img/no.png')) }}"
+                                        alt="Status HRD" class="thumb-icon" width="50">
+                                    <div class="status-name">
+                                        @if ($form->acc_hrd == 'oke')
+                                            HRD - Setuju
+                                        @elseif ($form->acc_hrd == 'reject')
+                                            HRD - Ditolak
+                                        @else
+                                            HRD - Menunggu
+                                        @endif
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
+
                             {{-- ACC HO  --}}
                             @if ($form->acc_hrd == 'oke')
                                 <div class="status-step">

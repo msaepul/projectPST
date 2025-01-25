@@ -11,6 +11,7 @@ use App\Models\Tujuan;
 use App\Models\Departemen;
 use App\Models\Pengajuan;
 use App\Models\Form;
+use App\Models\User;
 // use Illuminate\Support\Facades\DB;
 
 class FormController extends Controller
@@ -22,6 +23,7 @@ class FormController extends Controller
         $departemens = Departemen::all();
         $nama_pegawais = Nama_pegawai::all();
         $cabang_tujuans = Cabang_tujuan::all();
+        $users = User::all();
 
         $lastForm = Form::latest()->first();
         $lastNumber = $lastForm ? intval(substr($lastForm->no_surat, 0, 3)) : 0; 
@@ -39,52 +41,58 @@ class FormController extends Controller
         $nomorSurat = "{$newNumber}/PST/HO/HRD/{$romanMonth}/" . date('Y');
         
 
-        return view('formpst.form', compact('nomorSurat', 'cabangs', 'tujuans', 'departemens', 'nama_pegawais', 'cabang_tujuans'));
+        return view('formpst.form', compact('nomorSurat','users', 'cabangs', 'tujuans', 'departemens', 'nama_pegawais', 'cabang_tujuans'));
     }
 
     public function store(Request $request)
-    {
-        $validatedData = $request->validate([
-            'no_surat' => 'required|string|max:255',
-            'namaPemohon' => 'required|string|max:255',
-            'cabang_asal' => 'required|exists:cabangs,id',
-            'cabang_tujuan' => 'required|exists:cabangs,id',
-            'tujuan' => 'required|exists:tujuans,id',
-            'tanggalKeberangkatan' => 'required|date',
+{
+    $validatedData = $request->validate([
+        'no_surat' => 'required|string|max:255',
+        'namaPemohon' => 'required|string|max:255',
+        'cabang_asal' => 'required|exists:cabangs,id',
+        'cabang_tujuan' => 'required|exists:cabangs,id',
+        'tujuan' => 'required|exists:tujuans,id',
+        'tanggalKeberangkatan' => 'required|date',
 
-            'namaPegawai.*' => 'required|string|max:255',
-            'departemen.*' => 'required|string|max:255',
-            'nik.*' => 'required|string|max:255',
-            'uploadFile.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'lamaKeberangkatan.*' => 'required|date',
-        ]);
+        'namaPegawai.*' => 'required|string|max:255', // ID pegawai
+        'namaPegawaiNama.*' => 'required|string|max:255', // Nama lengkap pegawai
+        'departemen.*' => 'required|string|max:255',
+        'nik.*' => 'required|string|max:255',
+        'uploadFile.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+        'lamaKeberangkatan.*' => 'required|date',
+    ]);
 
-        $cabangAsal = Cabang::findOrFail($validatedData['cabang_asal'])->nama_cabang;
-        $cabangTujuan = Cabang::findOrFail($validatedData['cabang_tujuan'])->nama_cabang;
-        $tujuanPenugasan = Tujuan::findOrFail($validatedData['tujuan'])->tujuan_penugasan;
+    // Ambil nama cabang dan tujuan dari tabel terkait
+    $cabangAsal = Cabang::findOrFail($validatedData['cabang_asal'])->nama_cabang;
+    $cabangTujuan = Cabang::findOrFail($validatedData['cabang_tujuan'])->nama_cabang;
+    $tujuanPenugasan = Tujuan::findOrFail($validatedData['tujuan'])->tujuan_penugasan;
 
-        $form = Form::create([
-            'no_surat' => $validatedData['no_surat'],
-            'nama_pemohon' => $validatedData['namaPemohon'],
-            'cabang_asal' => $cabangAsal,
-            'cabang_tujuan' => $cabangTujuan,
-            'tujuan' => $tujuanPenugasan,
-            'tanggal_keberangkatan' => $validatedData['tanggalKeberangkatan'],
-        ]);
+    // Buat data form utama
+    $form = Form::create([
+        'no_surat' => $validatedData['no_surat'],
+        'nama_pemohon' => $validatedData['namaPemohon'],
+        'cabang_asal' => $cabangAsal,
+        'cabang_tujuan' => $cabangTujuan,
+        'tujuan' => $tujuanPenugasan,
+        'tanggal_keberangkatan' => $validatedData['tanggalKeberangkatan'],
+    ]);
 
+    // Siapkan data pegawai untuk insert batch
     $namaPegawais = [];
 
-    foreach ($request->namaPegawai as $index => $namaPegawai) {
+    foreach ($request->namaPegawai as $index => $pegawaiId) {
         $uploadFilePath = null;
 
-            if ($request->hasFile("uploadFile.$index")) {
-                $originalName = $request->file("uploadFile.$index")->getClientOriginalName();
-                $uploadFilePath = $request->file("uploadFile.$index")->storeAs('uploads', $originalName, 'public');
+        // Upload file jika ada
+        if ($request->hasFile("uploadFile.$index")) {
+            $originalName = $request->file("uploadFile.$index")->getClientOriginalName();
+            $uploadFilePath = $request->file("uploadFile.$index")->storeAs('uploads', $originalName, 'public');
         }
 
+        // Tambahkan data ke array
         $namaPegawais[] = [
             'form_id' => $form->id,
-            'nama_pegawai' => $namaPegawai,
+            'nama_pegawai' => $request->namaPegawaiNama[$index], // Nama lengkap pegawai
             'departemen' => $request->departemen[$index],
             'nik' => $request->nik[$index],
             'upload_file' => $uploadFilePath,
@@ -94,13 +102,16 @@ class FormController extends Controller
         ];
     }
 
+    // Masukkan data pegawai ke database
     Nama_pegawai::insert($namaPegawais);
 
-        return redirect()->route('formpst.index', ['form' => $form->id])
-            ->with('success', 'Data berhasil disimpan.');
-    }
+    // Redirect dengan pesan sukses
+    return redirect()->route('formpst.index_keluar', ['form' => $form->id])
+        ->with('success', 'Data berhasil disimpan.');
+}
 
-public function index(Request $request)
+
+public function index_keluar(Request $request)
 {
     $query = Form::query();
 
@@ -117,7 +128,7 @@ public function index(Request $request)
     $tujuans = Tujuan::all();
     $forms = Form::all();
 
-    return view('formpst.index', compact('data', 'tujuans','forms'));
+    return view('formpst.index_keluar', compact('data', 'tujuans','forms'));
 }
 
 public function index_masuk(Request $request)
@@ -185,32 +196,47 @@ public function submit(Request $request, $id)
     switch ($request->action) {
         case 'acc_bm':
             $form->acc_bm = 'oke';
+            $form->save(); 
+
             $message = 'Persetujuan BM berhasil disimpan.';
-            break;
+            return redirect()->route('formpst.index_keluar')->with('success', $message);
 
         case 'reject_bm':
             $form->acc_bm = 'reject';
+            $form->save(); 
+
             $message = 'Persetujuan BM ditolak.';
-            break;
+            return redirect()->route('formpst.index_keluar')->with('success', $message);
 
-            case 'acc_hrd':
-                if ($form->acc_bm !== 'oke') {
-                    return redirect()->back()->with('error', 'BM belum menyetujui.');
-                }
-                $form->acc_hrd = 'oke';
-                $form->save(); 
-                $message = 'Persetujuan HRD berhasil disimpan.';
-                return redirect()->route('hrd.index_hrd')->with('success', $message);
-                break;
+        case 'cancel':
+            // Reset semua status persetujuan
+            $form->acc_bm = 'cancel';
+            $form->acc_hrd = 'cancel';
+            $form->acc_ho = 'cancel';
+            $form->acc_cabang = 'cancel';
+            $form->save(); 
+    
+            $message = 'Semua persetujuan telah dibatalkan.';
+            return redirect()->route('formpst.index_keluar')->with('success', $message);
+
+        case 'acc_hrd':
+            if ($form->acc_bm !== 'oke') {
+                return redirect()->back()->with('error', 'BM belum menyetujui.');
+            }
+            $form->acc_hrd = 'oke';
+            $form->save(); 
+            $message = 'Persetujuan HRD berhasil disimpan.';
+            return redirect()->route('hrd.index_hrd_cabang')->with('success', $message);
             
-
         case 'reject_hrd':
             if ($form->acc_bm !== 'oke') {
                 return redirect()->back()->with('error', 'BM belum menyetujui.');
             }
             $form->acc_hrd = 'reject';
+            $form->save(); 
+
             $message = 'Persetujuan HRD ditolak.';
-            break;
+            return redirect()->route('hrd.index_hrd_cabang')->with('success', $message);
 
         case 'acc_ho':
             if ($form->acc_hrd !== 'oke') {
@@ -219,42 +245,42 @@ public function submit(Request $request, $id)
             $form->acc_ho = 'oke';
             $form->save();
             $message = 'Persetujuan HO berhasil disimpan.';
-            return redirect()->route('formpst.index_masuk')->with('success', $message);
-
-            break;
+            return redirect()->route('hrd.index_hrd')->with('success', $message);
 
         case 'reject_ho':
             if ($form->acc_hrd !== 'oke') {
                 return redirect()->back()->with('error', 'HRD belum menyetujui.');
             }
             $form->acc_ho = 'reject';
+            $form->save();
             $message = 'Persetujuan HO ditolak.';
-            break;
+            return redirect()->route('hrd.index_hrd')->with('success', $message);
 
-            case 'acc_cabang':
-                if ($form->acc_ho !== 'oke') {
-                    return redirect()->back()->with('error', 'HRD belum menyetujui.');
-                }
-                $form->acc_cabang = 'oke';
-                $message = 'Persetujuan HO berhasil disimpan.';
-                break;
-    
-            case 'reject_cabang':
-                if ($form->acc_ho !== 'oke') {
-                    return redirect()->back()->with('error', 'HRD belum menyetujui.');
-                }
-                $form->acc_cabang = 'reject';
-                $message = 'Persetujuan HO ditolak.';
-                break;
+        case 'acc_cabang':
+            if ($form->acc_ho !== 'oke') {
+                return redirect()->back()->with('error', 'HO belum menyetujui.');
+            }
+            $form->acc_cabang = 'oke';
+            $form->save();
+
+            $message = 'Persetujuan Cabang berhasil disimpan.';
+            return redirect()->route('formpst.index_masuk')->with('success', $message);
+
+        case 'reject_cabang':
+            if ($form->acc_ho !== 'oke') {
+                return redirect()->back()->with('error', 'HO belum menyetujui.');
+            }
+            $form->acc_cabang = 'reject';
+            $form->save();
+
+            $message = 'Persetujuan Cabang ditolak.';
+            return redirect()->route('formpst.index_masuk')->with('success', $message);
 
         default:
             return redirect()->back()->with('error', 'Aksi tidak valid.');
     }
-
-    $form->save();
-
-    return redirect()->back()->with('success', $message);
 }
+
 
 public function edit($id)
 {
@@ -293,6 +319,11 @@ public function update(Request $request, $id)
         'cabang_tujuan' => $cabangTujuan,
         'tujuan_id' => $tujuanPenugasan,
         'tanggal_keberangkatan' => $request->tanggal_keberangkatan,
+        'acc_bm' => '', 
+        'acc_hrd' => '', 
+        'acc_ho' => '', 
+        'acc_cabang' => '', 
+
     ]);
 
     // Update nama pegawai
@@ -304,8 +335,8 @@ public function update(Request $request, $id)
                 'nik' => $request->nik[$key],
                 'departemen' => $request->departemen[$key],
                 'lama_keberangkatan' => $request->lama_keberangkatan[$key],
-                'status' => $request->status[$key],
-                'keterangan' => $request->keterangan[$key],
+                'acc_nm' => '', 
+                'alasan' => '', 
             ]);
 
             if ($request->hasFile("file.$key")) {
@@ -315,7 +346,7 @@ public function update(Request $request, $id)
         }
     }
 
-    return redirect()->route('formpst.index')->with('success', 'Data berhasil diperbarui');
+    return redirect()->route('formpst.index_keluar')->with('success', 'Data berhasil diperbarui');
 }
 
 

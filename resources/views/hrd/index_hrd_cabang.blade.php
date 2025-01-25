@@ -10,6 +10,7 @@
         </form>
     </div>
 
+
     <div class="card mt-4 rounded-3 shadow custom-card">
         <div class="card-header bg-light py-3">
             <h5 class="mb-0 fw-bold">Hasil Pencarian</h5>
@@ -40,13 +41,13 @@
                                 <td class="text-center">
                                     @if ($item->acc_cabang == 'oke')
                                         <span class="badge bg-success">Sudah Diverifikasi</span>
-                                    @elseif ($item->acc_ho == 'reject')
-                                        <span class="badge bg-warning bg-danger">Verifikasi Di tolak HO</span>
-                                    @elseif ($item->acc_ho == 'oke')
-                                        <span class="badge bg-warning text-dark">Menunggu Verifikasi cabang</span>
-                                    @elseif ($item->acc_ho != 'oke')
-                                        <span class="badge bg-warning text-dark">Menunggu Verifikasi HO</span>
-                                    @else
+                                    @elseif ($item->acc_hrd == 'reject')
+                                        <span class="badge bg-warning bg-danger">Verifikasi Di tolak HRD</span>
+                                    @elseif ($item->acc_hrd == 'oke')
+                                        <span class="badge bg-warning text-dark">Menunggu Verifikasi HRD HO</span>
+                                    @elseif ($item->acc_hrd != 'oke')
+                                        <span class="badge bg-warning text-dark">Menunggu Verifikasi HRD</span>
+                                    @else 
                                         <span class="badge bg-danger">Belum Diverifikasi</span>
                                     @endif
                                 </td>
@@ -77,7 +78,7 @@
                                         <span class="badge bg-success">Semua Pegawai Diterima</span>
                                     @endif
                                 </td>
-
+                                
                                 <td class="text-center">
                                     <a href="{{ route('formpst.show', ['id' => $item->id]) }}"
                                         class="btn btn-sm btn-outline-primary">Lihat Detail</a>

@@ -2,7 +2,7 @@
 @section('content')
     {{ Breadcrumbs::render('Form') }}
     <div class="container pt-4">
-        <form id="searchForm" action="{{ route('formpst.index') }}" method="GET" class="d-flex">
+        <form id="searchForm" action="{{ route('formpst.index_keluar') }}" method="GET" class="d-flex">
             @csrf
             <input type="text" id="namaPemohon" name="namaPemohon" class="form-control me-2"
                 value="{{ request('namaPemohon') }}" placeholder="Cari nama pemohon">
@@ -47,6 +47,8 @@
                                         <span class="badge bg-warning text-dark">Menunggu Verifikasi HRD</span>
                                     @elseif ($item->acc_bm == 'reject')
                                         <span class="badge bg-warning bg-danger">Verifikasi Di tolak BM</span>
+                                    @elseif ($item->acc_bm == 'cancel')
+                                        <span class="badge bg-warning bg-danger">Cancel</span>
                                     @else
                                         <span class="badge bg-danger">Belum Diverifikasi</span>
                                     @endif
@@ -72,10 +74,13 @@
                                         @endif
                                     @endforeach
 
-                                    @if (!$anyRejected && !$anyAccepted)
+                                    @if (!$anyRejected && !$anyAccepted && $item->acc_bm != 'cancel')
                                         <span class="badge bg-warning text-dark">Menunggu Verifikasi</span>
                                     @elseif (!$anyRejected && $anyAccepted)
                                         <span class="badge bg-success">Semua Pegawai Diterima</span>
+                                    @endif
+                                    @if ($item->acc_bm == 'cancel')
+                                        <span class="badge bg-danger">Cancel</span>
                                     @endif
                                 </td>
 
@@ -84,8 +89,11 @@
                                 <td class="text-center">
                                     <a href="{{ route('formpst.show', ['id' => $item->id]) }}"
                                         class="btn btn-sm btn-outline-primary">Lihat Detail</a>
+                                    
+                                        @if ($item->acc_bm != 'cancel')
                                     <a href="{{ route('formpst.edit', ['id' => $item->id]) }}"
                                         class="btn btn-sm btn-outline-primary">Edit</a>
+                                    @endif
                                 </td>
                             </tr>
                         @empty

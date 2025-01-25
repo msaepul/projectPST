@@ -9,7 +9,7 @@ return new class extends Migration
     public function up()
 {
     Schema::table('users', function (Blueprint $table) {
-        $table->string('nama_lengkap')->nullable(); // Kolom baru untuk nama lengkap
+        $table->string('nama_lengkap')->default('');
     });
 }
 
