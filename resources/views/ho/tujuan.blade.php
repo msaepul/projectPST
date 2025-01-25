@@ -36,7 +36,7 @@
                                             style="width: 20px; height: 20px; margin-right: 4px">
                                     </button>
 
-
+                                    +
                                     <!-- Modal Edit Penugasan -->
                                     <div class="modal fade" id="editModal-{{ $item->id }}" tabindex="-1" role="dialog"
                                         aria-labelledby="editModalLabel-{{ $item->id }}" aria-hidden="true">
