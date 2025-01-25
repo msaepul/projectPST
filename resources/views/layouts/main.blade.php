@@ -154,7 +154,7 @@
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-copy"></i>
-                                <p>Pelatihan<i class="fas fa-angle-left right"></i></p>
+                                <p> Form Surat Tugas<i class="fas fa-angle-left right"></i></p>
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
@@ -166,8 +166,8 @@
                                 </li>
 
                                 <li class="nav-item">
-                                    <a href="{{ route('formpst.index') }}"
-                                        class="nav-link {{ request()->is('formpst/index') ? 'active' : '' }}">
+                                    <a href="{{ route('formpst.index_keluar') }}"
+                                        class="nav-link {{ request()->is('formpst/index_keluar') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Surat Keluar</p>
                                     </a>
@@ -190,6 +190,36 @@
                     @endif
 
                     @if (auth()->user()->role === 'admin')
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-user nav-icon"></i>
+                                <p>HRD HO<i class="fas fa-angle-left right"></i></p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{{ route('hrd.index_hrd') }}"
+                                        class="nav-link {{ request()->is('ho/user') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>List Pengajuan</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-user nav-icon"></i>
+                                <p>HRD Cabang<i class="fas fa-angle-left right"></i></p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{{ route('hrd.index_hrd_cabang') }}"
+                                        class="nav-link {{ request()->is('ho/user') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>List Pengajuan</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-building"></i>
@@ -217,27 +247,11 @@
                                         <p>Departemen</p>
                                     </a>
                                 </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-user nav-icon"></i>
-                                <p>HRD<i class="fas fa-angle-left right"></i></p>
-                            </a>
-                            <ul class="nav nav-treeview">
-
                                 <li class="nav-item">
                                     <a href="{{ route('ho.user') }}"
                                         class="nav-link {{ request()->is('ho/user') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>User</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('hrd.index_hrd') }}"
-                                        class="nav-link {{ request()->is('ho/user') ? 'active' : '' }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>List Pengajuan</p>
                                     </a>
                                 </li>
                             </ul>

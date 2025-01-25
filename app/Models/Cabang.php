@@ -15,7 +15,7 @@ class cabang extends Model
     ];
     public function pegawais()
     {
-        return $this->hasMany(NamaPegawai::class);
+        return $this->hasMany(Nama_pegawai::class);
     }
     public function tujuans()
     {
