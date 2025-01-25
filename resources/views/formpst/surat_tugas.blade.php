@@ -215,12 +215,12 @@
         }
 
         /* .table th,
-                        .table td {
-                            border: 0.5pt solid #000;
-                            padding: 0.1cm;
-                            /* Further reduced padding */
+                                .table td {
+                                    border: 0.5pt solid #000;
+                                    padding: 0.1cm;
+                                    /* Further reduced padding */
         /* text-align: center;
-                        } */
+                                } */
         */ .signature {
             margin-top: 0.3cm;
             /* Reduced margin */
