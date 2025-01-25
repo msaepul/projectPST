@@ -10,7 +10,6 @@ use App\Models\Nama_pegawai;
 use App\Models\Cabang_tujuan;
 use App\Models\Tujuan;
 use App\Models\Departemen;
-use App\Models\Pengajuan;
 use App\Models\Form;
 
 use App\Models\User;
