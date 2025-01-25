@@ -27,7 +27,6 @@
 
                                 <div class="d-flex justify-content-end gap-2 mt-4">
                                     <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-                                    <button type="reset" class="btn btn-secondary">Reset</button>
                                     <a href="{{ route('formpst.index') }}" class="btn btn-danger">Kembali</a>
                                 </div>
 
