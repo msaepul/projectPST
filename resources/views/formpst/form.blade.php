@@ -85,19 +85,23 @@
                                     </thead>
                                     <tbody>
                                         <tr id="rowToClone">
-                                            <td><input type="text" name="namaPegawai[]" class="form-control" required>
-                                            </td>
                                             <td>
-                                                <select class="form-control" name="departemen[]" required>
-                                                    <option value="" disabled selected>Pilih Departemen</option>
-                                                    @foreach ($departemens as $departemen)
-                                                        <option value="{{ $departemen->nama_departemen }}">
-                                                            {{ $departemen->nama_departemen }}</option>
+                                                <select name="namaPegawai[]" class="form-control namaPegawai" required>
+                                                    <option value="" disabled selected>Pilih Nama</option>
+                                                    @foreach ($users as $user)
+                                                        <option value="{{ $user->id }}"
+                                                            data-departemen="{{ $user->departemen }}"
+                                                            data-nik="{{ $user->nik }}"
+                                                            data-nama="{{ $user->nama_lengkap }}">
+                                                            {{ $user->nama_lengkap }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
+                                                
                                             </td>
-                                            <td><input type="number" name="nik[]" class="form-control" minlength="16"
-                                                    maxlength="16" required></td>
+                                            
+                                            <td><input type="text" name="departemen[]" class="form-control departemen" readonly></td>
+                                            <td><input type="text" name="nik[]" class="form-control nik" readonly></td>
                                             <td><input type="file" name="uploadFile[]" class="form-control"></td>
                                             <td><input type="date" name="lamaKeberangkatan[]" class="form-control"
                                                     required></td>
@@ -122,6 +126,7 @@
         </div>
     </div>
     <script>
+        // Tambah Baris Baru
         document.getElementById('add-field').addEventListener('click', function() {
             const rowToClone = document.getElementById('rowToClone');
             if (rowToClone) {
@@ -133,12 +138,39 @@
                 console.error("Element 'rowToClone' tidak ditemukan.");
             }
         });
-
+    
+        // Hapus Baris
         document.querySelector('#pegawaiTable').addEventListener('click', function(event) {
             if (event.target.classList.contains('remove-item')) {
                 event.target.closest('tr').remove();
             }
         });
+    
+        // Update Kolom Departemen dan NIK Berdasarkan Pilihan Dropdown
+        document.querySelector('#pegawaiTable').addEventListener('change', function(event) {
+            if (event.target.classList.contains('namaPegawai')) {
+                const selectedOption = event.target.options[event.target.selectedIndex];
+                const row = event.target.closest('tr');
+                row.querySelector('.departemen').value = selectedOption.getAttribute('data-departemen');
+                row.querySelector('.nik').value = selectedOption.getAttribute('data-nik');
+            }
+        });
+    
+        // Tambahkan Nama Lengkap Pegawai ke Form Saat Submit
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const namaPegawaiInputs = document.querySelectorAll('.namaPegawai');
+            namaPegawaiInputs.forEach((select, index) => {
+                const selectedOption = select.options[select.selectedIndex];
+                const nama = selectedOption.getAttribute('data-nama');
+    
+                // Buat hidden input untuk mengirim nama lengkap
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = `namaPegawaiNama[${index}]`; // Pastikan nama sesuai dengan backend
+                input.value = nama;
+                this.appendChild(input); // Tambahkan ke form
+            });
+        });
     </script>
-
+    
 @endsection

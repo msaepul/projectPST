@@ -33,7 +33,7 @@ class PengajuanController extends Controller
     }
     public function show()
     {
-        $nama_pegawais = Nama_pegawai::all();
+        $nama_pegawais = NamaPegawai::all();
         $cabang_tujuans = Cabang_tujuan::all();
     
         $data = $nama_pegawais->map(function ($pegawai, $index) use ($cabang_tujuans) {
@@ -51,7 +51,7 @@ class PengajuanController extends Controller
     }
     public function destroy($id)
     {
-        $nama_pegawais = Nama_pegawai::findOrFail($id);
+        $nama_pegawais = NamaPegawai::findOrFail($id);
         $nama_pegawais->delete();
 
         return redirect()->route('formpst.show')->with('success', 'Data berhasil dihapus!');

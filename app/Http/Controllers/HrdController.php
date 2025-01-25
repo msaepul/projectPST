@@ -37,6 +37,25 @@ class HrdController extends Controller
     
         return view('hrd.index_hrd', compact('data', 'tujuans','forms'));
     }
+    public function index_hrd_cabang(Request $request)
+    {
+        $query = Form::where('acc_bm', 'oke');
+        
+    
+        if ($request->filled('namaPemohon')) {
+            $query->where('nama_pemohon', 'like', '%' . $request->namaPemohon . '%');
+        }
+    
+        if ($request->filled('tujuan')) {
+            $query->where('tujuan', $request->tujuan);
+        }
+    
+        $data = $query->get();
+        $tujuans = Tujuan::all();
+        $forms = Form::all();
+    
+        return view('hrd.index_hrd_cabang', compact('data', 'tujuans','forms'));
+    }
 
     public function list_nm(Request $request)
     {
