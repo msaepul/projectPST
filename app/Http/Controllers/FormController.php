@@ -318,9 +318,6 @@ public function update(Request $request, $id)
     return redirect()->route('formpst.index')->with('success', 'Data berhasil diperbarui');
 }
 
-
-
-
 public function updateStatus($itemId, $status, Request $request)
 {
     $item = Nama_pegawai::find($itemId);
@@ -338,8 +335,8 @@ public function updateStatus($itemId, $status, Request $request)
         } elseif ($status == 'oke') {
             $item->alasan = 'Diterima';
         }
-                $item->save();
-        
+
+        $item->save();
 
         return response()->json([
             'message' => 'Status berhasil diperbarui.',
