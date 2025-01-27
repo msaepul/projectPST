@@ -83,9 +83,12 @@ Route::middleware('auth')->group(function () {
         Route::post('/formpst/{id}/submit', [FormController::class, 'submit'])->name('form.submit');
         Route::get('/formpst/surat_tugas/{id}', [FormController::class, 'surat_tugas'])->name('formpst.surat_tugas');
         Route::post('/update-status/{itemId}/{status}', [FormController::class, 'updateStatus'])->name('update.status');
-    
+
+        Route::get('/formpst/form_nm', [FormController::class, 'form_nm'])->name('formpst.form_nm');
+        Route::post('/formpst/form_nm/store', [FormController::class, 'store_nm'])->name('formpst.store_nm');
+
     });
-    
+
 
     Route::get('/hrd/form_nm', function () {
         return view('hrd.form_nm');
