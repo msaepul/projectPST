@@ -18,8 +18,9 @@ class HoController extends Controller
     {
         $jumlahCabang = Cabang::count();
         $jumlahDepartemen = Departemen::count();
+        $jumlahForm = Form::count();
 
-        return view('dashboard', compact('jumlahCabang', 'jumlahDepartemen'));
+        return view('dashboard', compact('jumlahCabang', 'jumlahDepartemen','jumlahForm'));
     }
 
     // Cabang

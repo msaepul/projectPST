@@ -10,7 +10,6 @@
         </form>
     </div>
 
-
     <div class="card mt-4 rounded-3 shadow custom-card">
         <div class="card-header bg-light py-3">
             <h5 class="mb-0 fw-bold">Hasil Pencarian</h5>
@@ -41,9 +40,7 @@
                                     <a href="{{ route('formpst.show', ['id' => $item->id]) }}"
                                         class="btn btn-sm btn-outline-primary">Lihat Detail</a>
                                     <a href="{{ route('formpst.surat_tugas', ['id' => $item->id]) }}"
-                                        class="btn btn-sm btn-outline-primary">Lihat Surat tugas</a> 
-
-                                          
+                                        class="btn btn-sm btn-outline-primary">Lihat Surat tugas</a>
                                 </td>
                             </tr>
                         @empty

@@ -74,27 +74,33 @@
                                         @endif
                                     @endforeach
 
-                                    @if (!$anyRejected && !$anyAccepted && $item->acc_bm != 'cancel')
+                                    @if (!$anyRejected && !$anyAccepted && $item->acc_bm != 'cancel' && $item->acc_bm != 'reject')
                                         <span class="badge bg-warning text-dark">Menunggu Verifikasi</span>
                                     @elseif (!$anyRejected && $anyAccepted)
                                         <span class="badge bg-success">Semua Pegawai Diterima</span>
                                     @endif
-                                    @if ($item->acc_bm == 'cancel')
+                                    @if ($item->acc_bm == 'cancel' || $item->acc_bm == 'reject')
                                         <span class="badge bg-danger">Cancel</span>
                                     @endif
                                 </td>
 
 
-
                                 <td class="text-center">
-                                    <a href="{{ route('formpst.show', ['id' => $item->id]) }}"
-                                        class="btn btn-sm btn-outline-primary">Lihat Detail</a>
-                                    
+                                    <div style="display: flex; justify-content: center; gap: 10px;">
+                                        <a href="{{ route('formpst.show', ['id' => $item->id]) }}"
+                                            class="btn btn-sm btn-outline-primary"
+                                            style="width: 90px; text-align: center;">Lihat Detail</a>
+                                
                                         @if ($item->acc_bm != 'cancel')
-                                    <a href="{{ route('formpst.edit', ['id' => $item->id]) }}"
-                                        class="btn btn-sm btn-outline-primary">Edit</a>
-                                    @endif
+                                            <a href="{{ route('formpst.edit', ['id' => $item->id]) }}"
+                                                class="btn btn-sm btn-outline-primary"
+                                                style="width: 90px; text-align: center;">Edit</a>
+                                        @endif
+                                    </div>
                                 </td>
+                                
+                                
+                                
                             </tr>
                         @empty
                             <tr>

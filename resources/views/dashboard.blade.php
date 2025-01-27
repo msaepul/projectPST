@@ -62,7 +62,7 @@
                     <div class="icon">
                         <i class="fas fa-envelope"></i>
                     </div>
-                    <a href="#" class="small-box-footer">
+                    <a href="{{ route('formpst.index_keluar') }}" class="small-box-footer">
                         Lihat Detail <i class="fas fa-arrow-circle-right"></i>
                     </a>
                 </div>
@@ -108,6 +108,7 @@
 
             animateCount('countCabang', {{ $jumlahCabang }}, 'loadingCabang', 2000);
             animateCount('countDepartemen', {{ $jumlahDepartemen }}, 'loadingDepartemen', 2000);
+            animateCount('countForm', {{ $jumlahForm }}, 'loadingForm', 2000);
         });
     </script>
 @endsection

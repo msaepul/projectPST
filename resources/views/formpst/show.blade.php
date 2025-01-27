@@ -38,14 +38,14 @@
                         </ol>
                     </div>
 
+                    
                     <div class="card-body">
 
+                        {{-- tombol submit  --}}
                         <div class="mb-4">
-                            <!-- Form Handle (Submit or Reject for BM, HRD, HO) -->
                             <form action="{{ route('form.submit', $form->id) }}" method="POST">
                                 @csrf
 
-                                <!-- Tombol untuk ACC atau Tolak BM -->
                                 @if ($form->acc_bm == null)
                                     <button type="submit" name="action" value="acc_bm" class="btn btn-primary mr-2">
                                         Submit 
@@ -55,7 +55,6 @@
                                     </button>
                                 @endif
 
-                                <!-- Tombol untuk ACC atau Tolak HRD -->
                                 @if ($form->acc_hrd == null && $form->acc_bm == 'oke')
                                     <button type="submit" name="action" value="acc_hrd" class="btn btn-primary mr-2">
                                         Submit 
@@ -65,7 +64,6 @@
                                     </button>
                                 @endif
 
-                                <!-- Tombol untuk ACC atau Tolak HO -->
                                 @if ($form->acc_ho == null && $form->acc_hrd == 'oke')
                                     <button type="submit" id="submitHoButton" name="action" value="acc_ho"
                                         class="btn btn-primary mr-2" disabled>
@@ -84,9 +82,11 @@
                                         Tolak 
                                     </button>
                                 @endif
+                                @if ($form->acc_cabang != 'oke')
                                 <button type="submit" name="action" value="cancel" class="btn btn-danger">
                                     Cancel
-                                </button>
+                                </button>    
+                                @endif
                             </form>
                         </div>
 
@@ -123,6 +123,7 @@
                             </div>
                         </div>
 
+                        {{-- tabel list pegawai --}}
                         <div class="package-container">
                             <div class="item-table">
                                 <table class="table table-bordered">
@@ -143,7 +144,7 @@
                                                 <td>{{ $item->nama_pegawai }}</td>
                                                 <td>{{ $item->nik }}</td>
                                                 <td>{{ $item->departemen }}</td>
-                                                <td>{{ $item->lama_keberangkatan }}</td>
+                                                <td>{{ $item->lama_keberangkatan }} Hari</td>
                                                 <td>
                                                     @if ($item->upload_file)
                                                         <a href="{{ asset('storage/' . $item->upload_file) }}"
