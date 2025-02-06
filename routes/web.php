@@ -89,11 +89,6 @@ Route::middleware('auth')->group(function () {
 
     });
 
-
-    Route::get('/hrd/form_nm', function () {
-        return view('hrd.form_nm');
-    })->name('hrd.form_nm');
-
     // Data Diri Routes
     Route::get('/data_diri/biodata', [Data_diriController::class, 'biodata'])->name('data_diri.biodata');
 

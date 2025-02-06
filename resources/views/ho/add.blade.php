@@ -4,14 +4,14 @@
     <style>
         /* General Styling */
         /* body {
-            font-family: 'Arial', sans-serif;
-            background: #f8f9fa;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        } */
+                    font-family: 'Arial', sans-serif;
+                    background: #f8f9fa;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    min-height: 100vh;
+                    margin: 0;
+                } */
 
 
         /* Container Styling */
@@ -212,6 +212,7 @@
                     <select class="form-control" id="role" name="role" required>
                         <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
                         <option value="user" {{ old('role') == 'user' ? 'selected' : '' }}>User</option>
+                        <option value="bm" {{ old('role') == 'bm' ? 'selected' : '' }}>BM</option>
                     </select>
                 </div>
             </div>

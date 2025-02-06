@@ -38,7 +38,7 @@
                                 <td>{{ $item->cabang_asal }}</td>
                                 <td>{{ $item->cabang_tujuan }}</td>
                                 <td>{{ $item->tujuan }}</td>
-                              <td class="text-center">
+                                <td class="text-center">
                                     @if ($item->acc_cabang == 'oke')
                                         <span class="badge bg-success">Sudah Diverifikasi</span>
                                     @elseif ($item->acc_cabang == 'reject')
@@ -76,9 +76,6 @@
                                         <span class="badge bg-success">Semua Pegawai Diterima</span>
                                     @endif
                                 </td>
-
-
-
                                 <td class="text-center">
                                     <a href="{{ route('formpst.show', ['id' => $item->id]) }}"
                                         class="btn btn-sm btn-outline-primary">Lihat Detail</a>
