@@ -212,6 +212,10 @@
                     <select class="form-control" id="role" name="role" required>
                         <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
                         <option value="user" {{ old('role') == 'user' ? 'selected' : '' }}>User</option>
+                        <option value="bm" {{ old('role') == 'bm' ? 'selected' : '' }}>BM</option>
+                        <option value="hrd" {{ old('role') == 'hrd' ? 'selected' : '' }}>HRD</option>
+                        <option value="nm" {{ old('role') == 'nm' ? 'selected' : '' }}>NM</option>
+                        <option value="pegawai" {{ old('role') == 'pegawai' ? 'selected' : '' }}>Pegawai</option>
                     </select>
                 </div>
             </div>

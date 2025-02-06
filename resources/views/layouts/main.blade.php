@@ -110,7 +110,7 @@
                     <a href="#" class="d-block"
                         style="font-size: 16px; font-weight: bold; color: #ffffff;">{{ Auth::user()->name }}</a>
                     <p class="status" style="font-size: 12px; color: #dcefff; margin-bottom: 5px;">
-                        {{ Auth::user()->email }}</p>
+                        {{ Auth::user()->role }}-{{ Auth::user()->cabang_asal }}</p>
                     <span class="badge badge-success" style="font-size: 12px;">Online</span>
                 </div>
             </div>
@@ -150,7 +150,12 @@
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                     data-accordion="false">
 
-                    @if (auth()->user()->role === 'admin' || auth()->user()->role === 'user')
+                    @if (auth()->user()->role === 'admin' ||
+                            auth()->user()->role === 'user' ||
+                            auth()->user()->role === 'bm' ||
+                            auth()->user()->role === 'nm' ||
+                            auth()->user()->role === 'hrd' ||
+                            auth()->user()->role === 'pegawai')
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-copy"></i>
@@ -189,7 +194,7 @@
                         </li>
                     @endif
 
-                    @if (auth()->user()->role === 'admin')
+                    @if (auth()->user()->role === 'admin' || auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'Head Office')
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="fas fa-user nav-icon"></i>
@@ -205,10 +210,12 @@
                                 </li>
                             </ul>
                         </li>
+                    @endif
+                    @if ((auth()->user()->role === 'admin' || auth()->user()->role === 'hrd') && !empty(auth()->user()->cabang_asal))
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="fas fa-user nav-icon"></i>
-                                <p>HRD Cabang<i class="fas fa-angle-left right"></i></p>
+                                <p>HRD<i class="fas fa-angle-left right"></i></p>
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
@@ -220,6 +227,9 @@
                                 </li>
                             </ul>
                         </li>
+                    @endif
+
+                    @if (auth()->user()->role === 'admin')
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-building"></i>

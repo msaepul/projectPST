@@ -30,7 +30,11 @@
                                     Selesai
                                 </span>
                             </li>
-                            <li class="breadcrumb-item" @if ($form->acc_bm === 'reject' && $form->acc_hrd === 'reject' && $form->acc_ho === 'reject' && $form->acc_cabang === 'reject' ) text-primary @endif>
+                            <li class="breadcrumb-item" @if (
+                                $form->acc_bm === 'reject' &&
+                                    $form->acc_hrd === 'reject' &&
+                                    $form->acc_ho === 'reject' &&
+                                    $form->acc_cabang === 'reject') text-primary @endif>
                                 <span class="breadcrumb-step text-danger">
                                     Ditolak
                                 </span>
@@ -38,54 +42,60 @@
                         </ol>
                     </div>
 
-                    
+
                     <div class="card-body">
 
                         {{-- tombol submit  --}}
                         <div class="mb-4">
                             <form action="{{ route('form.submit', $form->id) }}" method="POST">
                                 @csrf
-
-                                @if ($form->acc_bm == null)
-                                    <button type="submit" name="action" value="acc_bm" class="btn btn-primary mr-2">
-                                        Submit 
-                                    </button>
-                                    <button type="submit" name="action" value="reject_bm" class="btn btn-danger">
-                                        Tolak 
-                                    </button>
+                                @if (auth()->user()->role === 'bm')
+                                    @if ($form->acc_bm == null)
+                                        <button type="submit" name="action" value="acc_bm" class="btn btn-primary mr-2">
+                                            Submit
+                                        </button>
+                                        <button type="submit" name="action" value="reject_bm" class="btn btn-danger">
+                                            Tolak
+                                        </button>
+                                    @endif
+                                @endif
+                                @if (auth()->user()->role === 'hrd')
+                                    @if ($form->acc_hrd == null && $form->acc_bm == 'oke')
+                                        <button type="submit" name="action" value="acc_hrd" class="btn btn-primary mr-2">
+                                            Submit
+                                        </button>
+                                        <button type="submit" name="action" value="reject_hrd" class="btn btn-danger">
+                                            Tolak
+                                        </button>
+                                    @endif
                                 @endif
 
-                                @if ($form->acc_hrd == null && $form->acc_bm == 'oke')
-                                    <button type="submit" name="action" value="acc_hrd" class="btn btn-primary mr-2">
-                                        Submit 
-                                    </button>
-                                    <button type="submit" name="action" value="reject_hrd" class="btn btn-danger">
-                                        Tolak 
-                                    </button>
+                                @if (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'Head Office')
+                                    @if ($form->acc_ho == null && $form->acc_hrd == 'oke')
+                                        <button type="submit" id="submitHoButton" name="action" value="acc_ho"
+                                            class="btn btn-primary mr-2" disabled>
+                                            Submit
+                                        </button>
+                                        <button type="submit" name="action" value="reject_ho" class="btn btn-danger">
+                                            Tolak
+                                        </button>
+                                    @endif
                                 @endif
-
-                                @if ($form->acc_ho == null && $form->acc_hrd == 'oke')
-                                    <button type="submit" id="submitHoButton" name="action" value="acc_ho"
-                                        class="btn btn-primary mr-2" disabled>
-                                        Submit 
-                                    </button>
-                                    <button type="submit" name="action" value="reject_ho" class="btn btn-danger">
-                                        Tolak 
-                                    </button>
-                                @endif
-
-                                @if ($form->acc_cabang == null && $form->acc_ho == 'oke')
-                                    <button type="submit" name="action" value="acc_cabang" class="btn btn-primary mr-2">
-                                        Submit 
-                                    </button>
-                                    <button type="submit" name="action" value="reject_cabang" class="btn btn-danger">
-                                        Tolak 
-                                    </button>
+                                @if (auth()->user()->role === 'bm' && auth()->user()->cabang_asal === $form->cabang_tujuan)
+                                    @if ($form->acc_cabang == null && $form->acc_ho == 'oke')
+                                        <button type="submit" name="action" value="acc_cabang"
+                                            class="btn btn-primary mr-2">
+                                            Submit
+                                        </button>
+                                        <button type="submit" name="action" value="reject_cabang" class="btn btn-danger">
+                                            Tolak
+                                        </button>
+                                    @endif
                                 @endif
                                 @if ($form->acc_cabang != 'oke')
-                                <button type="submit" name="action" value="cancel" class="btn btn-danger">
-                                    Cancel
-                                </button>    
+                                    <button type="submit" name="action" value="cancel" class="btn btn-danger">
+                                        Cancel
+                                    </button>
                                 @endif
                             </form>
                         </div>
@@ -140,55 +150,65 @@
                                     </thead>
                                     <tbody>
                                         @forelse ($data as $item)
-                                            <tr>
-                                                <td>{{ $item->nama_pegawai }}</td>
-                                                <td>{{ $item->nik }}</td>
-                                                <td>{{ $item->departemen }}</td>
-                                                <td>{{ $item->lama_keberangkatan }} Hari</td>
-                                                <td>
-                                                    @if ($item->upload_file)
-                                                        <a href="{{ asset('storage/' . $item->upload_file) }}"
-                                                            target="_blank">Lihat File</a>
-                                                    @else
-                                                        Tidak ada file
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    @if ($form->acc_hrd == 'oke' && $form->acc_hrd != 'reject' && $form->acc_bm != 'reject' && $item->acc_nm == null)
-                                                        <button class="btn btn-success btn-sm"
-                                                            onclick="updateStatus({{ $item->id }}, 'oke')">
-                                                            Setuju
-                                                        </button>
-                                                        <button class="btn btn-danger btn-sm"
-                                                            onclick="openRejectModal({{ $item->id }})">
-                                                            Tolak
-                                                        </button>
-                                                    @endif
+                                            @if (
+                                                (auth()->user()->role === 'nm' && auth()->user()->departemen === $item->departemen) ||
+                                                    auth()->user()->role === 'admin' ||
+                                                    auth()->user()->role === 'user' ||
+                                                    auth()->user()->role === 'bm' ||
+                                                    auth()->user()->role === 'hrd' ||
+                                                    auth()->user()->role === 'pegawai')
+                                                <tr>
+                                                    <td>{{ $item->nama_pegawai }}</td>
+                                                    <td>{{ $item->nik }}</td>
+                                                    <td>{{ $item->departemen }}</td>
+                                                    <td>{{ $item->lama_keberangkatan }} Hari</td>
+                                                    <td>
+                                                        @if ($item->upload_file)
+                                                            <a href="{{ asset('storage/' . $item->upload_file) }}"
+                                                                target="_blank">Lihat File</a>
+                                                        @else
+                                                            Tidak ada file
+                                                        @endif
+                                                    </td>
+                                                    <td>
 
-                                                    @if ($item->acc_nm == 'oke')
-                                                        <span class="text-success">Diterima</span>
-                                                    @endif
 
-                                                    @if ($item->acc_nm == 'tolak' || $form->acc_bm == 'reject' || $form->acc_hrd == 'reject')
-                                                        <span class="text-danger">Ditolak</span>
-                                                    @endif
+                                                        @if ($form->acc_hrd == 'oke' && $form->acc_hrd != 'reject' && $form->acc_bm != 'reject' && $item->acc_nm == null)
+                                                            <button class="btn btn-success btn-sm"
+                                                                onclick="updateStatus({{ $item->id }}, 'oke')">
+                                                                Setuju
+                                                            </button>
+                                                            <button class="btn btn-danger btn-sm"
+                                                                onclick="openRejectModal({{ $item->id }})">
+                                                                Tolak
+                                                            </button>
+                                                        @endif
+                                                        @if ($item->acc_nm == 'oke')
+                                                            <span class="text-success">Diterima</span>
+                                                        @endif
 
-                                                    @if ($form->acc_bm == '' || $form->acc_hrd == '')
-                                                        <span class="text-warning">Menunggu</span>
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    @if ($item->acc_nm == 'oke')
-                                                        <span class="badge bg-success">Diterima</span>
-                                                    @elseif ($item->acc_nm == 'tolak')
-                                                        <span class="badge bg-danger">{{ $item->alasan }}</span>
-                                                    @elseif ($form->acc_hrd == 'reject' || $form->acc_hrd == 'reject')
-                                                        <span class="badge bg-danger">Ditolak</span>
-                                                    @elseif ($item->acc_nm == '' || $form->acc_hrd != 'reject' || $form->acc_bm != 'reject')
-                                                        <span class="badge bg-warning">Menunggu</span>
-                                                    @endif
-                                                </td>
-                                            </tr>
+                                                        @if ($item->acc_nm == 'tolak' || $form->acc_bm == 'reject' || $form->acc_hrd == 'reject')
+                                                            <span class="text-danger">Ditolak</span>
+                                                        @endif
+
+                                                        @if ($form->acc_bm == '' || $form->acc_hrd == '')
+                                                            <span class="text-warning">Menunggu</span>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if ($item->acc_nm == 'oke')
+                                                            <span class="badge bg-success">Diterima</span>
+                                                        @elseif ($item->acc_nm == 'tolak')
+                                                            <span class="badge bg-danger">{{ $item->alasan }}</span>
+                                                        @elseif ($form->acc_hrd == 'reject' || $form->acc_hrd == 'reject')
+                                                            <span class="badge bg-danger">Ditolak</span>
+                                                        @elseif ($item->acc_nm == '' || $form->acc_hrd != 'reject' || $form->acc_bm != 'reject')
+                                                            <span class="badge bg-warning">Menunggu</span>
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            @endif
+
                                         @empty
                                             <tr>
                                                 <td colspan="7" class="text-center">Tidak ada data untuk Form ID:
@@ -264,8 +284,9 @@
                                         @endif
                                     </div>
                                 </div>
+                            @endif
+
                         </div>
-                        @endif
 
                     </div>
                 </div>

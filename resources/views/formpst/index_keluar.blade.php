@@ -32,86 +32,86 @@
                     </thead>
                     <tbody>
                         @forelse ($data as $item)
-                            <tr>
-                                <td>{{ $item->no_surat }}</td>
-                                <td>{{ $item->nama_pemohon }}</td>
-                                <td>{{ $item->cabang_asal }}</td>
-                                <td>{{ $item->cabang_tujuan }}</td>
-                                <td>{{ $item->tujuan }}</td>
-                                <td class="text-center">
-                                    @if ($item->acc_hrd == 'oke')
-                                        <span class="badge bg-success">Sudah Diverifikasi</span>
-                                    @elseif ($item->acc_hrd == 'reject')
-                                        <span class="badge bg-warning bg-danger">Verifikasi Di tolak hrd</span>
-                                    @elseif ($item->acc_bm == 'oke')
-                                        <span class="badge bg-warning text-dark">Menunggu Verifikasi HRD</span>
-                                    @elseif ($item->acc_bm == 'reject')
-                                        <span class="badge bg-warning bg-danger">Verifikasi Di tolak BM</span>
-                                    @elseif ($item->acc_bm == 'cancel')
-                                        <span class="badge bg-warning bg-danger">Cancel</span>
-                                    @else
-                                        <span class="badge bg-danger">Belum Diverifikasi</span>
-                                    @endif
-                                </td>
-
-                                <td class="text-center">
-                                    @php
-                                        $anyRejected = false;
-                                        $anyAccepted = false;
-                                    @endphp
-
-                                    @foreach ($item->nama_pegawais as $pegawai)
-                                        @if ($pegawai->acc_nm == 'tolak')
-                                            @php
-                                                $anyRejected = true;
-                                            @endphp
-                                            <span class="badge bg-danger">Pegawai Ditolak:
-                                                {{ $pegawai->nama_pegawai }}</span>
-                                        @elseif ($pegawai->acc_nm == 'oke')
-                                            @php
-                                                $anyAccepted = true;
-                                            @endphp
+                        @if (auth()->user()->cabang_asal === $item->cabang_asal || auth()->user()->role === 'admin' || auth()->user()->cabang_asal === 'Head Office')
+                                <tr>
+                                    <td>{{ $item->no_surat }}</td>
+                                    <td>{{ $item->nama_pemohon }}</td>
+                                    <td>{{ $item->cabang_asal }}</td>
+                                    <td>{{ $item->cabang_tujuan }}</td>
+                                    <td>{{ $item->tujuan }}</td>
+                                    <td class="text-center">
+                                        @if ($item->acc_hrd == 'oke')
+                                            <span class="badge bg-success">Sudah Diverifikasi</span>
+                                        @elseif ($item->acc_hrd == 'reject')
+                                            <span class="badge bg-warning bg-danger">Verifikasi Di tolak hrd</span>
+                                        @elseif ($item->acc_bm == 'oke')
+                                            <span class="badge bg-warning text-dark">Menunggu Verifikasi HRD</span>
+                                        @elseif ($item->acc_bm == 'reject')
+                                            <span class="badge bg-warning bg-danger">Verifikasi Di tolak BM</span>
+                                        @elseif ($item->acc_bm == 'cancel')
+                                            <span class="badge bg-warning bg-danger">Cancel</span>
+                                        @else
+                                            <span class="badge bg-danger">Belum Diverifikasi</span>
                                         @endif
-                                    @endforeach
+                                    </td>
 
-                                    @if (!$anyRejected && !$anyAccepted && $item->acc_bm != 'cancel' && $item->acc_bm != 'reject')
-                                        <span class="badge bg-warning text-dark">Menunggu Verifikasi</span>
-                                    @elseif (!$anyRejected && $anyAccepted)
-                                        <span class="badge bg-success">Semua Pegawai Diterima</span>
-                                    @endif
-                                    @if ($item->acc_bm == 'cancel' || $item->acc_bm == 'reject')
-                                        <span class="badge bg-danger">Cancel</span>
-                                    @endif
-                                </td>
+                                    <td class="text-center">
+                                        @php
+                                            $anyRejected = false;
+                                            $anyAccepted = false;
+                                        @endphp
+
+                                        @foreach ($item->nama_pegawais as $pegawai)
+                                            @if ($pegawai->acc_nm == 'tolak')
+                                                @php
+                                                    $anyRejected = true;
+                                                @endphp
+                                                <span class="badge bg-danger">Pegawai Ditolak:
+                                                    {{ $pegawai->nama_pegawai }}</span>
+                                            @elseif ($pegawai->acc_nm == 'oke')
+                                                @php
+                                                    $anyAccepted = true;
+                                                @endphp
+                                            @endif
+                                        @endforeach
+
+                                        @if (!$anyRejected && !$anyAccepted && $item->acc_bm != 'cancel' && $item->acc_bm != 'reject')
+                                            <span class="badge bg-warning text-dark">Menunggu Verifikasi</span>
+                                        @elseif (!$anyRejected && $anyAccepted)
+                                            <span class="badge bg-success">Semua Pegawai Diterima</span>
+                                        @endif
+                                        @if ($item->acc_bm == 'cancel' || $item->acc_bm == 'reject')
+                                            <span class="badge bg-danger">Cancel</span>
+                                        @endif
+                                    </td>
 
 
-                                <td class="text-center">
-                                    <div style="display: flex; justify-content: center; gap: 10px;">
-                                        <a href="{{ route('formpst.show', ['id' => $item->id]) }}"
-                                            class="btn btn-sm btn-outline-primary"
-                                            style="width: 90px; text-align: center;">Lihat Detail</a>
-                                
-                                        @if ($item->acc_bm != 'cancel')
-                                            <a href="{{ route('formpst.edit', ['id' => $item->id]) }}"
+                                    <td class="text-center">
+                                        <div style="display: flex; justify-content: center; gap: 10px;">
+                                            <a href="{{ route('formpst.show', ['id' => $item->id]) }}"
                                                 class="btn btn-sm btn-outline-primary"
-                                                style="width: 90px; text-align: center;">Edit</a>
-                                        @endif
-                                    </div>
-                                </td>
-                                
-                                
-                                
-                            </tr>
+                                                style="width: 90px; text-align: center;">Lihat Detail</a>
+
+                                            @if ($item->acc_bm != 'cancel')
+                                                <a href="{{ route('formpst.edit', ['id' => $item->id]) }}"
+                                                    class="btn btn-sm btn-outline-primary"
+                                                    style="width: 90px; text-align: center;">Edit</a>
+                                            @endif
+                                        </div>
+                                    </td>
+
+                                </tr>
+                            @endif
                         @empty
                             <tr>
                                 <td colspan="7" class="text-center py-3">Tidak ada data ditemukan.</td>
                             </tr>
-                        @endforelse
-                    </tbody>
+                            @endforelse
+                        </tbody>
 
-                </table>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
-    </div>
-@endsection
+        </div>
+    @endsection
