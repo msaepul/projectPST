@@ -219,7 +219,8 @@ public function updateUser(Request $request, $id)
       'departemen' => 'required|exists:departemens,nama_departemen',
       'cabang_asal' => 'required|exists:cabangs,nama_cabang',
       'no_hp' => 'required|string',
-      'role' => 'required|in:admin,user,bm',
+      'role' => 'required|in:admin,user,bm,hrd,nm,pegawai',
+
       'nama_lengkap' => 'required|string|max:255',
   ]);
 
@@ -256,7 +257,8 @@ public function updateUser(Request $request, $id)
          'departemen' => 'required|exists:departemens,id',
          'cabang_asal' => 'required|exists:cabangs,id',
          'no_hp' => 'required|string',
-         'role' => 'required|in:admin,user,bm',
+         'role' => 'required|in:admin,user,bm,hrd,nm,pegawai',
+
          'nama_lengkap' => 'required|string|max:255',
      ]);
 

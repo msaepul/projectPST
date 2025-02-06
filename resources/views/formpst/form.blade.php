@@ -126,6 +126,7 @@
         </div>
     </div>
     <script>
+        // Tambah Baris Baru
         document.getElementById('add-field').addEventListener('click', function() {
             const rowToClone = document.getElementById('rowToClone');
             if (rowToClone) {
@@ -138,12 +139,14 @@
             }
         });
     
+        // Hapus Baris
         document.querySelector('#pegawaiTable').addEventListener('click', function(event) {
             if (event.target.classList.contains('remove-item')) {
                 event.target.closest('tr').remove();
             }
         });
     
+        // Update Kolom Departemen dan NIK Berdasarkan Pilihan Dropdown
         document.querySelector('#pegawaiTable').addEventListener('change', function(event) {
             if (event.target.classList.contains('namaPegawai')) {
                 const selectedOption = event.target.options[event.target.selectedIndex];
@@ -153,17 +156,19 @@
             }
         });
     
+        // Tambahkan Nama Lengkap Pegawai ke Form Saat Submit
         document.querySelector('form').addEventListener('submit', function(e) {
             const namaPegawaiInputs = document.querySelectorAll('.namaPegawai');
             namaPegawaiInputs.forEach((select, index) => {
                 const selectedOption = select.options[select.selectedIndex];
                 const nama = selectedOption.getAttribute('data-nama');
     
+                // Buat hidden input untuk mengirim nama lengkap
                 const input = document.createElement('input');
                 input.type = 'hidden';
-                input.name = `namaPegawaiNama[${index}]`; 
+                input.name = `namaPegawaiNama[${index}]`; // Pastikan nama sesuai dengan backend
                 input.value = nama;
-                this.appendChild(input); 
+                this.appendChild(input); // Tambahkan ke form
             });
         });
     </script>

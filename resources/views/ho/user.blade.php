@@ -14,6 +14,17 @@
                         style="width: 20px; height: 20px; margin-right: 4px">Tambah User
                 </a>
 
+                <!-- Form untuk filter berdasarkan cabang -->
+                <form method="GET" class="mb-3">
+                    <label for="cabang">Filter Berdasarkan Cabang: </label>
+                    <select name="cabang" id="cabang" onchange="this.form.submit()">
+                        <option value="">Semua Cabang</option>
+                        @foreach ($users->pluck('cabang_asal')->unique() as $cabang)
+                            <option value="{{ $cabang }}" {{ request('cabang') == $cabang ? 'selected' : '' }}>{{ $cabang }}</option>
+                        @endforeach
+                    </select>
+                </form>
+
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover">
                         <thead>
@@ -31,9 +42,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($users as $key => $user)
+                            @php
+                                $filteredUsers = $users;
+                                if (request('cabang')) {
+                                    $filteredUsers = $users->where('cabang_asal', request('cabang'));
+                                }
+                            @endphp
+                            @foreach ($filteredUsers as $key => $user)
                                 <tr>
-                                    <td class="text-center">{{ $key + 1 }}</td>
+                                    <td class="text-center">{{ $loop->iteration }}</td>
                                     <td>{{ $user->nama_lengkap }}</td>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
@@ -62,6 +79,11 @@
                                     </td>
                                 </tr>
                             @endforeach
+                            @if ($filteredUsers->isEmpty())
+                                <tr>
+                                    <td colspan="10" class="text-center">Tidak ada data untuk cabang yang dipilih.</td>
+                                </tr>
+                            @endif
                         </tbody>
                     </table>
                 </div>
