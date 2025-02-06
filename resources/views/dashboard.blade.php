@@ -19,8 +19,8 @@
             </div>
         </div>
 
-        <div class="row"> {{-- Bungkus box-box statistik dalam satu row --}}
-            <div class="col-lg-3 col-md-6 col-sm-12 mb-4"> {{-- Ubah col-lg-4 jadi col-lg-3 dan tambahkan col-md-6 dan col-sm-12 --}}
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
                 <div class="small-box bg-navy">
                     <div class="inner">
                         <h3 id="countCabang">0</h3>
@@ -36,7 +36,7 @@
                 </div>
             </div>
 
-            <div class="col-lg-3 col-md-6 col-sm-12 mb-4"> {{-- Ubah col-lg-4 jadi col-lg-3 dan tambahkan col-md-6 dan col-sm-12 --}}
+            <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
                 <div class="small-box bg-gray">
                     <div class="inner">
                         <h3 id="countDepartemen">0</h3>
@@ -52,40 +52,39 @@
                 </div>
             </div>
 
-            <div class="col-lg-3 col-md-6 col-sm-12 mb-4"> {{-- Ubah col-lg-4 jadi col-lg-3 dan tambahkan col-md-6 dan col-sm-12 --}}
-                <div class="small-box bg-teal">
+            <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+                <div class="small-box bg-cyan">
                     <div class="inner">
-                        <h3 id="countSuratMasuk">0</h3>
+                        <h3 id="countSuratMasuk">{{ $jumlahSuratMasuk }}</h3>
                         <p>Jumlah Surat Masuk</p>
                         <span id="loadingSuratMasuk" class="text-muted"></span>
                     </div>
                     <div class="icon">
                         <i class="fas fa-envelope"></i>
                     </div>
-                    <a href="{{ route('formpst.index_keluar') }}" class="small-box-footer">
+                    <a href="{{ route('formpst.index_masuk') }}" class="small-box-footer">
                         Lihat Detail <i class="fas fa-arrow-circle-right"></i>
                     </a>
                 </div>
             </div>
 
-            <div class="col-lg-3 col-md-6 col-sm-12 mb-4"> {{-- Ubah col-lg-4 jadi col-lg-3 dan tambahkan col-md-6 dan col-sm-12 --}}
-                <div class="small-box bg-orange">
+            <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+                <div class="small-box bg-gray-dark">
                     <div class="inner">
-                        <h3 id="countSuratKeluar">0</h3>
+                        <h3 id="countSuratKeluar">{{ $jumlahSuratKeluar }}</h3>
                         <p>Jumlah Surat Keluar</p>
                         <span id="loadingSuratKeluar" class="text-muted"></span>
                     </div>
                     <div class="icon">
                         <i class="fas fa-paper-plane"></i>
                     </div>
-                    <a href="#" class="small-box-footer">
+                    <a href="{{ route('formpst.index_keluar') }}" class="small-box-footer">
                         Lihat Detail <i class="fas fa-arrow-circle-right"></i>
                     </a>
                 </div>
             </div>
         </div>
     </div>
-
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -108,7 +107,8 @@
 
             animateCount('countCabang', {{ $jumlahCabang }}, 'loadingCabang', 2000);
             animateCount('countDepartemen', {{ $jumlahDepartemen }}, 'loadingDepartemen', 2000);
-            animateCount('countForm', {{ $jumlahForm }}, 'loadingForm', 2000);
+            animateCount('countSuratMasuk', {{ $jumlahSuratMasuk }}, 'loadingSuratMasuk', 2000);
+            animateCount('countSuratKeluar', {{ $jumlahSuratKeluar }}, 'loadingSuratKeluar', 2000);
         });
     </script>
 @endsection
