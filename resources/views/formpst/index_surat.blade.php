@@ -30,22 +30,23 @@
                     </thead>
                     <tbody>
                         @forelse ($data as $item)
-                        @if (auth()->user()->cabang_asal === $item->cabang_tujuan || auth()->user()->cabang_asal === $item->cabang_asal || auth()->user()->role === 'admin')
-
-                            <tr>
-                                <td>{{ $item->no_surat }}</td>
-                                <td>{{ $item->nama_pemohon }}</td>
-                                <td>{{ $item->cabang_asal }}</td>
-                                <td>{{ $item->cabang_tujuan }}</td>
-                                <td>{{ $item->tujuan }}</td>
-                                <td class="text-center">
-                                    <a href="{{ route('formpst.show', ['id' => $item->id]) }}"
-                                        class="btn btn-sm btn-outline-primary">Lihat Detail</a>
-                                    <a href="{{ route('formpst.surat_tugas', ['id' => $item->id]) }}"
-                                        class="btn btn-sm btn-outline-primary">Lihat Surat tugas</a>
-                                </td>
-                            </tr>
-                        @endif
+                            @if (auth()->user()->cabang_asal === $item->cabang_tujuan ||
+                                    auth()->user()->cabang_asal === $item->cabang_asal ||
+                                    auth()->user()->role === 'admin')
+                                <tr>
+                                    <td>{{ $item->no_surat }}</td>
+                                    <td>{{ $item->nama_pemohon }}</td>
+                                    <td>{{ $item->cabang_asal }}</td>
+                                    <td>{{ $item->cabang_tujuan }}</td>
+                                    <td>{{ $item->tujuan }}</td>
+                                    <td class="text-center">
+                                        <a href="{{ route('formpst.show', ['id' => $item->id]) }}"
+                                            class="btn btn-sm btn-outline-primary">Lihat Detail</a>
+                                        <a href="{{ route('formpst.surat_tugas', ['id' => $item->id]) }}"
+                                            class="btn btn-sm btn-outline-primary">Lihat Surat tugas</a>
+                                    </td>
+                                </tr>
+                            @endif
                         @empty
                             <tr>
                                 <td colspan="7" class="text-center py-3">Tidak ada data ditemukan.</td>
