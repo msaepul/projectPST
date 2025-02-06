@@ -31,6 +31,7 @@
                     </thead>
                     <tbody>
                         @forelse ($data as $item)
+                        
                             <tr>
                                 <td>{{ $item->no_surat }}</td>
                                 <td>{{ $item->nama_pemohon }}</td>

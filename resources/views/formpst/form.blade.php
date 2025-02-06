@@ -97,10 +97,11 @@
                                                         </option>
                                                     @endforeach
                                                 </select>
-                                                
+
                                             </td>
-                                            
-                                            <td><input type="text" name="departemen[]" class="form-control departemen" readonly></td>
+
+                                            <td><input type="text" name="departemen[]" class="form-control departemen"
+                                                    readonly></td>
                                             <td><input type="text" name="nik[]" class="form-control nik" readonly></td>
                                             <td><input type="file" name="uploadFile[]" class="form-control"></td>
                                             <td><input type="date" name="lamaKeberangkatan[]" class="form-control"
@@ -138,14 +139,14 @@
                 console.error("Element 'rowToClone' tidak ditemukan.");
             }
         });
-    
+
         // Hapus Baris
         document.querySelector('#pegawaiTable').addEventListener('click', function(event) {
             if (event.target.classList.contains('remove-item')) {
                 event.target.closest('tr').remove();
             }
         });
-    
+
         // Update Kolom Departemen dan NIK Berdasarkan Pilihan Dropdown
         document.querySelector('#pegawaiTable').addEventListener('change', function(event) {
             if (event.target.classList.contains('namaPegawai')) {
@@ -155,14 +156,14 @@
                 row.querySelector('.nik').value = selectedOption.getAttribute('data-nik');
             }
         });
-    
+
         // Tambahkan Nama Lengkap Pegawai ke Form Saat Submit
         document.querySelector('form').addEventListener('submit', function(e) {
             const namaPegawaiInputs = document.querySelectorAll('.namaPegawai');
             namaPegawaiInputs.forEach((select, index) => {
                 const selectedOption = select.options[select.selectedIndex];
                 const nama = selectedOption.getAttribute('data-nama');
-    
+
                 // Buat hidden input untuk mengirim nama lengkap
                 const input = document.createElement('input');
                 input.type = 'hidden';
@@ -172,5 +173,4 @@
             });
         });
     </script>
-    
 @endsection

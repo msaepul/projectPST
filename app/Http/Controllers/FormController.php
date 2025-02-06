@@ -26,7 +26,7 @@ class FormController extends Controller
         $cabang_tujuans = Cabang_tujuan::all();
         $users = User::all();
 
-        $lastForm = Form::latest()->first();
+        $lastForm = Form::where('cabang_asal', auth()->user()->cabang_asal)->latest()->first();
         $lastNumber = $lastForm ? intval(substr($lastForm->no_surat, 0, 3)) : 0;
 
         $newNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
@@ -225,13 +225,10 @@ public function generatePdf($targetFormId)
             // Render PDF
             $dompdf->render();
 
-            // Stream PDF ke browser untuk preview atau download
-            return $dompdf->stream('surat_tugas_' . $form->no_surat . '.pdf', ['Attachment' => 0]); // Nama file lebih deskriptif
+            return $dompdf->stream('surat_tugas_' . $form->no_surat . '.pdf', ['Attachment' => 0]); 
         } catch (\Exception $e) {
-            // Log error lengkap untuk debugging
             Log::error("Error saat generate PDF untuk form ID: {$targetFormId}. Error: " . $e->getMessage() . "\n" . $e->getTraceAsString());
-            // Berikan pesan error yang lebih umum ke user (jangan tampilkan detail teknis)
-            return back()->with('error', 'Terjadi kesalahan saat membuat PDF. Silakan coba lagi.'); // atau tampilkan view error khusus
+            return back()->with('error', 'Terjadi kesalahan saat membuat PDF. Silakan coba lagi.'); 
         }
     }
 

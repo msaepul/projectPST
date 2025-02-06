@@ -93,7 +93,6 @@
                                             Tolak
                                         </button>
                                     @endif
-
                                 @endif
                                 @if ($form->acc_cabang != 'oke')
                                     <button type="submit" name="action" value="cancel" class="btn btn-danger">
