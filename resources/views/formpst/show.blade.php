@@ -2,44 +2,46 @@
 
 @section('content')
     <div class="container-fluid pt-4">
-        <!-- Breadcrumb Section -->
-
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card mb-4 mt-3">
-                    <div class="card-header style="position: sticky; top: 0; z-index: 100;>
-                        <ol class="breadcrumb">
+                    <div class="card-header" style="position: sticky; top: 0; z-index: 100;">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
 
-                            <li class="breadcrumb-item">
-                                <span class="breadcrumb-step @if (($form->acc_bm === '' || $form->acc_hrd === '') && ($form->acc_bm !== 'oke' || $form->acc_hrd !== 'oke')) text-primary @endif">
-                                    Pengajuan Cabang
-                                </span>
-                            </li>
-                            <li class="breadcrumb-item">
-                                <span class="breadcrumb-step @if ($form->acc_bm === 'oke' && $form->acc_hrd === 'oke' && ($form->acc_ho === '' || $form->acc_ho !== 'oke')) text-primary @endif">
-                                    Diperiksa HO
-                                </span>
-                            </li>
-                            <li class="breadcrumb-item">
-                                <span class="breadcrumb-step @if ($form->acc_ho === 'oke' && ($form->acc_cabang === '' || $form->acc_cabang !== 'oke')) text-primary @endif">
-                                    Diperiksa Cabang Tujuan
-                                </span>
-                            </li>
-                            <li class="breadcrumb-item">
-                                <span class="breadcrumb-step @if ($form->acc_cabang === 'oke') text-primary @endif">
-                                    Selesai
-                                </span>
-                            </li>
-                            <li class="breadcrumb-item" @if (
-                                $form->acc_bm === 'reject' &&
-                                    $form->acc_hrd === 'reject' &&
-                                    $form->acc_ho === 'reject' &&
-                                    $form->acc_cabang === 'reject') text-primary @endif>
-                                <span class="breadcrumb-step text-danger">
-                                    Ditolak
-                                </span>
-                            </li>
-                        </ol>
+                                <li class="breadcrumb-item">
+                                    <span class="breadcrumb-step @if (($form->acc_bm === '' || $form->acc_hrd === '') && ($form->acc_bm !== 'oke' || $form->acc_hrd !== 'oke')) breadcrumb-active @endif">
+                                        Pengajuan Cabang
+                                    </span>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <span
+                                        class="breadcrumb-step @if ($form->acc_bm === 'oke' && $form->acc_hrd === 'oke' && ($form->acc_ho === '' || $form->acc_ho !== 'oke')) breadcrumb-active @endif">
+                                        Diperiksa HO
+                                    </span>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <span
+                                        class="breadcrumb-step @if ($form->acc_ho === 'oke' && ($form->acc_cabang === '' || $form->acc_cabang !== 'oke')) breadcrumb-active @endif">
+                                        Diperiksa Cabang Tujuan
+                                    </span>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <span
+                                        class="breadcrumb-step @if ($form->acc_cabang === 'oke') breadcrumb-active @endif">
+                                        Selesai
+                                    </span>
+                                </li>
+                                <li class="breadcrumb-item" @if (
+                                    $form->acc_bm === 'reject' &&
+                                        $form->acc_hrd === 'reject' &&
+                                        $form->acc_ho === 'reject' &&
+                                        $form->acc_cabang === 'reject') text-primary @endif>
+                                    <span class="breadcrumb-step text-danger">
+                                        Ditolak
+                                    </span>
+                                </li>
+                            </ol>
                     </div>
 
 
@@ -91,6 +93,7 @@
                                             Tolak
                                         </button>
                                     @endif
+
                                 @endif
                                 @if ($form->acc_cabang != 'oke')
                                     <button type="submit" name="action" value="cancel" class="btn btn-danger">
@@ -399,6 +402,12 @@
             $(document).ajaxSuccess(function() {
                 updateSubmitHoButton();
             });
+
+            function changeStep(index) {
+                let steps = document.querySelectorAll('.step');
+                steps.forEach(step => step.classList.remove('active'));
+                steps[index].classList.add('active');
+            }
         });
     </script>
 
@@ -521,17 +530,96 @@
 
         /* Breadcrumb styles */
         .breadcrumb {
-            background-color: transparent;
-            padding: 0;
-            margin-bottom: 20px;
+            background-color: #f8f9fa;
+            /* Light gray background */
+            padding: 10px 15px;
+            border-radius: 5px;
+            display: flex;
+            /* Enable flexbox for horizontal layout */
         }
 
-        .breadcrumb-item a {
+        .breadcrumb-item {
+            margin-right: 10px;
+            position: relative;
+            /* For positioning the triangle */
+            display: flex;
+            /* Ensure items are displayed as flex containers */
+            align-items: center;
+            /* Vertically align items */
+            background-color: #ffffff;
+            /* Light gray background for box */
+            padding: 5px 15px;
+            /* Adjust padding as needed */
+            border-radius: 3px;
+            /* Rounded corners */
+        }
+
+        .breadcrumb-step {
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 4px;
+        }
+
+        .breadcrumb-active {
+            background-color: #368df0;
+            /* Warna biru Bootstrap */
+            color: white !important;
+        }
+
+        .breadcrumb-item+.breadcrumb-item::before {
+            content: "";
+            position: absolute;
+            left: -15px;
+            /* Adjust position of the triangle */
+            top: 50%;
+            transform: translateY(-50%);
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-left: 15px solid #c3e0fd;
+            ;
+            /* Match the box background color */
+        }
+
+        .breadcrumb-link {
             color: #007bff;
+            /* Blue link color */
+            text-decoration: none;
         }
 
-        .breadcrumb-item.active {
+        .breadcrumb-link:hover {
+            color: #0056b3;
+            /* Darker blue on hover */
+        }
+
+        .breadcrumb-item.active .breadcrumb-text {
             color: #6c757d;
+            /* Gray for active item */
+            font-weight: 500;
+        }
+
+        .breadcrumb-text.text-danger {
+            color: #dc3545 !important;
+        }
+
+        /* Responsive adjustments (example) */
+        @media (max-width: 768px) {
+            .breadcrumb {
+                flex-wrap: wrap;
+            }
+
+            .breadcrumb-item {
+                margin-bottom: 5px;
+            }
+
+            .breadcrumb-item+.breadcrumb-item::before {
+                display: inline-block;
+                /* Show arrows on small screens */
+                border: none;
+                /* Remove default triangle on smaller screens */
+                content: "\f105";
+                /* Use Font Awesome icon */
+                font-family: "FontAwesome";
+            }
         }
     </style>
 @endsection

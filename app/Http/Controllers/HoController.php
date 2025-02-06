@@ -17,10 +17,15 @@ class HoController extends Controller
     public function dashboard()
     {
         $jumlahCabang = Cabang::count();
-        $jumlahDepartemen = Departemen::count();
-        $jumlahForm = Form::count();
+    $jumlahDepartemen = Departemen::count();
 
-        return view('dashboard', compact('jumlahCabang', 'jumlahDepartemen','jumlahForm'));
+    // Hitung jumlah surat masuk (acc_ho = 'oke')
+    $jumlahSuratMasuk = Form::where('acc_ho', 'oke')->count();
+
+    // Hitung jumlah surat keluar (misalnya semua data Form dianggap surat keluar)
+    $jumlahSuratKeluar = Form::count();
+
+    return view('dashboard', compact('jumlahCabang', 'jumlahDepartemen', 'jumlahSuratMasuk', 'jumlahSuratKeluar'));
     }
 
     // Cabang
@@ -215,6 +220,7 @@ public function updateUser(Request $request, $id)
       'cabang_asal' => 'required|exists:cabangs,nama_cabang',
       'no_hp' => 'required|string',
       'role' => 'required|in:admin,user,bm,hrd,nm,pegawai',
+
       'nama_lengkap' => 'required|string|max:255',
   ]);
 
@@ -252,6 +258,7 @@ public function updateUser(Request $request, $id)
          'cabang_asal' => 'required|exists:cabangs,id',
          'no_hp' => 'required|string',
          'role' => 'required|in:admin,user,bm,hrd,nm,pegawai',
+
          'nama_lengkap' => 'required|string|max:255',
      ]);
 

@@ -35,6 +35,7 @@
                         @forelse ($data as $item)
                          @if (auth()->user()->cabang_asal === $item->cabang_tujuan || auth()->user()->cabang_asal == 'Head Office' || auth()->user()->role === 'admin')
 
+
                                 <tr>
 
                                     <td>{{ $item->no_surat }}</td>
@@ -93,6 +94,7 @@
                                 <tr>
                                     <td colspan="7" class="text-center py-3">Tidak ada data ditemukan.</td>
                                 </tr>
+
                         @endforelse
                     </tbody>
 
