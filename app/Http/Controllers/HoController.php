@@ -20,10 +20,11 @@ class HoController extends Controller
     $jumlahDepartemen = Departemen::count();
 
     // Hitung jumlah surat masuk (acc_ho = 'oke')
-    $jumlahSuratMasuk = Form::where('acc_ho', 'oke')->count();
+
+    $jumlahSuratMasuk = Form::where('acc_ho', 'oke')->where('cabang_tujuan', auth()->user()->cabang_asal)->count();
 
     // Hitung jumlah surat keluar (misalnya semua data Form dianggap surat keluar)
-    $jumlahSuratKeluar = Form::count();
+    $jumlahSuratKeluar = Form::where('cabang_asal', auth()->user()->cabang_asal)->count();
 
     $jumlahSuratTugas = $jumlahSuratMasuk;
     return view('dashboard', compact('jumlahCabang', 'jumlahDepartemen', 'jumlahSuratMasuk', 'jumlahSuratKeluar'));
@@ -203,20 +204,18 @@ public function editUser($id)
  $departemens = Departemen::all(); // Mendapatkan data departemen
  $cabangs = Cabang::all(); // Mendapatkan data cabang
 
- return view('ho.edit', compact('user', 'departemens', 'cabangs')); // Mengirim data ke view edit
+ return view('ho.edit', compact('user', 'departemens', 'cabangs')); 
 }
 
-// Fungsi untuk mengupdate data user
 public function updateUser(Request $request, $id)
 {
-  // Ambil data user berdasarkan ID
   $user = User::findOrFail($id);
 
   // Validasi input update
   $validated = $request->validate([
       'name' => 'required|string|max:255',
-      'email' => 'required|email|unique:users,email,' . $id, // Unique kecuali yang sedang diupdate
-      'nik' => 'required|string|unique:users,nik,' . $id, // Unique kecuali yang sedang diupdate
+      'email' => 'required|email|unique:users,email,' . $id, 
+      'nik' => 'required|string|unique:users,nik,' . $id, 
       'departemen' => 'required|exists:departemens,nama_departemen',
       'cabang_asal' => 'required|exists:cabangs,nama_cabang',
       'no_hp' => 'required|string',

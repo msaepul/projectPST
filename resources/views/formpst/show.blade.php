@@ -76,6 +76,7 @@
                                     <button type="submit" name="action" value="reject_ho" class="btn btn-danger">
                                         Tolak
                                     </button>
+
                                 @endif
                             @endif
                             @if (auth()->user()->role === 'bm' && auth()->user()->cabang_asal === $form->cabang_tujuan)

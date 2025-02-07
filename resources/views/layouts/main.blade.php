@@ -94,7 +94,7 @@
 
         <!-- Sidebar -->
         <aside class="main-sidebar sidebar-dark-navy elevation-4">
-            <a href="index3.html" class="brand-link">
+            <a href="{{ route('dashboard') }}" class="brand-link">
                 <img src="{{ asset('dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo"
                     class="brand-image img-circle elevation-3" style="opacity: .8">
                 <span class="brand-text font-weight-light">FormPST</span>
@@ -198,22 +198,13 @@
 
                     @if (auth()->user()->role === 'admin' || auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'Head Office')
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-user nav-icon"></i>
-                                <p>HRD HO<i class="fas fa-angle-left right"></i></p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="{{ route('hrd.index_hrd') }}"
-                                        class="nav-link {{ request()->is('ho/user') ? 'active' : '' }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>List Pengajuan</p>
-                                    </a>
-                                </li>
-                            </ul>
+                            <a href="{{ route('hrd.index_hrd') }}"
+                            class="nav-link {{ request()->is('ho/user') ? 'active' : '' }}">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>List Pengajuan</p>
                         </li>
                     @endif
-                    @if ((auth()->user()->role === 'admin' || auth()->user()->role === 'hrd') && !empty(auth()->user()->cabang_asal))
+                    @if ((auth()->user()->role === 'admin' || auth()->user()->role === 'hrd' && auth()->user()->cabang_asal !== 'Head Office'))
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="fas fa-user nav-icon"></i>

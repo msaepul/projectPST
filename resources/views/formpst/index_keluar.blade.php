@@ -32,7 +32,9 @@
                     </thead>
                     <tbody>
                         @forelse ($data as $item)
-                        @if (auth()->user()->cabang_asal === $item->cabang_asal || auth()->user()->role === 'admin' || auth()->user()->cabang_asal === 'Head Office')
+                            @if (auth()->user()->cabang_asal === $item->cabang_asal ||
+                                    auth()->user()->role === 'admin' ||
+                                    auth()->user()->cabang_asal === 'Head Office')
                                 <tr>
                                     <td>{{ $item->no_surat }}</td>
                                     <td>{{ $item->nama_pemohon }}</td>
@@ -106,12 +108,12 @@
                             <tr>
                                 <td colspan="7" class="text-center py-3">Tidak ada data ditemukan.</td>
                             </tr>
-                            @endforelse
-                        </tbody>
+                        @endforelse
+                    </tbody>
 
-                    </table>
-                </div>
+                </table>
             </div>
         </div>
-        </div>
-    @endsection
+    </div>
+    </div>
+@endsection
