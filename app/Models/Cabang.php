@@ -21,6 +21,11 @@ class cabang extends Model
     {
         return $this->hasMany(Cabang_tujuan::class);
     }
+
+    public function users()
+{
+    return $this->hasMany(User::class);
+}
 }
 
 

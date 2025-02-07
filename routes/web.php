@@ -85,7 +85,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/formpst/edit/{id}', [FormController::class, 'edit'])->name('formpst.edit');
         Route::put('/formpst/update/{id}', [FormController::class, 'update'])->name('formpst.update');
         Route::delete('/formpst/delete/{id}', [FormController::class, 'destroy'])->name('formpst.destroy');
-        
+
         Route::post('/formpst/{id}/submit', [FormController::class, 'submit'])->name('form.submit');
         Route::get('/formpst/surat_tugas/{id}', [FormController::class, 'surat_tugas'])->name('formpst.surat_tugas');
         Route::post('/update-status/{itemId}/{status}', [FormController::class, 'updateStatus'])->name('update.status');
@@ -97,7 +97,7 @@ Route::middleware('auth')->group(function () {
 
     // Data Diri Routes
     Route::get('/data_diri/biodata', [Data_diriController::class, 'biodata'])->name('data_diri.biodata');
-    
+
      // Data_diri Routes
      Route::get('/data_diri/biodata', [Data_diriController::class, 'biodata'])->name('data_diri.biodata');
      Route::get('/forms', [FormController::class, 'index']);
