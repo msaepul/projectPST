@@ -32,11 +32,14 @@
                         <div class="form-group col-md-6">
                             <label for="cabangAsal">Cabang Asal</label>
                             <select class="form-control" name="cabang_asal" id="cabangAsal" required>
-                                <option value="" disabled selected>Pilih Cabang</option>
+                                <option value="" disabled>Pilih Cabang</option>
                                 @foreach ($cabangs as $cabang)
-                                    <option value="{{ $cabang->id }}">{{ $cabang->nama_cabang }}</option>
+                                    <option value="{{ $cabang->id }}" 
+                                        {{ auth()->user()->cabang_id == $cabang->id ? 'selected' : '' }}>
+                                        {{ $cabang->nama_cabang }}
+                                    </option>
                                 @endforeach
-                            </select>
+                            </select>                            
                         </div>
                         <div class="form-group col-md-6">
                             <label for="cabangTujuan">Cabang Tujuan</label>
@@ -72,43 +75,38 @@
                         </div>
                         <div class="card-body" style="padding: 20px;">
                             <div class="table-responsive">
-                                <table id="pegawaiTable" class="table table-bordered">
-                                    <thead>
+                                <table id="pegawaiTable" class="table table-bordered" style="width: 100%; min-width: 1200px; table-layout: auto;">
+                                    <thead class="thead-light">
                                         <tr>
-                                            <th>Nama</th>
-                                            <th>Departemen</th>
-                                            <th>NIK</th>
-                                            <th>Upload File</th>
-                                            <th>Lama Keberangkatan</th>
-                                            <th>Aksi</th>
+                                            <th style="width: 10%;">Nama</th>
+                                            <th style="width: 10%;">Departemen</th>
+                                            <th style="width: 10%;">NIK</th>
+                                            <th style="width: 10%;">Upload File</th>
+                                            <th style="width: 10%;">Lama Keberangkatan</th>
+                                            <th style="width: 5%; text-align: center;">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr id="rowToClone">
                                             <td>
-                                                <select name="namaPegawai[]" class="form-control namaPegawai" required>
+                                                <select name="namaPegawai[]" class="form-control namaPegawai select2" required>
                                                     <option value="" disabled selected>Pilih Nama</option>
                                                     @foreach ($users as $user)
                                                         <option value="{{ $user->id }}"
                                                             data-departemen="{{ $user->departemen }}"
                                                             data-nik="{{ $user->nik }}"
                                                             data-nama="{{ $user->nama_lengkap }}">
-                                                            {{ $user->nama_lengkap }}
+                                                            {{ $user->nama_lengkap }} / {{ $user->departemen }}
                                                         </option>
                                                     @endforeach
                                                 </select>
-
                                             </td>
-
-                                            <td><input type="text" name="departemen[]" class="form-control departemen"
-                                                    readonly></td>
+                                            <td><input type="text" name="departemen[]" class="form-control departemen" readonly></td>
                                             <td><input type="text" name="nik[]" class="form-control nik" readonly></td>
                                             <td><input type="file" name="uploadFile[]" class="form-control"></td>
-                                            <td><input type="date" name="lamaKeberangkatan[]" class="form-control"
-                                                    required></td>
+                                            <td><input type="date" name="lamaKeberangkatan[]" class="form-control" required></td>
                                             <td style="text-align: center; vertical-align: middle;">
-                                                <button type="button" class="btn btn-danger btn-sm remove-item"
-                                                    style="margin: 2px; padding: 0.25rem 0.5rem;">
+                                                <button type="button" class="btn btn-danger btn-sm remove-item">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>
                                             </td>
@@ -116,6 +114,7 @@
                                     </tbody>
                                 </table>
                             </div>
+                            
                             <button type="button" class="btn btn-primary mt-3" id="add-field">Tambah Pegawai</button>
                         </div>
                     </div>
@@ -172,5 +171,23 @@
                 this.appendChild(input); // Tambahkan ke form
             });
         });
+        $(document).ready(function() {
+    $('.select2').select2({
+        placeholder: "Cari Nama Pegawai...",
+        allowClear: true,
+        width: '100%' // Supaya menyesuaikan lebar parent
+    });
+
+    // Event listener untuk mengisi Departemen dan NIK setelah memilih pegawai
+    $(document).on('select2:select', '.namaPegawai', function(e) {
+        let selectedOption = $(this).find(':selected'); // Ambil option yang dipilih
+        let row = $(this).closest('tr'); // Cari tr terdekat
+
+        // Set nilai Departemen dan NIK berdasarkan data yang ada di option
+        row.find('.departemen').val(selectedOption.data('departemen'));
+        row.find('.nik').val(selectedOption.data('nik'));
+    });
+});
+
     </script>
 @endsection

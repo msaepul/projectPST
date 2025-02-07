@@ -42,15 +42,25 @@
                                     <td>{{ $item->cabang_tujuan }}</td>
                                     <td>{{ $item->tujuan }}</td>
                                     <td class="text-center">
-                                        @if ($item->acc_hrd == 'oke')
+                                        @if ($item->acc_cabang == 'oke')
                                             <span class="badge bg-success">Sudah Diverifikasi</span>
-                                        @elseif ($item->acc_hrd == 'reject')
-                                            <span class="badge bg-warning bg-danger">Verifikasi Di tolak hrd</span>
+                                        @elseif ($item->acc_cabang == 'reject')
+                                            <span class="badge bg-warning bg-danger">Verifikasi Di tolak Cabang</span>
+                                        @elseif ($item->acc_hrd== 'oke')
+                                            <span class="badge bg-warning text-dark">Menunggu Verifikasi BM</span>
                                         @elseif ($item->acc_bm == 'oke')
-                                            <span class="badge bg-warning text-dark">Menunggu Verifikasi HRD</span>
+                                            <span class="badge bg-warning text-dark">Menunggu Verifikasi HO</span>
                                         @elseif ($item->acc_bm == 'reject')
                                             <span class="badge bg-warning bg-danger">Verifikasi Di tolak BM</span>
+                                        @elseif ($item->acc_ho== 'oke')
+                                            <span class="badge bg-warning text-dark">Menunggu Verifikasi Cabang</span>
+                                        @elseif ($item->acc_ho == 'reject')
+                                            <span class="badge bg-warning bg-danger">Verifikasi Di tolak HO</span>
                                         @elseif ($item->acc_bm == 'cancel')
+                                            <span class="badge bg-warning bg-danger">Cancel</span>
+                                        @elseif ($item->acc_ho == 'cancel')
+                                            <span class="badge bg-warning bg-danger">Cancel</span>
+                                        @elseif ($item->acc_cabang == 'cancel')
                                             <span class="badge bg-warning bg-danger">Cancel</span>
                                         @else
                                             <span class="badge bg-danger">Belum Diverifikasi</span>

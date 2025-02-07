@@ -61,19 +61,9 @@
                                         </button>
                                     @endif
                                 @endif
-                                @if (auth()->user()->role === 'hrd')
-                                    @if ($form->acc_hrd == null && $form->acc_bm == 'oke')
-                                        <button type="submit" name="action" value="acc_hrd" class="btn btn-primary mr-2">
-                                            Submit
-                                        </button>
-                                        <button type="submit" name="action" value="reject_hrd" class="btn btn-danger">
-                                            Tolak
-                                        </button>
-                                    @endif
-                                @endif
 
                                 @if (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'Head Office')
-                                    @if ($form->acc_ho == null && $form->acc_hrd == 'oke')
+                                    @if ($form->acc_ho == null && $form->acc_bm == 'oke')
                                         <button type="submit" id="submitHoButton" name="action" value="acc_ho"
                                             class="btn btn-primary mr-2" disabled>
                                             Submit
@@ -105,7 +95,7 @@
                         <h5 class="text-center mb-8">
                             @if ($form->acc_ho == 'oke')
                                 Form Persetujuan Cabang
-                            @elseif ($form->acc_bm == 'oke' && $form->acc_hrd == 'oke')
+                            @elseif ($form->acc_bm == 'oke')
                                 Form Persetujuan HO
                             @else
                                 Form Persetujuan
@@ -172,39 +162,35 @@
                                                             Tidak ada file
                                                         @endif
                                                     </td>
+
                                                     <td>
-
-
-                                                        @if ($form->acc_hrd == 'oke' && $form->acc_hrd != 'reject' && $form->acc_bm != 'reject' && $item->acc_nm == null)
-                                                            <button class="btn btn-success btn-sm"
-                                                                onclick="updateStatus({{ $item->id }}, 'oke')">
-                                                                Setuju
-                                                            </button>
-                                                            <button class="btn btn-danger btn-sm"
-                                                                onclick="openRejectModal({{ $item->id }})">
-                                                                Tolak
-                                                            </button>
+                                                        @if (auth()->user()->role === 'nm' && auth()->user()->departemen === $item->departemen)
+                                                        @if ($form->acc_bm == 'oke' && $form->acc_hrd != 'reject' && $form->acc_bm != 'reject' && $item->acc_nm == null)
+                                                                <button class="btn btn-success btn-sm" onclick="updateStatus({{ $item->id }}, 'oke')">
+                                                                    Setuju
+                                                                </button>
+                                                                <button class="btn btn-danger btn-sm" onclick="openRejectModal({{ $item->id }})">
+                                                                    Tolak
+                                                                </button>
+                                                            @endif
                                                         @endif
-                                                        @if ($item->acc_nm == 'oke')
+                                                    
+                                                        {{-- Status Teks --}}
+                                                        @if ($item->acc_nm === 'oke')
                                                             <span class="text-success">Diterima</span>
-                                                        @endif
-
-                                                        @if ($item->acc_nm == 'tolak' || $form->acc_bm == 'reject' || $form->acc_hrd == 'reject')
+                                                        @elseif ($item->acc_nm === 'tolak' || $form->acc_bm === 'reject' || $form->acc_hrd === 'reject')
                                                             <span class="text-danger">Ditolak</span>
-                                                        @endif
-
-                                                        @if ($form->acc_bm == '' || $form->acc_hrd == '')
+                                                        @elseif (empty($form->acc_bm) || empty($form->acc_hrd))
                                                             <span class="text-warning">Menunggu</span>
                                                         @endif
                                                     </td>
+                                                    
                                                     <td>
                                                         @if ($item->acc_nm == 'oke')
                                                             <span class="badge bg-success">Diterima</span>
                                                         @elseif ($item->acc_nm == 'tolak')
                                                             <span class="badge bg-danger">{{ $item->alasan }}</span>
-                                                        @elseif ($form->acc_hrd == 'reject' || $form->acc_hrd == 'reject')
-                                                            <span class="badge bg-danger">Ditolak</span>
-                                                        @elseif ($item->acc_nm == '' || $form->acc_hrd != 'reject' || $form->acc_bm != 'reject')
+                                                        @elseif ($item->acc_nm == '' || $form->acc_bm != 'reject')
                                                             <span class="badge bg-warning">Menunggu</span>
                                                         @endif
                                                     </td>
@@ -224,401 +210,369 @@
 
                         <!-- Bar Status -->
                         <div class="status-bar mb-4" style="position: sticky; top: 70px;">
-                            <!-- ACC BM -->
+
+                            <!-- ACC HRD -->
                             <div class="status-step">
-                                <img src="{{ $form->acc_bm == 'oke' ? asset('dist/img/oke.png') : ($form->acc_bm == 'reject' ? asset('dist/img/reject.png') : asset('dist/img/no.png')) }}"
-                                    alt="Status BM" class="thumb-icon" width="50">
+                                <img src="{{ $statusImages['hrd'] }}" alt="Status HRD" class="thumb-icon" width="50">
                                 <div class="status-name">
-                                    @if ($form->acc_bm == 'oke')
-                                        BM - Setuju
-                                    @elseif ($form->acc_bm == 'reject')
-                                        BM - Ditolak
-                                    @else
-                                        BM - Menunggu
-                                    @endif
+                                    {{ $statusTexts['hrd'] }}
                                 </div>
                             </div>
-                            <!-- ACC HRD -->
-                            @if ($form->acc_bm == 'oke')
-                                <div class="status-step">
-                                    <img src="{{ $form->acc_hrd == 'oke' ? asset('dist/img/oke.png') : ($form->acc_hrd == 'reject' ? asset('dist/img/reject.png') : asset('dist/img/no.png')) }}"
-                                        alt="Status HRD" class="thumb-icon" width="50">
-                                    <div class="status-name">
-                                        @if ($form->acc_hrd == 'oke')
-                                            HRD - Setuju
-                                        @elseif ($form->acc_hrd == 'reject')
-                                            HRD - Ditolak
-                                        @else
-                                            HRD - Menunggu
-                                        @endif
-                                    </div>
-                                </div>
-                            @endif
 
-                            {{-- ACC HO  --}}
-                            @if ($form->acc_hrd == 'oke')
-                                <div class="status-step">
-                                    <img src="{{ $form->acc_ho == 'oke' ? asset('dist/img/oke.png') : ($form->acc_ho == 'reject' ? asset('dist/img/reject.png') : asset('dist/img/no.png')) }}"
-                                        alt="Status HO" class="thumb-icon" width="50">
-                                    <div class="status-name">
-                                        @if ($form->acc_ho == 'oke')
-                                            HRD HO - Setuju
-                                        @elseif ($form->acc_ho == 'reject')
-                                            HRD HO - Ditolak
-                                        @else
-                                            HRD HO - Menunggu
-                                        @endif
-                                    </div>
+                            <!-- ACC BM -->
+                            <div class="status-step">
+                                <img src="{{ $statusImages['bm'] }}" alt="Status BM" class="thumb-icon" width="50">
+                                <div class="status-name">
+                                    {{ $statusTexts['bm'] }}
                                 </div>
-                            @endif
-                            {{-- ACC CABANG --}}
-                            @if ($form->acc_ho == 'oke')
-                                <div class="status-step">
-                                    <img src="{{ $form->acc_cabang == 'oke' ? asset('dist/img/oke.png') : ($form->acc_cabang == 'reject' ? asset('dist/img/reject.png') : asset('dist/img/no.png')) }}"
-                                        alt="Status CABANG" class="thumb-icon" width="50">
-                                    <div class="status-name">
-                                        @if ($form->acc_cabang == 'oke')
-                                            CABANG - Setuju
-                                        @elseif ($form->acc_cabang == 'reject')
-                                            CABANG- Ditolak
-                                        @else
-                                            CABANG- Menunggu
-                                        @endif
-                                    </div>
+                            </div>
+
+                            <!-- ACC HO -->
+                            <div class="status-step">
+                                <img src="{{ $statusImages['ho'] }}" alt="Status HO" class="thumb-icon" width="50">
+                                <div class="status-name">
+                                    {{ $statusTexts['ho'] }}
                                 </div>
-                            @endif
+                            </div>
+
+                            <!-- ACC CABANG -->
+                            <div class="status-step">
+                                <img src="{{ $statusImages['cabang'] }}" alt="Status CABANG" class="thumb-icon"
+                                    width="50">
+                                <div class="status-name">
+                                    {{ $statusTexts['cabang'] }}
+                                </div>
+                            </div>
 
                         </div>
-
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Modal untuk alasan penolakan -->
-    <div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="rejectModalLabel">Alasan Penolakan</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="rejectForm">
-                        <div class="mb-3">
-                            <label for="rejectionReason" class="form-label">Alasan Penolakan</label>
-                            <textarea id="rejectionReason" class="form-control" rows="3" required></textarea>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    <button type="button" class="btn btn-danger" id="submitRejection">Tolak Pegawai</button>
+        <!-- Modal untuk alasan penolakan -->
+        <div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="rejectModalLabel">Alasan Penolakan</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="rejectForm">
+                            <div class="mb-3">
+                                <label for="rejectionReason" class="form-label">Alasan Penolakan</label>
+                                <textarea id="rejectionReason" class="form-control" rows="3" required></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                        <button type="button" class="btn btn-danger" id="submitRejection">Tolak Pegawai</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <script>
-        var itemIdToReject = null;
+        <script>
+            var itemIdToReject = null;
 
-        function openRejectModal(itemId) {
-            itemIdToReject = itemId;
-            $('#rejectModal').modal('show');
-        }
-
-        document.getElementById('submitRejection').addEventListener('click', function() {
-            var rejectionReason = document.getElementById('rejectionReason').value;
-            if (!rejectionReason) {
-                alert('Alasan penolakan wajib diisi');
-                return;
+            function openRejectModal(itemId) {
+                itemIdToReject = itemId;
+                $('#rejectModal').modal('show');
             }
 
-            // Kirim permintaan AJAX untuk menolak pegawai dengan alasan
-            $.ajax({
-                url: '/update-status/' + itemIdToReject + '/tolak',
-                type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    alasan: rejectionReason
-                },
-                success: function(response) {
-                    alert(response.message);
-                    $('#rejectModal').modal('hide');
-                    location.reload();
-                },
-                error: function(xhr) {
-                    alert('Terjadi kesalahan: ' + xhr.responseJSON.message);
+            document.getElementById('submitRejection').addEventListener('click', function() {
+                var rejectionReason = document.getElementById('rejectionReason').value;
+                if (!rejectionReason) {
+                    alert('Alasan penolakan wajib diisi');
+                    return;
                 }
-            });
-        });
 
-        function updateStatus(itemId, status) {
-            if (status == 'oke' && !confirm("Apakah Anda yakin ingin menyetujui?")) {
-                return;
-            }
-            if (status == 'tolak' && !confirm("Apakah Anda yakin ingin menolak?")) {
-                return;
-            }
-
-            $.ajax({
-                url: '/update-status/' + itemId + '/' + status,
-                type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                },
-                success: function(response) {
-                    alert(response.message);
-                    location.reload();
-                },
-                error: function(xhr) {
-                    alert('Terjadi kesalahan: ' + xhr.responseJSON.message);
-                }
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            function updateSubmitHoButton() {
-                const submitHoButton = document.getElementById('submitHoButton');
-                const rows = document.querySelectorAll('.item-table tbody tr');
-                let allReviewed = true;
-
-                rows.forEach(row => {
-                    const statusCell = row.querySelector('td span.badge');
-                    if (statusCell && statusCell.classList.contains('bg-warning')) {
-                        allReviewed = false;
+                // Kirim permintaan AJAX untuk menolak pegawai dengan alasan
+                $.ajax({
+                    url: '/update-status/' + itemIdToReject + '/tolak',
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        alasan: rejectionReason
+                    },
+                    success: function(response) {
+                        alert(response.message);
+                        $('#rejectModal').modal('hide');
+                        location.reload();
+                    },
+                    error: function(xhr) {
+                        alert('Terjadi kesalahan: ' + xhr.responseJSON.message);
                     }
                 });
-
-                submitHoButton.disabled = !allReviewed;
-            }
-
-            // Periksa status awal saat halaman dimuat
-            updateSubmitHoButton();
-
-            // Tangkap event AJAX untuk memperbarui tombol
-            $(document).ajaxSuccess(function() {
-                updateSubmitHoButton();
             });
 
-            function changeStep(index) {
-                let steps = document.querySelectorAll('.step');
-                steps.forEach(step => step.classList.remove('active'));
-                steps[index].classList.add('active');
+            function updateStatus(itemId, status) {
+                if (status == 'oke' && !confirm("Apakah Anda yakin ingin menyetujui?")) {
+                    return;
+                }
+                if (status == 'tolak' && !confirm("Apakah Anda yakin ingin menolak?")) {
+                    return;
+                }
+
+                $.ajax({
+                    url: '/update-status/' + itemId + '/' + status,
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                    },
+                    success: function(response) {
+                        alert(response.message);
+                        location.reload();
+                    },
+                    error: function(xhr) {
+                        alert('Terjadi kesalahan: ' + xhr.responseJSON.message);
+                    }
+                });
             }
-        });
-    </script>
 
-    <style>
-        .form-details {
-            width: 100%;
-            max-width: 100%;
-        }
+            document.addEventListener('DOMContentLoaded', function() {
+                function updateSubmitHoButton() {
+                    const submitHoButton = document.getElementById('submitHoButton');
+                    const rows = document.querySelectorAll('.item-table tbody tr');
+                    let allReviewed = true;
 
-        .package-container {
-            width: 100%;
-        }
+                    rows.forEach(row => {
+                        const statusCell = row.querySelector('td span.badge');
+                        if (statusCell && statusCell.classList.contains('bg-warning')) {
+                            allReviewed = false;
+                        }
+                    });
 
-        .item-table table {
-            width: 100%;
-        }
+                    submitHoButton.disabled = !allReviewed;
+                }
 
-        .card {
-            max-width: 100%;
-        }
+                // Periksa status awal saat halaman dimuat
+                updateSubmitHoButton();
 
-        .status-bar {
-            display: flex;
-            justify-content: space-evenly;
-        }
+                // Tangkap event AJAX untuk memperbarui tombol
+                $(document).ajaxSuccess(function() {
+                    updateSubmitHoButton();
+                });
 
-        .form-details {
-            border: 1px solid #000;
-            padding: 15px;
-            margin-bottom: 20px;
-            background-color: #f8f9fa;
-        }
+                function changeStep(index) {
+                    let steps = document.querySelectorAll('.step');
+                    steps.forEach(step => step.classList.remove('active'));
+                    steps[index].classList.add('active');
+                }
+            });
+        </script>
 
-        .detail-group {
-            margin-bottom: 8px;
-            display: flex;
-            align-items: baseline;
-        }
+        <style>
+            .form-details {
+                width: 100%;
+                max-width: 100%;
+            }
 
-        .detail-label {
-            font-weight: bold;
-            width: 150px;
-        }
+            .package-container {
+                width: 100%;
+            }
 
-        .detail-value {
-            flex-grow: 1;
-            border-bottom: 1px dotted #ccc;
-            padding-bottom: 3px;
-        }
+            .item-table table {
+                width: 100%;
+            }
 
-        .package-container {
-            border: 1px solid #000;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-        }
+            .card {
+                max-width: 100%;
+            }
 
-        .item-table table {
-            width: 100%;
-            margin-bottom: 0;
-            border-collapse: collapse;
-        }
+            .status-bar {
+                display: flex;
+                justify-content: space-evenly;
+            }
 
-        .item-table th,
-        .item-table td {
-            padding: 10px;
-            text-align: left;
-            vertical-align: middle;
-            border: 1px solid #000;
-        }
+            .form-details {
+                border: 1px solid #000;
+                padding: 15px;
+                margin-bottom: 20px;
+                background-color: #f8f9fa;
+            }
 
-        .item-table th {
-            background-color: #e9ecef;
-        }
+            .detail-group {
+                margin-bottom: 8px;
+                display: flex;
+                align-items: baseline;
+            }
 
-        td.text-center {
-            text-align: center;
-        }
+            .detail-label {
+                font-weight: bold;
+                width: 150px;
+            }
 
-        .btn {
-            padding: 5px 10px;
-            margin: 0 3px;
-            border: 1px solid #ccc;
-            cursor: pointer;
-            border-radius: 3px;
-        }
+            .detail-value {
+                flex-grow: 1;
+                border-bottom: 1px dotted #ccc;
+                padding-bottom: 3px;
+            }
 
-        .btn-success {
-            background-color: #dff0d8;
-            border-color: #d6e9c6;
-            color: #3c763d;
-        }
+            .package-container {
+                border: 1px solid #000;
+                border-radius: 8px;
+                padding: 20px;
+                margin-bottom: 20px;
+                box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            }
 
-        .btn-danger {
-            background-color: #f2dede;
-            border-color: #ebccd1;
-            color: #a94442;
-        }
+            .item-table table {
+                width: 100%;
+                margin-bottom: 0;
+                border-collapse: collapse;
+            }
 
-        .status-bar {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 20px;
-        }
+            .item-table th,
+            .item-table td {
+                padding: 10px;
+                text-align: left;
+                vertical-align: middle;
+                border: 1px solid #000;
+            }
 
-        .status-step {
-            text-align: center;
-        }
+            .item-table th {
+                background-color: #e9ecef;
+            }
 
-        .thumb-icon {
-            width: 200px;
-        }
+            td.text-center {
+                text-align: center;
+            }
 
-        .status-name {
-            margin-top: 5px;
-            font-size: 14px;
-            color: #555;
-        }
+            .btn {
+                padding: 5px 10px;
+                margin: 0 3px;
+                border: 1px solid #ccc;
+                cursor: pointer;
+                border-radius: 3px;
+            }
 
-        /* Breadcrumb styles */
-        .breadcrumb {
-            background-color: #f8f9fa;
-            /* Light gray background */
-            padding: 10px 15px;
-            border-radius: 5px;
-            display: flex;
-            /* Enable flexbox for horizontal layout */
-        }
+            .btn-success {
+                background-color: #dff0d8;
+                border-color: #d6e9c6;
+                color: #3c763d;
+            }
 
-        .breadcrumb-item {
-            margin-right: 10px;
-            position: relative;
-            /* For positioning the triangle */
-            display: flex;
-            /* Ensure items are displayed as flex containers */
-            align-items: center;
-            /* Vertically align items */
-            background-color: #ffffff;
-            /* Light gray background for box */
-            padding: 5px 15px;
-            /* Adjust padding as needed */
-            border-radius: 3px;
-            /* Rounded corners */
-        }
+            .btn-danger {
+                background-color: #f2dede;
+                border-color: #ebccd1;
+                color: #a94442;
+            }
 
-        .breadcrumb-step {
-            display: inline-block;
-            padding: 8px 12px;
-            border-radius: 4px;
-        }
+            .status-bar {
+                display: flex;
+                justify-content: space-around;
+                margin-bottom: 20px;
+            }
 
-        .breadcrumb-active {
-            background-color: #368df0;
-            /* Warna biru Bootstrap */
-            color: white !important;
-        }
+            .status-step {
+                text-align: center;
+            }
 
-        .breadcrumb-item+.breadcrumb-item::before {
-            content: "";
-            position: absolute;
-            left: -15px;
-            /* Adjust position of the triangle */
-            top: 50%;
-            transform: translateY(-50%);
-            border-top: 10px solid transparent;
-            border-bottom: 10px solid transparent;
-            border-left: 15px solid #c3e0fd;
-            ;
-            /* Match the box background color */
-        }
+            .thumb-icon {
+                width: 250px;
+            }
 
-        .breadcrumb-link {
-            color: #007bff;
-            /* Blue link color */
-            text-decoration: none;
-        }
+            .status-name {
+                margin-top: 5px;
+                font-size: 14px;
+                color: #555;
+            }
 
-        .breadcrumb-link:hover {
-            color: #0056b3;
-            /* Darker blue on hover */
-        }
-
-        .breadcrumb-item.active .breadcrumb-text {
-            color: #6c757d;
-            /* Gray for active item */
-            font-weight: 500;
-        }
-
-        .breadcrumb-text.text-danger {
-            color: #dc3545 !important;
-        }
-
-        /* Responsive adjustments (example) */
-        @media (max-width: 768px) {
+            /* Breadcrumb styles */
             .breadcrumb {
-                flex-wrap: wrap;
+                background-color: #f8f9fa;
+                /* Light gray background */
+                padding: 10px 15px;
+                border-radius: 5px;
+                display: flex;
+                /* Enable flexbox for horizontal layout */
             }
 
             .breadcrumb-item {
-                margin-bottom: 5px;
+                margin-right: 10px;
+                position: relative;
+                /* For positioning the triangle */
+                display: flex;
+                /* Ensure items are displayed as flex containers */
+                align-items: center;
+                /* Vertically align items */
+                background-color: #ffffff;
+                /* Light gray background for box */
+                padding: 5px 15px;
+                /* Adjust padding as needed */
+                border-radius: 3px;
+                /* Rounded corners */
+            }
+
+            .breadcrumb-step {
+                display: inline-block;
+                padding: 8px 12px;
+                border-radius: 4px;
+            }
+
+            .breadcrumb-active {
+                background-color: #368df0;
+                /* Warna biru Bootstrap */
+                color: white !important;
             }
 
             .breadcrumb-item+.breadcrumb-item::before {
-                display: inline-block;
-                /* Show arrows on small screens */
-                border: none;
-                /* Remove default triangle on smaller screens */
-                content: "\f105";
-                /* Use Font Awesome icon */
-                font-family: "FontAwesome";
+                content: "";
+                position: absolute;
+                left: -15px;
+                /* Adjust position of the triangle */
+                top: 50%;
+                transform: translateY(-50%);
+                border-top: 10px solid transparent;
+                border-bottom: 10px solid transparent;
+                border-left: 15px solid #c3e0fd;
+                ;
+                /* Match the box background color */
             }
-        }
-    </style>
-@endsection
+
+            .breadcrumb-link {
+                color: #007bff;
+                /* Blue link color */
+                text-decoration: none;
+            }
+
+            .breadcrumb-link:hover {
+                color: #0056b3;
+                /* Darker blue on hover */
+            }
+
+            .breadcrumb-item.active .breadcrumb-text {
+                color: #6c757d;
+                /* Gray for active item */
+                font-weight: 500;
+            }
+
+            .breadcrumb-text.text-danger {
+                color: #dc3545 !important;
+            }
+
+            /* Responsive adjustments (example) */
+            @media (max-width: 768px) {
+                .breadcrumb {
+                    flex-wrap: wrap;
+                }
+
+                .breadcrumb-item {
+                    margin-bottom: 5px;
+                }
+
+                .breadcrumb-item+.breadcrumb-item::before {
+                    display: inline-block;
+                    /* Show arrows on small screens */
+                    border: none;
+                    /* Remove default triangle on smaller screens */
+                    content: "\f105";
+                    /* Use Font Awesome icon */
+                    font-family: "FontAwesome";
+                }
+            }
+        </style>
+    @endsection

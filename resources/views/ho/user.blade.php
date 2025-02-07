@@ -48,36 +48,39 @@
                                     $filteredUsers = $users->where('cabang_asal', request('cabang'));
                                 }
                             @endphp
-                            @foreach ($filteredUsers as $key => $user)
-                                <tr>
-                                    <td class="text-center">{{ $loop->iteration }}</td>
-                                    <td>{{ $user->nama_lengkap }}</td>
-                                    <td>{{ $user->name }}</td>
-                                    <td>{{ $user->email }}</td>
-                                    <td>{{ $user->nik }}</td>
-                                    <td>{{ $user->departemen }}</td>
-                                    <td>{{ $user->cabang_asal }}</td>
-                                    <td>{{ $user->no_hp }}</td>
-                                    <td>{{ $user->role }}</td>
-                                    <td class="text-center">
-                                        <div class="d-flex justify-content-center" style="gap: 5px;">
-                                            <a href="{{ route('ho.user.edit', $user->id) }}"
-                                                class="btn btn-sm btn-outline-warning" title="Edit">
-                                                <img src="{{ asset('icons/create-outline.svg') }}" alt="Edit"
-                                                    style="width: 20px; height: 20px;">
-                                            </a>
-                                            <form action="{{ route('ho.user.destroy', $user->id) }}" method="POST"
-                                                onsubmit="return confirm('Apakah Anda yakin ingin menghapus user ini?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Hapus">
-                                                    <img src="{{ asset('icons/trash-outline.svg') }}" alt="Delete"
+                            @php $index = 1; @endphp
+                            @foreach ($filteredUsers as $user)
+                                @if (auth()->user()->role === 'hrd' && (auth()->user()->cabang_asal === 'Head Office' || auth()->user()->cabang_asal === $user->cabang_asal))
+                                    <tr>
+                                        <td class="text-center">{{ $index++ }}</td>
+                                        <td>{{ $user->nama_lengkap }}</td>
+                                        <td>{{ $user->name }}</td>
+                                        <td>{{ $user->email }}</td>
+                                        <td>{{ $user->nik }}</td>
+                                        <td>{{ $user->departemen }}</td>
+                                        <td>{{ $user->cabang_asal }}</td>
+                                        <td>{{ $user->no_hp }}</td>
+                                        <td>{{ $user->role }}</td>
+                                        <td class="text-center">
+                                            <div class="d-flex justify-content-center" style="gap: 5px;">
+                                                <a href="{{ route('ho.user.edit', $user->id) }}"
+                                                    class="btn btn-sm btn-outline-warning" title="Edit">
+                                                    <img src="{{ asset('icons/create-outline.svg') }}" alt="Edit"
                                                         style="width: 20px; height: 20px;">
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                </tr>
+                                                </a>
+                                                <form action="{{ route('ho.user.destroy', $user->id) }}" method="POST"
+                                                    onsubmit="return confirm('Apakah Anda yakin ingin menghapus user ini?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Hapus">
+                                                        <img src="{{ asset('icons/trash-outline.svg') }}" alt="Delete"
+                                                            style="width: 20px; height: 20px;">
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endif
                             @endforeach
                             @if ($filteredUsers->isEmpty())
                                 <tr>
