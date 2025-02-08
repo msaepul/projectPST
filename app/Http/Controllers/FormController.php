@@ -39,11 +39,34 @@ class FormController extends Controller
         ];
         $romanMonth = $romanMonths[$month];
 
-        $nomorSurat = "{$newNumber}/PST/HO/HRD/{$romanMonth}/" . date('Y');
 
 
-        return view('formpst.form', compact('nomorSurat','users', 'cabangs', 'tujuans', 'departemens', 'nama_pegawais', 'cabang_tujuans'));
-    }
+
+    // Ambil cabang asal berdasarkan user yang sedang login
+    $user = auth()->user(); // Mendapatkan user yang login
+    $kodeCabangAsal = $user->cabang->kode_cabang ?? 'HO'; // Default ke 'HO' jika tidak ada cabang
+
+    // Ambil nomor terakhir dari database
+    $lastForm = Form::latest()->first();
+    $lastNumber = $lastForm ? intval(substr($lastForm->no_surat, 0, 3)) : 0;
+
+    // Generate nomor baru
+    $newNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
+
+    // Konversi bulan ke angka romawi
+    $month = date('n');
+    $romanMonths = [
+        1 => 'I', 2 => 'II', 3 => 'III', 4 => 'IV', 5 => 'V',
+        6 => 'VI', 7 => 'VII', 8 => 'VIII', 9 => 'IX', 10 => 'X',
+        11 => 'XI', 12 => 'XII'
+    ];
+    $romanMonth = $romanMonths[$month];
+
+    // Buat format nomor surat tanpa /HRD/
+    $nomorSurat = "{$newNumber}/PST/{$kodeCabangAsal}/{$romanMonth}/" . date('Y');
+
+    return view('formpst.form', compact('nomorSurat', 'users', 'cabangs', 'tujuans', 'departemens', 'nama_pegawais', 'cabang_tujuans'));
+}
 
     public function store(Request $request)
 {

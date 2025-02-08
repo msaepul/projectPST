@@ -53,14 +53,15 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="tujuanPenugasan">Tujuan Penugasan</label>
-                        <select class="form-control" name="tujuan" id="tujuan" required>
+                        <label for="tujuan">Tujuan Penugasan</label>
+                        <select class="form-control select2" name="tujuan" id="tujuan" required>
                             <option value="" disabled selected>Pilih Tujuan</option>
                             @foreach ($tujuans as $tujuan)
                                 <option value="{{ $tujuan->id }}">{{ $tujuan->tujuan_penugasan }}</option>
                             @endforeach
                         </select>
                     </div>
+
 
                     <div class="form-group">
                         <label for="tanggalKeberangkatan">Tanggal Keberangkatan</label>
@@ -169,6 +170,9 @@
                 input.name = `namaPegawaiNama[${index}]`; // Pastikan nama sesuai dengan backend
                 input.value = nama;
                 this.appendChild(input); // Tambahkan ke form
+            });
+            $(document).ready(function() {
+                $('.select2').select2(); // Aktifkan select2 untuk dropdown tujuan penugasan
             });
         });
         $(document).ready(function() {

@@ -22,6 +22,10 @@
                     </div>
 
                     <hr class="header-line">
+                    <div
+                        style="position: absolute; top: 0; right: 0; font-size: 10pt; font-weight: bold; text-align: right;">
+                        No. Catatan Mutu: <strong>{{ $form->no_catatan_mutu }}</strong>
+                    </div>
 
                     <div class="letter-content">
                         <p class="text-center title">SURAT TUGAS</p>
@@ -37,7 +41,7 @@
                         </div>
 
                         <div class="reference">
-                            <p>Berdasarkan komunikasi No. {{ $form->no_surat }} :</p>
+                            <p>Berdasarkan Pengajuan No. {{ $form->no_surat }} :</p>
                         </div>
 
                         <div class="assignment">
@@ -98,6 +102,10 @@
                             <p class="text-right">Hormat kami,</p>
                             <p class="text-right"><strong>Nama Pengirim</strong></p>
                         </div>
+                        <div
+                            style="position: absolute; bottom: 0; left: 0; width: 100%; text-align: left; font-size: 10pt; font-style: italic;">
+                            *Ket
+                        </div>
                     </div>
                 </div>
             </div>
@@ -128,6 +136,7 @@
         }
 
         .header {
+            position: relative;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -215,12 +224,12 @@
         }
 
         /* .table th,
-                                .table td {
-                                    border: 0.5pt solid #000;
-                                    padding: 0.1cm;
-                                    /* Further reduced padding */
+                                                    .table td {
+                                                        border: 0.5pt solid #000;
+                                                        padding: 0.1cm;
+                                                        /* Further reduced padding */
         /* text-align: center;
-                                } */
+                                                    } */
         */ .signature {
             margin-top: 0.3cm;
             /* Reduced margin */
