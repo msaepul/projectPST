@@ -18,13 +18,27 @@ use App\Models\User;
 class FormController extends Controller
 {
     public function form()
-{
-    $cabangs = Cabang::all();
-    $tujuans = Tujuan::all();
-    $departemens = Departemen::all();
-    $nama_pegawais = Nama_pegawai::all();
-    $cabang_tujuans = Cabang_tujuan::all();
-    $users = User::all();
+    {
+        $cabangs = Cabang::all();
+        $tujuans = Tujuan::all();
+        $departemens = Departemen::all();
+        $nama_pegawais = Nama_pegawai::all();
+        $cabang_tujuans = Cabang_tujuan::all();
+        $users = User::where('cabang_asal', auth()->user()->cabang_asal)->get();
+
+        $lastForm = Form::where('cabang_asal', auth()->user()->cabang_asal)->latest()->first();
+        $lastNumber = $lastForm ? intval(substr($lastForm->no_surat, 0, 3)) : 0;
+
+        $newNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
+
+        $month = date('n');
+        $romanMonths = [
+            1 => 'I', 2 => 'II', 3 => 'III', 4 => 'IV', 5 => 'V',
+            6 => 'VI', 7 => 'VII', 8 => 'VIII', 9 => 'IX', 10 => 'X',
+            11 => 'XI', 12 => 'XII'
+        ];
+        $romanMonth = $romanMonths[$month];
+
 
 
 
@@ -184,11 +198,41 @@ public function index_surat(Request $request)
 public function show($id)
 {
     $form = Form::findOrFail($id);
-
     $data = Nama_pegawai::where('form_id', $form->id)->get();
+    $user = auth()->user();
 
-    return view('formpst.show', compact('form', 'data'));
+    // HRD selalu disetujui otomatis
+    $form->acc_hrd = 'oke';
+    $form->save(); // Simpan perubahan ke database
+
+    // Fungsi untuk menentukan gambar berdasarkan status
+    $getStatusImage = function ($status) {
+        return asset($status === 'oke' 
+            ? 'dist/img/oke.png' 
+            : ($status === 'reject' ? 'dist/img/reject.png' : 'dist/img/no.png'));
+    };
+
+    // Status gambar
+    $statusImages = [
+        'hrd' => $getStatusImage($form->acc_hrd),
+        'bm' => $getStatusImage($form->acc_bm),
+        'ho' => $getStatusImage($form->acc_ho),
+        'cabang' => $getStatusImage($form->acc_cabang),
+    ];
+
+    // Status teks
+    $statusTexts = [
+        'hrd' => 'HRD - Setuju', // HRD selalu "Setuju"
+        'bm' => $form->acc_bm === 'oke' ? 'BM - Setuju' : ($form->acc_bm === 'reject' ? 'BM - Ditolak' : 'BM - Menunggu'),
+        'ho' => $form->acc_ho === 'oke' ? 'HRD HO - Setuju' : ($form->acc_ho === 'reject' ? 'HRD HO - Ditolak' : 'HRD HO - Menunggu'),
+        'cabang' => $form->acc_cabang === 'oke' ? 'CABANG - Setuju' : ($form->acc_cabang === 'reject' ? 'CABANG - Ditolak' : 'CABANG - Menunggu'),
+    ];
+
+    return view('formpst.show', compact('form', 'data', 'statusImages', 'statusTexts'));
 }
+
+
+
 
 public function surat_tugas($id)
 {
