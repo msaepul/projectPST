@@ -97,7 +97,7 @@
                                                             data-departemen="{{ $user->departemen }}"
                                                             data-nik="{{ $user->nik }}"
                                                             data-nama="{{ $user->nama_lengkap }}">
-                                                            {{ $user->nama_lengkap }} / {{ $user->departemen }}
+                                                            {{ $user->nama_lengkap }} / {{ $user->departemen }} / {{ $user->nik }}
                                                         </option>
                                                     @endforeach
                                                 </select>

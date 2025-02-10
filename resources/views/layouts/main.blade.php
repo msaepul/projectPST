@@ -188,7 +188,7 @@
                                     <a href="{{ route('formpst.index_surat') }}"
                                         class="nav-link {{ request()->is('formpst/index_surat') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Surat Jalan</p>
+                                        <p>Surat Tugas</p>
                                     </a>
                                 </li>
                             </ul>

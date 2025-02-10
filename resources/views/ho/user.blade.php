@@ -50,7 +50,7 @@
                             @endphp
                             @php $index = 1; @endphp
                             @foreach ($filteredUsers as $user)
-                                @if (auth()->user()->role === 'hrd' && (auth()->user()->cabang_asal === 'Head Office' || auth()->user()->cabang_asal === $user->cabang_asal))
+                                @if (auth()->user()->role === 'hrd' && (auth()->user()->cabang_asal === 'Head Office' || auth()->user()->cabang_asal === $user->cabang_asal)|| auth()->user()->role === 'admin')
                                     <tr>
                                         <td class="text-center">{{ $index++ }}</td>
                                         <td>{{ $user->nama_lengkap }}</td>
