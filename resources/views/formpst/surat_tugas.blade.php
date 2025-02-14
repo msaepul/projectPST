@@ -23,8 +23,8 @@
 
                     <hr class="header-line">
                     <div
-                        style="position: absolute; top: 0; right: 0; font-size: 10pt; font-weight: bold; text-align: right;">
-                        No. Catatan Mutu: <strong>{{ $form->no_catatan_mutu }}</strong>
+                        style="position: absolute; top: 0; right: 0; padding: 10px; font-size: 10pt; font-weight: bold; text-align: right;">
+                        HRD-32 Rev.00
                     </div>
 
                     <div class="letter-content">
@@ -52,8 +52,7 @@
                                 style="width: 100%; border-collapse: collapse; font-size: 10pt;">
                                 <thead>
                                     <tr>
-                                        <th style="border: 0.5pt solid #000; padding: 0.15cm; text-align: center;">No
-                                        </th>
+                                        <th style="border: 0.5pt solid #000; padding: 0.15cm; text-align: center;">No</th>
                                         <th style="border: 0.5pt solid #000; padding: 0.15cm; text-align: center;">NIK</th>
                                         <th style="border: 0.5pt solid #000; padding: 0.15cm; text-align: center;">Nama</th>
                                         <th style="border: 0.5pt solid #000; padding: 0.15cm; text-align: center;">Cabang
@@ -66,22 +65,31 @@
                                     @forelse ($data as $item)
                                         <tr>
                                             <td style="border: 0.5pt solid #000; padding: 0.15cm; text-align: center;">
-                                                {{ $loop->iteration }}</td>
+                                                {{ $loop->iteration }}
+                                            </td>
                                             <td style="border: 0.5pt solid #000; padding: 0.15cm; text-align: center;">
-                                                {{ $item->nik }}</td>
+                                                {{ $item->nik }}
+                                            </td>
                                             <td style="border: 0.5pt solid #000; padding: 0.15cm; text-align: center;">
-                                                {{ $item->nama_pegawai }}</td>
+                                                {{ $item->nama_pegawai }}
+                                            </td>
                                             <td style="border: 0.5pt solid #000; padding: 0.15cm; text-align: center;">
-                                                {{ $item->departemen }}</td>
+                                                {{ $item->departemen }}
+                                            </td>
                                             <td style="border: 0.5pt solid #000; padding: 0.15cm; text-align: center;">
-                                                {{ $item->lama_keberangkatan }}</td>
+                                                @foreach ($data as $pegawai)
+                                                    {{ \Carbon\Carbon::parse($form->tanggal_keberangkatan)->format('d M Y') }}
+                                                    -
+                                                    {{ \Carbon\Carbon::parse($data->first()->lama_keberangkatan ?? '')->format('d M Y') }}
+                                                @endforeach
+                                            </td>
                                         </tr>
                                     @empty
                                         <tr>
                                             <td colspan="5"
-                                                style="text-align: center; border: 0.5pt solid #000; padding: 0.15cm;">Tidak
-                                                ada data untuk Form ID:
-                                                {{ $targetFormId }}.</td>
+                                                style="text-align: center; border: 0.5pt solid #000; padding: 0.15cm;">
+                                                Tidak ada data untuk Form ID: {{ $targetFormId }}.
+                                            </td>
                                         </tr>
                                     @endforelse
                                 </tbody>
@@ -103,7 +111,7 @@
                             <p class="text-right"><strong>Nama Pengirim</strong></p>
                         </div>
                         <div
-                            style="position: absolute; bottom: 0; left: 0; width: 100%; text-align: left; font-size: 10pt; font-style: italic;">
+                            style="position: absolute; bottom: 0; left: 0; width: 100%; padding: 5px; text-align: left; font-size: 10pt; font-style: italic;">
                             *Ket
                         </div>
                     </div>
@@ -224,12 +232,12 @@
         }
 
         /* .table th,
-                                                    .table td {
-                                                        border: 0.5pt solid #000;
-                                                        padding: 0.1cm;
-                                                        /* Further reduced padding */
+                                                                                                                            .table td {
+                                                                                                                                border: 0.5pt solid #000;
+                                                                                                                                padding: 0.1cm;
+                                                                                                                                /* Further reduced padding */
         /* text-align: center;
-                                                    } */
+                                                                                                                            } */
         */ .signature {
             margin-top: 0.3cm;
             /* Reduced margin */
