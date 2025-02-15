@@ -253,50 +253,70 @@ public function show($id)
 {
     $form = Form::findOrFail($id);
     $data = Nama_pegawai::where('form_id', $form->id)->get();
-    $user = auth()->user();
+    $user = User::find($id);
 
-    // HRD selalu disetujui otomatis
     $form->acc_hrd = 'oke';
-    $form->save(); // Simpan perubahan ke database
+    $form->save(); 
 
-    // Fungsi untuk menentukan gambar berdasarkan status
-    $getStatusImage = function ($status) {
-        return asset($status === 'oke'
-            ? 'dist/img/oke.png'
-            : ($status === 'reject' ? 'dist/img/reject.png' : 'dist/img/no.png'));
-    };
+    // Mengatur status berdasarkan nilai dari form
+    $statuses = [
+        'hrd' => [
+            'status' => $form->acc_hrd,
+            'name' => $form->nama_pemohon,
+            'role' => 'HRD'
+        ],
+        'bm' => [
+            'status' => $form->acc_bm,
+            'name' => User::where('cabang_asal', $form->cabang_asal)->where('role', 'bm')->value('name'),
+            'role' => 'BM'
+        ],
+        'hrd_ho' => [
+            'status' => $form->acc_ho,
+            'name' => User::where('cabang_asal', 'Head Office')->where('role', 'hrd')->value('name'),
+            'role' => 'HRD HO'
+        ],
+        'cabang' => [
+            'status' => $form->acc_cabang,
+            'name' => User::where('cabang_asal', $form->cabang_tujuan)->where('role', 'bm')->value('name'),
+            'role' => 'CABANG'
+        ]
 
-    // Status gambar
-    $statusImages = [
-        'hrd' => $getStatusImage($form->acc_hrd),
-        'bm' => $getStatusImage($form->acc_bm),
-        'ho' => $getStatusImage($form->acc_ho),
-        'cabang' => $getStatusImage($form->acc_cabang),
     ];
 
-    // Status teks
-    $statusTexts = [
-        'hrd' => 'HRD - Setuju', // HRD selalu "Setuju"
-        'bm' => $form->acc_bm === 'oke' ? 'BM - Setuju' : ($form->acc_bm === 'reject' ? 'BM - Ditolak' : 'BM - Menunggu'),
-        'ho' => $form->acc_ho === 'oke' ? 'HRD HO - Setuju' : ($form->acc_ho === 'reject' ? 'HRD HO - Ditolak' : 'HRD HO - Menunggu'),
-        'cabang' => $form->acc_cabang === 'oke' ? 'CABANG - Setuju' : ($form->acc_cabang === 'reject' ? 'CABANG - Ditolak' : 'CABANG - Menunggu'),
-    ];
+    // Menyiapkan path gambar status
+    foreach ($statuses as &$status) {
+        switch ($status['status']) {
+            case 'oke':
+                $status['image'] = asset('dist/img/oke.png');
+                $status['text'] = ($status['name'] ?? '') . ' - Setuju';
+                break;
+            case 'reject':
+                $status['image'] = asset('dist/img/reject.png');
+                $status['text'] = $status['role'] . ' - Ditolak';
+                break;
+            default:
+                $status['image'] = asset('dist/img/no.png');
+                $status['text'] = $status['role'] . ' - Menunggu';
+        }
+    }
 
-    return view('formpst.show', compact('form', 'data', 'statusImages', 'statusTexts'));
+    return view('formpst.show', compact('form', 'data', 'user', 'statuses'));
 }
 
 public function surat_tugas($id)
 {
     $form = Form::findOrFail($id);
+    $users = User::all();
 
     $data = Nama_pegawai::where('form_id', $form->id)->get();
+
 
     foreach ($data as $pegawai) {
         $pegawai->tanggal_berangkat = Carbon::parse($pegawai->tanggal_berangkat)->format('d M Y');
         $pegawai->tanggal_pulang = Carbon::parse($pegawai->tanggal_pulang)->format('d M Y');
     }
 
-    return view('formpst.surat_tugas', compact('form', 'data'));
+    return view('formpst.surat_tugas', compact('form', 'data', 'users'));
 }
 public function generatePdf($targetFormId)
     {

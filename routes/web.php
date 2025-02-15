@@ -51,6 +51,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/ho/user/edit/{id}', [HoController::class, 'editUser'])->name('ho.user.edit');
         Route::put('/ho/user/update/{id}', [HoController::class, 'updateUser'])->name('ho.user.update');
         Route::delete('/ho/user/delete/{id}', [HoController::class, 'destroyUser'])->name('ho.user.destroy');
+        Route::post('/ho/user/{id}/upload-signature', [HOController::class, 'uploadSignature'])->name('ho.user.uploadSignature');
 
         Route::get('/formpst/show_pegawai/{form_id}', [HoController::class, 'show_pegawai'])->middleware(['auth', 'role:admin,user,hrd,bm,nm,pegawai'])->name('formpst.show_pegawai');
 

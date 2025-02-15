@@ -220,8 +220,8 @@ public function updateUser(Request $request, $id)
       'cabang_asal' => 'required|exists:cabangs,nama_cabang',
       'no_hp' => 'required|string',
       'role' => 'required|in:admin,user,bm,hrd,nm,pegawai',
-
       'nama_lengkap' => 'required|string|max:255',
+      
   ]);
 
   // Cek jika password ada di request dan enkripsi password
@@ -290,6 +290,30 @@ public function updateUser(Request $request, $id)
      $user->delete();
 
      return redirect()->route('ho.user')->with('success', 'Data user berhasil dihapus!');
+ }
+ public function uploadSignature(Request $request, $id)
+ {
+     $request->validate([
+         'ttd' => 'required|image|mimes:png,jpg,jpeg|max:2048',
+     ]);
+
+     $user = User::findOrFail($id);
+
+     // Hapus tanda tangan lama jika ada
+     if ($user->ttd) {
+         Storage::delete('public/signatures/' . $user->ttd);
+     }
+
+     // Simpan file baru
+     $file = $request->file('ttd');
+     $filename = time() . '_' . $user->id . '.' . $file->getClientOriginalExtension();
+     $file->storeAs('public/signatures', $filename);
+
+     // Simpan nama file ke database
+     $user->ttd = $filename;
+     $user->save();
+
+     return redirect()->back()->with('success', 'Tanda tangan berhasil diunggah.');
  }
 
 }
