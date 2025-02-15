@@ -34,7 +34,7 @@
 
                 <hr class="header-line">
                 <div style="position: absolute; top: 0; right: 0; font-size: 10pt; font-weight: bold; text-align: right;">
-                    No. Catatan Mutu: <strong>{{ $form->no_catatan_mutu }}</strong>
+                <strong>{{ $form->no_catatan_mutu }}</strong>
                 </div>
 
                 <div class="letter-content">
