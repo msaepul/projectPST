@@ -31,14 +31,16 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="cabangAsal">Cabang Asal</label>
-                            <select class="form-control" name="cabang_asal" id="cabangAsal" required readonly>
-                                <option value="{{ auth()->user()->cabang_asal }}" selected>{{ auth()->user()->cabang_asal }}</option>
+                            <select class="form-control" name="cabang_asal" id="cabangAsal" required>
+                                <option value="" disabled>Pilih Cabang</option>
+                                @foreach ($cabangs as $cabang)
+                                    <option value="{{ $cabang->id }}" 
+                                        {{ auth()->user()->cabang_id == $cabang->id ? 'selected' : '' }}>
+                                        {{ $cabang->nama_cabang }}
+                                    </option>
+                                @endforeach
                             </select>                            
                         </div>
-                        
-                        
-                        
-                        
                         <div class="form-group col-md-6">
                             <label for="cabangTujuan">Cabang Tujuan</label>
                             <select class="form-control" name="cabang_tujuan" id="cabangTujuan" required>
