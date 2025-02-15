@@ -17,7 +17,7 @@ class HoController extends Controller
     public function dashboard()
     {
         $jumlahCabang = Cabang::count();
-    $jumlahDepartemen = Departemen::count();
+        $jumlahDepartemen = Departemen::count();
 
     // Hitung jumlah surat masuk (acc_ho = 'oke')
 
@@ -204,7 +204,7 @@ public function editUser($id)
  $departemens = Departemen::all(); // Mendapatkan data departemen
  $cabangs = Cabang::all(); // Mendapatkan data cabang
 
- return view('ho.edit', compact('user', 'departemens', 'cabangs')); 
+ return view('ho.edit', compact('user', 'departemens', 'cabangs'));
 }
 
 public function updateUser(Request $request, $id)
@@ -214,8 +214,8 @@ public function updateUser(Request $request, $id)
   // Validasi input update
   $validated = $request->validate([
       'name' => 'required|string|max:255',
-      'email' => 'required|email|unique:users,email,' . $id, 
-      'nik' => 'required|string|unique:users,nik,' . $id, 
+      'email' => 'required|email|unique:users,email,' . $id,
+      'nik' => 'required|string|unique:users,nik,' . $id,
       'departemen' => 'required|exists:departemens,nama_departemen',
       'cabang_asal' => 'required|exists:cabangs,nama_cabang',
       'no_hp' => 'required|string',

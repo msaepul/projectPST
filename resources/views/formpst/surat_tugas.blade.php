@@ -49,9 +49,12 @@
                         <p style="margin-bottom: 0.1cm;"><span class="label">Alamat</span>: Jl.Raya Batujajar No.201 RT 02/RW 05,</p>
                         <p style="margin-left: 100px; margin-bottom: 0.1cm;">Desa Laksana Mekar - Bandung Barat</p>
                     </div>
-
                     <div class="reference">
                         <p>Berdasarkan Pengajuan No. {{ $form->no_surat }} :</p>
+                    <hr class="header-line">
+                    <div
+                        style="position: absolute; top: 0; right: 0; padding: 10px; font-size: 10pt; font-weight: bold; text-align: right;">
+                        HRD-32 Rev.00
                     </div>
 
                     <div class="assignment">
@@ -238,12 +241,12 @@
         }
 
         /* .table th,
-                                                    .table td {
-                                                        border: 0.5pt solid #000;
-                                                        padding: 0.1cm;
-                                                        /* Further reduced padding */
+.table td {
+border: 0.5pt solid #000;
+padding: 0.1cm;
+ /* Further reduced padding */
         /* text-align: center;
-                                                    } */
+} */
         */ .signature {
             margin-top: 0.3cm;
             /* Reduced margin */

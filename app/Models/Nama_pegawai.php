@@ -14,21 +14,20 @@ class Nama_pegawai extends Model
         'departemen',
         'nik',
         'upload_file',
-        'lama_keberangkatan',       
-        'acc_nm',       
-        'alasan',       
+        'lama_keberangkatan',
+        'acc_nm',
+        'alasan',
     ];
     public function form()
-    {
-        return $this->belongsTo(Form::class);
-    }
+{
+    return $this->belongsTo(Form::class, 'form_id', 'id');
+}
     public function cabang()
     {
-        return $this->belongsTo(Cabang::class); 
+        return $this->belongsTo(Cabang::class);
     }
     public function tujuan()
     {
-        return $this->belongsTo(Tujuan::class); 
+        return $this->belongsTo(Tujuan::class);
     }
-
 }

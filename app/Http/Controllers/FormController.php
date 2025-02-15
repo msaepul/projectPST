@@ -11,8 +11,8 @@ use App\Models\Cabang_tujuan;
 use App\Models\Tujuan;
 use App\Models\Departemen;
 use App\Models\Form;
-
 use App\Models\User;
+use Carbon\Carbon;
 // use Illuminate\Support\Facades\DB;
 
 class FormController extends Controller
@@ -26,6 +26,11 @@ class FormController extends Controller
         $cabang_tujuans = Cabang_tujuan::all();
         $users = User::where('cabang_asal', auth()->user()->cabang_asal)->get();
 
+         // Ambil user yang sedang login
+         $user = auth()->user();
+         $kodeCabangAsal = $user->cabang->kode_cabang ?? 'HO'; // Default ke 'HO' jika tidak ada cabang
+         $cabangAsalNama = $user->cabang->nama_cabang ?? 'Head Office'; // Nama cabang asal
+
         $lastForm = Form::where('cabang_asal', auth()->user()->cabang_asal)->latest()->first();
         $lastNumber = $lastForm ? intval(substr($lastForm->no_surat, 0, 3)) : 0;
 
@@ -38,9 +43,6 @@ class FormController extends Controller
             11 => 'XI', 12 => 'XII'
         ];
         $romanMonth = $romanMonths[$month];
-
-
-
 
     // Ambil cabang asal berdasarkan user yang sedang login
     $user = auth()->user(); // Mendapatkan user yang login
@@ -137,8 +139,25 @@ class FormController extends Controller
 
 public function index_keluar(Request $request)
 {
+    // Ambil user yang sedang login
+    $user = auth()->user();
+
+    // Cari data pegawai berdasarkan user login
+    $pegawai = Nama_pegawai::where('nama_pegawai', $user->name)->first();
+
+    // Ambil hanya surat keluar yang terkait dengan pegawai login
     $query = Form::query();
 
+    if ($pegawai) {
+        $query->whereHas('Nama_pegawais', function ($q) use ($pegawai) {
+            $q->where('nama_pegawai', $pegawai->nama_pegawai);
+        });
+    } else {
+        // Jika pegawai tidak ditemukan, jangan tampilkan surat keluar
+        $query->whereHas('Nama_pegawais', function ($q) {
+            $q->whereNull('nama_pegawai');
+        });
+    }
 
     if ($request->filled('namaPemohon')) {
         $query->where('nama_pemohon', 'like', '%' . $request->namaPemohon . '%');
@@ -152,13 +171,30 @@ public function index_keluar(Request $request)
     $tujuans = Tujuan::all();
     $forms = Form::all();
 
-    return view('formpst.index_keluar', compact('data', 'tujuans','forms'));
+    return view('formpst.index_keluar', compact('data', 'tujuans', 'forms'));
 }
+
 
 public function index_masuk(Request $request)
 {
+    // Ambil user yang sedang login
+    $user = auth()->user();
+
+    // Cari data pegawai berdasarkan user login (misalnya berdasarkan nama_pegawai)
+    $pegawai = Nama_pegawai::where('nama_pegawai', $user->name)->first();
+
+    // Jika pegawai ditemukan, filter surat yang terkait dengan pegawai tersebut
     $query = Form::where('acc_ho', 'oke');
 
+    if ($pegawai) {
+        $query->whereHas('Nama_pegawais', function ($q) use ($pegawai) {
+            $q->where('nama_pegawai', $pegawai->nama_pegawai);
+        });
+    } else {
+        $query->whereHas('Nama_pegawais', function ($q) {
+            $q->whereNull('nama_pegawai');
+        });
+    }
 
     if ($request->filled('namaPemohon')) {
         $query->where('nama_pemohon', 'like', '%' . $request->namaPemohon . '%');
@@ -172,13 +208,30 @@ public function index_masuk(Request $request)
     $tujuans = Tujuan::all();
     $forms = Form::all();
 
-    return view('formpst.index_masuk', compact('data', 'tujuans','forms'));
+    return view('formpst.index_masuk', compact('data', 'tujuans', 'forms'));
 }
 
 public function index_surat(Request $request)
 {
+    // Ambil user yang sedang login
+    $user = auth()->user();
+
+    // Cari data pegawai berdasarkan user login
+    $pegawai = Nama_pegawai::where('nama_pegawai', $user->name)->first();
+
+    // Ambil hanya surat jalan yang terkait dengan pegawai login dan sudah di-ACC cabang
     $query = Form::where('acc_cabang', 'oke');
 
+    if ($pegawai) {
+        $query->whereHas('Nama_pegawais', function ($q) use ($pegawai) {
+            $q->where('nama_pegawai', $pegawai->nama_pegawai);
+        });
+    } else {
+        // Jika pegawai tidak ditemukan, jangan tampilkan surat jalan
+        $query->whereHas('Nama_pegawais', function ($q) {
+            $q->whereNull('nama_pegawai');
+        });
+    }
 
     if ($request->filled('namaPemohon')) {
         $query->where('nama_pemohon', 'like', '%' . $request->namaPemohon . '%');
@@ -192,8 +245,9 @@ public function index_surat(Request $request)
     $tujuans = Tujuan::all();
     $forms = Form::all();
 
-    return view('formpst.index_surat', compact('data', 'tujuans','forms'));
+    return view('formpst.index_surat', compact('data', 'tujuans', 'forms'));
 }
+
 
 public function show($id)
 {
@@ -226,6 +280,7 @@ public function show($id)
             'name' => User::where('cabang_asal', $form->cabang_tujuan)->where('role', 'bm')->value('name'),
             'role' => 'CABANG'
         ]
+
     ];
 
     // Menyiapkan path gambar status
@@ -255,7 +310,13 @@ public function surat_tugas($id)
 
     $data = Nama_pegawai::where('form_id', $form->id)->get();
 
-    return view('formpst.surat_tugas', compact('form', 'data','users'));
+
+    foreach ($data as $pegawai) {
+        $pegawai->tanggal_berangkat = Carbon::parse($pegawai->tanggal_berangkat)->format('d M Y');
+        $pegawai->tanggal_pulang = Carbon::parse($pegawai->tanggal_pulang)->format('d M Y');
+    }
+
+    return view('formpst.surat_tugas', compact('form', 'data', 'users'));
 }
 public function generatePdf($targetFormId)
     {
@@ -293,10 +354,10 @@ public function generatePdf($targetFormId)
             // Render PDF
             $dompdf->render();
 
-            return $dompdf->stream('surat_tugas_' . $form->no_surat . '.pdf', ['Attachment' => 0]); 
+            return $dompdf->stream('surat_tugas_' . $form->no_surat . '.pdf', ['Attachment' => 0]);
         } catch (\Exception $e) {
             Log::error("Error saat generate PDF untuk form ID: {$targetFormId}. Error: " . $e->getMessage() . "\n" . $e->getTraceAsString());
-            return back()->with('error', 'Terjadi kesalahan saat membuat PDF. Silakan coba lagi.'); 
+            return back()->with('error', 'Terjadi kesalahan saat membuat PDF. Silakan coba lagi.');
         }
     }
 
