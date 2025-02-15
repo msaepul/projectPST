@@ -14,7 +14,6 @@
                         style="width: 20px; height: 20px; margin-right: 4px">Tambah User
                 </a>
 
-                <!-- Form untuk filter berdasarkan cabang -->
                 <form method="GET" class="mb-3">
                     <label for="cabang">Filter Berdasarkan Cabang: </label>
                     <select name="cabang" id="cabang" onchange="this.form.submit()">
@@ -68,6 +67,10 @@
                                                     <img src="{{ asset('icons/create-outline.svg') }}" alt="Edit"
                                                         style="width: 20px; height: 20px;">
                                                 </a>
+                                                <button type="button" class="btn btn-sm btn-outline-primary" title="Upload Tanda Tangan" data-bs-toggle="modal" data-bs-target="#uploadSignatureModal{{ $user->id }}">
+                                                    <img src="{{ asset('icons/upload-outline.svg') }}" alt="Upload"
+                                                        style="width: 20px; height: 20px;">
+                                                </button>
                                                 <form action="{{ route('ho.user.destroy', $user->id) }}" method="POST"
                                                     onsubmit="return confirm('Apakah Anda yakin ingin menghapus user ini?');">
                                                     @csrf
@@ -80,6 +83,25 @@
                                             </div>
                                         </td>
                                     </tr>
+                                    <!-- Modal Upload Tanda Tangan -->
+                                    <div class="modal fade" id="uploadSignatureModal{{ $user->id }}" tabindex="-1" aria-labelledby="uploadSignatureLabel{{ $user->id }}" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="uploadSignatureLabel{{ $user->id }}">Upload Tanda Tangan</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form action="{{ route('ho.user.uploadSignature', $user->id) }}" method="POST" enctype="multipart/form-data">
+                                                        @csrf
+                                                        <label for="ttd">Upload Tanda Tangan:</label>
+                                                        <input type="file" name="ttd" id="ttd" accept="image/png, image/jpeg" required>
+                                                        <button type="submit" class="btn btn-primary">Upload</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 @endif
                             @endforeach
                             @if ($filteredUsers->isEmpty())

@@ -164,17 +164,21 @@
                                                     </td>
 
                                                     <td>
-                                                        @if (auth()->user()->role === 'nm' && auth()->user()->departemen === $item->departemen)
-                                                        @if ($form->acc_bm == 'oke' && $form->acc_hrd != 'reject' && $form->acc_bm != 'reject' && $item->acc_nm == null)
-                                                                <button class="btn btn-success btn-sm" onclick="updateStatus({{ $item->id }}, 'oke')">
+                                                        @if (
+                                                            (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'Head Office') ||
+                                                                (auth()->user()->role === 'nm' && auth()->user()->departemen === $item->departemen))
+                                                            @if ($form->acc_bm == 'oke' && $form->acc_hrd != 'reject' && $form->acc_bm != 'reject' && $item->acc_nm == null)
+                                                                <button class="btn btn-success btn-sm"
+                                                                    onclick="updateStatus({{ $item->id }}, 'oke')">
                                                                     Setuju
                                                                 </button>
-                                                                <button class="btn btn-danger btn-sm" onclick="openRejectModal({{ $item->id }})">
+                                                                <button class="btn btn-danger btn-sm"
+                                                                    onclick="openRejectModal({{ $item->id }})">
                                                                     Tolak
                                                                 </button>
                                                             @endif
                                                         @endif
-                                                    
+
                                                         {{-- Status Teks --}}
                                                         @if ($item->acc_nm === 'oke')
                                                             <span class="text-success">Diterima</span>
@@ -184,7 +188,7 @@
                                                             <span class="text-warning">Menunggu</span>
                                                         @endif
                                                     </td>
-                                                    
+
                                                     <td>
                                                         @if ($item->acc_nm == 'oke')
                                                             <span class="badge bg-success">Diterima</span>
@@ -208,43 +212,15 @@
                             </div>
                         </div>
 
-                        <!-- Bar Status -->
                         <div class="status-bar mb-4" style="position: sticky; top: 70px;">
-
-                            <!-- ACC HRD -->
-                            <div class="status-step">
-                                <img src="{{ $statusImages['hrd'] }}" alt="Status HRD" class="thumb-icon" width="50">
-                                <div class="status-name">
-                                    {{ $statusTexts['hrd'] }}
+                            @foreach ($statuses as $status)
+                                <div class="status-step">
+                                    <img src="{{ $status['image'] }}" alt="Status {{ $status['role'] }}" class="thumb-icon" width="50">
+                                    <div class="status-name">{{ $status['text'] }}</div>
                                 </div>
-                            </div>
-
-                            <!-- ACC BM -->
-                            <div class="status-step">
-                                <img src="{{ $statusImages['bm'] }}" alt="Status BM" class="thumb-icon" width="50">
-                                <div class="status-name">
-                                    {{ $statusTexts['bm'] }}
-                                </div>
-                            </div>
-
-                            <!-- ACC HO -->
-                            <div class="status-step">
-                                <img src="{{ $statusImages['ho'] }}" alt="Status HO" class="thumb-icon" width="50">
-                                <div class="status-name">
-                                    {{ $statusTexts['ho'] }}
-                                </div>
-                            </div>
-
-                            <!-- ACC CABANG -->
-                            <div class="status-step">
-                                <img src="{{ $statusImages['cabang'] }}" alt="Status CABANG" class="thumb-icon"
-                                    width="50">
-                                <div class="status-name">
-                                    {{ $statusTexts['cabang'] }}
-                                </div>
-                            </div>
-
+                            @endforeach
                         </div>
+                        
                     </div>
                 </div>
             </div>
