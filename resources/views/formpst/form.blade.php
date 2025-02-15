@@ -27,20 +27,18 @@
                             <input type="text" id="namaPemohon" name="namaPemohon" class="form-control" required>
                         </div>
                     </div>
+
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="cabangAsal">Cabang Asal</label>
-                            <select class="form-control" id="cabangAsal" disabled>
-                                <option value="" disabled>Pilih Cabang</option>
-                                @foreach ($cabangs as $cabang)
-                                    <option value="{{ $cabang->id }}"
-                                        {{ auth()->user()->cabang_id == $cabang->id ? 'selected' : '' }}>
-                                        {{ $cabang->nama_cabang }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            <input type="hidden" name="cabang_asal" value="{{ auth()->user()->cabang_id }}">
+                            <select class="form-control" name="cabang_asal" id="cabangAsal" required readonly>
+                                <option value="{{ auth()->user()->cabang_asal }}" selected>{{ auth()->user()->cabang_asal }}</option>
+                            </select>                            
                         </div>
+                        
+                        
+                        
+                        
                         <div class="form-group col-md-6">
                             <label for="cabangTujuan">Cabang Tujuan</label>
                             <select class="form-control" name="cabang_tujuan" id="cabangTujuan" required>
@@ -76,8 +74,7 @@
                         </div>
                         <div class="card-body" style="padding: 20px;">
                             <div class="table-responsive">
-                                <table id="pegawaiTable" class="table table-bordered"
-                                    style="width: 100%; min-width: 1200px; table-layout: auto;">
+                                <table id="pegawaiTable" class="table table-bordered" style="width: 100%; min-width: 1200px; table-layout: auto;">
                                     <thead class="thead-light">
                                         <tr>
                                             <th style="width: 10%;">Nama</th>
@@ -91,8 +88,7 @@
                                     <tbody>
                                         <tr id="rowToClone">
                                             <td>
-                                                <select name="namaPegawai[]" class="form-control namaPegawai select2"
-                                                    required>
+                                                <select name="namaPegawai[]" class="form-control namaPegawai select2" required>
                                                     <option value="" disabled selected>Pilih Nama</option>
                                                     @foreach ($users as $user)
                                                         <option value="{{ $user->id }}"
@@ -104,12 +100,10 @@
                                                     @endforeach
                                                 </select>
                                             </td>
-                                            <td><input type="text" name="departemen[]" class="form-control departemen"
-                                                    readonly></td>
+                                            <td><input type="text" name="departemen[]" class="form-control departemen" readonly></td>
                                             <td><input type="text" name="nik[]" class="form-control nik" readonly></td>
                                             <td><input type="file" name="uploadFile[]" class="form-control"></td>
-                                            <td><input type="date" name="lamaKeberangkatan[]" class="form-control"
-                                                    required></td>
+                                            <td><input type="date" name="lamaKeberangkatan[]" class="form-control" required></td>
                                             <td style="text-align: center; vertical-align: middle;">
                                                 <button type="button" class="btn btn-danger btn-sm remove-item">
                                                     <i class="fas fa-trash-alt"></i>
@@ -119,7 +113,7 @@
                                     </tbody>
                                 </table>
                             </div>
-
+                            
                             <button type="button" class="btn btn-primary mt-3" id="add-field">Tambah Pegawai</button>
                         </div>
                     </div>
@@ -180,21 +174,22 @@
             });
         });
         $(document).ready(function() {
-            $('.select2').select2({
-                placeholder: "Cari Nama Pegawai...",
-                allowClear: true,
-                width: '100%' // Supaya menyesuaikan lebar parent
-            });
+    $('.select2').select2({
+        placeholder: "Cari Nama Pegawai...",
+        allowClear: true,
+        width: '100%' // Supaya menyesuaikan lebar parent
+    });
 
-            // Event listener untuk mengisi Departemen dan NIK setelah memilih pegawai
-            $(document).on('select2:select', '.namaPegawai', function(e) {
-                let selectedOption = $(this).find(':selected'); // Ambil option yang dipilih
-                let row = $(this).closest('tr'); // Cari tr terdekat
+    // Event listener untuk mengisi Departemen dan NIK setelah memilih pegawai
+    $(document).on('select2:select', '.namaPegawai', function(e) {
+        let selectedOption = $(this).find(':selected'); // Ambil option yang dipilih
+        let row = $(this).closest('tr'); // Cari tr terdekat
 
-                // Set nilai Departemen dan NIK berdasarkan data yang ada di option
-                row.find('.departemen').val(selectedOption.data('departemen'));
-                row.find('.nik').val(selectedOption.data('nik'));
-            });
-        });
+        // Set nilai Departemen dan NIK berdasarkan data yang ada di option
+        row.find('.departemen').val(selectedOption.data('departemen'));
+        row.find('.nik').val(selectedOption.data('nik'));
+    });
+});
+
     </script>
 @endsection

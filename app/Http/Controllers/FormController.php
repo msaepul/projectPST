@@ -130,6 +130,7 @@ class FormController extends Controller
 
     // Masukkan data pegawai ke database
     Nama_pegawai::insert($namaPegawais);
+    $form->save(); 
 
     // Redirect dengan pesan sukses
     return redirect()->route('formpst.index_keluar', ['form' => $form->id])
