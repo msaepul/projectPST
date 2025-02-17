@@ -28,7 +28,7 @@ class FormController extends Controller
 
          // Ambil user yang sedang login
          $user = auth()->user();
-         $kodeCabangAsal = $user->cabang->kode_cabang ?? 'HO'; // Default ke 'HO' jika tidak ada cabang
+         $kodeCabangAsal = optional($user->cabang)->kode_cabang ?? 'HO';
          $cabangAsalNama = $user->cabang->nama_cabang ?? 'Head Office'; // Nama cabang asal
 
         $lastForm = Form::where('cabang_asal', auth()->user()->cabang_asal)->latest()->first();
@@ -256,7 +256,7 @@ public function show($id)
     $user = User::find($id);
 
     $form->acc_hrd = 'oke';
-    $form->save(); 
+    $form->save();
 
     // Mengatur status berdasarkan nilai dari form
     $statuses = [

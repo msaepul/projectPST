@@ -23,9 +23,9 @@ class cabang extends Model
     }
 
     public function users()
-{
-    return $this->hasMany(User::class);
-}
+    {
+        return $this->hasMany(User::class, 'cabang_asal', 'id');
+    }
 }
 
 

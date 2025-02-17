@@ -5,56 +5,75 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card mb-4 mt-3">
-
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
-                                <span class="breadcrumb-step @if (($form->acc_bm === '' || $form->acc_hrd === '') && ($form->acc_bm !== 'oke' || $form->acc_hrd !== 'oke')) breadcrumb-active @endif">
+                                @php
+                                    $isPengajuanCabangActive =
+                                        ($form->acc_bm === '' || $form->acc_hrd === '') &&
+                                        ($form->acc_bm !== 'oke' || $form->acc_hrd !== 'oke');
+                                @endphp
+                                <span class="breadcrumb-step @if ($isPengajuanCabangActive) breadcrumb-active @endif">
                                     Pengajuan Cabang
                                 </span>
                             </li>
+
                             <li class="breadcrumb-item">
-                                <span class="breadcrumb-step @if ($form->acc_bm === 'oke' && $form->acc_hrd === 'oke' && ($form->acc_ho === '' || $form->acc_ho !== 'oke')) breadcrumb-active @endif">
+                                @php
+                                    $isDiperiksaHOActive =
+                                        $form->acc_bm === 'oke' &&
+                                        $form->acc_hrd === 'oke' &&
+                                        ($form->acc_ho === '' || $form->acc_ho !== 'oke');
+                                @endphp
+                                <span class="breadcrumb-step @if ($isDiperiksaHOActive) breadcrumb-active @endif">
                                     Diperiksa HO
                                 </span>
                             </li>
+
                             <li class="breadcrumb-item">
-                                <span class="breadcrumb-step @if ($form->acc_ho === 'oke' && ($form->acc_cabang === '' || $form->acc_cabang !== 'oke')) breadcrumb-active @endif">
+                                @php
+                                    $isDiperiksaCabangActive =
+                                        $form->acc_ho === 'oke' &&
+                                        ($form->acc_cabang === '' || $form->acc_cabang !== 'oke');
+                                @endphp
+                                <span class="breadcrumb-step @if ($isDiperiksaCabangActive) breadcrumb-active @endif">
                                     Diperiksa Cabang Tujuan
                                 </span>
                             </li>
+
                             <li class="breadcrumb-item">
                                 <span class="breadcrumb-step @if ($form->acc_cabang === 'oke') breadcrumb-active @endif">
                                     Selesai
                                 </span>
                             </li>
-                            <li class="breadcrumb-item" @if (
+
+                            <li class="breadcrumb-item @if (
                                 $form->acc_bm === 'reject' &&
                                     $form->acc_hrd === 'reject' &&
                                     $form->acc_ho === 'reject' &&
-                                    $form->acc_cabang === 'reject')  @endif>
+                                    $form->acc_cabang === 'reject') active @endif">
                                 <span class="breadcrumb-step text-black">
                                     Ditolak
                                 </span>
                             </li>
                         </ol>
-                </div>
+                    </nav>
 
-                <div class="card-body">
-                    {{-- tombol submit  --}}
-                    <div class="mb-4">
-                        <form action="{{ route('form.submit', $form->id) }}" method="POST">
-                            @csrf
-                            @if (auth()->user()->role === 'bm')
-                                @if ($form->acc_bm == null)
-                                    <button type="submit" name="action" value="acc_bm" class="btn btn-primary mr-2">
-                                        Submit
-                                    </button>
-                                    <button type="submit" name="action" value="reject_bm" class="btn btn-danger">
-                                        Tolak
-                                    </button>
+                    <div class="card-body">
+                        {{-- tombol submit  --}}
+                        <div class="mb-4">
+                            <form action="{{ route('form.submit', $form->id) }}" method="POST">
+                                @csrf
+                                @if (auth()->user()->role === 'bm')
+                                    @if ($form->acc_bm == null)
+                                        <button type="submit" name="action" value="acc_bm" class="btn btn-primary mr-2">
+                                            Submit
+                                        </button>
+                                        <button type="submit" name="action" value="reject_bm" class="btn btn-danger">
+                                            Tolak
+                                        </button>
+                                    @endif
                                 @endif
-                            @endif
 
                                 @if (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'Head Office')
                                     @if ($form->acc_ho == null && $form->acc_bm == 'oke')
@@ -78,11 +97,10 @@
                                         </button>
                                     @endif
                                 @endif
-                                @if ($form->acc_cabang != 'oke')
-                                    <button type="submit" name="action" value="cancel" class="btn btn-danger">
+                                @if ($form->acc_cabang != 'oke') <button type="submit"
+                                        name="action" value="cancel" class="btn btn-danger">
                                         Cancel
-                                    </button>
-                                @endif
+                                    </button> @endif
                             </form>
                         </div>
 
@@ -119,30 +137,11 @@
                             </div>
                         </div>
 
-                {{-- tabel list pegawai --}}
-                <div class="package-container">
-                    <div class="item-table">
-                        <table class="table table-bordered">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Nama</th>
-                                    <th>NIK</th>
-                                    <th>Departemen</th>
-                                    <th>Lama Keberangkatan</th>
-                                    <th>File</th>
-                                    <th>Status</th>
-                                    <th>Keterangan</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse ($data as $item)
-                                    @if (
-                                        (auth()->user()->role === 'nm' && auth()->user()->departemen === $item->departemen) ||
-                                            auth()->user()->role === 'admin' ||
-                                            auth()->user()->role === 'user' ||
-                                            auth()->user()->role === 'bm' ||
-                                            auth()->user()->role === 'hrd' ||
-                                            auth()->user()->role === 'pegawai')
+                        {{-- tabel list pegawai --}}
+                        <div class="package-container">
+                            <div class="item-table">
+                                <table class="table table-bordered">
+                                    <thead class="table-light">
                                         <tr>
                                             <th>Nama</th>
                                             <th>NIK</th>
@@ -153,6 +152,25 @@
                                             <th>Keterangan</th>
                                         </tr>
                                     </thead>
+                                    <tbody>
+                                        @forelse ($data as $item)
+                                            @if (
+                                                (auth()->user()->role === 'nm' && auth()->user()->departemen === $item->departemen) ||
+                                                    auth()->user()->role === 'admin' ||
+                                                    auth()->user()->role === 'user' ||
+                                                    auth()->user()->role === 'bm' ||
+                                                    auth()->user()->role === 'hrd' ||
+                                                    auth()->user()->role === 'pegawai')
+                                                <tr>
+                                                    <th>Nama</th>
+                                                    <th>NIK</th>
+                                                    <th>Departemen</th>
+                                                    <th>Lama Keberangkatan</th>
+                                                    <th>File</th>
+                                                    <th>Status</th>
+                                                    <th>Keterangan</th>
+                                                </tr>
+                                                </thead>
                                     <tbody>
                                         @forelse ($data as $item)
                                             @if (
@@ -228,12 +246,13 @@
                         <div class="status-bar mb-4" style="position: sticky; top: 70px;">
                             @foreach ($statuses as $status)
                                 <div class="status-step">
-                                    <img src="{{ $status['image'] }}" alt="Status {{ $status['role'] }}" class="thumb-icon" width="50">
+                                    <img src="{{ $status['image'] }}" alt="Status {{ $status['role'] }}"
+                                        class="thumb-icon" width="50">
                                     <div class="status-name">{{ $status['text'] }}</div>
                                 </div>
                             @endforeach
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
