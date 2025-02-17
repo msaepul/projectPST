@@ -70,7 +70,7 @@ class FormController extends Controller
     return view('formpst.form', compact('nomorSurat', 'users', 'cabangs', 'tujuans', 'departemens', 'nama_pegawais', 'cabang_tujuans'));
 }
 
-    public function store(Request $request)
+public function store(Request $request)
 {
     $validatedData = $request->validate([
         'no_surat' => 'required|string|max:255',
@@ -90,11 +90,9 @@ class FormController extends Controller
     ]);
 
     // Ambil nama cabang dan tujuan dari tabel terkait
-    // $cabangs = Cabang::where('id', auth()->user()->cabang_id)->get();
     $cabangTujuan = Cabang::findOrFail($validatedData['cabang_tujuan'])->nama_cabang;
     $tujuanPenugasan = Tujuan::findOrFail($validatedData['tujuan'])->tujuan_penugasan;
     
-
     // Buat data form utama
     $form = Form::create([
         'no_surat' => $validatedData['no_surat'],
@@ -104,6 +102,11 @@ class FormController extends Controller
         'tujuan' => $tujuanPenugasan,
         'tanggal_keberangkatan' => $validatedData['tanggalKeberangkatan'],
     ]);
+
+    // Otomatis approve HRD (set "oke")
+    $form->acc_hrd = 'oke'; // HRD approval automatically
+    $form->submitted_by_hrd = auth()->user()->name; // Store the HRD approver (current logged-in user)
+    $form->save();
 
     // Siapkan data pegawai untuk insert batch
     $namaPegawais = [];
@@ -132,11 +135,10 @@ class FormController extends Controller
 
     // Masukkan data pegawai ke database
     Nama_pegawai::insert($namaPegawais);
-    $form->save(); 
 
     // Redirect dengan pesan sukses
     return redirect()->route('formpst.index_keluar', ['form' => $form->id])
-        ->with('success', 'Data berhasil disimpan.');
+        ->with('success', 'Data berhasil disimpan, dan persetujuan HRD otomatis telah diberikan.');
 }
 
 
@@ -206,8 +208,8 @@ public function show($id)
     $data = Nama_pegawai::where('form_id', $form->id)->get();
     $user = User::find($id);
 
-    $form->acc_hrd = 'oke';
-    $form->save(); 
+    // $form->acc_hrd = 'oke';
+    // $form->save(); 
 
     // Mengatur status berdasarkan nilai dari form
     $statuses = [
@@ -262,142 +264,102 @@ public function surat_tugas($id)
 
     return view('formpst.surat_tugas', compact('form', 'data','users'));
 }
-public function generatePdf($targetFormId)
-    {
-        try {
-            // Ambil data form berdasarkan ID
-            $form = Form::findOrFail($targetFormId);
 
-            // Ambil data pegawai yang ditugaskan (pastikan relasi di model sudah benar)
-            $data = Nama_pegawai::where('form_id', $targetFormId)->get();
 
-            if (!$form || $data->isEmpty()) {
-                // Log jika data tidak ditemukan
-                Log::error("Data form atau data pegawai tidak ditemukan untuk form ID: {$targetFormId}");
-                abort(404, 'Data tidak ditemukan.');
-            }
-
-            // Set options untuk DOMPDF (opsional, tapi disarankan)
-            $options = new Options();
-            $options->set('isHtml5ParserEnabled', true);
-            $options->set('isPhpEnabled', true); // Aktifkan jika view PDF menggunakan kode PHP
-            $options->set('chroot', public_path()); // Penting untuk path gambar relatif
-
-            // Inisialisasi DOMPDF dengan options
-            $dompdf = new \Dompdf\Dompdf($options);
-
-            // Load HTML dari view dan kirimkan data
-            $html = View::make('formpst.surat_tugas_pdf', compact('form', 'data', 'targetFormId'))->render(); //gunakan view::make agar bisa di render dengan benar
-
-            // Load HTML ke DOMPDF
-            $dompdf->loadHtml($html);
-
-            // Set ukuran kertas dan orientasi
-            $dompdf->setPaper('A4', 'portrait');
-
-            // Render PDF
-            $dompdf->render();
-
-            return $dompdf->stream('surat_tugas_' . $form->no_surat . '.pdf', ['Attachment' => 0]);
-        } catch (\Exception $e) {
-            Log::error("Error saat generate PDF untuk form ID: {$targetFormId}. Error: " . $e->getMessage() . "\n" . $e->getTraceAsString());
-            return back()->with('error', 'Terjadi kesalahan saat membuat PDF. Silakan coba lagi.');
-        }
-    }
-
-public function submit(Request $request, $id)
+    public function submit(Request $request, $id)
 {
     $form = Form::findOrFail($id);
-
+    $user = auth()->user()->name; // Mengambil nama user yang sedang login
+    
     switch ($request->action) {
         case 'acc_bm':
             $form->acc_bm = 'oke';
+            $form->submitted_by_bm = $user;
             $form->save();
-
-            $message = 'Persetujuan BM berhasil disimpan.';
-            return redirect()->route('formpst.index_keluar')->with('success', $message);
-
+    
+            return redirect()->route('formpst.index_keluar')->with('success', 'Persetujuan BM berhasil disimpan.');
+    
         case 'reject_bm':
             $form->acc_bm = 'reject';
+            $form->submitted_by_bm = $user;
             $form->save();
-
-            $message = 'Persetujuan BM ditolak.';
-            return redirect()->route('formpst.index_keluar')->with('success', $message);
-
+    
+            return redirect()->route('formpst.index_keluar')->with('success', 'Persetujuan BM ditolak.');
+    
         case 'cancel':
-            // Reset semua status persetujuan
             $form->acc_bm = 'cancel';
             $form->acc_hrd = 'cancel';
             $form->acc_ho = 'cancel';
             $form->acc_cabang = 'cancel';
+            $form->submitted_by_bm = $user;
+            $form->submitted_by_hrd = $user;
+            $form->submitted_by_ho = $user;
+            $form->submitted_by_cabang = $user;
             $form->save();
-
-            $message = 'Semua persetujuan telah dibatalkan.';
-            return redirect()->route('formpst.index_keluar')->with('success', $message);
-
+    
+            return redirect()->route('formpst.index_keluar')->with('success', 'Semua persetujuan telah dibatalkan.');
+    
         case 'acc_hrd':
-            if ($form->acc_bm !== 'oke') {
-                return redirect()->back()->with('error', 'BM belum menyetujui.');
-            }
-            $form->acc_hrd = 'oke';
+            // Automate HRD approval before BM approval
+            $form->acc_hrd = 'oke'; // Automatically approve HRD
+            $form->submitted_by_hrd = $user; // Save the user who approved HRD
             $form->save();
-            $message = 'Persetujuan HRD berhasil disimpan.';
-            return redirect()->route('hrd.index_hrd_cabang')->with('success', $message);
 
+            return redirect()->route('hrd.index_hrd_cabang')->with('success', 'Persetujuan HRD otomatis berhasil disimpan.');
+    
         case 'reject_hrd':
-            if ($form->acc_bm !== 'oke') {
-                return redirect()->back()->with('error', 'BM belum menyetujui.');
-            }
             $form->acc_hrd = 'reject';
+            $form->submitted_by_hrd = $user;
             $form->save();
-
-            $message = 'Persetujuan HRD ditolak.';
-            return redirect()->route('hrd.index_hrd_cabang')->with('success', $message);
-
+    
+            return redirect()->route('hrd.index_hrd_cabang')->with('success', 'Persetujuan HRD ditolak.');
+    
         case 'acc_ho':
             if ($form->acc_hrd !== 'oke') {
                 return redirect()->back()->with('error', 'HRD belum menyetujui.');
             }
             $form->acc_ho = 'oke';
+            $form->submitted_by_ho = $user;
             $form->save();
-            $message = 'Persetujuan HO berhasil disimpan.';
-            return redirect()->route('hrd.index_hrd')->with('success', $message);
-
+    
+            return redirect()->route('hrd.index_hrd')->with('success', 'Persetujuan HO berhasil disimpan.');
+    
         case 'reject_ho':
             if ($form->acc_hrd !== 'oke') {
                 return redirect()->back()->with('error', 'HRD belum menyetujui.');
             }
             $form->acc_ho = 'reject';
+            $form->submitted_by_ho = $user;
             $form->save();
-            $message = 'Persetujuan HO ditolak.';
-
-            return redirect()->route('hrd.index_hrd')->with('success', $message);
-
+    
+            return redirect()->route('hrd.index_hrd')->with('success', 'Persetujuan HO ditolak.');
+    
         case 'acc_cabang':
             if ($form->acc_ho !== 'oke') {
                 return redirect()->back()->with('error', 'HO belum menyetujui.');
             }
             $form->acc_cabang = 'oke';
+            $form->submitted_by_cabang = $user;
             $form->save();
-
-            $message = 'Persetujuan Cabang berhasil disimpan.';
-            return redirect()->route('formpst.index_masuk')->with('success', $message);
-
+    
+            return redirect()->route('formpst.index_masuk')->with('success', 'Persetujuan Cabang berhasil disimpan.');
+    
         case 'reject_cabang':
             if ($form->acc_ho !== 'oke') {
                 return redirect()->back()->with('error', 'HO belum menyetujui.');
             }
             $form->acc_cabang = 'reject';
+            $form->submitted_by_cabang = $user;
             $form->save();
-
-            $message = 'Persetujuan Cabang ditolak.';
-            return redirect()->route('formpst.index_masuk')->with('success', $message);
-
+    
+            return redirect()->route('formpst.index_masuk')->with('success', 'Persetujuan Cabang ditolak.');
+    
         default:
             return redirect()->back()->with('error', 'Aksi tidak valid.');
     }
 }
 
+    
 
 public function edit($id)
 {
@@ -591,5 +553,47 @@ public function store_nm(Request $request)
     return redirect()->route('formpst.form_nm')
         ->with('success', 'Data berhasil disimpan.');
 }
+public function generatePdf($targetFormId)
+    {
+        try {
+            // Ambil data form berdasarkan ID
+            $form = Form::findOrFail($targetFormId);
+
+            // Ambil data pegawai yang ditugaskan (pastikan relasi di model sudah benar)
+            $data = Nama_pegawai::where('form_id', $targetFormId)->get();
+
+            if (!$form || $data->isEmpty()) {
+                // Log jika data tidak ditemukan
+                Log::error("Data form atau data pegawai tidak ditemukan untuk form ID: {$targetFormId}");
+                abort(404, 'Data tidak ditemukan.');
+            }
+
+            // Set options untuk DOMPDF (opsional, tapi disarankan)
+            $options = new Options();
+            $options->set('isHtml5ParserEnabled', true);
+            $options->set('isPhpEnabled', true); // Aktifkan jika view PDF menggunakan kode PHP
+            $options->set('chroot', public_path()); // Penting untuk path gambar relatif
+
+            // Inisialisasi DOMPDF dengan options
+            $dompdf = new \Dompdf\Dompdf($options);
+
+            // Load HTML dari view dan kirimkan data
+            $html = View::make('formpst.surat_tugas_pdf', compact('form', 'data', 'targetFormId'))->render(); //gunakan view::make agar bisa di render dengan benar
+
+            // Load HTML ke DOMPDF
+            $dompdf->loadHtml($html);
+
+            // Set ukuran kertas dan orientasi
+            $dompdf->setPaper('A4', 'portrait');
+
+            // Render PDF
+            $dompdf->render();
+
+            return $dompdf->stream('surat_tugas_' . $form->no_surat . '.pdf', ['Attachment' => 0]);
+        } catch (\Exception $e) {
+            Log::error("Error saat generate PDF untuk form ID: {$targetFormId}. Error: " . $e->getMessage() . "\n" . $e->getTraceAsString());
+            return back()->with('error', 'Terjadi kesalahan saat membuat PDF. Silakan coba lagi.');
+        }
+    }
 }
 
