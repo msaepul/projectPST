@@ -75,7 +75,8 @@ class FormController extends Controller
     $validatedData = $request->validate([
         'no_surat' => 'required|string|max:255',
         'namaPemohon' => 'required|string|max:255',
-        'cabang_asal' => 'required|exists:cabangs,id',
+        // 'cabang_asal' => 'required|exists:cabangs,id',
+        'cabangAsal' => 'required|string|max:255',
         'cabang_tujuan' => 'required|exists:cabangs,id',
         'tujuan' => 'required|exists:tujuans,id',
         'tanggalKeberangkatan' => 'required|date',
@@ -89,15 +90,16 @@ class FormController extends Controller
     ]);
 
     // Ambil nama cabang dan tujuan dari tabel terkait
-    $cabangAsal = Cabang::findOrFail($validatedData['cabang_asal'])->nama_cabang;
+    // $cabangs = Cabang::where('id', auth()->user()->cabang_id)->get();
     $cabangTujuan = Cabang::findOrFail($validatedData['cabang_tujuan'])->nama_cabang;
     $tujuanPenugasan = Tujuan::findOrFail($validatedData['tujuan'])->tujuan_penugasan;
+    
 
     // Buat data form utama
     $form = Form::create([
         'no_surat' => $validatedData['no_surat'],
         'nama_pemohon' => $validatedData['namaPemohon'],
-        'cabang_asal' => $cabangAsal,
+        'cabang_asal' => $validatedData['cabangAsal'],
         'cabang_tujuan' => $cabangTujuan,
         'tujuan' => $tujuanPenugasan,
         'tanggal_keberangkatan' => $validatedData['tanggalKeberangkatan'],

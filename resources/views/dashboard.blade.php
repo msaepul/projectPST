@@ -39,36 +39,7 @@
         @else
             {{-- Jika bukan pegawai, tampilkan semua box --}}
             <div class="row">
-                <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
-                    <div class="small-box bg-navy">
-                        <div class="inner">
-                            <h3 id="countCabang">{{ $jumlahCabang }}</h3>
-                            <p>Jumlah Cabang Terdaftar</p>
-                        </div>
-                        <div class="icon">
-                            <i class="fas fa-building"></i>
-                        </div>
-                        <a href="{{ route('ho.cabang') }}" class="small-box-footer">
-                            Lihat Detail <i class="fas fa-arrow-circle-right"></i>
-                        </a>
-                    </div>
-                </div>
-
-
-                <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
-                    <div class="small-box bg-gray">
-                        <div class="inner">
-                            <h3 id="countDepartemen">{{ $jumlahDepartemen }}</h3>
-                            <p>Jumlah Departemen Terdaftar</p>
-                        </div>
-                        <div class="icon">
-                            <i class="fas fa-sitemap"></i>
-                        </div>
-                        <a href="{{ route('ho.departemen') }}" class="small-box-footer">
-                            Lihat Detail <i class="fas fa-arrow-circle-right"></i>
-                        </a>
-                    </div>
-                </div>
+            
 
                 <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
                     <div class="small-box bg-cyan">

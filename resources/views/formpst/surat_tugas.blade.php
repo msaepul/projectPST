@@ -34,7 +34,7 @@
 
                 <hr class="header-line">
                 <div style="position: absolute; top: 0; right: 0; font-size: 10pt; font-weight: bold; text-align: right;">
-                    No. Catatan Mutu: <strong>{{ $form->no_catatan_mutu }}</strong>
+                <strong>{{ $form->no_catatan_mutu }}</strong>
                 </div>
 
                 <div class="letter-content">
@@ -124,13 +124,11 @@
             </div>
         </div>
     </div>
-
-    <div class="action-buttons">
-        <button onclick="exportToPDF()" class="btn btn-primary">Export to PDF</button>
-    </div>
 </div>
 
-
+<div class="action-buttons">
+    <button onclick="exportToPDF()" class="btn btn-primary">Export to PDF</button>
+</div>
 
     <style>
         
