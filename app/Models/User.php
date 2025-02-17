@@ -64,7 +64,8 @@ class User extends Authenticatable
         return $this->role === strtolower($role);
     }
 
-    public function cabang() {
-        return $this->belongsTo(Cabang::class, 'cabang_asal');
-    }
+    public function cabang()
+{
+    return $this->belongsTo(Cabang::class, 'cabang_asal', 'id');
+}
 }

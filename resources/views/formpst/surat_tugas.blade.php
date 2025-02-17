@@ -141,12 +141,10 @@
                     </div>
                 </div>
             </div>
-
-            <div class="action-buttons">
-                <button onclick="exportToPDF()" class="btn btn-primary">Export to PDF</button>
-            </div>
         </div>
-
+        <div class="action-buttons">
+            <button onclick="exportToPDF()" class="btn btn-primary">Export to PDF</button>
+        </div>
 
 
         <style>
@@ -257,12 +255,12 @@
             }
 
             /* .table th,
-                .table td {
-                border: 0.5pt solid #000;
-                padding: 0.1cm;
-                 /* Further reduced padding */
+                        .table td {
+                        border: 0.5pt solid #000;
+                        padding: 0.1cm;
+                         /* Further reduced padding */
             /* text-align: center;
-                } */
+                        } */
             */ .signature {
                 margin-top: 0.3cm;
                 /* Reduced margin */
@@ -360,7 +358,6 @@
                     }
                 }
             }
-
 
             function exportToPDF() {
                 const {
