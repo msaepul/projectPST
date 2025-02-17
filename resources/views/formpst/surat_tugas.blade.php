@@ -124,13 +124,11 @@
             </div>
         </div>
     </div>
-
-    <div class="action-buttons">
-        <button onclick="exportToPDF()" class="btn btn-primary">Export to PDF</button>
-    </div>
 </div>
 
-
+<div class="action-buttons">
+    <button onclick="exportToPDF()" class="btn btn-primary">Export to PDF</button>
+</div>
 
     <style>
         
