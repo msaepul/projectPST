@@ -89,9 +89,10 @@ class FormController extends Controller
     ]);
 
     // Ambil nama cabang dan tujuan dari tabel terkait
-    $cabangAsal = Cabang::findOrFail($validatedData['cabang_asal'])->nama_cabang;
+    $cabangs = Cabang::where('id', auth()->user()->cabang_id)->get();
     $cabangTujuan = Cabang::findOrFail($validatedData['cabang_tujuan'])->nama_cabang;
     $tujuanPenugasan = Tujuan::findOrFail($validatedData['tujuan'])->tujuan_penugasan;
+    
 
     // Buat data form utama
     $form = Form::create([

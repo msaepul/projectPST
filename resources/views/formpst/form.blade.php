@@ -24,23 +24,25 @@
                     <div class="form-group row">
                         <label for="namaPemohon" class="col-md-3 col-form-label">Nama Pemohon</label>
                         <div class="col-md-9">
-                            <input type="text" id="namaPemohon" name="namaPemohon" class="form-control" required>
+                            <input type="text" id="namaPemohon" name="namaPemohon" class="form-control" 
+                                   value="{{ old('namaPemohon', Auth::user()->nama_lengkap ?? '') }}" required readonly>
                         </div>
                     </div>
+                    
 
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="cabangAsal">Cabang Asal</label>
                             <select class="form-control" name="cabang_asal" id="cabangAsal" required>
                                 <option value="" disabled>Pilih Cabang</option>
-                                @foreach ($cabangs as $cabang)
-                                    <option value="{{ $cabang->id }}" 
-                                        {{ auth()->user()->cabang_id == $cabang->id ? 'selected' : '' }}>
-                                        {{ $cabang->nama_cabang }}
+                                @if(Auth::check() && Auth::user()->cabang_asal)
+                                    <option value="{{ Auth::user()->cabang_asal }}" selected>
+                                        {{ Auth::user()->cabang_asal ?? 'Cabang Tidak Diketahui' }}
                                     </option>
-                                @endforeach
+                                @endif
                             </select>                            
                         </div>
+                        
                         <div class="form-group col-md-6">
                             <label for="cabangTujuan">Cabang Tujuan</label>
                             <select class="form-control" name="cabang_tujuan" id="cabangTujuan" required>
@@ -175,23 +177,23 @@
                 $('.select2').select2(); // Aktifkan select2 untuk dropdown tujuan penugasan
             });
         });
-        $(document).ready(function() {
-    $('.select2').select2({
-        placeholder: "Cari Nama Pegawai...",
-        allowClear: true,
-        width: '100%' // Supaya menyesuaikan lebar parent
-    });
+//         $(document).ready(function() {
+//     $('.select2').select2({
+//         placeholder: "Cari Nama Pegawai...",
+//         allowClear: true,
+//         width: '100%' // Supaya menyesuaikan lebar parent
+//     });
 
-    // Event listener untuk mengisi Departemen dan NIK setelah memilih pegawai
-    $(document).on('select2:select', '.namaPegawai', function(e) {
-        let selectedOption = $(this).find(':selected'); // Ambil option yang dipilih
-        let row = $(this).closest('tr'); // Cari tr terdekat
+//     // Event listener untuk mengisi Departemen dan NIK setelah memilih pegawai
+//     $(document).on('select2:select', '.namaPegawai', function(e) {
+//         let selectedOption = $(this).find(':selected'); // Ambil option yang dipilih
+//         let row = $(this).closest('tr'); // Cari tr terdekat
 
-        // Set nilai Departemen dan NIK berdasarkan data yang ada di option
-        row.find('.departemen').val(selectedOption.data('departemen'));
-        row.find('.nik').val(selectedOption.data('nik'));
-    });
-});
+//         // Set nilai Departemen dan NIK berdasarkan data yang ada di option
+//         row.find('.departemen').val(selectedOption.data('departemen'));
+//         row.find('.nik').val(selectedOption.data('nik'));
+//     });
+// });
 
     </script>
 @endsection
