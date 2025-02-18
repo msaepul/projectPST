@@ -105,7 +105,7 @@ public function store(Request $request)
 
     // Otomatis approve HRD (set "oke")
     $form->acc_hrd = 'oke'; // HRD approval automatically
-    $form->submitted_by_hrd = auth()->user()->name; // Store the HRD approver (current logged-in user)
+    $form->submitted_by_hrd = auth()->user()->nama_lengkap; // Store the HRD approver (current logged-in user)
     $form->save();
 
     // Siapkan data pegawai untuk insert batch
@@ -207,52 +207,7 @@ public function show($id)
     $form = Form::findOrFail($id);
     $data = Nama_pegawai::where('form_id', $form->id)->get();
     $user = User::find($id);
-
-    // $form->acc_hrd = 'oke';
-    // $form->save(); 
-
-    // Mengatur status berdasarkan nilai dari form
-    $statuses = [
-        'hrd' => [
-            'status' => $form->acc_hrd,
-            'name' => $form->nama_pemohon,
-            'role' => 'HRD'
-        ],
-        'bm' => [
-            'status' => $form->acc_bm,
-            'name' => User::where('cabang_asal', $form->cabang_asal)->where('role', 'bm')->value('name'),
-            'role' => 'BM'
-        ],
-        'hrd_ho' => [
-            'status' => $form->acc_ho,
-            'name' => User::where('cabang_asal', 'Head Office')->where('role', 'hrd')->value('name'),
-            'role' => 'HRD HO'
-        ],
-        'cabang' => [
-            'status' => $form->acc_cabang,
-            'name' => User::where('cabang_asal', $form->cabang_tujuan)->where('role', 'bm')->value('name'),
-            'role' => 'CABANG'
-        ]
-    ];
-
-    // Menyiapkan path gambar status
-    foreach ($statuses as &$status) {
-        switch ($status['status']) {
-            case 'oke':
-                $status['image'] = asset('dist/img/oke.png');
-                $status['text'] = ($status['name'] ?? '') . ' - Setuju';
-                break;
-            case 'reject':
-                $status['image'] = asset('dist/img/reject.png');
-                $status['text'] = $status['role'] . ' - Ditolak';
-                break;
-            default:
-                $status['image'] = asset('dist/img/no.png');
-                $status['text'] = $status['role'] . ' - Menunggu';
-        }
-    }
-
-    return view('formpst.show', compact('form', 'data', 'user', 'statuses'));
+    return view('formpst.show', compact('form', 'data', 'user', ));
 }
 
 public function surat_tugas($id)
@@ -269,7 +224,7 @@ public function surat_tugas($id)
     public function submit(Request $request, $id)
 {
     $form = Form::findOrFail($id);
-    $user = auth()->user()->name; // Mengambil nama user yang sedang login
+    $user = auth()->user()->nama_lengkap; // Mengambil nama user yang sedang login
     
     switch ($request->action) {
         case 'acc_bm':
