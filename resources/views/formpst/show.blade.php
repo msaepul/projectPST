@@ -17,13 +17,13 @@
                                 <li class="breadcrumb-item">
                                     <span
                                         class="breadcrumb-step @if ($form->acc_bm === 'oke' && $form->acc_hrd === 'oke' && ($form->acc_ho === '' || $form->acc_ho !== 'oke')) breadcrumb-active @endif">
-                                        Diperiksa HO
+                                        Konfirmasi HO
                                     </span>
                                 </li>
                                 <li class="breadcrumb-item">
                                     <span
                                         class="breadcrumb-step @if ($form->acc_ho === 'oke' && ($form->acc_cabang === '' || $form->acc_cabang !== 'oke')) breadcrumb-active @endif">
-                                        Diperiksa Cabang Tujuan
+                                        Konfirmasi Cabang Tujuan
                                     </span>
                                 </li>
                                 <li class="breadcrumb-item">
@@ -46,6 +46,7 @@
                                         Ditolak
                                     </span>
                                 </li>
+
                                 @endif
                             </ol>
                     </div>
@@ -60,7 +61,7 @@
                                 @if (auth()->user()->role === 'bm')
                                     @if ($form->acc_bm == null)
                                         <button type="submit" name="action" value="acc_bm" class="btn btn-primary mr-2">
-                                            Submit
+                                            Confirm
                                         </button>
                                         <button type="submit" name="action" value="reject_bm" class="btn btn-danger">
                                             Tolak
@@ -72,7 +73,7 @@
                                     @if ($form->acc_ho == null && $form->acc_bm == 'oke')
                                         <button type="submit" id="submitHoButton" name="action" value="acc_ho"
                                             class="btn btn-primary mr-2" disabled>
-                                            Submit
+                                            Confirm
                                         </button>
                                         <button type="submit" name="action" value="reject_ho" class="btn btn-danger">
                                             Tolak
@@ -83,7 +84,7 @@
                                     @if ($form->acc_cabang == null && $form->acc_ho == 'oke')
                                         <button type="submit" name="action" value="acc_cabang"
                                             class="btn btn-primary mr-2">
-                                            Submit
+                                            Confirm
                                         </button>
                                         <button type="submit" name="action" value="reject_cabang" class="btn btn-danger">
                                             Tolak
