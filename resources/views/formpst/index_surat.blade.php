@@ -32,7 +32,7 @@
                         @forelse ($data as $item)
                             @if (auth()->user()->cabang_asal === $item->cabang_tujuan ||
                                     auth()->user()->cabang_asal === $item->cabang_asal ||
-                                    auth()->user()->role === 'admin')
+                                    auth()->user()->role === 'admin'|| auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'Head Office' )
                                 <tr>
                                     <td>{{ $item->no_surat }}</td>
                                     <td>{{ $item->nama_pemohon }}</td>

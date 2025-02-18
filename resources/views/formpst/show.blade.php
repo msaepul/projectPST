@@ -36,16 +36,17 @@
                                     $form->acc_bm === 'reject' &&
                                         $form->acc_hrd === 'reject' &&
                                         $form->acc_ho === 'reject' &&
-                                        $form->acc_cabang === 'reject')
-                                    <li class="breadcrumb-item" @if (
-                                        $form->acc_bm === 'reject' &&
-                                            $form->acc_hrd === 'reject' &&
-                                            $form->acc_ho === 'reject' &&
-                                            $form->acc_cabang === 'reject') text-primary @endif>
-                                        <span class="breadcrumb-step text-black">
-                                            Ditolak
-                                        </span>
-                                    </li>
+                                        $form->acc_cabang === 'reject') text-primary 
+                                <li class="breadcrumb-item" @if (
+                                    $form->acc_bm === 'reject' &&
+                                        $form->acc_hrd === 'reject' &&
+                                        $form->acc_ho === 'reject' &&
+                                        $form->acc_cabang === 'reject') text-primary @endif>
+                                    <span class="breadcrumb-step text-danger">
+                                        Ditolak
+                                    </span>
+                                </li>
+
                                 @endif
                             </ol>
                     </div>
@@ -218,16 +219,74 @@
                             </div>
                         </div>
 
+                        <!-- Bar Status -->
                         <div class="status-bar mb-4" style="position: sticky; top: 70px;">
-                            @foreach ($statuses as $status)
+                            <!-- ACC HRD -->
+                            <div class="status-step">
+                                <img src="{{ $form->acc_hrd == 'oke' ? asset('dist/img/oke.png') : ($form->acc_hrd == 'reject' ? asset('dist/img/reject.png') : asset('dist/img/no.png')) }}"
+                                    alt="Status HRD" class="thumb-icon" width="50">
+                                    <div class="status-name">
+                                        @if ($form->acc_hrd == 'oke')
+                                            {{ $form->submitted_by_hrd }} (HRD) - Setuju 
+                                        @elseif ($form->acc_hrd == 'reject')
+                                            {{ $form->submitted_by_hrd }} (HRD) - Ditolak
+                                        @else
+                                            HRD - Menunggu
+                                        @endif
+                                    </div>
+                                    
+                            </div>
+                            <!-- ACC BM -->
+                            @if ($form->acc_hrd == 'oke')
                                 <div class="status-step">
-                                    <img src="{{ $status['image'] }}" alt="Status {{ $status['role'] }}"
-                                        class="thumb-icon" width="50">
-                                    <div class="status-name">{{ $status['text'] }}</div>
+                                    <img src="{{ $form->acc_bm == 'oke' ? asset('dist/img/oke.png') : ($form->acc_bm == 'reject' ? asset('dist/img/reject.png') : asset('dist/img/no.png')) }}"
+                                        alt="Status BM" class="thumb-icon" width="50">
+                                    <div class="status-name">
+                                        @if ($form->acc_bm == 'oke')
+                                        {{ $form->submitted_by_bm }} (BM) - Setuju
+                                        @elseif ($form->acc_bm == 'reject')
+                                        {{ $form->submitted_by_bm }} (BM) - Ditolak
+                                        @else
+                                            BM - Menunggu
+                                        @endif
+                                    </div>
                                 </div>
-                            @endforeach
-                        </div>
+                            @endif
 
+
+                            {{-- ACC HO  --}}
+                            @if ($form->acc_bm == 'oke')
+                                <div class="status-step">
+                                    <img src="{{ $form->acc_ho == 'oke' ? asset('dist/img/oke.png') : ($form->acc_ho == 'reject' ? asset('dist/img/reject.png') : asset('dist/img/no.png')) }}"
+                                        alt="Status HO" class="thumb-icon" width="50">
+                                    <div class="status-name">
+                                        @if ($form->acc_ho == 'oke')
+                                        {{ $form->submitted_by_ho }} (HRD HO) - Setuju
+                                        @elseif ($form->acc_ho == 'reject')
+                                        {{ $form->submitted_by_ho }} (HRD HO) - Ditolak
+                                        @else
+                                            HRD HO - Menunggu
+                                        @endif
+                                    </div>
+                                </div>
+                            @endif
+                            {{-- ACC CABANG --}}
+                            @if ($form->acc_ho == 'oke')
+                                <div class="status-step">
+                                    <img src="{{ $form->acc_cabang == 'oke' ? asset('dist/img/oke.png') : ($form->acc_cabang == 'reject' ? asset('dist/img/reject.png') : asset('dist/img/no.png')) }}"
+                                        alt="Status CABANG" class="thumb-icon" width="50">
+                                    <div class="status-name">
+                                        @if ($form->acc_cabang == 'oke')
+                                        {{ $form->submitted_by_cabang }} (CABANG) - Setuju
+                                        @elseif ($form->acc_cabang == 'reject')
+                                        {{ $form->submitted_by_cabang }} (CABANG)- Ditolak
+                                        @else
+                                            CABANG- Menunggu
+                                        @endif
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
                     </div>
                 </div>
             </div>

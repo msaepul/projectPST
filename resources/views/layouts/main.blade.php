@@ -162,13 +162,15 @@
                             </a>
                         </li>
                     @endif
-
                         <li class="nav-item">
+                            @if (auth()->user()->cabang_asal !== 'Head Office')
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-envelope"></i>
                                 <p> Surat Tugas<i class="fas fa-angle-left right"></i></p>
                             </a>
+                            @endif
                             <ul class="nav nav-treeview">
+                            @if (auth()->user()->cabang_asal !== 'Head Office')
 
                                 <li class="nav-item">
                                     <a href="{{ route('formpst.index_keluar') }}"
@@ -184,6 +186,8 @@
                                         <p>Surat Masuk</p>
                                     </a>
                                 </li>
+                            @endif
+
                                 <li class="nav-item">
                                     <a href="{{ route('formpst.index_surat') }}"
                                         class="nav-link {{ request()->is('formpst/index_surat') ? 'active' : '' }}">
@@ -193,8 +197,26 @@
                                 </li>
                             </ul>
                         </li>
-                        
+
+                        @if (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'Head Office')
+                        <li class="nav-item">
+                            <a href="{{ route('formpst.index_keluar') }}" class="nav-link">
+                                <i class="nav-icon fas fa-envelope"></i>
+                                <p>Daftar Pengajuan Surat </p>
+                            </a>
+                        </li>
+                        @endif
+
+                        @if (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'Head Office')
+                        <li class="nav-item">
+                            <a href="{{ route('formpst.index_surat') }}" class="nav-link">
+                                <i class="nav-icon fas fa-car"></i>
+                                <p>Daftar Surat Tugas </p>
+                            </a>
+                        </li>
+                        @endif
                     
+                        
                     @if (auth()->user()->role === 'admin' ||
                             (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'Head Office') ||
                             auth()->user()->role === 'hrd')
@@ -324,6 +346,10 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/js/select2.min.js"></script>
+
+    {{-- Tambahkan DataTables JS --}}
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
 
     <!-- overlayScrollbars -->
     <script src="{{ asset('plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
