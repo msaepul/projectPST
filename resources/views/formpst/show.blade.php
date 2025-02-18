@@ -17,13 +17,13 @@
                                 <li class="breadcrumb-item">
                                     <span
                                         class="breadcrumb-step @if ($form->acc_bm === 'oke' && $form->acc_hrd === 'oke' && ($form->acc_ho === '' || $form->acc_ho !== 'oke')) breadcrumb-active @endif">
-                                        Diperiksa HO
+                                        Konfirmasi HO
                                     </span>
                                 </li>
                                 <li class="breadcrumb-item">
                                     <span
                                         class="breadcrumb-step @if ($form->acc_ho === 'oke' && ($form->acc_cabang === '' || $form->acc_cabang !== 'oke')) breadcrumb-active @endif">
-                                        Diperiksa Cabang Tujuan
+                                        Konfirmasi Cabang Tujuan
                                     </span>
                                 </li>
                                 <li class="breadcrumb-item">
@@ -32,15 +32,21 @@
                                         Selesai
                                     </span>
                                 </li>
-                                <li class="breadcrumb-item" @if (
+                                @if (
                                     $form->acc_bm === 'reject' &&
                                         $form->acc_hrd === 'reject' &&
                                         $form->acc_ho === 'reject' &&
-                                        $form->acc_cabang === 'reject') text-primary @endif>
-                                    <span class="breadcrumb-step text-danger">
-                                        Ditolak
-                                    </span>
-                                </li>
+                                        $form->acc_cabang === 'reject')
+                                    <li class="breadcrumb-item" @if (
+                                        $form->acc_bm === 'reject' &&
+                                            $form->acc_hrd === 'reject' &&
+                                            $form->acc_ho === 'reject' &&
+                                            $form->acc_cabang === 'reject') text-primary @endif>
+                                        <span class="breadcrumb-step text-black">
+                                            Ditolak
+                                        </span>
+                                    </li>
+                                @endif
                             </ol>
                     </div>
 
@@ -54,7 +60,7 @@
                                 @if (auth()->user()->role === 'bm')
                                     @if ($form->acc_bm == null)
                                         <button type="submit" name="action" value="acc_bm" class="btn btn-primary mr-2">
-                                            Submit
+                                            Confirm
                                         </button>
                                         <button type="submit" name="action" value="reject_bm" class="btn btn-danger">
                                             Tolak
@@ -66,7 +72,7 @@
                                     @if ($form->acc_ho == null && $form->acc_bm == 'oke')
                                         <button type="submit" id="submitHoButton" name="action" value="acc_ho"
                                             class="btn btn-primary mr-2" disabled>
-                                            Submit
+                                            Confirm
                                         </button>
                                         <button type="submit" name="action" value="reject_ho" class="btn btn-danger">
                                             Tolak
@@ -77,7 +83,7 @@
                                     @if ($form->acc_cabang == null && $form->acc_ho == 'oke')
                                         <button type="submit" name="action" value="acc_cabang"
                                             class="btn btn-primary mr-2">
-                                            Submit
+                                            Confirm
                                         </button>
                                         <button type="submit" name="action" value="reject_cabang" class="btn btn-danger">
                                             Tolak
@@ -215,17 +221,18 @@
                         <div class="status-bar mb-4" style="position: sticky; top: 70px;">
                             @foreach ($statuses as $status)
                                 <div class="status-step">
-                                    <img src="{{ $status['image'] }}" alt="Status {{ $status['role'] }}" class="thumb-icon" width="50">
+                                    <img src="{{ $status['image'] }}" alt="Status {{ $status['role'] }}"
+                                        class="thumb-icon" width="50">
                                     <div class="status-name">{{ $status['text'] }}</div>
                                 </div>
                             @endforeach
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
         </div>
-        
+
         <!-- Modal untuk alasan penolakan -->
         <div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
             <div class="modal-dialog">
