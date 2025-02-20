@@ -46,6 +46,9 @@
     <link rel="stylesheet" href="{{ asset('plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/daterangepicker/daterangepicker.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.min.css') }}">
+    <!-- Di dalam <head> pada file layouts.main.blade.php -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
 
     <link href="https://cdn.jsdelivr.net/npm/ionicons@5.5.2/dist/css/ionicons.min.css" rel="stylesheet">
 
@@ -57,6 +60,7 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 
 </head>
 
@@ -161,7 +165,7 @@
                         </li>
                     @endif
 
-                    {{-- menu untuk umum --}}
+
                     <li class="nav-item">
                         @if (auth()->user()->cabang_asal !== 'Head Office')
                             <a href="#" class="nav-link">
@@ -233,7 +237,7 @@
                         </ul>
                     </li>
 
-                    {{-- menu untuk hrd HO --}}
+
                     @if (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'Head Office')
                         <li class="nav-item">
                             <a href="{{ route('formpst.index_keluar') }}" class="nav-link">
