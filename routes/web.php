@@ -77,17 +77,21 @@ Route::middleware('auth')->group(function () {
         Route::get('/formpst/show', [FormController::class, 'show'])->name('formpst.show');
         Route::get('/formpst/show/{id}', [FormController::class, 'show'])->name('formpst.show');
 
+        Route::get('/formpst/show_nm', [FormController::class, 'show_nm'])->name('formpst.show_nm');
+        Route::get('/formpst/show_nm/{id}', [FormController::class, 'show_nm'])->name('formpst.show_nm');
+
         Route::get('/formpst/index_keluar', [FormController::class, 'index_keluar'])->name('formpst.index_keluar');
         Route::get('/formpst/index_masuk', [FormController::class, 'index_masuk'])->name('formpst.index_masuk');
         Route::get('/formpst/index_surat', [FormController::class, 'index_surat'])->name('formpst.index_surat');
 
-        Route::post('/formpst/store', [FormController::class, 'store'])->name('formpst.store');
+        Route::post('/formpst/store/{role?}', [FormController::class, 'store'])->name('formpst.store');
         Route::get('/formpst/edit', [FormController::class, 'edit'])->name('formpst.edit');
         Route::get('/formpst/edit/{id}', [FormController::class, 'edit'])->name('formpst.edit');
         Route::put('/formpst/update/{id}', [FormController::class, 'update'])->name('formpst.update');
         Route::delete('/formpst/delete/{id}', [FormController::class, 'destroy'])->name('formpst.destroy');
 
         Route::post('/formpst/{id}/submit', [FormController::class, 'submit'])->name('form.submit');
+        Route::post('/formpst/{id}/submit_nm', [FormController::class, 'submit_nm'])->name('form.submit_nm');
         Route::get('/formpst/surat_tugas/{id}', [FormController::class, 'surat_tugas'])->name('formpst.surat_tugas');
         Route::post('/update-status/{itemId}/{status}', [FormController::class, 'updateStatus'])->name('update.status');
 

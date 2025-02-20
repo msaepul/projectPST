@@ -84,8 +84,13 @@
                                     </td>
                                     <td class="text-center">
                                         <div class="d-flex justify-content-center gap-2">
+                                            @if ($item->cabang_asal !== 'Head Office')
                                             <a href="{{ route('formpst.show', ['id' => $item->id]) }}" class="btn btn-sm btn-outline-primary">Detail</a>
-                                            @if ($item->acc_bm !== 'cancel')
+                                            @endif
+                                            @if ($item->cabang_asal === 'Head Office')
+                                            <a href="{{ route('formpst.show_nm', ['id' => $item->id]) }}" class="btn btn-sm btn-outline-primary">Detail</a>
+                                            @endif
+                                            @if ($item->acc_bm !== 'reject')
                                                 <a href="{{ route('formpst.edit', ['id' => $item->id]) }}" class="btn btn-sm btn-outline-primary">Edit</a>
                                             @endif
                                         </div>

@@ -14,6 +14,7 @@ return new class extends Migration
     Schema::table('forms', function (Blueprint $table) {
         $table->string('submitted_by_bm')->nullable();
         $table->string('submitted_by_hrd')->nullable();
+        $table->string('submitted_by_nm')->nullable();
         $table->string('submitted_by_ho')->nullable();
         $table->string('submitted_by_cabang')->nullable();
     });
@@ -25,6 +26,7 @@ public function down()
         $table->dropColumn([
             'submitted_by_bm',
             'submitted_by_hrd',
+            'submitted_by_nm',
             'submitted_by_ho',
             'submitted_by_cabang'
         ]);

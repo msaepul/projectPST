@@ -9,7 +9,12 @@
                 <h4 style="margin: 0;">Form Permintaan</h4>
             </div>
             <div class="card-body">
-                <form id="suratTugasForm" action="{{ route('formpst.store') }}" method="POST" enctype="multipart/form-data">
+                @php
+                $actionRoute = route('formpst.store', ['role' => auth()->user()->role]);
+            @endphp
+            
+            <form id="suratTugasForm" action="{{ $actionRoute }}" method="POST" enctype="multipart/form-data">
+                
                     @csrf
                     <div class="form-group row">
                         <div class="col-md-6">
@@ -86,6 +91,7 @@
                                             <td>
                                                 <select name="namaPegawai[]" class="form-control namaPegawai " required>
                                                     <option value="" disabled selected>Pilih Nama</option>
+                                                    @if ((auth()->user()->role !== 'nm' ))
                                                     @foreach ($users as $user)
                                                         <option value="{{ $user->id }}"
                                                             data-departemen="{{ $user->departemen }}"
@@ -94,6 +100,18 @@
                                                             {{ $user->nama_lengkap }} / {{ $user->departemen }} / {{ $user->nik }}
                                                         </option>
                                                     @endforeach
+                                                    @endif
+
+                                                    @if ((auth()->user()->role === 'nm' ))
+                                                    @foreach ($nm as $user)
+                                                        <option value="{{ $user->id }}"
+                                                            data-departemen="{{ $user->departemen }}"
+                                                            data-nik="{{ $user->nik }}"
+                                                            data-nama="{{ $user->nama_lengkap }}">
+                                                            {{ $user->nama_lengkap }} / {{ $user->departemen }} / {{ $user->nik }}
+                                                        </option>
+                                                    @endforeach
+                                                    @endif
                                                 </select>
                                             </td>
                                             <td><input type="text" name="departemen[]" class="form-control departemen" readonly></td>
@@ -111,6 +129,7 @@
                         </div>
                     </div>
                     <button type="submit" class="btn btn-success mt-4">Submit Form</button>
+
                     <button type="reset" class="btn btn-secondary mt-4">Reset Form</button>
                 </form>
             </div>
