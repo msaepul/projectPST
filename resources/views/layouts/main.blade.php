@@ -46,6 +46,9 @@
     <link rel="stylesheet" href="{{ asset('plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/daterangepicker/daterangepicker.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.min.css') }}">
+    <!-- Di dalam <head> pada file layouts.main.blade.php -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
 
     <link href="https://cdn.jsdelivr.net/npm/ionicons@5.5.2/dist/css/ionicons.min.css" rel="stylesheet">
 
@@ -57,6 +60,7 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 
 </head>
 
@@ -152,9 +156,7 @@
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                     data-accordion="false">
 
-                    @if (auth()->user()->role === 'admin' ||
-                            auth()->user()->role === 'nm' ||
-                            auth()->user()->role === 'hrd' )
+                    @if (auth()->user()->role === 'admin' || auth()->user()->role === 'nm' || auth()->user()->role === 'hrd')
                         <li class="nav-item">
                             <a href="{{ route('formpst.form') }}" class="nav-link">
                                 <i class="nav-icon fas fa-copy"></i>
@@ -162,16 +164,15 @@
                             </a>
                         </li>
                     @endif
-                        <li class="nav-item">
-                            @if (auth()->user()->cabang_asal !== 'Head Office')
+                    <li class="nav-item">
+                        @if (auth()->user()->cabang_asal !== 'Head Office')
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-envelope"></i>
                                 <p> Surat Tugas<i class="fas fa-angle-left right"></i></p>
                             </a>
-                            @endif
-                            <ul class="nav nav-treeview">
+                        @endif
+                        <ul class="nav nav-treeview">
                             @if (auth()->user()->cabang_asal !== 'Head Office')
-
                                 <li class="nav-item">
                                     <a href="{{ route('formpst.index_keluar') }}"
                                         class="nav-link {{ request()->is('formpst/index_keluar') ? 'active' : '' }}">
@@ -188,35 +189,35 @@
                                 </li>
                             @endif
 
-                                <li class="nav-item">
-                                    <a href="{{ route('formpst.index_surat') }}"
-                                        class="nav-link {{ request()->is('formpst/index_surat') ? 'active' : '' }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Surat Tugas</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                            <li class="nav-item">
+                                <a href="{{ route('formpst.index_surat') }}"
+                                    class="nav-link {{ request()->is('formpst/index_surat') ? 'active' : '' }}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Surat Tugas</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
 
-                        @if (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'Head Office')
+                    @if (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'Head Office')
                         <li class="nav-item">
                             <a href="{{ route('formpst.index_keluar') }}" class="nav-link">
                                 <i class="nav-icon fas fa-envelope"></i>
                                 <p>Daftar Pengajuan Surat </p>
                             </a>
                         </li>
-                        @endif
+                    @endif
 
-                        @if (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'Head Office')
+                    @if (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'Head Office')
                         <li class="nav-item">
                             <a href="{{ route('formpst.index_surat') }}" class="nav-link">
                                 <i class="nav-icon fas fa-car"></i>
                                 <p>Daftar Surat Tugas </p>
                             </a>
                         </li>
-                        @endif
-                    
-                        
+                    @endif
+
+
                     @if (auth()->user()->role === 'admin' ||
                             (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'Head Office') ||
                             auth()->user()->role === 'hrd')
@@ -226,29 +227,29 @@
                                 <p>Master Data<i class="fas fa-angle-left right"></i></p>
                             </a>
                             <ul class="nav nav-treeview">
-                            @if (auth()->user()->role === 'admin' ||
-                                (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'Head Office'))
-                                <li class="nav-item">
-                                    <a href="{{ route('ho.cabang') }}"
-                                        class="nav-link {{ request()->is('ho/cabang') ? 'active' : '' }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Cabang</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('ho.tujuan') }}"
-                                        class="nav-link {{ request()->is('ho/tujuan') ? 'active' : '' }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Daftar Penugasan</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('ho.departemen') }}"
-                                        class="nav-link {{ request()->is('ho/departemen') ? 'active' : '' }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Departemen</p>
-                                    </a>
-                                </li>
+                                @if (auth()->user()->role === 'admin' ||
+                                        (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'Head Office'))
+                                    <li class="nav-item">
+                                        <a href="{{ route('ho.cabang') }}"
+                                            class="nav-link {{ request()->is('ho/cabang') ? 'active' : '' }}">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Cabang</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('ho.tujuan') }}"
+                                            class="nav-link {{ request()->is('ho/tujuan') ? 'active' : '' }}">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Daftar Penugasan</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('ho.departemen') }}"
+                                            class="nav-link {{ request()->is('ho/departemen') ? 'active' : '' }}">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Departemen</p>
+                                        </a>
+                                    </li>
                                 @endif
                                 <li class="nav-item">
                                     <a href="{{ route('ho.user') }}"

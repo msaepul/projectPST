@@ -221,7 +221,7 @@ public function updateUser(Request $request, $id)
       'no_hp' => 'required|string',
       'role' => 'required|in:admin,user,bm,hrd,nm,pegawai',
       'nama_lengkap' => 'required|string|max:255',
-      
+
   ]);
 
   // Cek jika password ada di request dan enkripsi password

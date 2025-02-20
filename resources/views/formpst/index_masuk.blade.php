@@ -2,16 +2,6 @@
 @section('content')
     {{ Breadcrumbs::render('Form') }}
 
-    <div class="container pt-4">
-        <form id="searchForm" action="{{ route('formpst.index_masuk') }}" method="GET" class="d-flex">
-            @csrf
-            <input type="text" id="namaPemohon" name="namaPemohon" class="form-control me-2"
-                value="{{ request('namaPemohon') }}" placeholder="Cari nama pemohon">
-            <button type="submit" class="btn btn-primary">Cari</button>
-        </form>
-    </div>
-
-
     <div class="card mt-4 rounded-3 shadow custom-card">
         <div class="card-header bg-light py-3">
             <h5 class="mb-0 fw-bold">Hasil Pencarian</h5>
@@ -86,7 +76,7 @@
 
                                     <td class="text-center">
                                         <a href="{{ route('formpst.show', ['id' => $item->id]) }}"
-                                            class="btn btn-sm btn-outline-primary">Lihat Detail</a>
+                                            class="btn btn-sm btn-outline-primary">Detail</a>
                                     </td>
                                 </tr>
                             @endif

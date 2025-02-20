@@ -19,6 +19,7 @@
                 <table class="table table-bordered table-hover custom-table">
                     <thead>
                         <tr class="table-primary text-white">
+                            <th scope="col">Tanggal Dibuat</th>
                             <th scope="col">No Surat</th>
                             <th scope="col">Nama Pemohon</th>
                             <th scope="col">Cabang Asal</th>
@@ -32,8 +33,10 @@
                         @forelse ($data as $item)
                             @if (auth()->user()->cabang_asal === $item->cabang_tujuan ||
                                     auth()->user()->cabang_asal === $item->cabang_asal ||
-                                    auth()->user()->role === 'admin'|| auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'Head Office' )
+                                    auth()->user()->role === 'admin' ||
+                                    (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'Head Office'))
                                 <tr>
+                                    <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}</td>
                                     <td>{{ $item->no_surat }}</td>
                                     <td>{{ $item->nama_pemohon }}</td>
                                     <td>{{ $item->cabang_asal }}</td>
@@ -41,9 +44,14 @@
                                     <td>{{ $item->tujuan }}</td>
                                     <td class="text-center">
                                         <a href="{{ route('formpst.show', ['id' => $item->id]) }}"
-                                            class="btn btn-sm btn-outline-primary">Lihat Detail</a>
+                                            class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-eye" style="font-size: 16px; margin-right: 4px;"></i>
+                                        </a>
                                         <a href="{{ route('formpst.surat_tugas', ['id' => $item->id]) }}"
-                                            class="btn btn-sm btn-outline-primary">Lihat Surat tugas</a>
+                                            class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-file-earmark-text"
+                                                style="font-size: 16px; margin-right: 4px;"></i>
+                                        </a>
                                     </td>
                                 </tr>
                             @endif
