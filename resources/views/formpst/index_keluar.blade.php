@@ -1,14 +1,6 @@
 @extends('layouts.main')
 @section('content')
     {{ Breadcrumbs::render('Form') }}
-    <div class="container pt-4">
-        <form id="searchForm" action="{{ route('formpst.index_keluar') }}" method="GET" class="d-flex">
-            @csrf
-            <input type="text" id="namaPemohon" name="namaPemohon" class="form-control me-2"
-                value="{{ request('namaPemohon') }}" placeholder="Cari nama pemohon">
-            <button type="submit" class="btn btn-primary">Cari</button>
-        </form>
-    </div>
 
     <div class="card mt-4 rounded-3 shadow custom-card">
         <div class="card-header bg-light py-3">
@@ -19,6 +11,7 @@
                 <table id="dataTable" class="table table-bordered table-hover custom-table">
                     <thead>
                         <tr class="table-primary text-white">
+                            <th>Tanggal Dibuat</th>
                             <th>No Surat</th>
                             <th>Nama Pemohon</th>
                             <th>Cabang Asal</th>
@@ -34,7 +27,10 @@
                             @if (auth()->user()->cabang_asal === $item->cabang_asal ||
                                     auth()->user()->role === 'admin' ||
                                     auth()->user()->cabang_asal === 'Head Office')
-                                <tr class="{{ $item->acc_cabang === 'oke' ? 'table-success' : ($item->acc_cabang === 'reject' || $item->acc_ho === 'reject' || $item->acc_bm === 'reject' ? 'table-danger' : ($item->acc_cabang === 'cancel' || $item->acc_ho === 'cancel' || $item->acc_bm === 'cancel' ? 'table-warning' : '')) }} hover-row">
+                                <tr
+                                    class="{{ $item->acc_cabang === 'oke' ? 'table-success' : ($item->acc_cabang === 'reject' || $item->acc_ho === 'reject' || $item->acc_bm === 'reject' ? 'table-danger' : ($item->acc_cabang === 'cancel' || $item->acc_ho === 'cancel' || $item->acc_bm === 'cancel' ? 'table-warning' : '')) }} hover-row">
+                                    <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}</td>
+                                    <!-- Tambahkan ini -->
                                     <td>{{ $item->no_surat }}</td>
                                     <td>{{ $item->nama_pemohon }}</td>
                                     <td>{{ $item->cabang_asal }}</td>
@@ -53,9 +49,9 @@
                                             <span class="badge bg-danger">Verifikasi Ditolak BM</span>
                                         @elseif ($item->acc_bm != 'oke' && $item->acc_hrd == 'oke')
                                             <span class="badge bg-warning text-dark">Menunggu Verifikasi BM</span>
-                                        @elseif (in_array($item->acc_bm, ['cancel', 'reject']) || 
-                                                 in_array($item->acc_ho, ['cancel']) || 
-                                                 in_array($item->acc_cabang, ['cancel']))
+                                        @elseif (in_array($item->acc_bm, ['cancel', 'reject']) ||
+                                                in_array($item->acc_ho, ['cancel']) ||
+                                                in_array($item->acc_cabang, ['cancel']))
                                             <span class="badge bg-danger">Cancel</span>
                                         @else
                                             <span class="badge bg-danger">Belum Diverifikasi</span>
@@ -70,7 +66,8 @@
                                         @foreach ($item->nama_pegawais as $pegawai)
                                             @if ($pegawai->acc_nm == 'tolak')
                                                 @php $anyRejected = true; @endphp
-                                                <span class="badge bg-danger">Pegawai Ditolak: {{ $pegawai->nama_pegawai }}</span>
+                                                <span class="badge bg-danger">Pegawai Ditolak:
+                                                    {{ $pegawai->nama_pegawai }}</span>
                                             @elseif ($pegawai->acc_nm == 'oke')
                                                 @php $anyAccepted = true; @endphp
                                             @endif
@@ -84,9 +81,19 @@
                                     </td>
                                     <td class="text-center">
                                         <div class="d-flex justify-content-center gap-2">
-                                            <a href="{{ route('formpst.show', ['id' => $item->id]) }}" class="btn btn-sm btn-outline-primary">Detail</a>
+                                            <!-- Detail Button -->
+                                            <a href="{{ route('formpst.show', ['id' => $item->id]) }}"
+                                                class="btn btn-sm btn-outline-primary">
+                                                <i class="bi bi-eye" style="font-size: 16px; margin-right: 4px;"></i>
+                                            </a>
+
+                                            <!-- Edit Button (only if acc_bm is not 'cancel') -->
                                             @if ($item->acc_bm !== 'cancel')
-                                                <a href="{{ route('formpst.edit', ['id' => $item->id]) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                                                <a href="{{ route('formpst.edit', ['id' => $item->id]) }}"
+                                                    class="btn btn-sm btn-outline-primary">
+                                                    <i class="bi bi-pencil" style="font-size: 16px; margin-right: 4px;"></i>
+
+                                                </a>
                                             @endif
                                         </div>
                                     </td>
@@ -94,10 +101,12 @@
                             @endif
                         @empty
                             <tr>
-                                <td colspan="8" class="text-center py-3">Tidak ada data ditemukan.</td>
+                                <td colspan="9" class="text-center py-3">Tidak ada data ditemukan.</td>
+                                <!-- Sesuaikan jumlah kolom -->
                             </tr>
                         @endforelse
                     </tbody>
+
                 </table>
             </div>
         </div>
@@ -105,7 +114,7 @@
 
     {{-- Inisialisasi DataTables --}}
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $('#dataTable').DataTable({
                 paging: true,
                 searching: true,
@@ -132,7 +141,7 @@
         .custom-table tbody tr {
             transition: all 0.3s ease;
         }
-        
+
         .custom-table tbody tr:hover {
             background-color: #f1f1f1;
             box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);

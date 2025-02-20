@@ -5,48 +5,86 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card mb-4 mt-3">
-                    <div class="card-header" style="position: sticky; top: 0; z-index: 100;">
+                    <div class="card-header" style=" top: 0; z-index: 100;">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
-
-                                <li class="breadcrumb-item">
-                                    <span class="breadcrumb-step @if (($form->acc_bm === '' || $form->acc_hrd === '') && ($form->acc_bm !== 'oke' || $form->acc_hrd !== 'oke')) breadcrumb-active @endif">
-                                        Pengajuan Cabang
-                                    </span>
-                                </li>
-                                <li class="breadcrumb-item">
-                                    <span
-                                        class="breadcrumb-step @if ($form->acc_bm === 'oke' && $form->acc_hrd === 'oke' && ($form->acc_ho === '' || $form->acc_ho !== 'oke')) breadcrumb-active @endif">
-                                        Konfirmasi HO
-                                    </span>
-                                </li>
-                                <li class="breadcrumb-item">
-                                    <span
-                                        class="breadcrumb-step @if ($form->acc_ho === 'oke' && ($form->acc_cabang === '' || $form->acc_cabang !== 'oke')) breadcrumb-active @endif">
-                                        Konfirmasi Cabang Tujuan
-                                    </span>
-                                </li>
-                                <li class="breadcrumb-item">
-                                    <span
-                                        class="breadcrumb-step @if ($form->acc_cabang === 'oke') breadcrumb-active @endif">
-                                        Selesai
-                                    </span>
-                                </li>
-                                @if (
-                                    $form->acc_bm === 'reject' &&
-                                        $form->acc_hrd === 'reject' &&
-                                        $form->acc_ho === 'reject' &&
-                                        $form->acc_cabang === 'reject') text-primary 
-                                <li class="breadcrumb-item" @if (
-                                    $form->acc_bm === 'reject' &&
-                                        $form->acc_hrd === 'reject' &&
-                                        $form->acc_ho === 'reject' &&
-                                        $form->acc_cabang === 'reject') text-primary @endif>
-                                    <span class="breadcrumb-step text-danger">
-                                        Ditolak
-                                    </span>
-                                </li>
-
+                                @if (auth()->user()->role !== 'nm')
+                                    <li class="breadcrumb-item">
+                                        <span
+                                            class="breadcrumb-step @if (($form->acc_bm === '' || $form->acc_hrd === '') && ($form->acc_bm !== 'oke' || $form->acc_hrd !== 'oke')) breadcrumb-active @endif">
+                                            Pengajuan Cabang
+                                        </span>
+                                    </li>
+                                    <li class="breadcrumb-item">
+                                        <span
+                                            class="breadcrumb-step @if ($form->acc_bm === 'oke' && $form->acc_hrd === 'oke' && ($form->acc_ho === '' || $form->acc_ho !== 'oke')) breadcrumb-active @endif">
+                                            Konfirmasi HO
+                                        </span>
+                                    </li>
+                                    <li class="breadcrumb-item">
+                                        <span
+                                            class="breadcrumb-step @if ($form->acc_ho === 'oke' && ($form->acc_cabang === '' || $form->acc_cabang !== 'oke')) breadcrumb-active @endif">
+                                            Konfirmasi Cabang Tujuan
+                                        </span>
+                                    </li>
+                                    <li class="breadcrumb-item">
+                                        <span
+                                            class="breadcrumb-step @if ($form->acc_cabang === 'oke') breadcrumb-active @endif">
+                                            Selesai
+                                        </span>
+                                    </li>
+                                    @if (
+                                        $form->acc_bm === 'reject' &&
+                                            $form->acc_hrd === 'reject' &&
+                                            $form->acc_ho === 'reject' &&
+                                            $form->acc_cabang === 'reject')
+                                        text-primary
+                                        <li class="breadcrumb-item" @if (
+                                            $form->acc_bm === 'reject' &&
+                                                $form->acc_hrd === 'reject' &&
+                                                $form->acc_ho === 'reject' &&
+                                                $form->acc_cabang === 'reject') text-primary @endif>
+                                            <span class="breadcrumb-step text-danger">
+                                                Ditolak
+                                            </span>
+                                        </li>
+                                    @endif
+                                @endif
+                                @if (auth()->user()->role === 'nm')
+                                    <li class="breadcrumb-item">
+                                        <span
+                                            class="breadcrumb-step @if ($form->acc_bm === 'oke' && $form->acc_hrd === 'oke' && ($form->acc_ho === '' || $form->acc_ho !== 'oke')) breadcrumb-active @endif">
+                                            Konfirmasi HO
+                                        </span>
+                                    </li>
+                                    <li class="breadcrumb-item">
+                                        <span
+                                            class="breadcrumb-step @if ($form->acc_ho === 'oke' && ($form->acc_cabang === '' || $form->acc_cabang !== 'oke')) breadcrumb-active @endif">
+                                            Konfirmasi Cabang Tujuan
+                                        </span>
+                                    </li>
+                                    <li class="breadcrumb-item">
+                                        <span
+                                            class="breadcrumb-step @if ($form->acc_cabang === 'oke') breadcrumb-active @endif">
+                                            Selesai
+                                        </span>
+                                    </li>
+                                    @if (
+                                        $form->acc_bm === 'reject' &&
+                                            $form->acc_hrd === 'reject' &&
+                                            $form->acc_ho === 'reject' &&
+                                            $form->acc_cabang === 'reject')
+                                        text-primary
+                                        <li class="breadcrumb-item" @if (
+                                            $form->acc_bm === 'reject' &&
+                                                $form->acc_hrd === 'reject' &&
+                                                $form->acc_ho === 'reject' &&
+                                                $form->acc_cabang === 'reject') text-primary @endif>
+                                            <span class="breadcrumb-step text-danger">
+                                                Ditolak
+                                            </span>
+                                        </li>
+                                    @endif
                                 @endif
                             </ol>
                     </div>
@@ -225,16 +263,16 @@
                             <div class="status-step">
                                 <img src="{{ $form->acc_hrd == 'oke' ? asset('dist/img/oke.png') : ($form->acc_hrd == 'reject' ? asset('dist/img/reject.png') : asset('dist/img/no.png')) }}"
                                     alt="Status HRD" class="thumb-icon" width="50">
-                                    <div class="status-name">
-                                        @if ($form->acc_hrd == 'oke')
-                                            {{ $form->submitted_by_hrd }} (HRD) - Setuju 
-                                        @elseif ($form->acc_hrd == 'reject')
-                                            {{ $form->submitted_by_hrd }} (HRD) - Ditolak
-                                        @else
-                                            HRD - Menunggu
-                                        @endif
-                                    </div>
-                                    
+                                <div class="status-name">
+                                    @if ($form->acc_hrd == 'oke')
+                                        {{ $form->submitted_by_hrd }} (HRD) - Setuju
+                                    @elseif ($form->acc_hrd == 'reject')
+                                        {{ $form->submitted_by_hrd }} (HRD) - Ditolak
+                                    @else
+                                        HRD - Menunggu
+                                    @endif
+                                </div>
+
                             </div>
                             <!-- ACC BM -->
                             @if ($form->acc_hrd == 'oke')
@@ -243,9 +281,9 @@
                                         alt="Status BM" class="thumb-icon" width="50">
                                     <div class="status-name">
                                         @if ($form->acc_bm == 'oke')
-                                        {{ $form->submitted_by_bm }} (BM) - Setuju
+                                            {{ $form->submitted_by_bm }} (BM) - Setuju
                                         @elseif ($form->acc_bm == 'reject')
-                                        {{ $form->submitted_by_bm }} (BM) - Ditolak
+                                            {{ $form->submitted_by_bm }} (BM) - Ditolak
                                         @else
                                             BM - Menunggu
                                         @endif
@@ -261,9 +299,9 @@
                                         alt="Status HO" class="thumb-icon" width="50">
                                     <div class="status-name">
                                         @if ($form->acc_ho == 'oke')
-                                        {{ $form->submitted_by_ho }} (HRD HO) - Setuju
+                                            {{ $form->submitted_by_ho }} (HRD HO) - Setuju
                                         @elseif ($form->acc_ho == 'reject')
-                                        {{ $form->submitted_by_ho }} (HRD HO) - Ditolak
+                                            {{ $form->submitted_by_ho }} (HRD HO) - Ditolak
                                         @else
                                             HRD HO - Menunggu
                                         @endif
@@ -277,9 +315,9 @@
                                         alt="Status CABANG" class="thumb-icon" width="50">
                                     <div class="status-name">
                                         @if ($form->acc_cabang == 'oke')
-                                        {{ $form->submitted_by_cabang }} (CABANG) - Setuju
+                                            {{ $form->submitted_by_cabang }} (CABANG) - Setuju
                                         @elseif ($form->acc_cabang == 'reject')
-                                        {{ $form->submitted_by_cabang }} (CABANG)- Ditolak
+                                            {{ $form->submitted_by_cabang }} (CABANG)- Ditolak
                                         @else
                                             CABANG- Menunggu
                                         @endif
