@@ -25,17 +25,19 @@ class FormController extends Controller
         $nama_pegawais = Nama_pegawai::all();
         $cabang_tujuans = Cabang_tujuan::all();
         $users = User::where('cabang_asal', auth()->user()->cabang_asal)->get();
+        $nm = User::where('departemen', auth()->user()->departemen)->get();
+    
+        $user = auth()->user();
+    
+        $kodeCabang = $user->cabang_asal; 
 
-         // Ambil user yang sedang login
-         $user = auth()->user();
-         $kodeCabangAsal = $user->cabang->kode_cabang ?? 'HO'; // Default ke 'HO' jika tidak ada cabang
-         $cabangAsalNama = $user->cabang->nama_cabang ?? 'Head Office'; // Nama cabang asal
-
-        $lastForm = Form::where('cabang_asal', auth()->user()->cabang_asal)->latest()->first();
+        $lastForm = Form::where('cabang_asal', $user->cabang_asal)->latest()->first();
         $lastNumber = $lastForm ? intval(substr($lastForm->no_surat, 0, 3)) : 0;
-
+    
+        // Generate nomor baru
         $newNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
-
+    
+        // Konversi bulan ke format Romawi
         $month = date('n');
         $romanMonths = [
             1 => 'I', 2 => 'II', 3 => 'III', 4 => 'IV', 5 => 'V',
@@ -43,39 +45,19 @@ class FormController extends Controller
             11 => 'XI', 12 => 'XII'
         ];
         $romanMonth = $romanMonths[$month];
+    
+        // Format nomor surat
+        $nomorSurat = "{$newNumber}/PST/{$kodeCabang}/{$romanMonth}/" . date('Y');
+    
+        return view('formpst.form', compact('nomorSurat', 'users', 'cabangs', 'tujuans', 'departemens', 'nama_pegawais', 'cabang_tujuans', 'nm'));
+    }
+    
 
-    // Ambil cabang asal berdasarkan user yang sedang login
-    $user = auth()->user(); // Mendapatkan user yang login
-    $kodeCabangAsal = $user->cabang->kode_cabang ?? 'HO'; // Default ke 'HO' jika tidak ada cabang
-
-    // Ambil nomor terakhir dari database
-    $lastForm = Form::latest()->first();
-    $lastNumber = $lastForm ? intval(substr($lastForm->no_surat, 0, 3)) : 0;
-
-    // Generate nomor baru
-    $newNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
-
-    // Konversi bulan ke angka romawi
-    $month = date('n');
-    $romanMonths = [
-        1 => 'I', 2 => 'II', 3 => 'III', 4 => 'IV', 5 => 'V',
-        6 => 'VI', 7 => 'VII', 8 => 'VIII', 9 => 'IX', 10 => 'X',
-        11 => 'XI', 12 => 'XII'
-    ];
-    $romanMonth = $romanMonths[$month];
-
-    // Buat format nomor surat tanpa /HRD/
-    $nomorSurat = "{$newNumber}/PST/{$kodeCabangAsal}/{$romanMonth}/" . date('Y');
-
-    return view('formpst.form', compact('nomorSurat', 'users', 'cabangs', 'tujuans', 'departemens', 'nama_pegawais', 'cabang_tujuans'));
-}
-
-public function store(Request $request)
+public function store(Request $request, $role = null)
 {
     $validatedData = $request->validate([
         'no_surat' => 'required|string|max:255',
         'namaPemohon' => 'required|string|max:255',
-        // 'cabang_asal' => 'required|exists:cabangs,id',
         'cabangAsal' => 'required|string|max:255',
         'cabang_tujuan' => 'required|exists:cabangs,id',
         'tujuan' => 'required|exists:tujuans,id',
@@ -92,7 +74,7 @@ public function store(Request $request)
     // Ambil nama cabang dan tujuan dari tabel terkait
     $cabangTujuan = Cabang::findOrFail($validatedData['cabang_tujuan'])->nama_cabang;
     $tujuanPenugasan = Tujuan::findOrFail($validatedData['tujuan'])->tujuan_penugasan;
-    
+
     // Buat data form utama
     $form = Form::create([
         'no_surat' => $validatedData['no_surat'],
@@ -103,9 +85,14 @@ public function store(Request $request)
         'tanggal_keberangkatan' => $validatedData['tanggalKeberangkatan'],
     ]);
 
-    // Otomatis approve HRD (set "oke")
-    $form->acc_hrd = 'oke'; // HRD approval automatically
-    $form->submitted_by_hrd = auth()->user()->nama_lengkap; // Store the HRD approver (current logged-in user)
+    // Tentukan persetujuan berdasarkan peran
+    if ($role === 'nm') {
+        $form->acc_nm = 'oke';
+    } else {
+        $form->acc_hrd = 'oke';
+    }
+
+    $form->submitted_by_hrd = auth()->user()->nama_lengkap;
     $form->save();
 
     // Siapkan data pegawai untuk insert batch
@@ -138,8 +125,10 @@ public function store(Request $request)
 
     // Redirect dengan pesan sukses
     return redirect()->route('formpst.index_keluar', ['form' => $form->id])
-        ->with('success', 'Data berhasil disimpan, dan persetujuan HRD otomatis telah diberikan.');
+        ->with('success', 'Data berhasil disimpan, dan persetujuan otomatis telah diberikan.');
 }
+
+
 
 
 public function index_keluar(Request $request)
@@ -210,6 +199,14 @@ public function show($id)
     return view('formpst.show', compact('form', 'data', 'user', ));
 }
 
+public function show_nm($id)
+{
+    $form = Form::findOrFail($id);
+    $data = Nama_pegawai::where('form_id', $form->id)->get();
+    $user = User::find($id);
+    return view('formpst.show_nm', compact('form', 'data', 'user', ));
+}
+
 public function surat_tugas($id)
 {
     $form = Form::findOrFail($id);
@@ -253,21 +250,7 @@ public function surat_tugas($id)
             $form->save();
     
             return redirect()->route('formpst.index_keluar')->with('success', 'Semua persetujuan telah dibatalkan.');
-    
-        case 'acc_hrd':
-            // Automate HRD approval before BM approval
-            $form->acc_hrd = 'oke'; // Automatically approve HRD
-            $form->submitted_by_hrd = $user; // Save the user who approved HRD
-            $form->save();
 
-            return redirect()->route('hrd.index_hrd_cabang')->with('success', 'Persetujuan HRD otomatis berhasil disimpan.');
-    
-        case 'reject_hrd':
-            $form->acc_hrd = 'reject';
-            $form->submitted_by_hrd = $user;
-            $form->save();
-    
-            return redirect()->route('hrd.index_hrd_cabang')->with('success', 'Persetujuan HRD ditolak.');
     
         case 'acc_ho':
             if ($form->acc_hrd !== 'oke') {
@@ -277,7 +260,7 @@ public function surat_tugas($id)
             $form->submitted_by_ho = $user;
             $form->save();
     
-            return redirect()->route('hrd.index_hrd')->with('success', 'Persetujuan HO berhasil disimpan.');
+            return redirect()->route('formpst.index_keluar')->with('success', 'Persetujuan HO berhasil disimpan.');
     
         case 'reject_ho':
             if ($form->acc_hrd !== 'oke') {
@@ -287,8 +270,70 @@ public function surat_tugas($id)
             $form->submitted_by_ho = $user;
             $form->save();
     
-            return redirect()->route('hrd.index_hrd')->with('success', 'Persetujuan HO ditolak.');
+            return redirect()->route('formpst.index_keluar')->with('success', 'Persetujuan HO ditolak.');
     
+        case 'acc_cabang':
+            if ($form->acc_ho !== 'oke') {
+                return redirect()->back()->with('error', 'HO belum menyetujui.');
+            }
+            $form->acc_cabang = 'oke';
+            $form->submitted_by_cabang = $user;
+            $form->save();
+    
+            return redirect()->route('formpst.index_masuk')->with('success', 'Persetujuan Cabang berhasil disimpan.');
+    
+        case 'reject_cabang':
+            if ($form->acc_ho !== 'oke') {
+                return redirect()->back()->with('error', 'HO belum menyetujui.');
+            }
+            $form->acc_cabang = 'reject';
+            $form->submitted_by_cabang = $user;
+            $form->save();
+    
+            return redirect()->route('formpst.index_masuk')->with('success', 'Persetujuan Cabang ditolak.');
+    
+        default:
+            return redirect()->back()->with('error', 'Aksi tidak valid.');
+    }
+}
+
+public function submit_nm(Request $request, $id)
+{
+    $form = Form::findOrFail($id);
+    $user = auth()->user()->nama_lengkap; // Mengambil nama user yang sedang login
+    
+    switch ($request->action) {
+        case 'acc_ho':
+            $form->acc_ho = 'oke';
+            $form->submitted_by_ho = $user;
+            $form->save();
+    
+            return redirect()->route('formpst.index_keluar')->with('success', 'Persetujuan BM berhasil disimpan.');
+    
+            case 'reject_ho':
+                if ($form->acc_hrd !== 'oke') {
+                    return redirect()->back()->with('error', 'HRD belum menyetujui.');
+                }
+                $form->acc_ho = 'reject';
+                $form->submitted_by_ho = $user;
+                $form->save();
+        
+                return redirect()->route('formpst.index_keluar')->with('success', 'Persetujuan HO ditolak.');
+
+        case 'cancel':
+            $form->acc_bm = 'cancel';
+            $form->acc_hrd = 'cancel';
+            $form->acc_ho = 'cancel';
+            $form->acc_cabang = 'cancel';
+            $form->submitted_by_bm = $user;
+            $form->submitted_by_hrd = $user;
+            $form->submitted_by_ho = $user;
+            $form->submitted_by_cabang = $user;
+            $form->save();
+    
+            return redirect()->route('formpst.index_keluar')->with('success', 'Semua persetujuan telah dibatalkan.');
+
+ 
         case 'acc_cabang':
             if ($form->acc_ho !== 'oke') {
                 return redirect()->back()->with('error', 'HO belum menyetujui.');
@@ -415,140 +460,7 @@ public function updateStatus($itemId, $status, Request $request)
     ], 404);
 }
 
-public function form_nm()
-{
-    // Ambil data yang mungkin diperlukan oleh view
-    $cabangs = Cabang::all();
-    $tujuans = Tujuan::all();
-    $departemens = Departemen::all();
-    $nama_pegawais = Nama_pegawai::all();
-    $cabang_tujuans = Cabang_tujuan::all();
-    $users = User::all();
 
-    // Siapkan nomor surat baru jika diperlukan
-    $lastForm = Form::latest()->first();
-    $lastNumber = $lastForm ? intval(substr($lastForm->no_surat, 0, 3)) : 0;
-    $newNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
 
-    $month = date('n');
-    $romanMonths = [
-        1 => 'I', 2 => 'II', 3 => 'III', 4 => 'IV', 5 => 'V',
-        6 => 'VI', 7 => 'VII', 8 => 'VIII', 9 => 'IX', 10 => 'X',
-        11 => 'XI', 12 => 'XII'
-    ];
-    $romanMonth = $romanMonths[$month];
-    $nomorSurat = "{$newNumber}/PST/HO/HRD/{$romanMonth}/" . date('Y');
-
-    return view('formpst.form_nm', compact('nomorSurat', 'users', 'cabangs', 'tujuans', 'departemens', 'nama_pegawais', 'cabang_tujuans'));
-}
-
-public function store_nm(Request $request)
-{
-    // Validasi data dari form
-    $validatedData = $request->validate([
-        'no_surat' => 'required|string|max:255',
-        'namaPemohon' => 'required|string|max:255',
-        'cabang_asal' => 'required|exists:cabangs,id',
-        'cabang_tujuan' => 'required|exists:cabangs,id',
-        'tujuan' => 'required|exists:tujuans,id',
-        'tanggalKeberangkatan' => 'required|date',
-
-        'namaPegawai.*' => 'required|string|max:255', // ID pegawai
-        'namaPegawaiNama.*' => 'required|string|max:255', // Nama lengkap pegawai
-        'departemen.*' => 'required|string|max:255',
-        'nik.*' => 'required|string|max:255',
-        'uploadFile.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-        'lamaKeberangkatan.*' => 'required|date',
-    ]);
-
-    // Ambil nama cabang dan tujuan dari tabel terkait
-    $cabangAsal = Cabang::findOrFail($validatedData['cabang_asal'])->nama_cabang;
-    $cabangTujuan = Cabang::findOrFail($validatedData['cabang_tujuan'])->nama_cabang;
-    $tujuanPenugasan = Tujuan::findOrFail($validatedData['tujuan'])->tujuan_penugasan;
-
-    // Simpan data form utama
-    $form = Form::create([
-        'no_surat' => $validatedData['no_surat'],
-        'nama_pemohon' => $validatedData['namaPemohon'],
-        'cabang_asal' => $cabangAsal,
-        'cabang_tujuan' => $cabangTujuan,
-        'tujuan' => $tujuanPenugasan,
-        'tanggal_keberangkatan' => $validatedData['tanggalKeberangkatan'],
-    ]);
-
-    // Siapkan data pegawai untuk insert batch
-    $namaPegawais = [];
-
-    foreach ($request->namaPegawai as $index => $pegawaiId) {
-        $uploadFilePath = null;
-
-        // Upload file jika ada
-        if ($request->hasFile("uploadFile.$index")) {
-            $originalName = $request->file("uploadFile.$index")->getClientOriginalName();
-            $uploadFilePath = $request->file("uploadFile.$index")->storeAs('uploads', $originalName, 'public');
-        }
-
-        // Tambahkan data ke array
-        $namaPegawais[] = [
-            'form_id' => $form->id,
-            'nama_pegawai' => $request->namaPegawaiNama[$index], // Nama lengkap pegawai
-            'departemen' => $request->departemen[$index],
-            'nik' => $request->nik[$index],
-            'upload_file' => $uploadFilePath,
-            'lama_keberangkatan' => $request->lamaKeberangkatan[$index],
-            'created_at' => now(),
-            'updated_at' => now(),
-        ];
-    }
-
-    // Masukkan data pegawai ke database
-    Nama_pegawai::insert($namaPegawais);
-
-    // Redirect dengan pesan sukses
-    return redirect()->route('formpst.form_nm')
-        ->with('success', 'Data berhasil disimpan.');
-}
-public function generatePdf($targetFormId)
-    {
-        try {
-            // Ambil data form berdasarkan ID
-            $form = Form::findOrFail($targetFormId);
-
-            // Ambil data pegawai yang ditugaskan (pastikan relasi di model sudah benar)
-            $data = Nama_pegawai::where('form_id', $targetFormId)->get();
-
-            if (!$form || $data->isEmpty()) {
-                // Log jika data tidak ditemukan
-                Log::error("Data form atau data pegawai tidak ditemukan untuk form ID: {$targetFormId}");
-                abort(404, 'Data tidak ditemukan.');
-            }
-
-            // Set options untuk DOMPDF (opsional, tapi disarankan)
-            $options = new Options();
-            $options->set('isHtml5ParserEnabled', true);
-            $options->set('isPhpEnabled', true); // Aktifkan jika view PDF menggunakan kode PHP
-            $options->set('chroot', public_path()); // Penting untuk path gambar relatif
-
-            // Inisialisasi DOMPDF dengan options
-            $dompdf = new \Dompdf\Dompdf($options);
-
-            // Load HTML dari view dan kirimkan data
-            $html = View::make('formpst.surat_tugas_pdf', compact('form', 'data', 'targetFormId'))->render(); //gunakan view::make agar bisa di render dengan benar
-
-            // Load HTML ke DOMPDF
-            $dompdf->loadHtml($html);
-
-            // Set ukuran kertas dan orientasi
-            $dompdf->setPaper('A4', 'portrait');
-
-            // Render PDF
-            $dompdf->render();
-
-            return $dompdf->stream('surat_tugas_' . $form->no_surat . '.pdf', ['Attachment' => 0]);
-        } catch (\Exception $e) {
-            Log::error("Error saat generate PDF untuk form ID: {$targetFormId}. Error: " . $e->getMessage() . "\n" . $e->getTraceAsString());
-            return back()->with('error', 'Terjadi kesalahan saat membuat PDF. Silakan coba lagi.');
-        }
-    }
 }
 

@@ -81,19 +81,14 @@
                                     </td>
                                     <td class="text-center">
                                         <div class="d-flex justify-content-center gap-2">
-                                            <!-- Detail Button -->
-                                            <a href="{{ route('formpst.show', ['id' => $item->id]) }}"
-                                                class="btn btn-sm btn-outline-primary">
-                                                <i class="bi bi-eye" style="font-size: 16px; margin-right: 4px;"></i>
-                                            </a>
-
-                                            <!-- Edit Button (only if acc_bm is not 'cancel') -->
-                                            @if ($item->acc_bm !== 'cancel')
-                                                <a href="{{ route('formpst.edit', ['id' => $item->id]) }}"
-                                                    class="btn btn-sm btn-outline-primary">
-                                                    <i class="bi bi-pencil" style="font-size: 16px; margin-right: 4px;"></i>
-
-                                                </a>
+                                            @if ($item->cabang_asal !== 'Head Office')
+                                            <a href="{{ route('formpst.show', ['id' => $item->id]) }}" class="btn btn-sm btn-outline-primary">Detail</a>
+                                            @endif
+                                            @if ($item->cabang_asal === 'Head Office')
+                                            <a href="{{ route('formpst.show_nm', ['id' => $item->id]) }}" class="btn btn-sm btn-outline-primary">Detail</a>
+                                            @endif
+                                            @if ($item->acc_bm !== 'reject')
+                                                <a href="{{ route('formpst.edit', ['id' => $item->id]) }}" class="btn btn-sm btn-outline-primary">Edit</a>
                                             @endif
                                         </div>
                                     </td>

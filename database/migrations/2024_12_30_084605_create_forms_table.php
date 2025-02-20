@@ -32,6 +32,7 @@ return new class extends Migration
             $table->string('tujuan');
             $table->string('acc_bm')->default('');
             $table->string('acc_hrd')->default('');
+            $table->string('acc_nm')->default('');
             $table->string('acc_ho')->default('');
             $table->string('acc_cabang')->default('');
             $table->date('tanggal_keberangkatan');

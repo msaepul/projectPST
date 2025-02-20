@@ -8,17 +8,36 @@
                 <img src="{{ asset('dist/img/arnon.png') }}" alt="Logo Arnon" class="logo">
                 <h4 style="margin: 0; margin-left: 10px;">Form Permintaan</h4>
             </div>
-        </div>
+            <div class="card-body">
+                @php
+                $actionRoute = route('formpst.store', ['role' => auth()->user()->role]);
+            @endphp
+            
+            <form id="suratTugasForm" action="{{ $actionRoute }}" method="POST" enctype="multipart/form-data">
+                
+                    @csrf
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <label for="noSurat">No. Surat</label>
+                                    <input type="text" class="form-control form-control-sm" name="no_surat" id="noSurat"
+                                           value="{{ $nomorSurat }}" readonly required style="width: 100%;">
+                                </div>
+                    
+                                <div class="col-md-12 mb-3">
+                                    <label for="namaPemohon">Nama Pemohon</label>
+                                    <input type="text" id="namaPemohon" name="namaPemohon" class="form-control" 
+                                           value="{{ old('namaPemohon', Auth::user()->nama_lengkap ?? '') }}" required readonly style="width: 100%;">
+                                </div>
+                    
+                                <div class="col-md-12 mb-3">
+                                    <label for="cabangAsal">Cabang Asal</label>
+                                    <input type="text" id="cabangAsal" name="cabangAsal" class="form-control" 
+                                           value="{{ old('cabangAsal', Auth::user()->cabang_asal ?? '') }}" required readonly style="width: 100%;">
+                                </div>
+                            </div>
 
-        <div class="card-body">
-            <form id="suratTugasForm" action="{{ route('formpst.store') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="noSurat">No. Surat</label>
-                            <input type="text" class="form-control form-control-sm" name="no_surat" id="noSurat"
-                                value="{{ $nomorSurat }}" readonly required>
                         </div>
                         <div class="form-group">
                             <label for="namaPemohon">Nama Pemohon</label>
@@ -42,66 +61,52 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label for="tujuan">Tujuan Penugasan</label>
-                            <select class="form-control select2" name="tujuan" id="tujuan" required>
-                                <option value="" disabled selected>Pilih Tujuan</option>
-                                @foreach ($tujuans as $tujuan)
-                                    <option value="{{ $tujuan->id }}">{{ $tujuan->tujuan_penugasan }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="tanggalKeberangkatan">Tanggal Keberangkatan</label>
-                            <input type="date" id="tanggalKeberangkatan" name="tanggalKeberangkatan" class="form-control"
-                                required>
-                        </div>
-                    </div>
-                </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="pegawaiTable" class="table table-bordered">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th style="width: 10%;">Nama</th>
+                                            <th style="width: 10%;">Departemen</th>
+                                            <th style="width: 10%;">NIK</th>
+                                            <th style="width: 10%;">Upload File</th>
+                                            <th style="width: 10%;">Lama Keberangkatan</th>
+                                            <th style="width: 5%; text-align: center;">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr id="rowToClone">
+                                            <td>
+                                                <select name="namaPegawai[]" class="form-control namaPegawai " required>
+                                                    <option value="" disabled selected>Pilih Nama</option>
+                                                    @if ((auth()->user()->role !== 'nm' ))
+                                                    @foreach ($users as $user)
+                                                        <option value="{{ $user->id }}"
+                                                            data-departemen="{{ $user->departemen }}"
+                                                            data-nik="{{ $user->nik }}"
+                                                            data-nama="{{ $user->nama_lengkap }}">
+                                                            {{ $user->nama_lengkap }} / {{ $user->departemen }} / {{ $user->nik }}
+                                                        </option>
+                                                    @endforeach
+                                                    @endif
 
-                <div class="card mt-4">
-                    <div class="card-header">Daftar Pegawai yang Berangkat</div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table id="pegawaiTable" class="table table-bordered">
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th>Nama</th>
-                                        <th>Departemen</th>
-                                        <th>NIK</th>
-                                        <th>Upload File</th>
-                                        <th>Lama Keberangkatan</th>
-                                        <th style="text-align: center;">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr id="rowToClone">
-                                        <td>
-                                            <select name="namaPegawai[]" class="form-control namaPegawai" required>
-                                                <option value="" disabled selected>Pilih Nama</option>
-                                                @foreach ($users as $user)
-                                                    <option value="{{ $user->id }}"
-                                                        data-departemen="{{ $user->departemen }}"
-                                                        data-nik="{{ $user->nik }}"
-                                                        data-nama="{{ $user->nama_lengkap }}">
-                                                        {{ $user->nama_lengkap }} / {{ $user->departemen }} /
-                                                        {{ $user->nik }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </td>
-                                        <td><input type="text" name="departemen[]" class="form-control departemen"
-                                                readonly></td>
-                                        <td><input type="text" name="nik[]" class="form-control nik" readonly>
-                                        </td>
-                                        <td><input type="file" name="uploadFile[]" class="form-control"></td>
-                                        <td><input type="date" name="lamaKeberangkatan[]" class="form-control" required>
-                                        </td>
-                                        <td style="text-align: center;">
-                                            <button type="button" class="btn btn-danger btn-remove">
-                                                <i class="bi bi-trash" style="font-size: 16px; margin-right: 4px;"></i>
-                                            </button>
-
+                                                    @if ((auth()->user()->role === 'nm' ))
+                                                    @foreach ($nm as $user)
+                                                        <option value="{{ $user->id }}"
+                                                            data-departemen="{{ $user->departemen }}"
+                                                            data-nik="{{ $user->nik }}"
+                                                            data-nama="{{ $user->nama_lengkap }}">
+                                                            {{ $user->nama_lengkap }} / {{ $user->departemen }} / {{ $user->nik }}
+                                                        </option>
+                                                    @endforeach
+                                                    @endif
+                                                </select>
+                                            </td>
+                                            <td><input type="text" name="departemen[]" class="form-control departemen" readonly></td>
+                                            <td><input type="text" name="nik[]" class="form-control nik" readonly></td>
+                                            <td><input type="file" name="uploadFile[]" class="form-control"></td>
+                                            <td><input type="date" name="lamaKeberangkatan[]" class="form-control" required></td>
+                                            <td style="text-align: center;"><button type="button" class="btn btn-danger btn-remove">Hapus</button></td>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -110,13 +115,12 @@
                         <button type="button" class="btn btn-primary mt-3" id="add-field">Tambah
                             Pegawai</button>
                     </div>
-                </div>
+                    <button type="submit" class="btn btn-success mt-4">Submit Form</button>
 
-                <div class="d-flex justify-content-end mt-4">
-                    <button type="submit" class="btn btn-success me-2">Submit Form</button>
-                    <button type="reset" class="btn btn-secondary">Reset Form</button>
-                </div>
-            </form>
+                    <button type="reset" class="btn btn-secondary mt-4">Reset Form</button>
+                </form>
+            </div>
+
         </div>
     </div>
     </div>

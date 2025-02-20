@@ -1,118 +1,7 @@
 @extends('layouts.main')
 
 @section('content')
-    <style>
-        /* General Styling */
-        /* body {
-                    font-family: 'Arial', sans-serif;
-                    background: #f8f9fa;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    min-height: 100vh;
-                    margin: 0;
-                } */
-
-
-        /* Container Styling */
-        .container {
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-            width: 600px;
-            margin-top: 20px;
-        }
-
-        .container h2 {
-            text-align: center;
-            margin-bottom: 25px;
-            font-size: 24px;
-            color: #343a40;
-        }
-
-        /* Form Styling */
-        .form-group {
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 16px;
-            color: #495057;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="password"],
-        select {
-            width: 100%;
-            padding: 12px;
-            border-radius: 5px;
-            border: 1px solid #ced4da;
-            background-color: white;
-            color: #495057;
-            font-size: 16px;
-            box-sizing: border-box;
-            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-        }
-
-        input:focus,
-        select:focus {
-            border-color: #80bdff;
-            outline: 0;
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-        }
-
-        button {
-            background-color: #007bff;
-            color: white;
-            padding: 12px 20px;
-            border-radius: 5px;
-            border: none;
-            width: 100%;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.15s ease-in-out;
-        }
-
-        button:hover {
-            background-color: #0069d9;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .form-group .icon {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #ced4da;
-            cursor: pointer;
-        }
-
-        @media (max-width: 768px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-
-            .container {
-                width: 90%;
-            }
-        }
-
-        .error-message {
-            color: red;
-            margin-top: 5px;
-            font-size: 14px;
-        }
-    </style>
+   
 
     <div class="container">
         <h2>Tambah User Baru</h2>
@@ -236,4 +125,117 @@
             this.innerHTML = type === 'password' ? '&#128065;' : '&#128064;';
         });
     </script>
+
+     <style>
+        /* General Styling */
+        /* body {
+                    font-family: 'Arial', sans-serif;
+                    background: #f8f9fa;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    min-height: 100vh;
+                    margin: 0;
+                } */
+
+
+        /* Container Styling */
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            width: 600px;
+            margin-top: 20px;
+        }
+
+        .container h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 24px;
+            color: #343a40;
+        }
+
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 16px;
+            color: #495057;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 5px;
+            border: 1px solid #ced4da;
+            background-color: white;
+            color: #495057;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 5px;
+            border: none;
+            width: 100%;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.15s ease-in-out;
+        }
+
+        button:hover {
+            background-color: #0069d9;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group .icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ced4da;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                width: 90%;
+            }
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+    </style>
 @endsection

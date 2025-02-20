@@ -164,6 +164,8 @@
                             </a>
                         </li>
                     @endif
+
+
                     <li class="nav-item">
                         @if (auth()->user()->cabang_asal !== 'Head Office')
                             <a href="#" class="nav-link">
@@ -198,6 +200,43 @@
                             </li>
                         </ul>
                     </li>
+
+                    {{-- menu untuk nm --}}
+                    <li class="nav-item">
+                        @if (auth()->user()->role === 'nm')
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-envelope"></i>
+                                <p> Surat Tugas<i class="fas fa-angle-left right"></i></p>
+                            </a>
+                        @endif
+                        <ul class="nav nav-treeview">
+                            @if (auth()->user()->role === 'nm')
+                                <li class="nav-item">
+                                    <a href="{{ route('formpst.index_keluar') }}"
+                                        class="nav-link {{ request()->is('formpst/index_keluar') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Surat Keluar</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('formpst.index_masuk') }}"
+                                        class="nav-link {{ request()->is('formpst/index_masuk') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Surat Masuk</p>
+                                    </a>
+                                </li>
+                            @endif
+
+                            <li class="nav-item">
+                                <a href="{{ route('formpst.index_surat') }}"
+                                    class="nav-link {{ request()->is('formpst/index_surat') ? 'active' : '' }}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Surat Tugas</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
 
                     @if (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'Head Office')
                         <li class="nav-item">

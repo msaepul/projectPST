@@ -247,42 +247,40 @@ public function updateUser(Request $request, $id)
 
  // Fungsi untuk menambahkan user baru
  public function storeUser(Request $request)
- {
-     // Validasi input data user
-     $validated = $request->validate([
-         'name' => 'required|string|max:255',
-         'email' => 'required|email|unique:users,email',
-         'password' => 'required|min:6',
-         'nik' => 'required|string|unique:users,nik',
-         'departemen' => 'required|exists:departemens,id',
-         'cabang_asal' => 'required|exists:cabangs,id',
-         'no_hp' => 'required|string',
-         'role' => 'required|in:admin,user,bm,hrd,nm,pegawai',
+{
+    // Validasi input data user
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email',
+        'password' => 'required|min:6',
+        'nik' => 'required|string|unique:users,nik',
+        'departemen' => 'required|exists:departemens,id',
+        'cabang_asal' => 'required|exists:cabangs,id',
+        'no_hp' => 'required|string',
+        'role' => 'required|in:admin,user,bm,hrd,nm,pegawai',
+        'nama_lengkap' => 'required|string|max:255',
+    ]);
 
-         'nama_lengkap' => 'required|string|max:255',
-     ]);
+    // Ambil kode cabang dan nama departemen berdasarkan ID yang divalidasi
+    $cabangAsalKode = Cabang::findOrFail($validated['cabang_asal'])->kode_cabang;
+    $departemenNama = Departemen::findOrFail($validated['departemen'])->nama_departemen;
 
-     // Ambil nama cabang dan departemen berdasarkan ID yang divalidasi
-     $cabangAsal = Cabang::findOrFail($validated['cabang_asal'])->nama_cabang;
-     $departemenNama = Departemen::findOrFail($validated['departemen'])->nama_departemen;
+    // Membuat user baru
+    User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => bcrypt($request->password),
+        'nik' => $request->nik,
+        'departemen' => $departemenNama, // Menggunakan nama departemen yang valid
+        'cabang_asal' => $cabangAsalKode, // Menyimpan kode cabang, bukan nama
+        'no_hp' => $request->no_hp,
+        'role' => $request->role,
+        'nama_lengkap' => $request->nama_lengkap,
+    ]);
 
-     // Membuat user baru
-     User::create([
-         'name' => $request->name,
-         'email' => $request->email,
-         'password' => bcrypt($request->password),
-         'nik' => $request->nik,
-         'departemen' => $departemenNama, // Menggunakan nama departemen yang valid
-         'cabang_asal' => $cabangAsal,
-         'no_hp' => $request->no_hp,
-         'role' => $request->role,
-         'nama_lengkap' => $request->nama_lengkap,
-     ]);
-
-     // Redirect dengan pesan sukses setelah user berhasil ditambahkan
-     return redirect()->route('ho.user')->with('success', 'User berhasil ditambahkan!');
- }
-
+    // Redirect dengan pesan sukses setelah user berhasil ditambahkan
+    return redirect()->route('ho.user')->with('success', 'User berhasil ditambahkan!');
+}
  // Fungsi untuk menghapus user
  public function destroyuser($id)
  {

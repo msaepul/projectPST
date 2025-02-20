@@ -5,86 +5,42 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card mb-4 mt-3">
-                    <div class="card-header" style=" top: 0; z-index: 100;">
+                    <div class="card-header" style="position: sticky; top: 0; z-index: 100;">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                                @if (auth()->user()->role !== 'nm')
-                                    <li class="breadcrumb-item">
-                                        <span
-                                            class="breadcrumb-step @if (($form->acc_bm === '' || $form->acc_hrd === '') && ($form->acc_bm !== 'oke' || $form->acc_hrd !== 'oke')) breadcrumb-active @endif">
-                                            Pengajuan Cabang
-                                        </span>
-                                    </li>
-                                    <li class="breadcrumb-item">
-                                        <span
-                                            class="breadcrumb-step @if ($form->acc_bm === 'oke' && $form->acc_hrd === 'oke' && ($form->acc_ho === '' || $form->acc_ho !== 'oke')) breadcrumb-active @endif">
-                                            Konfirmasi HO
-                                        </span>
-                                    </li>
-                                    <li class="breadcrumb-item">
-                                        <span
-                                            class="breadcrumb-step @if ($form->acc_ho === 'oke' && ($form->acc_cabang === '' || $form->acc_cabang !== 'oke')) breadcrumb-active @endif">
-                                            Konfirmasi Cabang Tujuan
-                                        </span>
-                                    </li>
-                                    <li class="breadcrumb-item">
-                                        <span
-                                            class="breadcrumb-step @if ($form->acc_cabang === 'oke') breadcrumb-active @endif">
-                                            Selesai
-                                        </span>
-                                    </li>
-                                    @if (
+
+                                <li class="breadcrumb-item">
+                                    <span class="breadcrumb-step @if ($form->acc_bm === 'oke' && $form->acc_hrd === 'oke' && ($form->acc_ho === '' || $form->acc_ho !== 'oke')) breadcrumb-active @endif">
+                                        Diperiksa HO
+                                    </span>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <span
+                                        class="breadcrumb-step @if ($form->acc_ho === 'oke' && ($form->acc_cabang === '' || $form->acc_cabang !== 'oke')) breadcrumb-active @endif">
+                                        Diperiksa Cabang Tujuan
+                                    </span>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <span
+                                        class="breadcrumb-step @if ($form->acc_cabang === 'oke') breadcrumb-active @endif">
+                                        Selesai
+                                    </span>
+                                </li>
+                                @if (
+                                    $form->acc_bm === 'reject' &&
+                                        $form->acc_hrd === 'reject' &&
+                                        $form->acc_ho === 'reject' &&
+                                        $form->acc_cabang === 'reject')
+                                    text-primary
+                                    <li class="breadcrumb-item" @if (
                                         $form->acc_bm === 'reject' &&
                                             $form->acc_hrd === 'reject' &&
                                             $form->acc_ho === 'reject' &&
-                                            $form->acc_cabang === 'reject')
-                                        text-primary
-                                        <li class="breadcrumb-item" @if (
-                                            $form->acc_bm === 'reject' &&
-                                                $form->acc_hrd === 'reject' &&
-                                                $form->acc_ho === 'reject' &&
-                                                $form->acc_cabang === 'reject') text-primary @endif>
-                                            <span class="breadcrumb-step text-danger">
-                                                Ditolak
-                                            </span>
-                                        </li>
-                                    @endif
-                                @endif
-                                @if (auth()->user()->role === 'nm')
-                                    <li class="breadcrumb-item">
-                                        <span
-                                            class="breadcrumb-step @if ($form->acc_bm === 'oke' && $form->acc_hrd === 'oke' && ($form->acc_ho === '' || $form->acc_ho !== 'oke')) breadcrumb-active @endif">
-                                            Konfirmasi HO
+                                            $form->acc_cabang === 'reject') text-primary @endif>
+                                        <span class="breadcrumb-step text-danger">
+                                            Ditolak
                                         </span>
                                     </li>
-                                    <li class="breadcrumb-item">
-                                        <span
-                                            class="breadcrumb-step @if ($form->acc_ho === 'oke' && ($form->acc_cabang === '' || $form->acc_cabang !== 'oke')) breadcrumb-active @endif">
-                                            Konfirmasi Cabang Tujuan
-                                        </span>
-                                    </li>
-                                    <li class="breadcrumb-item">
-                                        <span
-                                            class="breadcrumb-step @if ($form->acc_cabang === 'oke') breadcrumb-active @endif">
-                                            Selesai
-                                        </span>
-                                    </li>
-                                    @if (
-                                        $form->acc_bm === 'reject' &&
-                                            $form->acc_hrd === 'reject' &&
-                                            $form->acc_ho === 'reject' &&
-                                            $form->acc_cabang === 'reject')
-                                        text-primary
-                                        <li class="breadcrumb-item" @if (
-                                            $form->acc_bm === 'reject' &&
-                                                $form->acc_hrd === 'reject' &&
-                                                $form->acc_ho === 'reject' &&
-                                                $form->acc_cabang === 'reject') text-primary @endif>
-                                            <span class="breadcrumb-step text-danger">
-                                                Ditolak
-                                            </span>
-                                        </li>
-                                    @endif
                                 @endif
                             </ol>
                     </div>
@@ -93,36 +49,29 @@
                     <div class="card-body">
 
                         {{-- tombol submit  --}}
+
+
                         <div class="mb-4">
-                            <form action="{{ route('form.submit', $form->id) }}" method="POST">
+                            <form action="{{ route('form.submit_nm', $form->id) }}" method="POST">
                                 @csrf
-                                @if (auth()->user()->role === 'bm')
-                                    @if ($form->acc_bm == null)
-                                        <button type="submit" name="action" value="acc_bm" class="btn btn-primary mr-2">
-                                            Confirm
-                                        </button>
-                                        <button type="submit" name="action" value="reject_bm" class="btn btn-danger">
-                                            Tolak
-                                        </button>
-                                    @endif
-                                @endif
 
                                 @if (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'Head Office')
-                                    @if ($form->acc_ho == null && $form->acc_bm == 'oke')
+                                    @if ($form->acc_ho == null && $form->acc_nm == 'oke')
                                         <button type="submit" id="submitHoButton" name="action" value="acc_ho"
                                             class="btn btn-primary mr-2" disabled>
-                                            Confirm
+                                            Submit
                                         </button>
                                         <button type="submit" name="action" value="reject_ho" class="btn btn-danger">
                                             Tolak
                                         </button>
                                     @endif
                                 @endif
+
                                 @if (auth()->user()->role === 'bm' && auth()->user()->cabang_asal === $form->cabang_tujuan)
                                     @if ($form->acc_cabang == null && $form->acc_ho == 'oke')
                                         <button type="submit" name="action" value="acc_cabang"
                                             class="btn btn-primary mr-2">
-                                            Confirm
+                                            Submit
                                         </button>
                                         <button type="submit" name="action" value="reject_cabang" class="btn btn-danger">
                                             Tolak
@@ -136,7 +85,6 @@
                                 @endif
                             </form>
                         </div>
-
                         <h5 class="text-center mb-8">
                             @if ($form->acc_ho == 'oke')
                                 Form Persetujuan Cabang
@@ -209,10 +157,9 @@
                                                     </td>
 
                                                     <td>
-                                                        @if (
-                                                            (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'Head Office') ||
+                                                        @if ((auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'Head Office') ||
                                                                 (auth()->user()->role === 'nm' && auth()->user()->departemen === $item->departemen))
-                                                            @if ($form->acc_bm == 'oke' && $form->acc_hrd != 'reject' && $form->acc_bm != 'reject' && $item->acc_nm == null)
+                                                            @if (($form->acc_nm == 'oke' && $item->acc_nm != 'oke'))
                                                                 <button class="btn btn-success btn-sm"
                                                                     onclick="updateStatus({{ $item->id }}, 'oke')">
                                                                     Setuju
@@ -229,10 +176,11 @@
                                                             <span class="text-success">Diterima</span>
                                                         @elseif ($item->acc_nm === 'tolak' || $form->acc_bm === 'reject' || $form->acc_hrd === 'reject')
                                                             <span class="text-danger">Ditolak</span>
-                                                        @elseif (empty($form->acc_bm) || empty($form->acc_hrd))
+                                                        @elseif (empty($item->acc_nm) && $form->acc_nm != 'oke')
                                                             <span class="text-warning">Menunggu</span>
                                                         @endif
                                                     </td>
+
 
                                                     <td>
                                                         @if ($item->acc_nm == 'oke')
@@ -260,20 +208,22 @@
                         <!-- Bar Status -->
                         <div class="status-bar mb-4" style="position: sticky; top: 70px;">
                             <!-- ACC HRD -->
-                            <div class="status-step">
-                                <img src="{{ $form->acc_hrd == 'oke' ? asset('dist/img/oke.png') : ($form->acc_hrd == 'reject' ? asset('dist/img/reject.png') : asset('dist/img/no.png')) }}"
-                                    alt="Status HRD" class="thumb-icon" width="50">
-                                <div class="status-name">
-                                    @if ($form->acc_hrd == 'oke')
-                                        {{ $form->submitted_by_hrd }} (HRD) - Setuju
-                                    @elseif ($form->acc_hrd == 'reject')
-                                        {{ $form->submitted_by_hrd }} (HRD) - Ditolak
-                                    @else
-                                        HRD - Menunggu
-                                    @endif
+                            @if ($form->acc_hrd == 'oke')
+                                <div class="status-step">
+                                    <img src="{{ $form->acc_hrd == 'oke' ? asset('dist/img/oke.png') : ($form->acc_hrd == 'reject' ? asset('dist/img/reject.png') : asset('dist/img/no.png')) }}"
+                                        alt="Status HRD" class="thumb-icon" width="50">
+                                    <div class="status-name">
+                                        @if ($form->acc_hrd == 'oke')
+                                            {{ $form->submitted_by_hrd }} (HRD) - Setuju
+                                        @elseif ($form->acc_hrd == 'reject')
+                                            {{ $form->submitted_by_hrd }} (HRD) - Ditolak
+                                        @else
+                                            HRD - Menunggu
+                                        @endif
+                                    </div>
                                 </div>
+                            @endif
 
-                            </div>
                             <!-- ACC BM -->
                             @if ($form->acc_hrd == 'oke')
                                 <div class="status-step">
@@ -293,7 +243,7 @@
 
 
                             {{-- ACC HO  --}}
-                            @if ($form->acc_bm == 'oke')
+                            @if ($form->acc_bm == 'oke' || $form->acc_nm == 'oke')
                                 <div class="status-step">
                                     <img src="{{ $form->acc_ho == 'oke' ? asset('dist/img/oke.png') : ($form->acc_ho == 'reject' ? asset('dist/img/reject.png') : asset('dist/img/no.png')) }}"
                                         alt="Status HO" class="thumb-icon" width="50">
@@ -309,7 +259,7 @@
                                 </div>
                             @endif
                             {{-- ACC CABANG --}}
-                            @if ($form->acc_ho == 'oke')
+                            @if ($form->acc_ho == 'oke' || $form->acc_nm == 'oke')
                                 <div class="status-step">
                                     <img src="{{ $form->acc_cabang == 'oke' ? asset('dist/img/oke.png') : ($form->acc_cabang == 'reject' ? asset('dist/img/reject.png') : asset('dist/img/no.png')) }}"
                                         alt="Status CABANG" class="thumb-icon" width="50">
