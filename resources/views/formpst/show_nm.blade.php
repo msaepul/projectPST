@@ -55,7 +55,7 @@
                             <form action="{{ route('form.submit_nm', $form->id) }}" method="POST">
                                 @csrf
 
-                                @if (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'Head Office')
+                                @if (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'HO')
                                     @if ($form->acc_ho == null && $form->acc_nm == 'oke')
                                         <button type="submit" id="submitHoButton" name="action" value="acc_ho"
                                             class="btn btn-primary mr-2" disabled>
@@ -157,7 +157,7 @@
                                                     </td>
 
                                                     <td>
-                                                        @if ((auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'Head Office') ||
+                                                        @if ((auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'HO') ||
                                                                 (auth()->user()->role === 'nm' && auth()->user()->departemen === $item->departemen))
                                                             @if (($form->acc_nm == 'oke' && $item->acc_nm != 'oke'))
                                                                 <button class="btn btn-success btn-sm"

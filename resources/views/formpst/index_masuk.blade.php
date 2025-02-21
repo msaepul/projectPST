@@ -24,7 +24,7 @@
                     <tbody>
                         @forelse ($data as $item)
                             @if (auth()->user()->cabang_asal === $item->cabang_tujuan ||
-                                    auth()->user()->cabang_asal == 'Head Office' ||
+                                    auth()->user()->cabang_asal == 'HO' ||
                                     auth()->user()->role === 'admin')
                                 <tr>
 
