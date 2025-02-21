@@ -161,14 +161,14 @@
                                     <label>Cabang Asal:</label>
                                     <select class="form-control" name="cabang_asal" required>
                                         @foreach ($cabangs as $cabang)
-                                            <option value="{{ $cabang->nama_cabang }}"
-                                                {{ $user->cabang_asal == $cabang->nama_cabang ? 'selected' : '' }}>
+                                            <option value="{{ $cabang->kode_cabang }}"
+                                                {{ $user->cabang_asal == $cabang->kode_cabang ? 'selected' : '' }}>
                                                 {{ $cabang->nama_cabang }}
                                             </option>
                                         @endforeach
                                     </select>
                                 </div>
-
+                                
                                 <div class="form-group">
                                     <label for="no_hp">No HP:</label>
                                     <input type="text" id="no_hp" name="no_hp" value="{{ $user->no_hp }}"

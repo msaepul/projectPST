@@ -34,7 +34,7 @@
                             @if (auth()->user()->cabang_asal === $item->cabang_tujuan ||
                                     auth()->user()->cabang_asal === $item->cabang_asal ||
                                     auth()->user()->role === 'admin' ||
-                                    (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'Head Office'))
+                                    (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'HO'))
                                 <tr>
                                     <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}</td>
                                     <td>{{ $item->no_surat }}</td>

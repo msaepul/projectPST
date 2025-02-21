@@ -26,7 +26,7 @@
                         @forelse ($data as $item)
                             @if (auth()->user()->cabang_asal === $item->cabang_asal ||
                                     auth()->user()->role === 'admin' ||
-                                    auth()->user()->cabang_asal === 'Head Office')
+                                    auth()->user()->cabang_asal === 'HO')
                                 <tr
                                     class="{{ $item->acc_cabang === 'oke' ? 'table-success' : ($item->acc_cabang === 'reject' || $item->acc_ho === 'reject' || $item->acc_bm === 'reject' ? 'table-danger' : ($item->acc_cabang === 'cancel' || $item->acc_ho === 'cancel' || $item->acc_bm === 'cancel' ? 'table-warning' : '')) }} hover-row">
                                     <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}</td>
@@ -59,12 +59,16 @@
                                     </td>
                                     <td class="text-center">
                                         @php
+                                            $formRejected = in_array($item->acc_cabang, ['reject', 'cancel']) ||
+                                                            in_array($item->acc_ho, ['reject', 'cancel']) ||
+                                                            in_array($item->acc_bm, ['reject', 'cancel']);
+                                    
                                             $anyRejected = false;
                                             $anyAccepted = false;
                                         @endphp
-
+                                    
                                         @foreach ($item->nama_pegawais as $pegawai)
-                                            @if ($pegawai->acc_nm == 'tolak')
+                                            @if ($pegawai->acc_nm == 'tolak' || $formRejected)
                                                 @php $anyRejected = true; @endphp
                                                 <span class="badge bg-danger">Pegawai Ditolak:
                                                     {{ $pegawai->nama_pegawai }}</span>
@@ -72,22 +76,25 @@
                                                 @php $anyAccepted = true; @endphp
                                             @endif
                                         @endforeach
-
-                                        @if (!$anyRejected && !$anyAccepted)
+                                    
+                                        @if ($formRejected)
+                                            <span class="badge bg-danger">Semua Pegawai Ditolak (Form Ditolak)</span>
+                                        @elseif (!$anyRejected && !$anyAccepted)
                                             <span class="badge bg-warning text-dark">Menunggu Verifikasi</span>
                                         @elseif ($anyAccepted)
                                             <span class="badge bg-success">Semua Pegawai Diterima</span>
                                         @endif
                                     </td>
+                                    
                                     <td class="text-center">
                                         <div class="d-flex justify-content-center gap-2">
-                                            @if ($item->cabang_asal !== 'Head Office')
+                                            @if ($item->cabang_asal !== 'HO')
                                             <a href="{{ route('formpst.show', ['id' => $item->id]) }}" class="btn btn-sm btn-outline-primary">Detail</a>
                                             @endif
-                                            @if ($item->cabang_asal === 'Head Office')
+                                            @if ($item->cabang_asal === 'HO')
                                             <a href="{{ route('formpst.show_nm', ['id' => $item->id]) }}" class="btn btn-sm btn-outline-primary">Detail</a>
                                             @endif
-                                            @if ($item->acc_bm !== 'reject')
+                                            @if ($item->acc_bm === 'reject' || $item->acc_nm === 'reject' || $item->acc_ho === 'reject' || $item->acc_cabang === 'reject')
                                                 <a href="{{ route('formpst.edit', ['id' => $item->id]) }}" class="btn btn-sm btn-outline-primary">Edit</a>
                                             @endif
                                         </div>

@@ -209,41 +209,41 @@ public function editUser($id)
 
 public function updateUser(Request $request, $id)
 {
-  $user = User::findOrFail($id);
+    $user = User::findOrFail($id);
 
-  // Validasi input update
-  $validated = $request->validate([
-      'name' => 'required|string|max:255',
-      'email' => 'required|email|unique:users,email,' . $id,
-      'nik' => 'required|string|unique:users,nik,' . $id,
-      'departemen' => 'required|exists:departemens,nama_departemen',
-      'cabang_asal' => 'required|exists:cabangs,nama_cabang',
-      'no_hp' => 'required|string',
-      'role' => 'required|in:admin,user,bm,hrd,nm,pegawai',
-      'nama_lengkap' => 'required|string|max:255',
+    // Validasi input update
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email,' . $id,
+        'nik' => 'required|string|unique:users,nik,' . $id,
+        'departemen' => 'required|exists:departemens,nama_departemen',
+        'cabang_asal' => 'required|exists:cabangs,kode_cabang', // Perbaikan validasi
+        'no_hp' => 'required|string',
+        'role' => 'required|in:admin,user,bm,hrd,nm,pegawai',
+        'nama_lengkap' => 'required|string|max:255',
+    ]);
 
-  ]);
+    // Cek jika password ada di request dan enkripsi password
+    if ($request->filled('password')) {
+        $user->password = bcrypt($request->password);
+    }
 
-  // Cek jika password ada di request dan enkripsi password
-  if ($request->has('password')) {
-      $user->password = bcrypt($request->password);
-  }
+    // Update data user, kecuali password yang sudah ditangani di atas
+    $user->update([
+        'name' => $request->name,
+        'email' => $request->email,
+        'nik' => $request->nik,
+        'departemen' => $request->departemen,
+        'cabang_asal' => $request->cabang_asal, // Pastikan yang disimpan adalah kode cabang
+        'no_hp' => $request->no_hp,
+        'role' => $request->role,
+        'nama_lengkap' => $request->nama_lengkap,
+    ]);
 
-  // Update data user, kecuali password yang sudah ditangani di atas
-  $user->update([
-      'name' => $request->name,
-      'email' => $request->email,
-      'nik' => $request->nik,
-      'departemen' => $request->departemen,
-      'cabang_asal' => $request->cabang_asal,
-      'no_hp' => $request->no_hp,
-      'role' => $request->role,
-      'nama_lengkap' => $request->nama_lengkap,
-  ]);
-
-  // Redirect dengan pesan sukses setelah berhasil update
-  return redirect()->route('ho.user')->with('success', 'User berhasil diperbarui!');
+    // Redirect dengan pesan sukses setelah berhasil update
+    return redirect()->route('ho.user')->with('success', 'User berhasil diperbarui!');
 }
+
 
  // Fungsi untuk menambahkan user baru
  public function storeUser(Request $request)

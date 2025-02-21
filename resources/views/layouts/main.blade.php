@@ -167,14 +167,14 @@
 
 
                     <li class="nav-item">
-                        @if (auth()->user()->cabang_asal !== 'Head Office')
+                        @if (auth()->user()->cabang_asal !== 'HO')
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-envelope"></i>
                                 <p> Surat Tugas<i class="fas fa-angle-left right"></i></p>
                             </a>
                         @endif
                         <ul class="nav nav-treeview">
-                            @if (auth()->user()->cabang_asal !== 'Head Office')
+                            @if (auth()->user()->cabang_asal !== 'HO')
                                 <li class="nav-item">
                                     <a href="{{ route('formpst.index_keluar') }}"
                                         class="nav-link {{ request()->is('formpst/index_keluar') ? 'active' : '' }}">
@@ -238,7 +238,7 @@
                     </li>
 
 
-                    @if (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'Head Office')
+                    @if (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'HO')
                         <li class="nav-item">
                             <a href="{{ route('formpst.index_keluar') }}" class="nav-link">
                                 <i class="nav-icon fas fa-envelope"></i>
@@ -247,7 +247,7 @@
                         </li>
                     @endif
 
-                    @if (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'Head Office')
+                    @if (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'HO')
                         <li class="nav-item">
                             <a href="{{ route('formpst.index_surat') }}" class="nav-link">
                                 <i class="nav-icon fas fa-car"></i>
@@ -258,7 +258,7 @@
 
 
                     @if (auth()->user()->role === 'admin' ||
-                            (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'Head Office') ||
+                            (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'HO') ||
                             auth()->user()->role === 'hrd')
                         <li class="nav-item">
                             <a href="#" class="nav-link">
@@ -267,7 +267,7 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 @if (auth()->user()->role === 'admin' ||
-                                        (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'Head Office'))
+                                        (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'HO'))
                                     <li class="nav-item">
                                         <a href="{{ route('ho.cabang') }}"
                                             class="nav-link {{ request()->is('ho/cabang') ? 'active' : '' }}">

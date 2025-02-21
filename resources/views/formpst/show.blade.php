@@ -33,58 +33,17 @@
                                             Selesai
                                         </span>
                                     </li>
-                                    @if (
-                                        $form->acc_bm === 'reject' &&
-                                            $form->acc_hrd === 'reject' &&
-                                            $form->acc_ho === 'reject' &&
-                                            $form->acc_cabang === 'reject')
-                                        text-primary
-                                        <li class="breadcrumb-item" @if (
-                                            $form->acc_bm === 'reject' &&
-                                                $form->acc_hrd === 'reject' &&
-                                                $form->acc_ho === 'reject' &&
-                                                $form->acc_cabang === 'reject') text-primary @endif>
-                                            <span class="breadcrumb-step text-danger">
+                                    @if ($form->acc_bm === 'reject' ||
+                                        $form->acc_hrd === 'reject' ||
+                                        $form->acc_ho === 'reject' ||
+                                        $form->acc_cabang === 'reject')
+                                        <li class="breadcrumb-item text-danger font-weight-bold">
+                                            <span class="breadcrumb-step">
                                                 Ditolak
                                             </span>
                                         </li>
                                     @endif
-                                @endif
-                                @if (auth()->user()->role === 'nm')
-                                    <li class="breadcrumb-item">
-                                        <span
-                                            class="breadcrumb-step @if ($form->acc_bm === 'oke' && $form->acc_hrd === 'oke' && ($form->acc_ho === '' || $form->acc_ho !== 'oke')) breadcrumb-active @endif">
-                                            Konfirmasi HO
-                                        </span>
-                                    </li>
-                                    <li class="breadcrumb-item">
-                                        <span
-                                            class="breadcrumb-step @if ($form->acc_ho === 'oke' && ($form->acc_cabang === '' || $form->acc_cabang !== 'oke')) breadcrumb-active @endif">
-                                            Konfirmasi Cabang Tujuan
-                                        </span>
-                                    </li>
-                                    <li class="breadcrumb-item">
-                                        <span
-                                            class="breadcrumb-step @if ($form->acc_cabang === 'oke') breadcrumb-active @endif">
-                                            Selesai
-                                        </span>
-                                    </li>
-                                    @if (
-                                        $form->acc_bm === 'reject' &&
-                                            $form->acc_hrd === 'reject' &&
-                                            $form->acc_ho === 'reject' &&
-                                            $form->acc_cabang === 'reject')
-                                        text-primary
-                                        <li class="breadcrumb-item" @if (
-                                            $form->acc_bm === 'reject' &&
-                                                $form->acc_hrd === 'reject' &&
-                                                $form->acc_ho === 'reject' &&
-                                                $form->acc_cabang === 'reject') text-primary @endif>
-                                            <span class="breadcrumb-step text-danger">
-                                                Ditolak
-                                            </span>
-                                        </li>
-                                    @endif
+
                                 @endif
                             </ol>
                     </div>
@@ -108,7 +67,7 @@
                                     @endif
                                 @endif
 
-                                @if (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'Head Office')
+                                @if (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'HO')
                                     @if ($form->acc_ho == null && $form->acc_bm == 'oke')
                                         <button type="submit" id="submitHoButton" name="action" value="acc_ho"
                                             class="btn btn-primary mr-2" disabled>
@@ -216,7 +175,7 @@
 
                                                     <td>
                                                         @if (
-                                                            (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'Head Office') ||
+                                                            (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'HO') ||
                                                                 (auth()->user()->role === 'nm' && auth()->user()->departemen === $item->departemen))
                                                             @if ($form->acc_bm == 'oke' && $form->acc_hrd != 'reject' && $form->acc_bm != 'reject' && $item->acc_nm == null)
                                                                 <button class="btn btn-success btn-sm"
