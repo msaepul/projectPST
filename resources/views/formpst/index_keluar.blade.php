@@ -94,7 +94,7 @@
                                             @if ($item->cabang_asal === 'HO')
                                             <a href="{{ route('formpst.show_nm', ['id' => $item->id]) }}" class="btn btn-sm btn-outline-primary">Detail</a>
                                             @endif
-                                            @if ($item->acc_bm === 'reject' || $item->acc_nm === 'reject' || $item->acc_ho === 'reject' || $item->acc_cabang === 'reject')
+                                            @if (auth()->user()->role === 'hrd' && $item->acc_cabang !== 'oke')
                                                 <a href="{{ route('formpst.edit', ['id' => $item->id]) }}" class="btn btn-sm btn-outline-primary">Edit</a>
                                             @endif
                                         </div>
