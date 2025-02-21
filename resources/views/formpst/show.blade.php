@@ -94,14 +94,15 @@
 
                         {{-- tombol submit  --}}
                         <div class="mb-4">
-                            <form action="{{ route('form.submit', $form->id) }}" method="POST">
+                            <form id="approvalForm" action="{{ route('form.submit', $form->id) }}" method="POST">
                                 @csrf
                                 @if (auth()->user()->role === 'bm')
                                     @if ($form->acc_bm == null)
                                         <button type="submit" name="action" value="acc_bm" class="btn btn-primary mr-2">
                                             Confirm
                                         </button>
-                                        <button type="submit" name="action" value="reject_bm" class="btn btn-danger">
+                                        <button type="button" class="btn btn-danger"
+                                            onclick="confirmAction('reject_bm', {{ $form->id }})">
                                             Tolak
                                         </button>
                                     @endif
@@ -113,24 +114,29 @@
                                             class="btn btn-primary mr-2" disabled>
                                             Confirm
                                         </button>
-                                        <button type="submit" name="action" value="reject_ho" class="btn btn-danger">
+                                        <button type="button" class="btn btn-danger"
+                                            onclick="confirmAction('reject_ho', {{ $form->id }})">
                                             Tolak
                                         </button>
                                     @endif
                                 @endif
+
                                 @if (auth()->user()->role === 'bm' && auth()->user()->cabang_asal === $form->cabang_tujuan)
                                     @if ($form->acc_cabang == null && $form->acc_ho == 'oke')
                                         <button type="submit" name="action" value="acc_cabang"
                                             class="btn btn-primary mr-2">
                                             Confirm
                                         </button>
-                                        <button type="submit" name="action" value="reject_cabang" class="btn btn-danger">
+                                        <button type="button" class="btn btn-danger"
+                                            onclick="confirmAction('reject_cabang', {{ $form->id }})">
                                             Tolak
                                         </button>
                                     @endif
                                 @endif
+
                                 @if ($form->acc_cabang != 'oke')
-                                    <button type="submit" name="action" value="cancel" class="btn btn-danger">
+                                    <button type="button" class="btn btn-danger"
+                                        onclick="confirmAction('cancel', {{ $form->id }})">
                                         Cancel
                                     </button>
                                 @endif
@@ -354,60 +360,43 @@
             </div>
         </div>
 
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
-            var itemIdToReject = null;
+            function confirmAction(actionType, itemId) {
+                let title = actionType === 'cancel' ? 'Masukkan alasan pembatalan' : 'Masukkan alasan penolakan';
 
-            function openRejectModal(itemId) {
-                itemIdToReject = itemId;
-                $('#rejectModal').modal('show');
-            }
-
-            document.getElementById('submitRejection').addEventListener('click', function() {
-                var rejectionReason = document.getElementById('rejectionReason').value;
-                if (!rejectionReason) {
-                    alert('Alasan penolakan wajib diisi');
-                    return;
-                }
-
-                // Kirim permintaan AJAX untuk menolak pegawai dengan alasan
-                $.ajax({
-                    url: '/update-status/' + itemIdToReject + '/tolak',
-                    type: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        alasan: rejectionReason
-                    },
-                    success: function(response) {
-                        alert(response.message);
-                        $('#rejectModal').modal('hide');
-                        location.reload();
-                    },
-                    error: function(xhr) {
-                        alert('Terjadi kesalahan: ' + xhr.responseJSON.message);
+                Swal.fire({
+                    title: title,
+                    input: 'textarea',
+                    inputPlaceholder: 'Tuliskan alasan...',
+                    showCancelButton: true,
+                    confirmButtonText: 'Kirim',
+                    cancelButtonText: 'Batal',
+                    preConfirm: (reason) => {
+                        if (!reason) {
+                            Swal.showValidationMessage('Alasan wajib diisi!');
+                        }
+                        return reason;
                     }
-                });
-            });
-
-            function updateStatus(itemId, status) {
-                if (status == 'oke' && !confirm("Apakah Anda yakin ingin menyetujui?")) {
-                    return;
-                }
-                if (status == 'tolak' && !confirm("Apakah Anda yakin ingin menolak?")) {
-                    return;
-                }
-
-                $.ajax({
-                    url: '/update-status/' + itemId + '/' + status,
-                    type: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                    },
-                    success: function(response) {
-                        alert(response.message);
-                        location.reload();
-                    },
-                    error: function(xhr) {
-                        alert('Terjadi kesalahan: ' + xhr.responseJSON.message);
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '/update-status/' + itemId + '/' + actionType,
+                            type: 'POST',
+                            data: {
+                                _token: '{{ csrf_token() }}',
+                                alasan: result.value
+                            },
+                            success: function(response) {
+                                Swal.fire('Berhasil!', response.message, 'success').then(() => {
+                                    location.reload();
+                                });
+                            },
+                            error: function(xhr) {
+                                Swal.fire('Error!', 'Terjadi kesalahan: ' + xhr.responseJSON.message,
+                                    'error');
+                            }
+                        });
                     }
                 });
             }
