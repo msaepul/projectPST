@@ -2,19 +2,7 @@
 
 @section('content')
     <div class="container">
-        <div class="dropdown-container">
-            {{-- @if (auth()->user()->cabang_asal === 'Head Office' && auth()->user()->role === 'hrd') --}}
-                <label for="userDropdown"><strong>Pilih User:</strong></label>
-                <select id="userDropdown" name="user_id" class="form-select" onchange="updateUserInfo(this)">
-                    <option value="" selected disabled>Pilih User</option>
-                    @foreach ($users as $user)
-                        <option value="{{ $user->id }}" data-nama="{{ $user->nama_lengkap }}"
-                            data-ttd="{{ $user->ttd }}">
-                            {{ $user->nama_lengkap }}
-                        </option>
-                    @endforeach
-                </select>
-        </div>
+
         <div class="print-area" id="print-area">
             <div class="card" id="surat-tugas-card">
                 <div class="card-body">
@@ -114,7 +102,8 @@
 
                             <div class="destination">
                                 <p>Ke cabang <strong>"{{ $form->cabang_tujuan }}"</strong> untuk
-                                    <strong>"{{ $form->tujuan }}"</strong></p>
+                                    <strong>"{{ $form->tujuan }}"</strong>
+                                </p>
                             </div>
 
                             <div class="closing">
@@ -125,8 +114,8 @@
                                 <p>Hormat kami,</p>
                                 <img id="userSignature" src="" alt="Tanda Tangan"
                                     style="width: 150px; height: auto; display: none;">
-                                <p><strong id="selectedUser"> {{ $user->nama_lengkap }}
-                                    </strong></p>
+                                {{-- <p><strong id="selectedUser"> {{ $user->nama_lengkap }}
+                                    </strong></p> --}}
                             </div>
 
                             <div
@@ -142,6 +131,21 @@
         <div class="action-buttons">
             <button onclick="exportToPDF()" class="btn btn-primary">Export to PDF</button>
         </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        <script>
+            function exportToPDF() {
+                const {
+                    jsPDF
+                } = window.jspdf;
+                let doc = new jsPDF();
+
+                doc.text("Surat Tugas", 10, 10);
+                doc.text(document.getElementById("print-area").innerText, 10, 20);
+
+                doc.save("Surat_Tugas.pdf");
+            }
+        </script>
 
         <style>
             body {
@@ -251,12 +255,12 @@
             }
 
             /* .table th,
-    .table td {
-    border: 0.5pt solid #000;
-    padding: 0.1cm;
-     /* Further reduced padding */
+            .table td {
+            border: 0.5pt solid #000;
+            padding: 0.1cm;
+             /* Further reduced padding */
             /* text-align: center;
-    } */
+            } */
             */ .signature {
                 margin-top: 0.3cm;
                 /* Reduced margin */
@@ -381,6 +385,4 @@
                 });
             }
         </script>
-
-
     @endsection
