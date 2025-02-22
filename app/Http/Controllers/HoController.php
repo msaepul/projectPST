@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Pengajuan;
 use App\Models\Nama_pegawai;
 use App\Models\Form;
+use Illuminate\Support\Facades\Storage;
 
 class HoController extends Controller
 {
