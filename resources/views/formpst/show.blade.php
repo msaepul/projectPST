@@ -33,17 +33,17 @@
                                             Selesai
                                         </span>
                                     </li>
-                                    @if ($form->acc_bm === 'reject' ||
-                                        $form->acc_hrd === 'reject' ||
-                                        $form->acc_ho === 'reject' ||
-                                        $form->acc_cabang === 'reject')
+                                    @if (
+                                        $form->acc_bm === 'reject' ||
+                                            $form->acc_hrd === 'reject' ||
+                                            $form->acc_ho === 'reject' ||
+                                            $form->acc_cabang === 'reject')
                                         <li class="breadcrumb-item text-danger font-weight-bold">
                                             <span class="breadcrumb-step">
                                                 Ditolak
                                             </span>
                                         </li>
                                     @endif
-
                                 @endif
                             </ol>
                     </div>
@@ -319,43 +319,84 @@
             </div>
         </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
-            function confirmAction(actionType, itemId) {
-                let title = actionType === 'cancel' ? 'Masukkan alasan pembatalan' : 'Masukkan alasan penolakan';
+            var itemIdToReject = null;
 
-                Swal.fire({
-                    title: title,
-                    input: 'textarea',
-                    inputPlaceholder: 'Tuliskan alasan...',
-                    showCancelButton: true,
-                    confirmButtonText: 'Kirim',
-                    cancelButtonText: 'Batal',
-                    preConfirm: (reason) => {
-                        if (!reason) {
-                            Swal.showValidationMessage('Alasan wajib diisi!');
+            function openRejectModal(itemId) {
+                itemIdToReject = itemId;
+                $('#rejectModal').modal('show');
+            }
+
+            document.getElementById('submitRejection').addEventListener('click', function() {
+                var rejectionReason = document.getElementById('rejectionReason').value;
+                if (!rejectionReason) {
+                    alert('Alasan penolakan wajib diisi');
+                    return;
+                }
+
+                if (!confirm("Apakah Anda yakin ingin menolak?")) {
+                    alert("Aksi dibatalkan.");
+                    return;
+                }
+
+                $.ajax({
+                    url: '/update-status/' + itemIdToReject + '/tolak',
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        alasan: rejectionReason
+                    },
+                    success: function(response) {
+                        if (response && response.message) {
+                            alert(response.message);
+                        } else {
+                            alert(
+                                'Status berhasil diperbarui.'
+                            ); // Pesan default jika tidak ada response.message
                         }
-                        return reason;
+                        $('#rejectModal').modal('hide');
+                        location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            alert('Terjadi kesalahan: ' + xhr.responseJSON.message);
+                        } else {
+                            alert('Terjadi kesalahan: ' +
+                                error); // Pesan default jika tidak ada xhr.responseJSON.message
+                        }
                     }
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: '/update-status/' + itemId + '/' + actionType,
-                            type: 'POST',
-                            data: {
-                                _token: '{{ csrf_token() }}',
-                                alasan: result.value
-                            },
-                            success: function(response) {
-                                Swal.fire('Berhasil!', response.message, 'success').then(() => {
-                                    location.reload();
-                                });
-                            },
-                            error: function(xhr) {
-                                Swal.fire('Error!', 'Terjadi kesalahan: ' + xhr.responseJSON.message,
-                                    'error');
-                            }
-                        });
+                });
+            });
+
+            function updateStatus(itemId, status) {
+                let message = status === 'oke' ? "Apakah Anda yakin ingin menyetujui?" : "Apakah Anda yakin ingin menolak?";
+
+                if (!confirm(message)) {
+                    alert("Aksi dibatalkan.");
+                    return;
+                }
+
+                $.ajax({
+                    url: '/update-status/' + itemId + '/' + status,
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                    },
+                    success: function(response) {
+                        if (response && response.message) {
+                            alert(response.message);
+                        } else {
+                            alert('Status berhasil diperbarui.'); // Pesan default jika tidak ada response.message
+                        }
+                        location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            alert('Terjadi kesalahan: ' + xhr.responseJSON.message);
+                        } else {
+                            alert('Terjadi kesalahan: ' +
+                                error); // Pesan default jika tidak ada xhr.responseJSON.message
+                        }
                     }
                 });
             }
@@ -376,10 +417,8 @@
                     submitHoButton.disabled = !allReviewed;
                 }
 
-                // Periksa status awal saat halaman dimuat
                 updateSubmitHoButton();
 
-                // Tangkap event AJAX untuk memperbarui tombol
                 $(document).ajaxSuccess(function() {
                     updateSubmitHoButton();
                 });
@@ -390,6 +429,43 @@
                     steps[index].classList.add('active');
                 }
             });
+
+            function confirmAction(actionType) {
+                Swal.fire({
+                    title: actionType === 'tolak' ? 'Alasan Penolakan' : 'Alasan Cancel',
+                    input: 'textarea',
+                    inputPlaceholder: 'Masukkan alasan...',
+                    showCancelButton: true,
+                    confirmButtonText: 'Kirim',
+                    cancelButtonText: 'Batal',
+                    preConfirm: (reason) => {
+                        if (!reason) {
+                            Swal.showValidationMessage('Alasan wajib diisi!');
+                        }
+                        return reason;
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Kirim alasan ke backend
+                        fetch('/your-route', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                },
+                                body: JSON.stringify({
+                                    action: actionType,
+                                    reason: result.value
+                                })
+                            }).then(response => response.json())
+                            .then(data => {
+                                Swal.fire('Sukses!', data.message, 'success');
+                            }).catch(error => {
+                                Swal.fire('Error!', 'Terjadi kesalahan.', 'error');
+                            });
+                    }
+                });
+            }
         </script>
 
         <style>
