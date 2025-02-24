@@ -2,8 +2,8 @@
 
 @section('content')
     <div class="container">
-        <div class="dropdown-container">
-            {{-- @if (auth()->user()->cabang_asal === 'Head Office' && auth()->user()->role === 'hrd') --}}
+        {{-- <div class="dropdown-container">
+            @if (auth()->user()->cabang_asal === 'Head Office' && auth()->user()->role === 'hrd')
                 <label for="userDropdown"><strong>Pilih User:</strong></label>
                 <select id="userDropdown" name="user_id" class="form-select" onchange="updateUserInfo(this)">
                     <option value="" selected disabled>Pilih User</option>
@@ -14,7 +14,7 @@
                         </option>
                     @endforeach
                 </select>
-        </div>
+        </div> --}}
         <div class="print-area" id="print-area">
             <div class="card" id="surat-tugas-card">
                 <div class="card-body">
@@ -46,7 +46,7 @@
 
                         <div class="person-info">
                             <p style="margin-bottom: 0.1cm;">
-                                <span class="label">Nama</span>: <strong id="selectedUser">Pilih User</strong>
+                                <span class="label">Nama</span>: <strong id="selectedUser">{{ $form->submitted_by_ho }}</strong>
                             </p>
                             <p style="margin-bottom: 0.1cm;"><span class="label">Jabatan</span>: HRD-HO</p>
                             <p style="margin-bottom: 0.1cm;"><span class="label">Alamat</span>: Jl.Raya Batujajar No.201 RT
@@ -123,10 +123,10 @@
 
                             <div class="signature" style="display: flex; flex-direction: column; align-items: flex-end;">
                                 <p>Hormat kami,</p>
-                                <img id="userSignature" src="" alt="Tanda Tangan"
-                                    style="width: 150px; height: auto; display: none;">
-                                <p><strong id="selectedUser"> {{ $user->nama_lengkap }}
-                                    </strong></p>
+                                <img src="{{ asset('storage/signatures/' . $form->ttd) }}" alt="Tanda Tangan"
+                                style="width: 150px; height: auto;">
+                            <p><strong>{{ $form->submitted_by_ho }}</strong></p>
+                            
                             </div>
 
                             <div

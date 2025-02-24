@@ -163,7 +163,7 @@
 
 
                     <li class="nav-item">
-                        @if (auth()->user()->cabang_asal !== 'HO')
+                        @if (auth()->user()->cabang_asal !== 'HO' || auth()->user()->role === 'admin')
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-envelope"></i>
                                 <p> Surat Tugas<i class="fas fa-angle-left right"></i></p>

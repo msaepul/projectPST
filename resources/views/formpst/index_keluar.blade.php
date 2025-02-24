@@ -24,97 +24,87 @@
                     </thead>
                     <tbody>
                         @forelse ($data as $item)
-                            @if (auth()->user()->cabang_asal === $item->cabang_asal ||
-                                    auth()->user()->role === 'admin' ||
-                                    auth()->user()->cabang_asal === 'HO')
-                                <tr
-                                    class="{{ $item->acc_cabang === 'oke' ? 'table-success' : ($item->acc_cabang === 'reject' || $item->acc_ho === 'reject' || $item->acc_bm === 'reject' ? 'table-danger' : ($item->acc_cabang === 'cancel' || $item->acc_ho === 'cancel' || $item->acc_bm === 'cancel' ? 'table-warning' : '')) }} hover-row">
-                                    <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}</td>
-                                    <!-- Tambahkan ini -->
-                                    <td>{{ $item->no_surat }}</td>
-                                    <td>{{ $item->nama_pemohon }}</td>
-                                    <td>{{ $item->cabang_asal }}</td>
-                                    <td>{{ $item->cabang_tujuan }}</td>
-                                    <td>{{ $item->tujuan }}</td>
-                                    <td class="text-center">
-                                        @if ($item->acc_cabang == 'oke')
-                                            <span class="badge bg-success">Sudah Diverifikasi</span>
-                                        @elseif ($item->acc_ho == 'reject')
-                                            <span class="badge bg-danger">Verifikasi Ditolak HO</span>
-                                        @elseif ($item->acc_ho == 'oke' && $item->acc_cabang != 'oke')
-                                            <span class="badge bg-warning text-dark">Menunggu Verifikasi Cabang</span>
-                                        @elseif ($item->acc_bm == 'oke' && $item->acc_ho != 'oke')
-                                            <span class="badge bg-warning text-dark">Menunggu Verifikasi HO</span>
-                                        @elseif ($item->acc_bm == 'reject')
-                                            <span class="badge bg-danger">Verifikasi Ditolak BM</span>
-                                        @elseif ($item->acc_bm != 'oke' && $item->acc_hrd == 'oke')
-                                            <span class="badge bg-warning text-dark">Menunggu Verifikasi BM</span>
-                                        @elseif (in_array($item->acc_bm, ['cancel', 'reject']) ||
-                                                in_array($item->acc_ho, ['cancel']) ||
-                                                in_array($item->acc_cabang, ['cancel']))
-                                            <span class="badge bg-danger">Cancel</span>
-                                        @else
-                                            <span class="badge bg-danger">Belum Diverifikasi</span>
-                                        @endif
-                                    </td>
-                                    <td class="text-center">
-                                        @php
-                                            $formRejected = in_array($item->acc_cabang, ['reject', 'cancel']) ||
-                                                            in_array($item->acc_ho, ['reject', 'cancel']) ||
-                                                            in_array($item->acc_bm, ['reject', 'cancel']);
-                                    
-                                            $anyRejected = false;
-                                            $anyAccepted = false;
-                                        @endphp
-                                    
-                                        @foreach ($item->nama_pegawais as $pegawai)
-                                            @if ($pegawai->acc_nm == 'tolak' || $formRejected)
-                                                @php $anyRejected = true; @endphp
-                                                <span class="badge bg-danger">Pegawai Ditolak:
-                                                    {{ $pegawai->nama_pegawai }}</span>
-                                            @elseif ($pegawai->acc_nm == 'oke')
-                                                @php $anyAccepted = true; @endphp
+                            @if (auth()->user()->role !== 'pegawai' || $item->nama_pegawais->contains('nama_pegawai', auth()->user()->nama_lengkap))
+                                @if (auth()->user()->cabang_asal === $item->cabang_asal || auth()->user()->role === 'admin' || auth()->user()->cabang_asal === 'HO')
+                                    <tr class="{{ $item->acc_cabang === 'oke' ? 'table-success' : ($item->acc_cabang === 'reject' || $item->acc_ho === 'reject' || $item->acc_bm === 'reject' ? 'table-danger' : ($item->acc_cabang === 'cancel' || $item->acc_ho === 'cancel' || $item->acc_bm === 'cancel' ? 'table-warning' : '')) }} hover-row">
+                                        <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}</td>
+                                        <td>{{ $item->no_surat }}</td>
+                                        <td>{{ $item->nama_pemohon }}</td>
+                                        <td>{{ $item->cabang_asal }}</td>
+                                        <td>{{ $item->cabang_tujuan }}</td>
+                                        <td>{{ $item->tujuan }}</td>
+                                        <td class="text-center">
+                                            @if ($item->acc_cabang == 'oke')
+                                                <span class="badge bg-success">Sudah Diverifikasi</span>
+                                            @elseif ($item->acc_ho == 'reject')
+                                                <span class="badge bg-danger">Verifikasi Ditolak HO</span>
+                                            @elseif ($item->acc_ho == 'oke' && $item->acc_cabang != 'oke')
+                                                <span class="badge bg-warning text-dark">Menunggu Verifikasi Cabang</span>
+                                            @elseif ($item->acc_bm == 'oke' && $item->acc_ho != 'oke')
+                                                <span class="badge bg-warning text-dark">Menunggu Verifikasi HO</span>
+                                            @elseif ($item->acc_bm == 'reject')
+                                                <span class="badge bg-danger">Verifikasi Ditolak BM</span>
+                                            @elseif ($item->acc_bm != 'oke' && $item->acc_hrd == 'oke')
+                                                <span class="badge bg-warning text-dark">Menunggu Verifikasi BM</span>
+                                            @elseif (in_array($item->acc_bm, ['cancel', 'reject']) ||
+                                                    in_array($item->acc_ho, ['cancel']) ||
+                                                    in_array($item->acc_cabang, ['cancel']))
+                                                <span class="badge bg-danger">Cancel</span>
+                                            @else
+                                                <span class="badge bg-danger">Belum Diverifikasi</span>
                                             @endif
-                                        @endforeach
-                                    
-                                        @if ($formRejected)
-                                            <span class="badge bg-danger">Semua Pegawai Ditolak (Form Ditolak)</span>
-                                        @elseif (!$anyRejected && !$anyAccepted)
-                                            <span class="badge bg-warning text-dark">Menunggu Verifikasi</span>
-                                        @elseif ($anyAccepted)
-                                            <span class="badge bg-success">Semua Pegawai Diterima</span>
-                                        @endif
-                                    </td>
-                                    
-                                    <td class="text-center">
-                                        <div class="d-flex justify-content-center gap-2">
-                                            @if ($item->cabang_asal !== 'HO')
-                                            <a href="{{ route('formpst.show', ['id' => $item->id]) }}" class="btn btn-sm btn-outline-primary">Detail</a>
+                                        </td>
+                                        <td class="text-center">
+                                            @php
+                                                $formRejected =
+                                                    in_array($item->acc_cabang, ['reject', 'cancel']) ||
+                                                    in_array($item->acc_ho, ['reject', 'cancel']) ||
+                                                    in_array($item->acc_bm, ['reject', 'cancel']);
+            
+                                                $anyRejected = false;
+                                                $anyAccepted = false;
+                                            @endphp
+            
+                                            @foreach ($item->nama_pegawais as $pegawai)
+                                                @if ($pegawai->acc_nm == 'tolak' || $formRejected)
+                                                    @php $anyRejected = true; @endphp
+                                                    <span class="badge bg-danger">Pegawai Ditolak:
+                                                        {{ $pegawai->nama_pegawai }}</span>
+                                                @elseif ($pegawai->acc_nm == 'oke')
+                                                    @php $anyAccepted = true; @endphp
+                                                @endif
+                                            @endforeach
+            
+                                            @if ($formRejected)
+                                                <span class="badge bg-danger">Semua Pegawai Ditolak (Form Ditolak)</span>
+                                            @elseif (!$anyRejected && !$anyAccepted)
+                                                <span class="badge bg-warning text-dark">Menunggu Verifikasi</span>
+                                            @elseif ($anyAccepted)
+                                                <span class="badge bg-success">Semua Pegawai Diterima</span>
                                             @endif
-                                            @if ($item->cabang_asal === 'HO')
-                                            <a href="{{ route('formpst.show_nm', ['id' => $item->id]) }}" class="btn btn-sm btn-outline-primary">Detail</a>
-                                            @endif
-                                            @if (auth()->user()->role === 'hrd' && $item->acc_cabang !== 'oke')
-                                                <a href="{{ route('formpst.edit', ['id' => $item->id]) }}" class="btn btn-sm btn-outline-primary">Edit</a>
-                                            @endif
-                                        </div>
-                                    </td>
-                                </tr>
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="d-flex justify-content-center gap-2">
+                                                <a href="{{ route($item->cabang_asal === 'HO' ? 'formpst.show_nm' : 'formpst.show', ['id' => $item->id]) }}" class="btn btn-sm btn-outline-primary">Detail</a>
+                                                @if (auth()->user()->role === 'hrd' && $item->acc_cabang !== 'oke')
+                                                    <a href="{{ route('formpst.edit', ['id' => $item->id]) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                                                @endif
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endif
                             @endif
                         @empty
                             <tr>
                                 <td colspan="9" class="text-center py-3">Tidak ada data ditemukan.</td>
-                                <!-- Sesuaikan jumlah kolom -->
                             </tr>
                         @endforelse
                     </tbody>
-
                 </table>
             </div>
         </div>
     </div>
 
-    {{-- Inisialisasi DataTables --}}
     <script>
         $(document).ready(function() {
             $('#dataTable').DataTable({
@@ -138,7 +128,6 @@
         });
     </script>
 
-    {{-- Custom Styles --}}
     <style>
         .custom-table tbody tr {
             transition: all 0.3s ease;
