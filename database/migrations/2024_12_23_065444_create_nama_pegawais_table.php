@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('departemen');
             $table->string('nik');
             $table->string('upload_file')->default('');
-            $table->date('lama_keberangkatan');
+            $table->date('tanggal_berangkat');
+            $table->date('tanggal_kembali');
             $table->string('acc_nm')->default('');
             $table->string('alasan')->default('');
 
