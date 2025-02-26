@@ -1,4 +1,5 @@
 @extends('layouts.main')
+
 @section('content')
     {{ Breadcrumbs::render('Form') }}
 
@@ -8,7 +9,7 @@
         </div>
         <div class="card-body p-4">
             <div class="table-responsive">
-                <table class="table table-bordered table-hover custom-table">
+                <table id="datatable" class="table table-bordered table-hover custom-table">
                     <thead>
                         <tr class="table-primary text-white">
                             <th scope="col">No Surat</th>
@@ -27,7 +28,6 @@
                                     auth()->user()->cabang_asal == 'HO' ||
                                     auth()->user()->role === 'admin')
                                 <tr>
-
                                     <td>{{ $item->no_surat }}</td>
                                     <td>{{ $item->nama_pemohon }}</td>
                                     <td>{{ $item->cabang_asal }}</td>
@@ -37,14 +37,13 @@
                                         @if ($item->acc_cabang == 'oke')
                                             <span class="badge bg-success">Sudah Diverifikasi</span>
                                         @elseif ($item->acc_cabang == 'reject')
-                                            <span class="badge bg-warning bg-danger">Verifikasi Di tolak Cabang</span>
+                                            <span class="badge bg-danger">Verifikasi Ditolak Cabang</span>
                                         @elseif ($item->acc_ho == 'oke')
                                             <span class="badge bg-warning text-dark">Menunggu Verifikasi Cabang</span>
                                         @else
                                             <span class="badge bg-danger">Belum Diverifikasi</span>
                                         @endif
                                     </td>
-
                                     <td class="text-center">
                                         @php
                                             $anyRejected = false;
@@ -53,15 +52,10 @@
 
                                         @foreach ($item->nama_pegawais as $pegawai)
                                             @if ($pegawai->acc_nm == 'tolak')
-                                                @php
-                                                    $anyRejected = true;
-                                                @endphp
-                                                <span class="badge bg-danger">Pegawai Ditolak:
-                                                    {{ $pegawai->nama_pegawai }}</span>
+                                                @php $anyRejected = true; @endphp
+                                                <span class="badge bg-danger">Pegawai Ditolak: {{ $pegawai->nama_pegawai }}</span>
                                             @elseif ($pegawai->acc_nm == 'oke')
-                                                @php
-                                                    $anyAccepted = true;
-                                                @endphp
+                                                @php $anyAccepted = true; @endphp
                                             @endif
                                         @endforeach
 
@@ -71,9 +65,6 @@
                                             <span class="badge bg-success">Semua Pegawai Diterima</span>
                                         @endif
                                     </td>
-
-
-
                                     <td class="text-center">
                                         <a href="{{ route('formpst.show', ['id' => $item->id]) }}"
                                             class="btn btn-sm btn-outline-primary">Detail</a>
@@ -82,14 +73,37 @@
                             @endif
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center py-3">Tidak ada data ditemukan.</td>
+                                <td colspan="8" class="text-center py-3">Tidak ada data ditemukan.</td>
                             </tr>
                         @endforelse
                     </tbody>
-
                 </table>
             </div>
         </div>
     </div>
-    </div>
+<script>
+    $(document).ready(function() {
+        $('#datatable').DataTable({
+            "language": {
+                "lengthMenu": "Tampilkan _MENU_ data per halaman",
+                "zeroRecords": "Data tidak ditemukan",
+                "info": "Menampilkan _PAGE_ dari _PAGES_ halaman",
+                "infoEmpty": "Tidak ada data tersedia",
+                "infoFiltered": "(difilter dari total _MAX_ data)",
+                "search": "Cari:",
+                "paginate": {
+                    "next": "Berikutnya",
+                    "previous": "Sebelumnya"
+                }
+            },
+            "order": [[0, "asc"]],
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false
+        });
+    });
+</script>
 @endsection

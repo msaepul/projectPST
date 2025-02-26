@@ -31,6 +31,8 @@
                     </thead>
                     <tbody>
                         @forelse ($data as $item)
+                        @if (auth()->user()->role !== 'pegawai' || $item->nama_pegawais->contains('nama_pegawai', auth()->user()->nama_lengkap))
+
                             @if (auth()->user()->cabang_asal === $item->cabang_tujuan ||
                                     auth()->user()->cabang_asal === $item->cabang_asal ||
                                     auth()->user()->role === 'admin' ||
@@ -42,18 +44,20 @@
                                     <td>{{ $item->cabang_asal }}</td>
                                     <td>{{ $item->cabang_tujuan }}</td>
                                     <td>{{ $item->tujuan }}</td>
-                                    <td class="text-center">
+                                    <td class="text-center d-flex justify-content-center gap-2 text-nowrap">
                                         <a href="{{ route('formpst.show', ['id' => $item->id]) }}"
-                                            class="btn btn-sm btn-outline-primary">
-                                            <i class="bi bi-eye" style="font-size: 16px; margin-right: 4px;"></i>
+                                            class="btn btn-sm btn-outline-primary d-flex align-items-center justify-content-center">
+                                            <i class="bi bi-eye" style="font-size: 16px;"></i>
                                         </a>
                                         <a href="{{ route('formpst.surat_tugas', ['id' => $item->id]) }}"
-                                            class="btn btn-sm btn-outline-primary">
-                                            <i class="bi bi-file-earmark-text"
-                                                style="font-size: 16px; margin-right: 4px;"></i>
+                                            class="btn btn-sm btn-outline-primary d-flex align-items-center justify-content-center">
+                                            <i class="bi bi-file-earmark-text" style="font-size: 16px;"></i>
                                         </a>
                                     </td>
+                                                                   
+                                    
                                 </tr>
+                            @endif
                             @endif
                         @empty
                             <tr>

@@ -8,11 +8,14 @@
                 <select id="userDropdown" name="user_id" class="form-select" onchange="updateUserInfo(this)">
                     <option value="" selected disabled>Pilih User</option>
                     @foreach ($users as $user)
+                    @if ($user->nama_lengkap === $form->submitted_by_ho)
                         <option value="{{ $user->id }}" data-nama="{{ $user->nama_lengkap }}"
                             data-ttd="{{ $user->ttd }}">
                             {{ $user->nama_lengkap }}
                         </option>
-                    @endforeach
+                    @endif
+                @endforeach
+                
                 </select>
         </div>
         <div class="print-area" id="print-area">
@@ -46,7 +49,7 @@
 
                         <div class="person-info">
                             <p style="margin-bottom: 0.1cm;">
-                                <span class="label">Nama</span>: <strong id="selectedUser">Pilih User</strong>
+                                <span class="label">Nama</span>: <strong id="selectedUser"></strong>
                             </p>
                             <p style="margin-bottom: 0.1cm;"><span class="label">Jabatan</span>: HRD-HO</p>
                             <p style="margin-bottom: 0.1cm;"><span class="label">Alamat</span>: Jl.Raya Batujajar No.201 RT
@@ -97,7 +100,9 @@
                                                     {{ $form->cabang_asal }} / {{ $item->departemen }}
                                                 </td>
                                                 <td style="border: 0.5pt solid #000; padding: 0.15cm; text-align: center;">
-                                                    {{ $item->lama_keberangkatan }}
+                                                    {{ \Carbon\Carbon::parse($item->tanggal_berangkat)->format('d') }} 
+                                                        s/d 
+                                                    {{ \Carbon\Carbon::parse($item->tanggal_kembali)->format('d M Y') }}
                                                 </td>
                                             </tr>
                                         @empty
@@ -125,7 +130,7 @@
                                 <p>Hormat kami,</p>
                                 <img id="userSignature" src="" alt="Tanda Tangan"
                                     style="width: 150px; height: auto; display: none;">
-                                <p><strong id="selectedUser"> {{ $user->nama_lengkap }}
+                                <p><strong id="selectedUser"> {{ $form->submitted_by_ho }}
                                     </strong></p>
                             </div>
 

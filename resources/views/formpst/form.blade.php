@@ -95,8 +95,14 @@
                                         <td><input type="text" name="nik[]" class="form-control nik" readonly>
                                         </td>
                                         <td><input type="file" name="uploadFile[]" class="form-control"></td>
-                                        <td><input type="date" name="lamaKeberangkatan[]" class="form-control" required>
-                                        </td>
+                                        <td>
+                                                <div class="d-flex align-items-center">
+                                                    <input type="date" name="tanggalBerangkat[]" class="form-control" required>
+                                                    <span class="mx-2">s/d</span>
+                                                    <input type="date" name="tanggalKembali[]" class="form-control" required>
+                                                </div>
+                                            </td>
+                                            
                                         <td style="text-align: center;">
                                             <button type="button" class="btn btn-danger btn-remove">
                                                 <i class="bi bi-trash" style="font-size: 16px; margin-right: 4px;"></i>

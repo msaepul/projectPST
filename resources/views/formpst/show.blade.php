@@ -131,7 +131,7 @@
                             </div>
                             <div class="detail-group">
                                 <label class="detail-label">Tanggal Keberangkatan:</label>
-                                <div class="detail-value">{{ $form->tanggal_keberangkatan }}</div>
+                                <div class="detail-value">{{ \Carbon\Carbon::parse($form->tanggal_keberangkatan)->format('d M Y') }}</div>
                             </div>
                         </div>
 
@@ -163,7 +163,10 @@
                                                     <td>{{ $item->nama_pegawai }}</td>
                                                     <td>{{ $item->nik }}</td>
                                                     <td>{{ $item->departemen }}</td>
-                                                    <td>{{ $item->lama_keberangkatan }} Hari</td>
+                                                    <td>{{ \Carbon\Carbon::parse($item->tanggal_berangkat)->format('d M') }} 
+                                                        s/d 
+                                                        {{ \Carbon\Carbon::parse($item->tanggal_kembali)->format('d M Y') }}
+                                                    </td>
                                                     <td>
                                                         @if ($item->upload_file)
                                                             <a href="{{ asset('storage/' . $item->upload_file) }}"
@@ -273,6 +276,7 @@
                                     </div>
                                 </div>
                             @endif
+                            
                             {{-- ACC CABANG --}}
                             @if ($form->acc_ho == 'oke')
                                 <div class="status-step">

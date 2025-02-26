@@ -14,7 +14,8 @@ class Nama_pegawai extends Model
         'departemen',
         'nik',
         'upload_file',
-        'lama_keberangkatan',
+        'tanggal_berangkat',
+        'tanggal_kembali',
         'acc_nm',
         'alasan',
     ];
