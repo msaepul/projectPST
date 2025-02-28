@@ -1,96 +1,98 @@
 @extends('layouts.main')
 
 @section('content')
-    <div class="container-fluid pt-4">
+    <div class="container">
+
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card mb-4 mt-3">
-                    <div class="card-header bg-primary text-white py-2"></div>
-
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center">
+                            <img src="{{ asset('dist/img/arnon.png') }}" alt="Logo Arnon" class="logo">
+                            <h4 style="margin: 0; margin-left: 10px;">Edit Surat</h4>
+                        </div>
+                    </div>
                     <div class="card-body">
-                        <div class="mb-4">
-                            <form action="{{ route('formpst.update', $form->id) }}" method="POST"
-                                enctype="multipart/form-data">
-                                @csrf
-                                @method('PUT')
+                        <form action="{{ route('formpst.update', $form->id) }}" method="POST"
+                            enctype="multipart/form-data">
+                            @csrf
+                            @method('PUT')
 
-
-                                @if ($errors->any())
-                                    <div class="alert alert-danger">
-                                        <ul>
-                                            @foreach ($errors->all() as $error)
-                                                <li>{{ $error }}</li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                @endif
-
-                                <div class="d-flex justify-content-end gap-2 mt-4">
-                                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-
-                                    <button type="reset" class="btn btn-secondary">Reset</button>
-                                    <a href="{{ route('formpst.index_keluar') }}" class="btn btn-danger">Kembali</a>
-
+                            @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
                                 </div>
+                            @endif
 
-                                <h5 class="text-center mb-8">Form Surat Penugasan</h5>
-                                <div class="form-details">
-                                    <div class="detail-group">
-                                        <label class="detail-label">No Surat:</label>
-                                        <div class="detail-value">{{ $form->no_surat }}</div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>No Surat:</label>
+                                        <input type="text" class="form-control" value="{{ $form->no_surat }}" readonly>
                                     </div>
-                                    <div class="detail-group">
-                                        <label class="detail-label">Cabang Asal:</label>
-                                        <select name="cabang_asal" class="form-control">
+                                    <div class="form-group">
+                                        <label>Nama Pemohon:</label>
+                                        <input type="text" class="form-control" value="{{ $form->nama_pemohon }}"
+                                            readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Cabang Asal:</label>
+                                        <input type="text" class="form-control" value="{{ $form->cabang_asal }}"
+                                            readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    {{-- <div class="form-group">
+                                        <label>Cabang Tujuan:</label>
+                                        <input type="text" class="form-control" value="{{ $form->cabang_tujuan }}"
+                                            readonly>
+                                    </div> --}}
+                                    <div class="form-group">
+                                        <label for="cabang_tujuan">Cabang Tujuan</label>
+                                        <select name="cabang_tujuan" id="cabang_tujuan" class="form-control">
                                             @foreach ($cabangs as $cabang)
-                                                <option value="{{ $cabang->id }}"
-                                                    @if ($cabang->id == $form->cabang_asal) selected @endif>
+                                                <option value="{{ $cabang->id }}" {{ $cabang->kode_cabang == $form->cabang_tujuan ? 'selected' : '' }}>
                                                     {{ $cabang->nama_cabang }}
                                                 </option>
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="detail-group">
-                                        <label class="detail-label">Cabang Tujuan:</label>
-                                        <select name="cabang_tujuan" class="form-control">
-                                            @foreach ($cabangs as $cabang)
-                                                <option value="{{ $cabang->id }}"
-                                                    @if ($cabang->id == $form->cabang_tujuan) selected @endif>
-                                                    {{ $cabang->nama_cabang }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="detail-group">
-                                        <label class="detail-label">Tujuan Penugasan:</label>
-                                        <select name="tujuan" class="form-control">
+                                    
+                                    <div class="form-group">
+                                        <label for="tujuan">Tujuan</label>
+                                        <select name="tujuan" id="tujuan" class="form-control">
                                             @foreach ($tujuans as $tujuan)
-                                                <option value="{{ $tujuan->id }}"
-                                                    @if ($tujuan->id == $form->tujuan_id) selected @endif>
+                                                <option value="{{ $tujuan->id }}" {{ $tujuan->id == $form->tujuan_id ? 'selected' : '' }}>
                                                     {{ $tujuan->tujuan_penugasan }}
                                                 </option>
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="detail-group">
-                                        <label class="detail-label">Tanggal Keberangkatan:</label>
+
+                                    <div class="form-group">
+                                        <label>Tanggal Keberangkatan:</label>
                                         <input type="date" name="tanggal_keberangkatan" class="form-control"
                                             value="{{ $form->tanggal_keberangkatan }}">
                                     </div>
                                 </div>
+                            </div>
 
-                                <div class="package-container">
-                                    <div class="item-table">
+                            <div class="card mt-4">
+                                <div class="card-header">Daftar Pegawai yang Berangkat</div>
+                                <div class="card-body">
+                                    <div class="table-responsive mt-4">
                                         <table class="table table-bordered">
-                                            <thead class="table-light">
+                                            <thead class="thead-light">
                                                 <tr>
                                                     <th>Nama</th>
                                                     <th>NIK</th>
                                                     <th>Departemen</th>
                                                     <th>Lama Keberangkatan</th>
                                                     <th>File</th>
-                                                    <th>Status</th>
-                                                    <th>Keterangan</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -112,30 +114,30 @@
                                                                 class="form-control">
                                                         </td>
                                                         <td>
-                                                            <input type="date"
-                                                                name="lama_keberangkatan[{{ $item->id }}]"
-                                                                value="{{ old('lama_keberangkatan.' . $item->id, $item->lama_keberangkatan) }}"
-                                                                class="form-control">
+                                                            <div class="d-flex align-items-center gap-2">
+                                                                <input type="date" 
+                                                                    name="lama_keberangkatan[{{ $item->id }}][tanggal_berangkat]" 
+                                                                    value="{{ old('lama_keberangkatan.' . $item->id . '.tanggal_berangkat', $item->tanggal_berangkat) }}" 
+                                                                    class="form-control">
+                                                        
+                                                                <span class="mx-2">s/d</span>
+                                                        
+                                                                <input type="date" 
+                                                                    name="lama_keberangkatan[{{ $item->id }}][tanggal_kembali]" 
+                                                                    value="{{ old('lama_keberangkatan.' . $item->id . '.tanggal_kembali', $item->tanggal_kembali) }}" 
+                                                                    class="form-control">
+                                                            </div>
                                                         </td>
+                                                        
                                                         <td>
+                                                            <input type="file" name="file[{{ $item->id }}]"
+                                                                class="form-control">
                                                             @if ($item->upload_file)
                                                                 <a href="{{ asset('storage/' . $item->upload_file) }}"
                                                                     target="_blank">Lihat File</a>
                                                             @else
                                                                 Tidak ada file
                                                             @endif
-                                                            <input type="file" name="file[{{ $item->id }}]"
-                                                                class="form-control mt-2">
-                                                        </td>
-                                                        <td>
-                                                            <input type="text" name="status[{{ $item->id }}]"
-                                                                value="{{ old('status.' . $item->id, $item->status) }}"
-                                                                class="form-control">
-                                                        </td>
-                                                        <td>
-                                                            <input type="text" name="keterangan[{{ $item->id }}]"
-                                                                value="{{ old('keterangan.' . $item->id, $item->keterangan) }}"
-                                                                class="form-control">
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -143,8 +145,13 @@
                                         </table>
                                     </div>
                                 </div>
-                            </form>
-                        </div>
+
+                                <div class="btn-container mt-3 d-flex gap-2">
+                                    <button type="submit" class="btn btn-success">Simpan Perubahan</button>
+                                    <button type="reset" class="btn btn-secondary">Reset</button>
+                                    <a href="{{ route('formpst.index_keluar') }}" class="btn btn-danger">Kembali</a>
+                                </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -152,45 +159,74 @@
     </div>
 
     <style>
-        .detail-value {
-            border: 1px solid #ced4da;
-            padding: 0.375rem 0.75rem;
-            border-radius: 0.25rem;
-            background-color: #fff;
-            width: 100%;
+        .container {
+            max-width: 1200px;
+            padding: 20px;
         }
 
-        .form-details {
-            border: 1px solid #dee2e6;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border-radius: 0.375rem;
-            background-color: #f8f9fa;
-        }
-
-        .detail-label {
+        .form-group label {
             font-weight: bold;
-            width: 200px;
-            margin-right: 1rem;
         }
 
-        .detail-group {
-            margin-bottom: 1rem;
+        .form-control {
+            border-radius: 5px;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin: 30px 0 20px 0; /* Atas: 30px, Bawah: 20px */
+            padding-top: 10px;
+            padding: 10px 20px; /* Tambah padding kiri & kanan */
+
+        }
+
+
+
+        .btn {
+            padding: 10px;
+            font-size: 14px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+        }
+
+        .card-header {
+            background-color: #3b0100;
+            color: white;
             display: flex;
             align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
         }
 
-        select {
-            width: 100%;
+        .logo {
+            height: 40px;
+            width: auto;
         }
 
-        input[type="file"] {
-            padding: 0.25rem;
-            width: 100%;
-        }
+        .table-responsive {
+    overflow-x: auto;
+    white-space: nowrap;
+}
 
-        table input {
-            width: 100%;
-        }
+.table {
+    min-width: 1200px; /* Sesuaikan dengan kebutuhan */
+}
+
     </style>
 @endsection

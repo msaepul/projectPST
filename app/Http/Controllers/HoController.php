@@ -27,8 +27,10 @@ class HoController extends Controller
     // Hitung jumlah surat keluar (misalnya semua data Form dianggap surat keluar)
     $jumlahSuratKeluar = Form::where('cabang_asal', auth()->user()->cabang_asal)->count();
 
-    $jumlahSuratTugas = $jumlahSuratMasuk;
-    return view('dashboard', compact('jumlahCabang', 'jumlahDepartemen', 'jumlahSuratMasuk', 'jumlahSuratKeluar'));
+    $jumlahSuratTugas = Form::where('acc_cabang', 'oke')->where(function ($query) {$query->where('cabang_asal', auth()->user()->cabang_asal)->orWhere('cabang_tujuan', auth()->user()->cabang_asal);})->count();
+
+
+    return view('dashboard', compact('jumlahCabang', 'jumlahDepartemen', 'jumlahSuratMasuk', 'jumlahSuratKeluar','jumlahSuratTugas'));
     }
 
     // Cabang

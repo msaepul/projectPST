@@ -18,28 +18,23 @@
             </div>
         </div>
 
-        @if (Auth::user()->role == 'pegawai')
             {{-- Jika Pegawai, hanya tampilkan box Surat Tugas --}}
             <div class="row">
+
                 <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
-                    <div class="small-box bg-teal">
+                    <div class="small-box bg-gray-dark">
                         <div class="inner">
-                            <h3 id="countSuratTugas">{{ $jumlahSuratMasuk }}</h3>
-                            <p>Jumlah Surat Tugas</p>
+                            <h3 id="countSuratKeluar">{{ $jumlahSuratKeluar }}</h3>
+                            <p>Jumlah Surat Keluar</p>
                         </div>
                         <div class="icon">
-                            <i class="fas fa-file-alt"></i>
+                            <i class="fas fa-paper-plane"></i>
                         </div>
-                        <a href="{{ route('formpst.index_masuk') }}" class="small-box-footer">
+                        <a href="{{ route('formpst.index_keluar') }}" class="small-box-footer">
                             Lihat Detail <i class="fas fa-arrow-circle-right"></i>
                         </a>
                     </div>
                 </div>
-            </div>
-        @else
-            {{-- Jika bukan pegawai, tampilkan semua box --}}
-            <div class="row">
-            
 
                 <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
                     <div class="small-box bg-cyan">
@@ -57,21 +52,20 @@
                 </div>
 
                 <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
-                    <div class="small-box bg-gray-dark">
+                    <div class="small-box bg-teal">
                         <div class="inner">
-                            <h3 id="countSuratKeluar">{{ $jumlahSuratKeluar }}</h3>
-                            <p>Jumlah Surat Keluar</p>
+                            <h3 id="countSuratTugas">{{ $jumlahSuratTugas }}</h3>
+                            <p>Jumlah Surat Tugas</p>
                         </div>
                         <div class="icon">
-                            <i class="fas fa-paper-plane"></i>
+                            <i class="fas fa-file-alt"></i>
                         </div>
-                        <a href="{{ route('formpst.index_keluar') }}" class="small-box-footer">
+                        <a href="{{ route('formpst.index_surat') }}" class="small-box-footer">
                             Lihat Detail <i class="fas fa-arrow-circle-right"></i>
                         </a>
                     </div>
                 </div>
             </div>
-        @endif
     </div>
 
     <script>
@@ -91,14 +85,11 @@
                 }, 50);
             };
 
-            @if (Auth::user()->role == 'pegawai')
-                animateCount('countSuratTugas', {{ $jumlahSuratTugas ?? 0 }}, 2000);
-            @else
+                animateCount('countSuratTugas', {{ $jumlahSuratTugas}}, 2000);
                 animateCount('countCabang', {{ $jumlahCabang }}, 2000);
                 animateCount('countDepartemen', {{ $jumlahDepartemen }}, 2000);
                 animateCount('countSuratMasuk', {{ $jumlahSuratMasuk }}, 2000);
                 animateCount('countSuratKeluar', {{ $jumlahSuratKeluar }}, 2000);
-            @endif
         });
     </script>
 @endsection

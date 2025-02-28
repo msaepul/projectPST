@@ -128,34 +128,92 @@
         });
     </script>
 
-    <style>
-        .custom-table tbody tr {
-            transition: all 0.3s ease;
-        }
+<style>
+    /* Styling tabel */
+    .custom-table {
+        border-collapse: separate;
+        border-spacing: 0;
+        width: 100%;
+        border-radius: 12px;
+        overflow: hidden;
+    }
 
-        .custom-table tbody tr:hover {
-            background-color: #f1f1f1;
-            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+    /* Header tabel */
+    .custom-table thead tr {
+        background-color: #6a5acd; /* Warna ungu kebiruan */
+        color: white;
+        text-align: left;
+    }
 
-        .table-primary {
-            background-color: #3d8f94;
-        }
+    /* Style untuk sel header */
+    .custom-table thead th {
+        padding: 14px 18px;
+        font-size: 16px;
+        font-weight: bold;
+    }
 
-        .badge {
-            transition: background-color 0.3s ease;
-        }
+    /* Style untuk baris tabel */
+    .custom-table tbody tr {
+        background-color: #f8f6ff; /* Ungu muda */
+        transition: background-color 0.3s ease-in-out;
+    }
 
-        .badge.bg-success:hover {
-            background-color: #28a745;
-        }
+    /* Style baris tabel dengan warna bergantian */
+    .custom-table tbody tr:nth-child(even) {
+        background-color: white;
+    }
 
-        .badge.bg-danger:hover {
-            background-color: #dc3545;
-        }
+    /* Hover effect */
+    .custom-table tbody tr:hover {
+        background-color: #e6e1ff; /* Warna ungu yang lebih terang */
+        box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+    }
 
-        .badge.bg-warning:hover {
-            background-color: #ffc107;
-        }
-    </style>
+    /* Style untuk sel tabel */
+    .custom-table tbody td {
+        padding: 12px 16px;
+        font-size: 14px;
+        color: #333;
+    }
+
+    /* Tambahkan border radius hanya di atas dan bawah tabel */
+    .custom-table thead tr:first-child th:first-child {
+        border-top-left-radius: 12px;
+    }
+    .custom-table thead tr:first-child th:last-child {
+        border-top-right-radius: 12px;
+    }
+    .custom-table tbody tr:last-child td:first-child {
+        border-bottom-left-radius: 12px;
+    }
+    .custom-table tbody tr:last-child td:last-child {
+        border-bottom-right-radius: 12px;
+    }
+
+    /* Style untuk badge */
+    .badge {
+        transition: background-color 0.3s ease, transform 0.2s;
+        padding: 6px 10px;
+        font-size: 13px;
+        border-radius: 8px;
+    }
+
+    .badge:hover {
+        transform: scale(1.05);
+    }
+
+    .badge.bg-success {
+        background-color: #28a745;
+    }
+
+    .badge.bg-danger {
+        background-color: #dc3545;
+    }
+
+    .badge.bg-warning {
+        background-color: #ffc107;
+        color: black;
+    }
+
+</style>
 @endsection
