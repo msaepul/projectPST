@@ -51,17 +51,19 @@
 
                     <div class="card-body">
 
-                        {{-- tombol submit  --}}
+                       {{-- Tombol Submit --}}
                         <div class="mb-4">
-                            <form id="approvalForm" action="{{ route('form.submit', $form->id) }}" method="POST">
+                            <form id="actionForm" action="{{ route('form.submit', $form->id) }}" method="POST">
                                 @csrf
+                                <input type="hidden" name="action" id="actionInput">
+                                <input type="hidden" name="reason" id="reasonHiddenInput"> {{-- Input alasan tersembunyi --}}
+
                                 @if (auth()->user()->role === 'bm')
                                     @if ($form->acc_bm == null)
                                         <button type="submit" name="action" value="acc_bm" class="btn btn-primary mr-2">
                                             Confirm
                                         </button>
-                                        <button type="button" class="btn btn-danger"
-                                            onclick="confirmAction('reject_bm', {{ $form->id }})">
+                                        <button type="button" class="btn btn-danger" onclick="showReasonModal('reject_bm')">
                                             Tolak
                                         </button>
                                     @endif
@@ -73,8 +75,7 @@
                                             class="btn btn-primary mr-2" disabled>
                                             Confirm
                                         </button>
-                                        <button type="button" class="btn btn-danger"
-                                            onclick="confirmAction('reject_ho', {{ $form->id }})">
+                                        <button type="button" class="btn btn-danger" onclick="showReasonModal('reject_ho')">
                                             Tolak
                                         </button>
                                     @endif
@@ -86,21 +87,20 @@
                                             class="btn btn-primary mr-2">
                                             Confirm
                                         </button>
-                                        <button type="button" class="btn btn-danger"
-                                            onclick="confirmAction('reject_cabang', {{ $form->id }})">
+                                        <button type="button" class="btn btn-danger" onclick="showReasonModal('reject_cabang')">
                                             Tolak
                                         </button>
                                     @endif
                                 @endif
 
                                 @if ($form->acc_cabang != 'oke')
-                                    <button type="button" class="btn btn-danger"
-                                        onclick="confirmAction('cancel', {{ $form->id }})">
+                                    <button type="button" class="btn btn-danger" onclick="showReasonModal('cancel')">
                                         Cancel
                                     </button>
                                 @endif
                             </form>
                         </div>
+
 
                         <h5 class="text-center mb-8">
                             @if ($form->acc_ho == 'oke')
@@ -323,6 +323,28 @@
             </div>
         </div>
 
+        {{-- Modal Alasan --}}
+        <div class="modal fade" id="reasonModal" tabindex="-1" role="dialog" aria-labelledby="reasonModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reasonModalLabel">Masukkan Alasan</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <textarea id="reasonInput" class="form-control" rows="3" placeholder="Masukkan alasan"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary" id="submitReasonButton">Kirim</button>
+                </div>
+            </div>
+        </div>
+        </div>
+
         <script>
             var itemIdToReject = null;
 
@@ -470,6 +492,25 @@
                     }
                 });
             }
+            let actionType = '';
+
+            function showReasonModal(action) {
+                actionType = action;
+                $('#reasonModal').modal('show');
+            }
+
+            document.getElementById('submitReasonButton').addEventListener('click', function () {
+                let reason = document.getElementById('reasonInput').value;
+
+                if (reason.trim() === '') {
+                    alert('Harap masukkan alasan terlebih dahulu.');
+                    return;
+                }
+
+                document.getElementById('actionInput').value = actionType;
+                document.getElementById('reasonHiddenInput').value = reason;
+                document.getElementById('actionForm').submit();
+            });
         </script>
 
         <style>

@@ -26,7 +26,7 @@
                         @forelse ($data as $item)
                             @if (auth()->user()->role !== 'pegawai' || $item->nama_pegawais->contains('nama_pegawai', auth()->user()->nama_lengkap))
                                 @if (auth()->user()->cabang_asal === $item->cabang_asal || auth()->user()->role === 'admin' || auth()->user()->cabang_asal === 'HO')
-                                    <tr class="{{ $item->acc_cabang === 'oke' ? 'table-success' : ($item->acc_cabang === 'reject' || $item->acc_ho === 'reject' || $item->acc_bm === 'reject' ? 'table-danger' : ($item->acc_cabang === 'cancel' || $item->acc_ho === 'cancel' || $item->acc_bm === 'cancel' ? 'table-warning' : '')) }} hover-row">
+                                    <tr class="{{ $item->acc_cabang === 'oke' ? 'table-success' : ($item->acc_cabang === 'reject' || $item->acc_ho === 'reject' || $item->acc_bm === 'reject' ? 'table-warning' : ($item->acc_cabang === 'cancel' || $item->acc_ho === 'cancel' || $item->acc_bm === 'cancel' ? 'table-danger' : '')) }} hover-row">
                                         <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}</td>
                                         <td>{{ $item->no_surat }}</td>
                                         <td>{{ $item->nama_pemohon }}</td>
@@ -129,6 +129,13 @@
     </script>
 
 <style>
+
+.custom-card {
+    width: 100%;
+    max-width: 2000px; /* Bisa sesuaikan, misal 1300px atau 1500px */
+    margin: auto;
+}
+
     /* Styling tabel */
     .custom-table {
         border-collapse: separate;

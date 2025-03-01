@@ -14,6 +14,8 @@ use App\Models\Form;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+
 
 class FormController extends Controller
 {
@@ -189,10 +191,6 @@ public function edit($id)
 
     return redirect()->route('formpst.index_keluar')->with('success', 'Data berhasil diperbarui!');
 }
-    
-
-
-
 
 public function index_keluar(Request $request)
 {
@@ -281,27 +279,35 @@ public function surat_tugas($id)
 }
 
 
-    public function submit(Request $request, $id)
+public function submit(Request $request, $id)
 {
     $form = Form::findOrFail($id);
     $user = auth()->user()->nama_lengkap; // Mengambil nama user yang sedang login
-    
+    $reason = $request->input('reason', null); // Mengambil alasan jika ada
+
     switch ($request->action) {
         case 'acc_bm':
             $form->acc_bm = 'oke';
             $form->submitted_by_bm = $user;
             $form->save();
-    
+
             return redirect()->route('formpst.index_keluar')->with('success', 'Persetujuan BM berhasil disimpan.');
-    
+
         case 'reject_bm':
+            if (!$reason) {
+                return redirect()->back()->with('error', 'Harap isi alasan penolakan.');
+            }
             $form->acc_bm = 'reject';
             $form->submitted_by_bm = $user;
+            $form->reason_bm = $reason; // Menyimpan alasan penolakan BM
             $form->save();
-    
+
             return redirect()->route('formpst.index_keluar')->with('success', 'Persetujuan BM ditolak.');
-    
+
         case 'cancel':
+            if (!$reason) {
+                return redirect()->back()->with('error', 'Harap isi alasan pembatalan.');
+            }
             $form->acc_bm = 'cancel';
             $form->acc_hrd = 'cancel';
             $form->acc_ho = 'cancel';
@@ -310,11 +316,11 @@ public function surat_tugas($id)
             $form->submitted_by_hrd = $user;
             $form->submitted_by_ho = $user;
             $form->submitted_by_cabang = $user;
+            $form->cancel_reason = $reason; // Menyimpan alasan pembatalan
             $form->save();
-    
+
             return redirect()->route('formpst.index_keluar')->with('success', 'Semua persetujuan telah dibatalkan.');
 
-    
         case 'acc_ho':
             if ($form->acc_hrd !== 'oke') {
                 return redirect()->back()->with('error', 'HRD belum menyetujui.');
@@ -322,19 +328,23 @@ public function surat_tugas($id)
             $form->acc_ho = 'oke';
             $form->submitted_by_ho = $user;
             $form->save();
-    
+
             return redirect()->route('formpst.index_keluar')->with('success', 'Persetujuan HO berhasil disimpan.');
-    
+
         case 'reject_ho':
+            if (!$reason) {
+                return redirect()->back()->with('error', 'Harap isi alasan penolakan.');
+            }
             if ($form->acc_hrd !== 'oke') {
                 return redirect()->back()->with('error', 'HRD belum menyetujui.');
             }
             $form->acc_ho = 'reject';
             $form->submitted_by_ho = $user;
+            $form->reason_ho = $reason; // Menyimpan alasan penolakan HO
             $form->save();
-    
+
             return redirect()->route('formpst.index_keluar')->with('success', 'Persetujuan HO ditolak.');
-    
+
         case 'acc_cabang':
             if ($form->acc_ho !== 'oke') {
                 return redirect()->back()->with('error', 'HO belum menyetujui.');
@@ -342,23 +352,28 @@ public function surat_tugas($id)
             $form->acc_cabang = 'oke';
             $form->submitted_by_cabang = $user;
             $form->save();
-    
+
             return redirect()->route('formpst.index_masuk')->with('success', 'Persetujuan Cabang berhasil disimpan.');
-    
+
         case 'reject_cabang':
+            if (!$reason) {
+                return redirect()->back()->with('error', 'Harap isi alasan penolakan.');
+            }
             if ($form->acc_ho !== 'oke') {
                 return redirect()->back()->with('error', 'HO belum menyetujui.');
             }
             $form->acc_cabang = 'reject';
             $form->submitted_by_cabang = $user;
+            $form->reason_cabang = $reason; // Menyimpan alasan penolakan Cabang
             $form->save();
-    
+
             return redirect()->route('formpst.index_masuk')->with('success', 'Persetujuan Cabang ditolak.');
-    
+
         default:
             return redirect()->back()->with('error', 'Aksi tidak valid.');
     }
 }
+
 
 public function submit_nm(Request $request, $id)
 {
