@@ -16,7 +16,6 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
-
 class FormController extends Controller
 {
     public function form()
@@ -28,16 +27,16 @@ class FormController extends Controller
         $cabang_tujuans = Cabang_tujuan::all();
         $users = User::where('cabang_asal', auth()->user()->cabang_asal)->get();
         $nm = User::where('departemen', auth()->user()->departemen)->get();
-    
+
         $user = auth()->user();
-    
-        $kodeCabang = $user->cabang_asal; 
+
+        $kodeCabang = $user->cabang_asal;
 
         $lastForm = Form::where('cabang_asal', $user->cabang_asal)->latest()->first();
         $lastNumber = $lastForm ? intval(substr($lastForm->no_surat, 0, 3)) : 0;
-    
+
         $newNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
-    
+
         $month = date('n');
         $romanMonths = [
             1 => 'I', 2 => 'II', 3 => 'III', 4 => 'IV', 5 => 'V',
@@ -45,12 +44,12 @@ class FormController extends Controller
             11 => 'XI', 12 => 'XII'
         ];
         $romanMonth = $romanMonths[$month];
-    
+
         $nomorSurat = "{$newNumber}/PST/{$kodeCabang}/{$romanMonth}/" . date('Y');
-    
+
         return view('formpst.form', compact('nomorSurat', 'users', 'cabangs', 'tujuans', 'departemens', 'nama_pegawais', 'cabang_tujuans', 'nm'));
     }
-    
+
 
     public function store(Request $request, $role = null)
 {
@@ -104,12 +103,12 @@ class FormController extends Controller
 
         $namaPegawais[] = [
             'form_id' => $form->id,
-            'nama_pegawai' => $request->namaPegawaiNama[$index], 
+            'nama_pegawai' => $request->namaPegawaiNama[$index],
             'departemen' => $request->departemen[$index],
             'nik' => $request->nik[$index],
             'upload_file' => $uploadFilePath,
-            'tanggal_berangkat' => $request->tanggalBerangkat[$index], 
-            'tanggal_kembali' => $request->tanggalKembali[$index], 
+            'tanggal_berangkat' => $request->tanggalBerangkat[$index],
+            'tanggal_kembali' => $request->tanggalKembali[$index],
             'created_at' => now(),
             'updated_at' => now(),
         ];
@@ -131,66 +130,63 @@ public function edit($id)
         return view('formpst.edit', compact('form', 'cabangs', 'tujuans', 'nama_pegawais'));
     }
 
-    public function update(Request $request, $id)
-{
-    // Debugging (sementara)
-    // dd($request->all());
-
-    $request->validate([
-        'cabang_tujuan' => 'required|exists:cabangs,id', 
-        'tujuan' => 'required|exists:tujuans,id', // Pastikan ini tidak null
-        'tanggal_keberangkatan' => 'required|date',
-        'nama.*' => 'required|string',
-        'nik.*' => 'required|string',
-        'departemen.*' => 'required|string',
-        'lama_keberangkatan' => 'required|array', 
-        'lama_keberangkatan.*.tanggal_berangkat' => 'required|date',
-        'lama_keberangkatan.*.tanggal_kembali' => 'nullable|date',
-        'status.*' => 'nullable|string',
-        'keterangan.*' => 'nullable|string',
-        'file.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-    ]);
-
-    $form = Form::findOrFail($id);
-
-    $cabang = Cabang::findOrFail($request->cabang_tujuan);
-
-    $tujuan = Tujuan::findOrFail($request->tujuan);
-
-    $form->update([
-        'cabang_tujuan' => $cabang->kode_cabang, 
-        'tujuan_id' => $tujuan->id, // Pastikan ini benar
-        'tanggal_keberangkatan' => $request->tanggal_keberangkatan,
-    ]);
-
-    // Update data pegawai
-    foreach ($request->nama as $pegawai_id => $nama) {
-        $pegawai = Nama_pegawai::findOrFail($pegawai_id);
-        $pegawai->update([
-            'nama_pegawai' => $nama,
-            'nik' => $request->nik[$pegawai_id],
-            'departemen' => $request->departemen[$pegawai_id],
-            'tanggal_berangkat' => $request->lama_keberangkatan[$pegawai_id]['tanggal_berangkat'] ?? now()->toDateString(),
-            'tanggal_kembali' => $request->lama_keberangkatan[$pegawai_id]['tanggal_kembali'] ?? now()->toDateString(),
-            'status' => $request->status[$pegawai_id] ?? null,
-            'keterangan' => $request->keterangan[$pegawai_id] ?? null,
+public function update(Request $request, $id)
+    {
+        $request->validate([
+            'cabang_tujuan' => 'required|exists:cabangs,id',
+            'tujuan' => 'required|exists:tujuans,tujuan_penugasan',
+            'tanggal_keberangkatan' => 'required|date',
+            'nama.*' => 'required|string',
+            'nik.*' => 'required|string',
+            'departemen.*' => 'required|string',
+            'lama_keberangkatan' => 'required|array',
+            'lama_keberangkatan.*.tanggal_berangkat' => 'required|date',
+            'lama_keberangkatan.*.tanggal_kembali' => 'nullable|date',
+            'status.*' => 'nullable|string',
+            'keterangan.*' => 'nullable|string',
+            'file.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
 
-        // Jika ada file yang diunggah, simpan
-        if ($request->hasFile("file.$pegawai_id")) {
-            // Hapus file lama jika ada
-            if ($pegawai->upload_file) {
-                Storage::delete($pegawai->upload_file);
-            }
+        $form = Form::findOrFail($id);
+        $cabang = Cabang::findOrFail($request->cabang_tujuan);
 
-            // Simpan file baru
-            $filePath = $request->file("file.$pegawai_id")->store('uploads');
-            $pegawai->update(['upload_file' => $filePath]);
+        $form->update([
+            'cabang_tujuan' => $cabang->kode_cabang,
+            'tujuan' => $request->tujuan, // Simpan tujuan langsung
+            'tanggal_keberangkatan' => $request->tanggal_keberangkatan,
+        ]);
+
+        // Update data pegawai
+        foreach ($request->nama as $pegawai_id => $nama) {
+            $pegawai = Nama_pegawai::findOrFail($pegawai_id);
+            $pegawai->update([
+                'nama_pegawai' => $nama,
+                'nik' => $request->nik[$pegawai_id],
+                'departemen' => $request->departemen[$pegawai_id],
+                'tanggal_berangkat' => $request->lama_keberangkatan[$pegawai_id]['tanggal_berangkat'] ?? now()->toDateString(),
+                'tanggal_kembali' => $request->lama_keberangkatan[$pegawai_id]['tanggal_kembali'] ?? now()->toDateString(),
+                'status' => $request->status[$pegawai_id] ?? null,
+                'keterangan' => $request->keterangan[$pegawai_id] ?? null,
+            ]);
+
+            // Jika ada file yang diunggah, simpan
+            if ($request->hasFile("file.$pegawai_id")) {
+                // Hapus file lama jika ada
+                if ($pegawai->upload_file) {
+                    Storage::disk('public')->delete($pegawai->upload_file);
+                }
+
+                // Simpan file baru
+                $filePath = $request->file("file.$pegawai_id")->store('uploads', 'public');
+                $pegawai->update(['upload_file' => $filePath]);
+
+            }
         }
     }
 
     return redirect()->route('formpst.index_keluar')->with('success', 'Data berhasil diperbarui!');
 }
+
 
 public function index_keluar(Request $request)
 {
@@ -284,6 +280,7 @@ public function submit(Request $request, $id)
     $form = Form::findOrFail($id);
     $user = auth()->user()->nama_lengkap; // Mengambil nama user yang sedang login
     $reason = $request->input('reason', null); // Mengambil alasan jika ada
+
 
     switch ($request->action) {
         case 'acc_bm':
@@ -379,15 +376,15 @@ public function submit_nm(Request $request, $id)
 {
     $form = Form::findOrFail($id);
     $user = auth()->user()->nama_lengkap; // Mengambil nama user yang sedang login
-    
+
     switch ($request->action) {
         case 'acc_ho':
             $form->acc_ho = 'oke';
             $form->submitted_by_ho = $user;
             $form->save();
-    
+
             return redirect()->route('formpst.index_keluar')->with('success', 'Persetujuan BM berhasil disimpan.');
-    
+
             case 'reject_ho':
                 if ($form->acc_hrd !== 'oke') {
                     return redirect()->back()->with('error', 'HRD belum menyetujui.');
@@ -395,7 +392,7 @@ public function submit_nm(Request $request, $id)
                 $form->acc_ho = 'reject';
                 $form->submitted_by_ho = $user;
                 $form->save();
-        
+
                 return redirect()->route('formpst.index_keluar')->with('success', 'Persetujuan HO ditolak.');
 
         case 'cancel':
@@ -408,10 +405,10 @@ public function submit_nm(Request $request, $id)
             $form->submitted_by_ho = $user;
             $form->submitted_by_cabang = $user;
             $form->save();
-    
+
             return redirect()->route('formpst.index_keluar')->with('success', 'Semua persetujuan telah dibatalkan.');
 
- 
+
         case 'acc_cabang':
             if ($form->acc_ho !== 'oke') {
                 return redirect()->back()->with('error', 'HO belum menyetujui.');
@@ -419,9 +416,9 @@ public function submit_nm(Request $request, $id)
             $form->acc_cabang = 'oke';
             $form->submitted_by_cabang = $user;
             $form->save();
-    
+
             return redirect()->route('formpst.index_masuk')->with('success', 'Persetujuan Cabang berhasil disimpan.');
-    
+
         case 'reject_cabang':
             if ($form->acc_ho !== 'oke') {
                 return redirect()->back()->with('error', 'HO belum menyetujui.');
@@ -429,19 +426,19 @@ public function submit_nm(Request $request, $id)
             $form->acc_cabang = 'reject';
             $form->submitted_by_cabang = $user;
             $form->save();
-    
+
             return redirect()->route('formpst.index_masuk')->with('success', 'Persetujuan Cabang ditolak.');
-    
+
         default:
             return redirect()->back()->with('error', 'Aksi tidak valid.');
     }
 }
 
-    
 
 
 
-    
+
+
 
 public function updateStatus($itemId, $status, Request $request)
 {
