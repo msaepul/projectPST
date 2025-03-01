@@ -182,10 +182,11 @@ public function update(Request $request, $id)
 
             }
         }
+    return redirect()->route('formpst.index_keluar')->with('success', 'Data berhasil diperbarui!');
+
     }
 
-    return redirect()->route('formpst.index_keluar')->with('success', 'Data berhasil diperbarui!');
-}
+
 
 
 public function index_keluar(Request $request)

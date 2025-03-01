@@ -108,7 +108,6 @@
 </script>
 
 <style>
-    /* Styling tabel */
     .custom-table {
         border-collapse: separate;
         border-spacing: 0;
@@ -117,44 +116,37 @@
         overflow: hidden;
     }
 
-    /* Header tabel */
     .custom-table thead tr {
         background-color: #6a5acd !important; /* Warna ungu */
         color: white !important;
         text-align: left;
     }
 
-    /* Style untuk sel header */
     .custom-table thead th {
         padding: 12px 16px;
         font-size: 16px;
         font-weight: bold;
     }
 
-    /* Style untuk baris tabel */
     .custom-table tbody tr {
         background-color: #f8f6ff; /* Ungu muda */
         transition: background-color 0.3s ease-in-out;
     }
 
-    /* Style baris tabel dengan warna bergantian */
     .custom-table tbody tr:nth-child(even) {
         background-color: white;
     }
 
-    /* Hover effect */
     .custom-table tbody tr:hover {
         background-color: #e6e1ff; /* Warna ungu lebih terang */
     }
 
-    /* Style untuk sel tabel */
     .custom-table tbody td {
         padding: 12px 16px;
         font-size: 14px;
         color: #333;
     }
 
-    /* Tambahkan border radius hanya di atas dan bawah tabel */
     .custom-table thead tr:first-child th:first-child {
         border-top-left-radius: 12px;
     }
@@ -168,7 +160,6 @@
         border-bottom-right-radius: 12px;
     }
 
-    /* Badge Styling */
     .badge {
         font-size: 12px;
         padding: 6px 10px;
