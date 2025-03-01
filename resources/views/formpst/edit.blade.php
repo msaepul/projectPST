@@ -55,18 +55,20 @@
                                         <label for="cabang_tujuan">Cabang Tujuan</label>
                                         <select name="cabang_tujuan" id="cabang_tujuan" class="form-control">
                                             @foreach ($cabangs as $cabang)
-                                                <option value="{{ $cabang->id }}" {{ $cabang->kode_cabang == $form->cabang_tujuan ? 'selected' : '' }}>
+                                                <option value="{{ $cabang->id }}"
+                                                    {{ $cabang->kode_cabang == $form->cabang_tujuan ? 'selected' : '' }}>
                                                     {{ $cabang->nama_cabang }}
                                                 </option>
                                             @endforeach
                                         </select>
                                     </div>
-                                    
+
                                     <div class="form-group">
                                         <label for="tujuan">Tujuan</label>
                                         <select name="tujuan" id="tujuan" class="form-control">
                                             @foreach ($tujuans as $tujuan)
-                                                <option value="{{ $tujuan->id }}" {{ $tujuan->id == $form->tujuan_id ? 'selected' : '' }}>
+                                                <option value="{{ $tujuan->tujuan_penugasan }}"
+                                                    {{ $tujuan->tujuan_penugasan == $form->tujuan ? 'selected' : '' }}>
                                                     {{ $tujuan->tujuan_penugasan }}
                                                 </option>
                                             @endforeach
@@ -115,28 +117,41 @@
                                                         </td>
                                                         <td>
                                                             <div class="d-flex align-items-center gap-2">
-                                                                <input type="date" 
-                                                                    name="lama_keberangkatan[{{ $item->id }}][tanggal_berangkat]" 
-                                                                    value="{{ old('lama_keberangkatan.' . $item->id . '.tanggal_berangkat', $item->tanggal_berangkat) }}" 
+                                                                <input type="date"
+                                                                    name="lama_keberangkatan[{{ $item->id }}][tanggal_berangkat]"
+                                                                    value="{{ old('lama_keberangkatan.' . $item->id . '.tanggal_berangkat', $item->tanggal_berangkat) }}"
                                                                     class="form-control">
-                                                        
+
                                                                 <span class="mx-2">s/d</span>
-                                                        
-                                                                <input type="date" 
-                                                                    name="lama_keberangkatan[{{ $item->id }}][tanggal_kembali]" 
-                                                                    value="{{ old('lama_keberangkatan.' . $item->id . '.tanggal_kembali', $item->tanggal_kembali) }}" 
+
+                                                                <input type="date"
+                                                                    name="lama_keberangkatan[{{ $item->id }}][tanggal_kembali]"
+                                                                    value="{{ old('lama_keberangkatan.' . $item->id . '.tanggal_kembali', $item->tanggal_kembali) }}"
                                                                     class="form-control">
                                                             </div>
                                                         </td>
-                                                        
                                                         <td>
-                                                            <input type="file" name="file[{{ $item->id }}]"
-                                                                class="form-control">
                                                             @if ($item->upload_file)
-                                                                <a href="{{ asset('storage/' . $item->upload_file) }}"
-                                                                    target="_blank">Lihat File</a>
+                                                                <div class="file-actions d-flex align-items-center">
+                                                                    <a href="{{ asset('storage/' . $item->upload_file) }}"
+                                                                        target="_blank" class="file-link">
+                                                                        <i class="fas fa-file-pdf"></i> Lihat File
+                                                                    </a>
+                                                                    <label for="file-{{ $item->id }}"
+                                                                        class="btn btn-primary btn-sm mx-1">
+                                                                        <i class="fas fa-edit"></i>
+                                                                    </label>
+                                                                    <input type="file" name="file[{{ $item->id }}]"
+                                                                        id="file-{{ $item->id }}"
+                                                                        style="display: none;">
+                                                                </div>
                                                             @else
-                                                                Tidak ada file
+                                                                <label for="file-{{ $item->id }}"
+                                                                    class="btn btn-primary btn-sm">
+                                                                    <i class="fas fa-upload"></i>
+                                                                </label>
+                                                                <input type="file" name="file[{{ $item->id }}]"
+                                                                    id="file-{{ $item->id }}" style="display: none;">
                                                             @endif
                                                         </td>
                                                     </tr>
@@ -176,13 +191,11 @@
             display: flex;
             justify-content: flex-end;
             gap: 10px;
-            margin: 30px 0 20px 0; /* Atas: 30px, Bawah: 20px */
-            padding-top: 10px;
-            padding: 10px 20px; /* Tambah padding kiri & kanan */
-
+            margin: 30px 0 20px 0;
+            /* Atas: 30px, Bawah: 20px */
+            padding: 10px 20px;
+            /* Tambah padding kiri & kanan */
         }
-
-
 
         .btn {
             padding: 10px;
@@ -220,13 +233,25 @@
         }
 
         .table-responsive {
-    overflow-x: auto;
-    white-space: nowrap;
-}
+            overflow-x: auto;
+            white-space: nowrap;
+        }
 
-.table {
-    min-width: 1200px; /* Sesuaikan dengan kebutuhan */
-}
+        .table {
+            min-width: 1200px;
+            /* Sesuaikan dengan kebutuhan */
+        }
 
+        .file-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .file-link {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 10px;
+            /* Tambahkan margin kanan untuk memberi jarak */
+        }
     </style>
 @endsection
