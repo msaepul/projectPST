@@ -51,7 +51,7 @@
 
                     <div class="card-body">
 
-                       {{-- Tombol Submit --}}
+                        {{-- Tombol Submit --}}
                         <div class="mb-4">
                             <form id="actionForm" action="{{ route('form.submit', $form->id) }}" method="POST">
                                 @csrf
@@ -63,7 +63,8 @@
                                         <button type="submit" name="action" value="acc_bm" class="btn btn-primary mr-2">
                                             Confirm
                                         </button>
-                                        <button type="button" class="btn btn-danger" onclick="showReasonModal('reject_bm')">
+                                        <button type="button" class="btn btn-danger"
+                                            onclick="showReasonModal('reject_bm')">
                                             Tolak
                                         </button>
                                     @endif
@@ -75,7 +76,8 @@
                                             class="btn btn-primary mr-2" disabled>
                                             Confirm
                                         </button>
-                                        <button type="button" class="btn btn-danger" onclick="showReasonModal('reject_ho')">
+                                        <button type="button" class="btn btn-danger"
+                                            onclick="showReasonModal('reject_ho')">
                                             Tolak
                                         </button>
                                     @endif
@@ -87,7 +89,8 @@
                                             class="btn btn-primary mr-2">
                                             Confirm
                                         </button>
-                                        <button type="button" class="btn btn-danger" onclick="showReasonModal('reject_cabang')">
+                                        <button type="button" class="btn btn-danger"
+                                            onclick="showReasonModal('reject_cabang')">
                                             Tolak
                                         </button>
                                     @endif
@@ -131,7 +134,8 @@
                             </div>
                             <div class="detail-group">
                                 <label class="detail-label">Tanggal Keberangkatan:</label>
-                                <div class="detail-value">{{ \Carbon\Carbon::parse($form->tanggal_keberangkatan)->format('d M Y') }}</div>
+                                <div class="detail-value">
+                                    {{ \Carbon\Carbon::parse($form->tanggal_keberangkatan)->format('d M Y') }}</div>
                             </div>
                         </div>
 
@@ -163,8 +167,8 @@
                                                     <td>{{ $item->nama_pegawai }}</td>
                                                     <td>{{ $item->nik }}</td>
                                                     <td>{{ $item->departemen }}</td>
-                                                    <td>{{ \Carbon\Carbon::parse($item->tanggal_berangkat)->format('d M') }} 
-                                                        s/d 
+                                                    <td>{{ \Carbon\Carbon::parse($item->tanggal_berangkat)->format('d M') }}
+                                                        s/d
                                                         {{ \Carbon\Carbon::parse($item->tanggal_kembali)->format('d M Y') }}
                                                     </td>
                                                     <td>
@@ -276,7 +280,7 @@
                                     </div>
                                 </div>
                             @endif
-                            
+
                             {{-- ACC CABANG --}}
                             @if ($form->acc_ho == 'oke')
                                 <div class="status-step">
@@ -325,24 +329,24 @@
 
         {{-- Modal Alasan --}}
         <div class="modal fade" id="reasonModal" tabindex="-1" role="dialog" aria-labelledby="reasonModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="reasonModalLabel">Masukkan Alasan</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <textarea id="reasonInput" class="form-control" rows="3" placeholder="Masukkan alasan"></textarea>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                    <button type="button" class="btn btn-primary" id="submitReasonButton">Kirim</button>
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="reasonModalLabel">Masukkan Alasan</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <textarea id="reasonInput" class="form-control" rows="3" placeholder="Masukkan alasan"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                        <button type="button" class="btn btn-primary" id="submitReasonButton">Kirim</button>
+                    </div>
                 </div>
             </div>
-        </div>
         </div>
 
         <script>
@@ -499,7 +503,7 @@
                 $('#reasonModal').modal('show');
             }
 
-            document.getElementById('submitReasonButton').addEventListener('click', function () {
+            document.getElementById('submitReasonButton').addEventListener('click', function() {
                 let reason = document.getElementById('reasonInput').value;
 
                 if (reason.trim() === '') {

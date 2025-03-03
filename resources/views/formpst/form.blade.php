@@ -82,17 +82,29 @@
                                 <tbody>
                                     <tr id="rowToClone">
                                         <td>
-                                            <select name="namaPegawai[]" class="form-control namaPegawai" required>
+                                            <select name="namaPegawai[]" class="form-control namaPegawai " required>
                                                 <option value="" disabled selected>Pilih Nama</option>
+                                                @if ((auth()->user()->role !== 'nm' ))
                                                 @foreach ($users as $user)
                                                     <option value="{{ $user->id }}"
                                                         data-departemen="{{ $user->departemen }}"
                                                         data-nik="{{ $user->nik }}"
                                                         data-nama="{{ $user->nama_lengkap }}">
-                                                        {{ $user->nama_lengkap }} / {{ $user->departemen }} /
-                                                        {{ $user->nik }}
+                                                        {{ $user->nama_lengkap }} / {{ $user->departemen }} / {{ $user->nik }}
                                                     </option>
                                                 @endforeach
+                                                @endif
+
+                                                @if ((auth()->user()->role === 'nm' ))
+                                                @foreach ($nm as $user)
+                                                    <option value="{{ $user->id }}"
+                                                        data-departemen="{{ $user->departemen }}"
+                                                        data-nik="{{ $user->nik }}"
+                                                        data-nama="{{ $user->nama_lengkap }}">
+                                                        {{ $user->nama_lengkap }} / {{ $user->departemen }} / {{ $user->nik }}
+                                                    </option>
+                                                @endforeach
+                                                @endif
                                             </select>
                                         </td>
                                         <td><input type="text" name="departemen[]" class="form-control departemen"

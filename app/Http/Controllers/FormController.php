@@ -107,11 +107,12 @@ foreach ($request->namaPegawai as $index => $pegawaiId) {
     // Tambahkan data ke array
     $namaPegawais[] = [
         'form_id' => $form->id,
-        'nama_pegawai' => $request->namaPegawaiNama[$index], // Nama lengkap pegawai
+        'nama_pegawai' => $request->namaPegawaiNama[$index],
         'departemen' => $request->departemen[$index],
         'nik' => $request->nik[$index],
         'upload_file' => $uploadFilePath,
-        'lama_keberangkatan' => $request->lamaKeberangkatan[$index],
+        'tanggal_berangkat' => $request->tanggalBerangkat[$index],
+        'tanggal_kembali' => $request->tanggalKembali[$index],
         'created_at' => now(),
         'updated_at' => now(),
     ];
