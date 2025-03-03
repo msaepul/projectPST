@@ -386,6 +386,8 @@ public function submit_nm(Request $request, $id)
 {
     $form = Form::findOrFail($id);
     $user = auth()->user()->nama_lengkap; // Mengambil nama user yang sedang login
+    $reason = $request->input('reason', null); // Mengambil alasan jika ada
+
 
     switch ($request->action) {
         case 'acc_ho':
@@ -401,6 +403,7 @@ public function submit_nm(Request $request, $id)
                 }
                 $form->acc_ho = 'reject';
                 $form->submitted_by_ho = $user;
+                $form->reason_ho = $reason; // Menyimpan alasan penolakan BM
                 $form->save();
 
                 return redirect()->route('formpst.index_keluar')->with('success', 'Persetujuan HO ditolak.');
@@ -414,6 +417,7 @@ public function submit_nm(Request $request, $id)
             $form->submitted_by_hrd = $user;
             $form->submitted_by_ho = $user;
             $form->submitted_by_cabang = $user;
+            $form->cancel_reason = $reason; // Menyimpan alasan pembatalan
             $form->save();
 
             return redirect()->route('formpst.index_keluar')->with('success', 'Semua persetujuan telah dibatalkan.');
@@ -435,6 +439,7 @@ public function submit_nm(Request $request, $id)
             }
             $form->acc_cabang = 'reject';
             $form->submitted_by_cabang = $user;
+            $form->reason_cabang = $reason; // Menyimpan alasan penolakan Cabang
             $form->save();
 
             return redirect()->route('formpst.index_masuk')->with('success', 'Persetujuan Cabang ditolak.');
@@ -443,11 +448,6 @@ public function submit_nm(Request $request, $id)
             return redirect()->back()->with('error', 'Aksi tidak valid.');
     }
 }
-
-
-
-
-
 
 
 public function updateStatus($itemId, $status, Request $request)
