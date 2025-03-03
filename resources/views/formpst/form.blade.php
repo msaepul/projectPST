@@ -11,7 +11,12 @@
         </div>
 
         <div class="card-body">
-            <form id="suratTugasForm" action="{{ route('formpst.store') }}" method="POST" enctype="multipart/form-data">
+            @php
+                $actionRoute = route('formpst.store', ['role' => auth()->user()->role]);
+            @endphp
+
+            <form id="suratTugasForm" action="{{ $actionRoute }}" method="POST" enctype="multipart/form-data">
+
                 @csrf
                 <div class="row">
                     <div class="col-md-6">
@@ -77,17 +82,29 @@
                                 <tbody>
                                     <tr id="rowToClone">
                                         <td>
-                                            <select name="namaPegawai[]" class="form-control namaPegawai" required>
+                                            <select name="namaPegawai[]" class="form-control namaPegawai " required>
                                                 <option value="" disabled selected>Pilih Nama</option>
+                                                @if ((auth()->user()->role !== 'nm' ))
                                                 @foreach ($users as $user)
                                                     <option value="{{ $user->id }}"
                                                         data-departemen="{{ $user->departemen }}"
                                                         data-nik="{{ $user->nik }}"
                                                         data-nama="{{ $user->nama_lengkap }}">
-                                                        {{ $user->nama_lengkap }} / {{ $user->departemen }} /
-                                                        {{ $user->nik }}
+                                                        {{ $user->nama_lengkap }} / {{ $user->departemen }} / {{ $user->nik }}
                                                     </option>
                                                 @endforeach
+                                                @endif
+
+                                                @if ((auth()->user()->role === 'nm' ))
+                                                @foreach ($nm as $user)
+                                                    <option value="{{ $user->id }}"
+                                                        data-departemen="{{ $user->departemen }}"
+                                                        data-nik="{{ $user->nik }}"
+                                                        data-nama="{{ $user->nama_lengkap }}">
+                                                        {{ $user->nama_lengkap }} / {{ $user->departemen }} / {{ $user->nik }}
+                                                    </option>
+                                                @endforeach
+                                                @endif
                                             </select>
                                         </td>
                                         <td><input type="text" name="departemen[]" class="form-control departemen"
@@ -96,13 +113,14 @@
                                         </td>
                                         <td><input type="file" name="uploadFile[]" class="form-control"></td>
                                         <td>
-                                                <div class="d-flex align-items-center">
-                                                    <input type="date" name="tanggalBerangkat[]" class="form-control" required>
-                                                    <span class="mx-2">s/d</span>
-                                                    <input type="date" name="tanggalKembali[]" class="form-control" required>
-                                                </div>
-                                            </td>
-                                            
+                                            <div class="d-flex align-items-center">
+                                                <input type="date" name="tanggalBerangkat[]" class="form-control"
+                                                    required>
+                                                <span class="mx-2">s/d</span>
+                                                <input type="date" name="tanggalKembali[]" class="form-control" required>
+                                            </div>
+                                        </td>
+
                                         <td style="text-align: center;">
                                             <button type="button" class="btn btn-danger btn-remove">
                                                 <i class="bi bi-trash" style="font-size: 16px; margin-right: 4px;"></i>

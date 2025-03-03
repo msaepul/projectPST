@@ -48,20 +48,33 @@
 
                     <div class="card-body">
 
-                        {{-- tombol submit  --}}
-
-
+                        {{-- Tombol Submit --}}
                         <div class="mb-4">
-                            <form action="{{ route('form.submit_nm', $form->id) }}" method="POST">
+                            <form id="actionForm" action="{{ route('form.submit', $form->id) }}" method="POST">
                                 @csrf
+                                <input type="hidden" name="action" id="actionInput">
+                                <input type="hidden" name="reason" id="reasonHiddenInput"> {{-- Input alasan tersembunyi --}}
+
+                                @if (auth()->user()->role === 'bm')
+                                    @if ($form->acc_bm == null)
+                                        <button type="submit" name="action" value="acc_bm" class="btn btn-primary mr-2">
+                                            Confirm
+                                        </button>
+                                        <button type="button" class="btn btn-danger"
+                                            onclick="showReasonModal('reject_bm')">
+                                            Tolak
+                                        </button>
+                                    @endif
+                                @endif
 
                                 @if (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'HO')
-                                    @if ($form->acc_ho == null && $form->acc_nm == 'oke')
+                                    @if ($form->acc_ho == null && $form->acc_bm == 'oke')
                                         <button type="submit" id="submitHoButton" name="action" value="acc_ho"
                                             class="btn btn-primary mr-2" disabled>
-                                            Submit
+                                            Confirm
                                         </button>
-                                        <button type="submit" name="action" value="reject_ho" class="btn btn-danger">
+                                        <button type="button" class="btn btn-danger"
+                                            onclick="showReasonModal('reject_ho')">
                                             Tolak
                                         </button>
                                     @endif
@@ -71,20 +84,24 @@
                                     @if ($form->acc_cabang == null && $form->acc_ho == 'oke')
                                         <button type="submit" name="action" value="acc_cabang"
                                             class="btn btn-primary mr-2">
-                                            Submit
+                                            Confirm
                                         </button>
-                                        <button type="submit" name="action" value="reject_cabang" class="btn btn-danger">
+                                        <button type="button" class="btn btn-danger"
+                                            onclick="showReasonModal('reject_cabang')">
                                             Tolak
                                         </button>
                                     @endif
                                 @endif
+
                                 @if ($form->acc_cabang != 'oke')
-                                    <button type="submit" name="action" value="cancel" class="btn btn-danger">
+                                    <button type="button" class="btn btn-danger" onclick="showReasonModal('cancel')">
                                         Cancel
                                     </button>
                                 @endif
                             </form>
                         </div>
+
+
                         <h5 class="text-center mb-8">
                             @if ($form->acc_ho == 'oke')
                                 Form Persetujuan Cabang
@@ -114,7 +131,8 @@
                             </div>
                             <div class="detail-group">
                                 <label class="detail-label">Tanggal Keberangkatan:</label>
-                                <div class="detail-value">{{ $form->tanggal_keberangkatan }}</div>
+                                <div class="detail-value">
+                                    {{ \Carbon\Carbon::parse($form->tanggal_keberangkatan)->format('d M Y') }}</div>
                             </div>
                         </div>
 
@@ -146,7 +164,10 @@
                                                     <td>{{ $item->nama_pegawai }}</td>
                                                     <td>{{ $item->nik }}</td>
                                                     <td>{{ $item->departemen }}</td>
-                                                    <td>{{ $item->lama_keberangkatan }} Hari</td>
+                                                    <td>{{ \Carbon\Carbon::parse($item->tanggal_berangkat)->format('d M') }}
+                                                        s/d
+                                                        {{ \Carbon\Carbon::parse($item->tanggal_kembali)->format('d M Y') }}
+                                                    </td>
                                                     <td>
                                                         @if ($item->upload_file)
                                                             <a href="{{ asset('storage/' . $item->upload_file) }}"
@@ -157,9 +178,10 @@
                                                     </td>
 
                                                     <td>
-                                                        @if ((auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'HO') ||
+                                                        @if (
+                                                            (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'HO') ||
                                                                 (auth()->user()->role === 'nm' && auth()->user()->departemen === $item->departemen))
-                                                            @if (($form->acc_nm == 'oke' && $item->acc_nm != 'oke'))
+                                                            @if ($form->acc_nm == 'oke' && $item->acc_nm != 'oke')
                                                                 <button class="btn btn-success btn-sm"
                                                                     onclick="updateStatus({{ $item->id }}, 'oke')">
                                                                     Setuju
@@ -180,7 +202,6 @@
                                                             <span class="text-warning">Menunggu</span>
                                                         @endif
                                                     </td>
-
 
                                                     <td>
                                                         @if ($item->acc_nm == 'oke')
@@ -207,43 +228,9 @@
 
                         <!-- Bar Status -->
                         <div class="status-bar mb-4" style="position: sticky; top: 70px;">
-                            <!-- ACC HRD -->
-                            @if ($form->acc_hrd == 'oke')
-                                <div class="status-step">
-                                    <img src="{{ $form->acc_hrd == 'oke' ? asset('dist/img/oke.png') : ($form->acc_hrd == 'reject' ? asset('dist/img/reject.png') : asset('dist/img/no.png')) }}"
-                                        alt="Status HRD" class="thumb-icon" width="50">
-                                    <div class="status-name">
-                                        @if ($form->acc_hrd == 'oke')
-                                            {{ $form->submitted_by_hrd }} (HRD) - Setuju
-                                        @elseif ($form->acc_hrd == 'reject')
-                                            {{ $form->submitted_by_hrd }} (HRD) - Ditolak
-                                        @else
-                                            HRD - Menunggu
-                                        @endif
-                                    </div>
-                                </div>
-                            @endif
-
-                            <!-- ACC BM -->
-                            @if ($form->acc_hrd == 'oke')
-                                <div class="status-step">
-                                    <img src="{{ $form->acc_bm == 'oke' ? asset('dist/img/oke.png') : ($form->acc_bm == 'reject' ? asset('dist/img/reject.png') : asset('dist/img/no.png')) }}"
-                                        alt="Status BM" class="thumb-icon" width="50">
-                                    <div class="status-name">
-                                        @if ($form->acc_bm == 'oke')
-                                            {{ $form->submitted_by_bm }} (BM) - Setuju
-                                        @elseif ($form->acc_bm == 'reject')
-                                            {{ $form->submitted_by_bm }} (BM) - Ditolak
-                                        @else
-                                            BM - Menunggu
-                                        @endif
-                                    </div>
-                                </div>
-                            @endif
-
 
                             {{-- ACC HO  --}}
-                            @if ($form->acc_bm == 'oke' || $form->acc_nm == 'oke')
+                            @if ($form->acc_nm == 'oke')
                                 <div class="status-step">
                                     <img src="{{ $form->acc_ho == 'oke' ? asset('dist/img/oke.png') : ($form->acc_ho == 'reject' ? asset('dist/img/reject.png') : asset('dist/img/no.png')) }}"
                                         alt="Status HO" class="thumb-icon" width="50">
@@ -258,8 +245,9 @@
                                     </div>
                                 </div>
                             @endif
+
                             {{-- ACC CABANG --}}
-                            @if ($form->acc_ho == 'oke' || $form->acc_nm == 'oke')
+                            @if ($form->acc_ho == 'oke')
                                 <div class="status-step">
                                     <img src="{{ $form->acc_cabang == 'oke' ? asset('dist/img/oke.png') : ($form->acc_cabang == 'reject' ? asset('dist/img/reject.png') : asset('dist/img/no.png')) }}"
                                         alt="Status CABANG" class="thumb-icon" width="50">
@@ -304,6 +292,28 @@
             </div>
         </div>
 
+        {{-- Modal Alasan --}}
+        <div class="modal fade" id="reasonModal" tabindex="-1" role="dialog" aria-labelledby="reasonModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="reasonModalLabel">Masukkan Alasan</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <textarea id="reasonInput" class="form-control" rows="3" placeholder="Masukkan alasan"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                        <button type="button" class="btn btn-primary" id="submitReasonButton">Kirim</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <script>
             var itemIdToReject = null;
 
@@ -319,7 +329,11 @@
                     return;
                 }
 
-                // Kirim permintaan AJAX untuk menolak pegawai dengan alasan
+                if (!confirm("Apakah Anda yakin ingin menolak?")) {
+                    alert("Aksi dibatalkan.");
+                    return;
+                }
+
                 $.ajax({
                     url: '/update-status/' + itemIdToReject + '/tolak',
                     type: 'POST',
@@ -328,21 +342,32 @@
                         alasan: rejectionReason
                     },
                     success: function(response) {
-                        alert(response.message);
+                        if (response && response.message) {
+                            alert(response.message);
+                        } else {
+                            alert(
+                                'Status berhasil diperbarui.'
+                            ); // Pesan default jika tidak ada response.message
+                        }
                         $('#rejectModal').modal('hide');
                         location.reload();
                     },
-                    error: function(xhr) {
-                        alert('Terjadi kesalahan: ' + xhr.responseJSON.message);
+                    error: function(xhr, status, error) {
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            alert('Terjadi kesalahan: ' + xhr.responseJSON.message);
+                        } else {
+                            alert('Terjadi kesalahan: ' +
+                                error); // Pesan default jika tidak ada xhr.responseJSON.message
+                        }
                     }
                 });
             });
 
             function updateStatus(itemId, status) {
-                if (status == 'oke' && !confirm("Apakah Anda yakin ingin menyetujui?")) {
-                    return;
-                }
-                if (status == 'tolak' && !confirm("Apakah Anda yakin ingin menolak?")) {
+                let message = status === 'oke' ? "Apakah Anda yakin ingin menyetujui?" : "Apakah Anda yakin ingin menolak?";
+
+                if (!confirm(message)) {
+                    alert("Aksi dibatalkan.");
                     return;
                 }
 
@@ -353,11 +378,20 @@
                         _token: '{{ csrf_token() }}',
                     },
                     success: function(response) {
-                        alert(response.message);
+                        if (response && response.message) {
+                            alert(response.message);
+                        } else {
+                            alert('Status berhasil diperbarui.'); // Pesan default jika tidak ada response.message
+                        }
                         location.reload();
                     },
-                    error: function(xhr) {
-                        alert('Terjadi kesalahan: ' + xhr.responseJSON.message);
+                    error: function(xhr, status, error) {
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            alert('Terjadi kesalahan: ' + xhr.responseJSON.message);
+                        } else {
+                            alert('Terjadi kesalahan: ' +
+                                error); // Pesan default jika tidak ada xhr.responseJSON.message
+                        }
                     }
                 });
             }
@@ -378,10 +412,8 @@
                     submitHoButton.disabled = !allReviewed;
                 }
 
-                // Periksa status awal saat halaman dimuat
                 updateSubmitHoButton();
 
-                // Tangkap event AJAX untuk memperbarui tombol
                 $(document).ajaxSuccess(function() {
                     updateSubmitHoButton();
                 });
@@ -391,6 +423,62 @@
                     steps.forEach(step => step.classList.remove('active'));
                     steps[index].classList.add('active');
                 }
+            });
+
+            function confirmAction(actionType) {
+                Swal.fire({
+                    title: actionType === 'tolak' ? 'Alasan Penolakan' : 'Alasan Cancel',
+                    input: 'textarea',
+                    inputPlaceholder: 'Masukkan alasan...',
+                    showCancelButton: true,
+                    confirmButtonText: 'Kirim',
+                    cancelButtonText: 'Batal',
+                    preConfirm: (reason) => {
+                        if (!reason) {
+                            Swal.showValidationMessage('Alasan wajib diisi!');
+                        }
+                        return reason;
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Kirim alasan ke backend
+                        fetch('/your-route', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                },
+                                body: JSON.stringify({
+                                    action: actionType,
+                                    reason: result.value
+                                })
+                            }).then(response => response.json())
+                            .then(data => {
+                                Swal.fire('Sukses!', data.message, 'success');
+                            }).catch(error => {
+                                Swal.fire('Error!', 'Terjadi kesalahan.', 'error');
+                            });
+                    }
+                });
+            }
+            let actionType = '';
+
+            function showReasonModal(action) {
+                actionType = action;
+                $('#reasonModal').modal('show');
+            }
+
+            document.getElementById('submitReasonButton').addEventListener('click', function() {
+                let reason = document.getElementById('reasonInput').value;
+
+                if (reason.trim() === '') {
+                    alert('Harap masukkan alasan terlebih dahulu.');
+                    return;
+                }
+
+                document.getElementById('actionInput').value = actionType;
+                document.getElementById('reasonHiddenInput').value = reason;
+                document.getElementById('actionForm').submit();
             });
         </script>
 
