@@ -82,43 +82,51 @@ class FormController extends Controller
         'tanggal_keberangkatan' => $validatedData['tanggalKeberangkatan'],
     ]);
 
-    if ($role === 'nm') {
-        $form->acc_nm = 'oke';
-    } else {
-        $form->acc_hrd = 'oke';
-    }
-
-    $form->submitted_by_hrd = auth()->user()->nama_lengkap;
-    $form->save();
-
-    $namaPegawais = [];
-
-    foreach ($request->namaPegawai as $index => $pegawaiId) {
-        $uploadFilePath = null;
-
-        if ($request->hasFile("uploadFile.$index")) {
-            $originalName = $request->file("uploadFile.$index")->getClientOriginalName();
-            $uploadFilePath = $request->file("uploadFile.$index")->storeAs('uploads', $originalName, 'public');
-        }
-
-        $namaPegawais[] = [
-            'form_id' => $form->id,
-            'nama_pegawai' => $request->namaPegawaiNama[$index],
-            'departemen' => $request->departemen[$index],
-            'nik' => $request->nik[$index],
-            'upload_file' => $uploadFilePath,
-            'tanggal_berangkat' => $request->tanggalBerangkat[$index],
-            'tanggal_kembali' => $request->tanggalKembali[$index],
-            'created_at' => now(),
-            'updated_at' => now(),
-        ];
-    }
-
-    Nama_pegawai::insert($namaPegawais);
-
-    return redirect()->route('formpst.index_keluar', ['form' => $form->id])
-        ->with('success', 'Data berhasil disimpan, dan persetujuan otomatis telah diberikan.');
+// Tentukan persetujuan berdasarkan peran
+if ($role === 'nm') {
+    $form->acc_nm = 'oke';
+} else {
+    $form->acc_hrd = 'oke';
 }
+
+$form->submitted_by_hrd = auth()->user()->nama_lengkap;
+$form->save();
+
+// Siapkan data pegawai untuk insert batch
+$namaPegawais = [];
+
+foreach ($request->namaPegawai as $index => $pegawaiId) {
+    $uploadFilePath = null;
+
+    // Upload file jika ada
+    if ($request->hasFile("uploadFile.$index")) {
+        $originalName = $request->file("uploadFile.$index")->getClientOriginalName();
+        $uploadFilePath = $request->file("uploadFile.$index")->storeAs('uploads', $originalName, 'public');
+    }
+
+    // Tambahkan data ke array
+    $namaPegawais[] = [
+        'form_id' => $form->id,
+        'nama_pegawai' => $request->namaPegawaiNama[$index], // Nama lengkap pegawai
+        'departemen' => $request->departemen[$index],
+        'nik' => $request->nik[$index],
+        'upload_file' => $uploadFilePath,
+        'lama_keberangkatan' => $request->lamaKeberangkatan[$index],
+        'created_at' => now(),
+        'updated_at' => now(),
+    ];
+}
+
+// Masukkan data pegawai ke database
+Nama_pegawai::insert($namaPegawais);
+
+// Redirect dengan pesan sukses
+return redirect()->route('formpst.index_keluar', ['form' => $form->id])
+    ->with('success', 'Data berhasil disimpan, dan persetujuan otomatis telah diberikan.');
+}
+
+
+    
 
 public function edit($id)
     {
