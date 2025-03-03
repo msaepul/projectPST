@@ -66,8 +66,12 @@
                                         @endif
                                     </td>
                                     <td class="text-center">
-                                        <a href="{{ route('formpst.show', ['id' => $item->id]) }}"
-                                            class="btn btn-sm btn-outline-primary">Detail</a>
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <a href="{{ route($item->cabang_asal === 'HO' ? 'formpst.show_nm' : 'formpst.show', ['id' => $item->id]) }}" class="btn btn-sm btn-outline-primary">Detail</a>
+                                            @if (auth()->user()->role === 'hrd' && $item->acc_cabang !== 'oke')
+                                                <a href="{{ route('formpst.edit', ['id' => $item->id]) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                                            @endif
+                                        </div>
                                     </td>
                                 </tr>
                             @endif
