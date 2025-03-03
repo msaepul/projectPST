@@ -50,25 +50,14 @@
 
                         {{-- Tombol Submit --}}
                         <div class="mb-4">
-                            <form id="actionForm" action="{{ route('form.submit', $form->id) }}" method="POST">
+                            <form id="actionForm" action="{{ route('form.submit_nm', $form->id) }}" method="POST">
                                 @csrf
                                 <input type="hidden" name="action" id="actionInput">
                                 <input type="hidden" name="reason" id="reasonHiddenInput"> {{-- Input alasan tersembunyi --}}
 
-                                @if (auth()->user()->role === 'bm')
-                                    @if ($form->acc_bm == null)
-                                        <button type="submit" name="action" value="acc_bm" class="btn btn-primary mr-2">
-                                            Confirm
-                                        </button>
-                                        <button type="button" class="btn btn-danger"
-                                            onclick="showReasonModal('reject_bm')">
-                                            Tolak
-                                        </button>
-                                    @endif
-                                @endif
 
                                 @if (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'HO')
-                                    @if ($form->acc_ho == null && $form->acc_bm == 'oke')
+                                    @if ($form->acc_ho == null && $form->acc_nm == 'oke')
                                         <button type="submit" id="submitHoButton" name="action" value="acc_ho"
                                             class="btn btn-primary mr-2" disabled>
                                             Confirm
