@@ -11,7 +11,12 @@
         </div>
 
         <div class="card-body">
-            <form id="suratTugasForm" action="{{ route('formpst.store') }}" method="POST" enctype="multipart/form-data">
+            @php
+                $actionRoute = route('formpst.store', ['role' => auth()->user()->role]);
+            @endphp
+
+            <form id="suratTugasForm" action="{{ $actionRoute }}" method="POST" enctype="multipart/form-data">
+
                 @csrf
                 <div class="row">
                     <div class="col-md-6">
@@ -96,13 +101,14 @@
                                         </td>
                                         <td><input type="file" name="uploadFile[]" class="form-control"></td>
                                         <td>
-                                                <div class="d-flex align-items-center">
-                                                    <input type="date" name="tanggalBerangkat[]" class="form-control" required>
-                                                    <span class="mx-2">s/d</span>
-                                                    <input type="date" name="tanggalKembali[]" class="form-control" required>
-                                                </div>
-                                            </td>
-                                            
+                                            <div class="d-flex align-items-center">
+                                                <input type="date" name="tanggalBerangkat[]" class="form-control"
+                                                    required>
+                                                <span class="mx-2">s/d</span>
+                                                <input type="date" name="tanggalKembali[]" class="form-control" required>
+                                            </div>
+                                        </td>
+
                                         <td style="text-align: center;">
                                             <button type="button" class="btn btn-danger btn-remove">
                                                 <i class="bi bi-trash" style="font-size: 16px; margin-right: 4px;"></i>
