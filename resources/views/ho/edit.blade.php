@@ -1,99 +1,6 @@
 @extends('layouts.main')
 
 @section('content')
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background: #eef2f7;
-        }
-
-        .container {
-            background-color: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 700px;
-            margin: 40px auto;
-        }
-
-        .card-header {
-            background-color: #007bff;
-            color: white;
-            padding: 15px;
-            border-radius: 10px 10px 0 0;
-            text-align: center;
-            font-weight: bold;
-            font-size: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 15px;
-            color: #555;
-            font-weight: 600;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        select {
-            width: 100%;
-            padding: 10px 15px;
-            border-radius: 8px;
-            border: 1px solid #ced4da;
-            background-color: #f9f9f9;
-            font-size: 16px;
-            transition: all 0.2s;
-        }
-
-        input:focus,
-        select:focus {
-            border-color: #007bff;
-            background-color: #fff;
-            box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
-            outline: none;
-        }
-
-        .btn-container {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-        }
-
-        button {
-            padding: 12px 30px;
-            border-radius: 8px;
-            border: none;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .btn-primary {
-            background-color: #007bff;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: #0056b3;
-        }
-
-        .btn-secondary {
-            background-color: #6c757d;
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background-color: #5a6268;
-        }
-    </style>
-
     <div class="container pt-4">
         <div class="row justify-content-center">
             <div class="col-md-10">
@@ -168,7 +75,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <label for="no_hp">No HP:</label>
                                     <input type="text" id="no_hp" name="no_hp" value="{{ $user->no_hp }}"
@@ -181,12 +88,14 @@
                                 <div class="form-group">
                                     <label for="role">Role:</label>
                                     <select class="form-control" id="role" name="role" required>
-                                        <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
+                                        <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin
+                                        </option>
                                         <option value="user" {{ $user->role == 'user' ? 'selected' : '' }}>User</option>
                                         <option value="bm" {{ $user->role == 'bm' ? 'selected' : '' }}>BM</option>
                                         <option value="hrd" {{ $user->role == 'hrd' ? 'selected' : '' }}>HRD</option>
                                         <option value="nm" {{ $user->role == 'nm' ? 'selected' : '' }}>NM</option>
-                                        <option value="pegawai" {{ $user->role == 'pegawai' ? 'selected' : '' }}>Pegawai</option>
+                                        <option value="pegawai" {{ $user->role == 'pegawai' ? 'selected' : '' }}>Pegawai
+                                        </option>
                                     </select>
                                 </div>
 
@@ -197,4 +106,96 @@
                             </form>
                         </div>
                     </div>
-                @endsection
+                    <style>
+                        body {
+                            font-family: 'Arial', sans-serif;
+                            background: #eef2f7;
+                        }
+
+                        .container {
+                            background-color: white;
+                            padding: 30px;
+                            border-radius: 15px;
+                            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+                            width: 100%;
+                            max-width: 700px;
+                            margin: 40px auto;
+                        }
+
+                        .card-header {
+                            background-color: #007bff;
+                            color: white;
+                            padding: 15px;
+                            border-radius: 10px 10px 0 0;
+                            text-align: center;
+                            font-weight: bold;
+                            font-size: 20px;
+                        }
+
+                        .form-group {
+                            margin-bottom: 20px;
+                        }
+
+                        label {
+                            display: block;
+                            margin-bottom: 8px;
+                            font-size: 15px;
+                            color: #555;
+                            font-weight: 600;
+                        }
+
+                        input[type="text"],
+                        input[type="email"],
+                        select {
+                            width: 100%;
+                            padding: 10px 15px;
+                            border-radius: 8px;
+                            border: 1px solid #ced4da;
+                            background-color: #f9f9f9;
+                            font-size: 16px;
+                            transition: all 0.2s;
+                        }
+
+                        input:focus,
+                        select:focus {
+                            border-color: #007bff;
+                            background-color: #fff;
+                            box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+                            outline: none;
+                        }
+
+                        .btn-container {
+                            display: flex;
+                            justify-content: center;
+                            gap: 20px;
+                        }
+
+                        button {
+                            padding: 12px 30px;
+                            border-radius: 8px;
+                            border: none;
+                            font-size: 16px;
+                            font-weight: bold;
+                            cursor: pointer;
+                            transition: background-color 0.3s ease;
+                        }
+
+                        .btn-primary {
+                            background-color: #007bff;
+                            color: white;
+                        }
+
+                        .btn-primary:hover {
+                            background-color: #0056b3;
+                        }
+
+                        .btn-secondary {
+                            background-color: #6c757d;
+                            color: white;
+                        }
+
+                        .btn-secondary:hover {
+                            background-color: #5a6268;
+                        }
+                    </style>
+@endsection
