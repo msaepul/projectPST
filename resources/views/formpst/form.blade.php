@@ -82,35 +82,38 @@
                                 <tbody>
                                     <tr id="rowToClone">
                                         <td>
-                                            <select name="namaPegawai[]" class="form-control namaPegawai " required>
+                                            <select name="namaPegawai[]" class="form-control namaPegawai" required>
                                                 <option value="" disabled selected>Pilih Nama</option>
-                                                @if ((auth()->user()->role !== 'nm' ))
-                                                @foreach ($users as $user)
-                                                    <option value="{{ $user->id }}"
-                                                        data-departemen="{{ $user->departemen }}"
-                                                        data-nik="{{ $user->nik }}"
-                                                        data-nama="{{ $user->nama_lengkap }}">
-                                                        {{ $user->nama_lengkap }} / {{ $user->departemen }} / {{ $user->nik }}
-                                                    </option>
-                                                @endforeach
+                                                @if (auth()->user()->role !== 'nm')
+                                                    @foreach ($users as $user)
+                                                        <option value="{{ $user->id }}"
+                                                            data-departemen="{{ $user->departemen }}"
+                                                            data-nik="{{ $user->nik }}"
+                                                            data-nama="{{ $user->nama_lengkap }}">
+                                                            {{ $user->nama_lengkap }} / {{ $user->departemen }} /
+                                                            {{ $user->nik }}
+                                                        </option>
+                                                    @endforeach
                                                 @endif
 
-                                                @if ((auth()->user()->role === 'nm' ))
-                                                @foreach ($nm as $user)
-                                                    <option value="{{ $user->id }}"
-                                                        data-departemen="{{ $user->departemen }}"
-                                                        data-nik="{{ $user->nik }}"
-                                                        data-nama="{{ $user->nama_lengkap }}">
-                                                        {{ $user->nama_lengkap }} / {{ $user->departemen }} / {{ $user->nik }}
-                                                    </option>
-                                                @endforeach
+                                                @if (auth()->user()->role === 'nm')
+                                                    @foreach ($nm as $user)
+                                                        <option value="{{ $user->id }}"
+                                                            data-departemen="{{ $user->departemen }}"
+                                                            data-nik="{{ $user->nik }}"
+                                                            data-nama="{{ $user->nama_lengkap }}">
+                                                            {{ $user->nama_lengkap }} / {{ $user->departemen }} /
+                                                            {{ $user->nik }}
+                                                        </option>
+                                                    @endforeach
                                                 @endif
                                             </select>
+                                            <input type="hidden" name="namaPegawaiId[]" class="namaPegawaiId">
+                                            <input type="text" class="form-control namaPegawaiDisplay" readonly>
                                         </td>
                                         <td><input type="text" name="departemen[]" class="form-control departemen"
                                                 readonly></td>
-                                        <td><input type="text" name="nik[]" class="form-control nik" readonly>
-                                        </td>
+                                        <td><input type="text" name="nik[]" class="form-control nik" readonly></td>
                                         <td><input type="file" name="uploadFile[]" class="form-control"></td>
                                         <td>
                                             <div class="d-flex align-items-center">
@@ -120,12 +123,10 @@
                                                 <input type="date" name="tanggalKembali[]" class="form-control" required>
                                             </div>
                                         </td>
-
                                         <td style="text-align: center;">
                                             <button type="button" class="btn btn-danger btn-remove">
                                                 <i class="bi bi-trash" style="font-size: 16px; margin-right: 4px;"></i>
                                             </button>
-
                                         </td>
                                     </tr>
                                 </tbody>
@@ -145,6 +146,38 @@
     </div>
     </div>
     <script>
+        document.querySelector('#pegawaiTable').addEventListener('change', function(event) {
+            if (event.target.classList.contains('namaPegawai')) {
+                const selectedOption = event.target.options[event.target.selectedIndex];
+                const row = event.target.closest('tr');
+                const departemenInput = row.querySelector('.departemen');
+                const nikInput = row.querySelector('.nik');
+                const namaPegawaiDisplayInput = row.querySelector('.namaPegawaiDisplay');
+
+                if (selectedOption && departemenInput && nikInput && namaPegawaiDisplayInput) {
+                    departemenInput.value = selectedOption.getAttribute('data-departemen');
+                    nikInput.value = selectedOption.getAttribute('data-nik');
+                    namaPegawaiDisplayInput.value = selectedOption.getAttribute('data-nama');
+
+                    // Sembunyikan dropdown, tampilkan input text
+                    event.target.style.display = 'none';
+                    namaPegawaiDisplayInput.style.display = 'block';
+                }
+            }
+        });
+
+        // Klik input namaPegawaiDisplay untuk mengganti nama
+        document.querySelector('#pegawaiTable').addEventListener('click', function(event) {
+            if (event.target.classList.contains('namaPegawaiDisplay')) {
+                const row = event.target.closest('tr');
+                const dropdown = row.querySelector('.namaPegawai');
+
+                // Tampilkan kembali dropdown, sembunyikan input text
+                dropdown.style.display = 'block';
+                event.target.style.display = 'none';
+            }
+        });
+
         // Tambah Baris Baru
         document.getElementById('add-field').addEventListener('click', function() {
             const rowToClone = document.getElementById('rowToClone');
@@ -153,7 +186,15 @@
                 newRow.removeAttribute('id');
                 newRow.querySelectorAll('input, select').forEach(input => input.value = '');
                 document.querySelector('#pegawaiTable tbody').appendChild(newRow);
+
+                // Aktifkan Select2 di dropdown yang baru
                 $(newRow).find('.select2').select2();
+
+                // Pastikan input text kosong dan dropdown terlihat
+                newRow.querySelector('.namaPegawaiId').value = '';
+                newRow.querySelector('.namaPegawaiDisplay').value = '';
+                newRow.querySelector('.namaPegawai').style.display = 'block';
+                newRow.querySelector('.namaPegawaiDisplay').style.display = 'none';
             }
         });
 
@@ -161,21 +202,6 @@
         document.querySelector('#pegawaiTable').addEventListener('click', function(event) {
             if (event.target.classList.contains('btn-remove')) {
                 event.target.closest('tr').remove();
-            }
-        });
-
-        // Update Kolom Departemen dan NIK Berdasarkan Pilihan Nama Pegawai
-        document.querySelector('#pegawaiTable').addEventListener('change', function(event) {
-            if (event.target.classList.contains('namaPegawai')) {
-                const selectedOption = event.target.options[event.target.selectedIndex];
-                const row = event.target.closest('tr');
-                const departemenInput = row.querySelector('.departemen');
-                const nikInput = row.querySelector('.nik');
-
-                if (selectedOption && departemenInput && nikInput) {
-                    departemenInput.value = selectedOption.getAttribute('data-departemen');
-                    nikInput.value = selectedOption.getAttribute('data-nik');
-                }
             }
         });
 
