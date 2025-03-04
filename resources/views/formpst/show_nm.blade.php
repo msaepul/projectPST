@@ -5,7 +5,7 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card mb-4 mt-3">
-                    <div class="card-header" style="position: sticky; top: 0; z-index: 100;">
+                    <div class="card-header" style=" top: 0; z-index: 100;">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
 
