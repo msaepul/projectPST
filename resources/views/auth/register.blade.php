@@ -9,7 +9,6 @@
         body {
             font-family: 'Arial', sans-serif;
             background: linear-gradient(135deg, #003366, #b0bec5);
-            /* Gradasi biru navy dan abu */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -22,10 +21,8 @@
             padding: 20px;
             border-radius: 15px;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-            /* Tambahkan bayangan pada container */
             color: white;
             width: 400px;
-            /* Ukuran container sedikit lebih kecil */
         }
 
         .container h2 {
@@ -48,7 +45,8 @@
 
         input[type="text"],
         input[type="email"],
-        input[type="password"] {
+        input[type="password"],
+        select {
             width: 100%;
             padding: 10px;
             border-radius: 8px;
@@ -62,11 +60,10 @@
 
         input[type="text"]:focus,
         input[type="email"]:focus,
-        input[type="password"]:focus {
+        input[type="password"]:focus,
+        select:focus {
             border-color: #17a2b8;
-            /* Border berubah saat focus */
             box-shadow: 0 0 8px rgba(23, 162, 184, 0.8);
-            /* Efek shadow saat fokus */
         }
 
         button {
@@ -83,9 +80,7 @@
 
         button:hover {
             background-color: #138496;
-            /* Efek hover pada tombol */
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            /* Efek bayangan tombol saat hover */
         }
 
         .link-container {
@@ -99,7 +94,6 @@
             font-size: 14px;
         }
 
-        /* Grid layout untuk dua kolom */
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -110,7 +104,6 @@
             margin-bottom: 10px;
         }
 
-        /* Menyesuaikan ukuran icon di password */
         .form-group .icon {
             position: absolute;
             right: 15px;
@@ -130,89 +123,105 @@
             @csrf
 
             <div class="form-group">
-                <label for="name">Name</label>
-                <input type="text" id="name" name="name" value="{{ old('name') }}" required autofocus
-                    autocomplete="name">
-                @error('name')
+                <label for="nama_lengkap">Nama Lengkap:</label>
+                <input type="text" id="nama_lengkap" name="nama_lengkap" value="{{ old('nama_lengkap') }}" required>
+                @error('nama_lengkap')
                     <p style="color: red; margin-top: 5px;">{{ $message }}</p>
                 @enderror
             </div>
 
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" value="{{ old('email') }}" required
-                    autocomplete="username">
-                @error('email')
-                    <p style="color: red; margin-top: 5px;">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <!-- Menggunakan layout dua kolom untuk NIK dan Departemen -->
             <div class="form-row">
                 <div class="form-group">
-                    <label for="nik">{{ __('NIK') }}</label>
-                    <input id="nik" type="text" class="form-control @error('nik') is-invalid @enderror"
-                        name="nik" value="{{ old('nik') }}" required>
+                    <label for="name">Nama User:</label>
+                    <input type="text" id="name" name="name" value="{{ old('name') }}" required>
+                    @error('name')
+                        <p style="color: red; margin-top: 5px;">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" value="{{ old('email') }}" required>
+                    @error('email')
+                        <p style="color: red; margin-top: 5px;">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                    <span class="icon" id="togglePassword"></span>
+                    @error('password')
+                        <p style="color: red; margin-top: 5px;">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div class="form-group">
+                    <label for="nik">NIK:</label>
+                    <input type="text" id="nik" name="nik" value="{{ old('nik') }}" required>
                     @error('nik')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
-                </div>
-
-                <div class="form-group">
-                    <label for="departemen">{{ __('Departemen') }}</label>
-                    <input id="departemen" type="text" class="form-control @error('departemen') is-invalid @enderror"
-                        name="departemen" value="{{ old('departemen') }}" required>
-                    @error('departemen')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
+                        <p style="color: red; margin-top: 5px;">{{ $message }}</p>
                     @enderror
                 </div>
             </div>
 
-            <!-- Menggunakan layout dua kolom untuk Cabang Asal dan No HP -->
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="cabang_asal">{{ __('Cabang Asal') }}</label>
-                    <input id="cabang_asal" type="text"
-                        class="form-control @error('cabang_asal') is-invalid @enderror" name="cabang_asal"
-                        value="{{ old('cabang_asal') }}" required>
-                    @error('cabang_asal')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
-                </div>
-
-                <div class="form-group">
-                    <label for="no_hp">{{ __('No HP') }}</label>
-                    <input id="no_hp" type="text" class="form-control @error('no_hp') is-invalid @enderror"
-                        name="no_hp" value="{{ old('no_hp') }}" required>
-                    @error('no_hp')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
-                </div>
-            </div>
-
-            <!-- Password dan Confirm Password -->
             <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required autocomplete="new-password">
-                <span class="icon" id="togglePassword">🔒</span> <!-- Ikon mata untuk password -->
-                @error('password')
+                <label>Departemen:</label>
+                <select class="form-control" name="departemen" required>
+                    <option value="">Pilih Departemen</option>
+                    @foreach ($departemens as $departemen)
+                        <option value="{{ $departemen->id }}"
+                            {{ old('departemen') == $departemen->id ? 'selected' : '' }}>
+                            {{ $departemen->nama_departemen }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('departemen')
                     <p style="color: red; margin-top: 5px;">{{ $message }}</p>
                 @enderror
+            </div>
+
+            <div class="form-group">
+                <label>Cabang Asal:</label>
+                <select class="form-control" name="cabang_asal" required>
+                    <option value="">Pilih Cabang</option>
+                    @foreach ($cabangs as $cabang)
+                        <option value="{{ $cabang->id }}" {{ old('cabang_asal') == $cabang->id ? 'selected' : '' }}>
+                            {{ $cabang->nama_cabang }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('cabang_asal')
+                    <p style="color: red; margin-top: 5px;">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="no_hp">No HP:</label>
+                    <input type="text" id="no_hp" name="no_hp" value="{{ old('no_hp') }}" required>
+                    @error('no_hp')
+                        <p style="color: red; margin-top: 5px;">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div class="form-group">
+                    <label for="role">Role:</label>
+                    <select class="form-control" id="role" name="role" required>
+                        <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+                        <option value="user" {{ old('role') == 'user' ? 'selected' : '' }}>User</option>
+                        <option value="bm" {{ old('role') == 'bm' ? 'selected' : '' }}>BM</option>
+                        <option value="hrd" {{ old('role') == 'hrd' ? 'selected' : '' }}>HRD</option>
+                        <option value="nm" {{ old('role') == 'nm' ? 'selected' : '' }}>NM</option>
+                        <option value="pegawai" {{ old('role') == 'pegawai' ? 'selected' : '' }}>Pegawai</option>
+                    </select>
+                </div>
             </div>
 
             <div class="form-group">
                 <label for="password_confirmation">Confirm Password</label>
                 <input type="password" id="password_confirmation" name="password_confirmation" required
                     autocomplete="new-password">
-                <span class="icon" id="toggleConfirmPassword">🔒</span> <!-- Ikon mata untuk konfirmasi password -->
+                <span class="icon" id="toggleConfirmPassword"></span>
                 @error('password_confirmation')
                     <p style="color: red; margin-top: 5px;">{{ $message }}</p>
                 @enderror
@@ -227,23 +236,22 @@
     </div>
 
     <script>
-        // Toggle Password Visibility
         const togglePassword = document.getElementById('togglePassword');
         const password = document.getElementById('password');
 
-        togglePassword.addEventListener('click', function(e) {
+        togglePassword.addEventListener('click', function() {
             const type = password.type === 'password' ? 'text' : 'password';
             password.type = type;
-            this.textContent = type === 'password' ? '🔒' : '🔓';
+            this.innerHTML = type === 'password' ? '&#128065;' : '&#128064;';
         });
 
         const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
         const confirmPassword = document.getElementById('password_confirmation');
 
-        toggleConfirmPassword.addEventListener('click', function(e) {
+        toggleConfirmPassword.addEventListener('click', function() {
             const type = confirmPassword.type === 'password' ? 'text' : 'password';
             confirmPassword.type = type;
-            this.textContent = type === 'password' ? '🔒' : '🔓';
+            this.innerHTML = type === 'password' ? '&#128065;' : '&#128064;';
         });
     </script>
 </body>

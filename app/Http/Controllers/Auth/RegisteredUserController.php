@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Departemen;
+use App\Models\Cabang;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -20,7 +22,9 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        return view('auth.register');
+        $departemens = Departemen::all(); // Ambil data departemen dari database
+        $cabangs = Cabang::all(); // Ambil data cabang dari database
+        return view('auth.register', compact('departemens', 'cabangs')); // Kirim data departemen dan cabang ke view
     }
 
     /**
