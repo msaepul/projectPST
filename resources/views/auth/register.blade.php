@@ -165,7 +165,7 @@
                 </div>
             </div>
 
-            <div class="form-group">
+            {{-- <div class="form-group">
                 <label>Departemen:</label>
                 <select class="form-control" name="departemen" required>
                     <option value="">Pilih Departemen</option>
@@ -194,7 +194,7 @@
                 @error('cabang_asal')
                     <p style="color: red; margin-top: 5px;">{{ $message }}</p>
                 @enderror
-            </div>
+            </div> --}}
 
             <div class="form-row">
                 <div class="form-group">
