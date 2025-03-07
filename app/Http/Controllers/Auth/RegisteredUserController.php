@@ -41,9 +41,8 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'role' => ['required', 'string', 'in:admin,user'],
             'nik' => ['required', 'string', 'max:20', 'unique:users'],
-            'departemen' => ['required', 'string', 'max:255'],
-            'cabang_asal' => ['required', 'string', 'max:255'],
             'no_hp' => ['required', 'string', 'max:15'],
+            // 'departemen' dan 'cabang_asal' tidak required lagi
         ]);
 
         // Membuat pengguna baru
@@ -54,8 +53,8 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
             'role' => $request->role,
             'nik' => $request->nik,
-            'departemen' => $request->departemen,
-            'cabang_asal' => $request->cabang_asal,
+            'departemen' => $request->departemen ?? null, // Jika kosong, jadikan NULL
+            'cabang_asal' => $request->cabang_asal ?? null, // Jika kosong, jadikan NULL
             'no_hp' => $request->no_hp,
         ]);
 
