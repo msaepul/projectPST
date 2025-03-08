@@ -47,26 +47,21 @@
                                         <td>{{ $user->no_hp }}</td>
                                         <td>{{ $user->role }}</td>
                                         <td class="text-center">
-                                            <div class="d-flex justify-content-center" style="gap: 10px;">
+                                            <div class="d-flex justify-content-center" style="gap: 5px;">
                                                 <a href="{{ route('ho.user.edit', $user->id) }}"
                                                     class="btn btn-sm btn-outline-warning" title="Edit">
                                                     <img src="{{ asset('icons/create-outline.svg') }}" alt="Edit"
                                                         style="width: 20px; height: 20px;">
                                                 </a>
-                        
-                                                <button type="button" class="btn btn-sm btn-outline-primary"
-                                                    title="Upload Tanda Tangan" data-bs-toggle="modal"
-                                                    data-bs-target="#uploadSignatureModal{{ $user->id }}">
-                                                    <i class="bi bi-upload"
-                                                        style="font-size: 20px; width: 20px; height: 20px;"></i>
+                                                <button type="button" class="btn btn-sm btn-outline-primary" title="Upload Tanda Tangan" data-bs-toggle="modal" data-bs-target="#uploadSignatureModal{{ $user->id }}">
+                                                    <img src="{{ asset('icons/upload-outline.svg') }}" alt="Upload"
+                                                        style="width: 20px; height: 20px;">
                                                 </button>
-                        
                                                 <form action="{{ route('ho.user.destroy', $user->id) }}" method="POST"
                                                     onsubmit="return confirm('Apakah Anda yakin ingin menghapus user ini?');">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger"
-                                                        title="Hapus">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Hapus">
                                                         <img src="{{ asset('icons/trash-outline.svg') }}" alt="Delete"
                                                             style="width: 20px; height: 20px;">
                                                     </button>
@@ -74,6 +69,25 @@
                                             </div>
                                         </td>
                                     </tr>
+                                    <!-- Modal Upload Tanda Tangan -->
+                                    <div class="modal fade" id="uploadSignatureModal{{ $user->id }}" tabindex="-1" aria-labelledby="uploadSignatureLabel{{ $user->id }}" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="uploadSignatureLabel{{ $user->id }}">Upload Tanda Tangan</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form action="{{ route('ho.user.uploadSignature', $user->id) }}" method="POST" enctype="multipart/form-data">
+                                                        @csrf
+                                                        <label for="ttd">Upload Tanda Tangan:</label>
+                                                        <input type="file" name="ttd" id="ttd" accept="image/png, image/jpeg" required>
+                                                        <button type="submit" class="btn btn-primary">Upload</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 @endif
                             @endforeach
                         </tbody>
