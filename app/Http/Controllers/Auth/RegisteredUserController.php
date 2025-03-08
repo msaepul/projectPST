@@ -51,7 +51,7 @@ class RegisteredUserController extends Controller
             'nama_lengkap' => $request->nama_lengkap,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => $request->role ?? null,
+            'role' => $request->role,
             'nik' => $request->nik,
             'departemen' => $request->departemen ?? null, // Jika kosong, jadikan NULL
             'cabang_asal' => $request->cabang_asal ?? null, // Jika kosong, jadikan NULL
