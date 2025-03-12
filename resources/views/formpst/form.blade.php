@@ -1,5 +1,7 @@
 @extends('layouts.main')
+
 @section('content')
+
     {{ Breadcrumbs::render('Form') }}
 
     <div class="card mb-4">
@@ -16,7 +18,6 @@
             @endphp
 
             <form id="suratTugasForm" action="{{ $actionRoute }}" method="POST" enctype="multipart/form-data">
-
                 @csrf
                 <div class="row">
                     <div class="col-md-6">
@@ -63,7 +64,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="card mt-4">
                     <div class="card-header">Daftar Pegawai yang Berangkat</div>
                     <div class="card-body">
@@ -74,15 +74,18 @@
                                         <th>Nama</th>
                                         <th>Departemen</th>
                                         <th>NIK</th>
-                                        <th>Upload File</th>
+                                        <th>No. HP</th>
+                                        <th>Ditugaskan Oleh</th>
+                                        <th>Status Koordinasi</th>
                                         <th>Lama Keberangkatan</th>
+                                        <th>Estimasi</th>
                                         <th style="text-align: center;">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr id="rowToClone">
                                         <td>
-                                            <select name="namaPegawai[]" class="form-control namaPegawai" required>
+                                            <select name="namaPegawai" class="form-control namaPegawai" required>
                                                 <option value="" disabled selected>Pilih Nama</option>
                                                 @if (auth()->user()->role !== 'nm')
                                                     @foreach ($users as $user)
@@ -108,20 +111,32 @@
                                                     @endforeach
                                                 @endif
                                             </select>
-                                            <input type="hidden" name="namaPegawaiId[]" class="namaPegawaiId">
+                                            <input type="hidden" name="namaPegawaiId" class="namaPegawaiId">
                                             <input type="text" class="form-control namaPegawaiDisplay" readonly>
                                         </td>
-                                        <td><input type="text" name="departemen[]" class="form-control departemen"
+                                        <td><input type="text" name="departemen" class="form-control departemen"
                                                 readonly></td>
-                                        <td><input type="text" name="nik[]" class="form-control nik" readonly></td>
-                                        <td><input type="file" name="uploadFile[]" class="form-control"></td>
+                                        <td><input type="text" name="nik" class="form-control nik" readonly></td>
+                                        <td><input type="text" name="noHp" class="form-control noHp" required></td>
+                                        <td><input type="text" name="ditugaskanOleh" class="form-control ditugaskanOleh"
+                                                required></td>
+                                        <td>
+                                            <select name="statusKoordinasi" class="form-control statusKoordinasi" required>
+                                                <option value="" disabled selected>Pilih Status</option>
+                                                <option value="Sudah Koordinasi">Sudah Koordinasi</option>
+                                                <option value="Belum Koordinasi">Belum Koordinasi</option>
+                                            </select>
+                                        </td>
                                         <td>
                                             <div class="d-flex align-items-center">
-                                                <input type="date" name="tanggalBerangkat[]" class="form-control"
-                                                    required>
+                                                <input type="date" name="tanggalBerangkat"
+                                                    class="form-control tanggalBerangkat" required>
                                                 <span class="mx-2">s/d</span>
-                                                <input type="date" name="tanggalKembali[]" class="form-control" required>
+                                                <input type="date" name="tanggalKembali"
+                                                    class="form-control tanggalKembali" required>
                                             </div>
+                                        </td>
+                                        <td><input type="text" name="estimasi" class="form-control estimasi" required>
                                         </td>
                                         <td style="text-align: center;">
                                             <button type="button" class="btn btn-danger btn-remove">
@@ -132,8 +147,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <button type="button" class="btn btn-primary mt-3" id="add-field">Tambah
-                            Pegawai</button>
+                        <button type="button" class="btn btn-primary mt-3" id="add-field">Tambah Pegawai</button>
                     </div>
                 </div>
 
@@ -146,35 +160,43 @@
     </div>
     </div>
     <script>
-        document.querySelector('#pegawaiTable').addEventListener('change', function(event) {
+        document.getElementById('pegawaiContainer').addEventListener('change', function(event) {
             if (event.target.classList.contains('namaPegawai')) {
                 const selectedOption = event.target.options[event.target.selectedIndex];
-                const row = event.target.closest('tr');
+                const row = event.target.closest('.pegawai-row');
                 const departemenInput = row.querySelector('.departemen');
                 const nikInput = row.querySelector('.nik');
                 const namaPegawaiDisplayInput = row.querySelector('.namaPegawaiDisplay');
+                const namaPegawaiId = row.querySelector('.namaPegawaiId');
 
                 if (selectedOption && departemenInput && nikInput && namaPegawaiDisplayInput) {
                     departemenInput.value = selectedOption.getAttribute('data-departemen');
                     nikInput.value = selectedOption.getAttribute('data-nik');
                     namaPegawaiDisplayInput.value = selectedOption.getAttribute('data-nama');
+                    namaPegawaiId.value = selectedOption.value;
 
                     // Sembunyikan dropdown, tampilkan input text
                     event.target.style.display = 'none';
                     namaPegawaiDisplayInput.style.display = 'block';
+
+                    // Blur dropdown agar otomatis hilang
+                    event.target.blur();
                 }
             }
         });
 
         // Klik input namaPegawaiDisplay untuk mengganti nama
-        document.querySelector('#pegawaiTable').addEventListener('click', function(event) {
+        document.getElementById('pegawaiContainer').addEventListener('click', function(event) {
             if (event.target.classList.contains('namaPegawaiDisplay')) {
-                const row = event.target.closest('tr');
+                const row = event.target.closest('.pegawai-row');
                 const dropdown = row.querySelector('.namaPegawai');
 
                 // Tampilkan kembali dropdown, sembunyikan input text
                 dropdown.style.display = 'block';
                 event.target.style.display = 'none';
+
+                // Fokus ke dropdown agar bisa langsung memilih
+                dropdown.focus();
             }
         });
 
@@ -185,7 +207,7 @@
                 const newRow = rowToClone.cloneNode(true);
                 newRow.removeAttribute('id');
                 newRow.querySelectorAll('input, select').forEach(input => input.value = '');
-                document.querySelector('#pegawaiTable tbody').appendChild(newRow);
+                document.getElementById('pegawaiContainer').appendChild(newRow);
 
                 // Aktifkan Select2 di dropdown yang baru
                 $(newRow).find('.select2').select2();
@@ -199,9 +221,9 @@
         });
 
         // Menghapus Baris
-        document.querySelector('#pegawaiTable').addEventListener('click', function(event) {
+        document.getElementById('pegawaiContainer').addEventListener('click', function(event) {
             if (event.target.classList.contains('btn-remove')) {
-                event.target.closest('tr').remove();
+                event.target.closest('.pegawai-row').remove();
             }
         });
 
@@ -228,7 +250,6 @@
     <style>
         .container {
             max-width: 400px;
-            /* Membuat form lebih ramping */
             margin: 0 auto;
             padding: 10px;
         }
@@ -268,15 +289,12 @@
             border-radius: 5px;
             display: flex;
             flex-direction: column;
-            /* Mengatur elemen dalam form menjadi vertikal */
             gap: 10px;
-            /* Memberikan jarak antar elemen */
         }
 
         .form-group {
             display: flex;
             flex-direction: column;
-            /* Input lebih tersusun ke bawah */
         }
 
         .form-group label {
@@ -299,7 +317,6 @@
             display: flex;
             flex-direction: column;
             gap: 5px;
-            /* Beri jarak antar tombol */
         }
 
         .btn {
@@ -326,6 +343,56 @@
 
         .btn-secondary {
             background-color: #6c757d;
+        }
+
+        /* Tambahan CSS untuk layout yang lebih rapi */
+        .card-body .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .card-body .col-md-6 {
+            flex: 1 1 48%;
+            min-width: 300px;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        #pegawaiTable {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        #pegawaiTable th,
+        #pegawaiTable td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        #pegawaiTable th {
+            background-color: #f2f2f2;
+        }
+
+        #pegawaiTable tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        #pegawaiTable input[type="text"],
+        #pegawaiTable input[type="date"],
+        #pegawaiTable select {
+            width: 100%;
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        #pegawaiTable .d-flex {
+            gap: 5px;
         }
     </style>
 @endsection
