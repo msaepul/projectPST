@@ -2,91 +2,87 @@
 @section('content')
     {{ Breadcrumbs::render('Form') }}
 
-    <div class="container mt-4">
-        <div class="card">
-            <div class="card-header bg-primary text-white">
-                <div class="d-flex align-items-center">
-                    <img src="{{ asset('dist/img/arnon.png') }}" alt="Logo Arnon" class="mr-2" style="height: 30px;">
-                    <h5 class="mb-0">Form Permintaan</h5>
-                </div>
+    <div class="card mb-4">
+        <div class="card-header d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <img src="{{ asset('dist/img/arnon.png') }}" alt="Logo Arnon" class="logo">
+                <h4 style="margin: 0; margin-left: 10px;">Form Permintaan</h4>
             </div>
-            <div class="card-body">
-                <form id="suratTugasForm" action="{{ route('formpst.store', ['role' => auth()->user()->role]) }}"
-                    method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <div class="row mb-3">
-                        <div class="col-md-4">
-                            <label for="noSurat" class="form-label">No. Surat</label>
-                            <input type="text" class="form-control" name="no_surat" id="noSurat"
+        </div>
+
+        <div class="card-body">
+            @php
+                $actionRoute = route('formpst.store', ['role' => auth()->user()->role]);
+            @endphp
+
+            <form id="suratTugasForm" action="{{ $actionRoute }}" method="POST" enctype="multipart/form-data">
+
+                @csrf
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="noSurat">No. Surat</label>
+                            <input type="text" class="form-control form-control-sm" name="no_surat" id="noSurat"
                                 value="{{ $nomorSurat }}" readonly required>
                         </div>
-                        <div class="col-md-4">
-                            <label for="namaPemohon" class="form-label">Nama Pemohon</label>
-                            <input type="text" class="form-control" name="namaPemohon" id="namaPemohon"
-                                value="{{ Auth::user()->nama_lengkap ?? '' }}" readonly required>
+                        <div class="form-group">
+                            <label for="namaPemohon">Nama Pemohon</label>
+                            <input type="text" id="namaPemohon" name="namaPemohon" class="form-control"
+                                value="{{ old('namaPemohon', Auth::user()->nama_lengkap ?? '') }}" required readonly>
                         </div>
-                        <div class="col-md-4">
-                            <label for="cabangAsal" class="form-label">Cabang Asal</label>
-                            <input type="text" class="form-control" name="cabangAsal" id="cabangAsal"
-                                value="{{ Auth::user()->cabang_asal ?? '' }}" readonly required>
+                        <div class="form-group">
+                            <label for="cabangAsal">Cabang Asal</label>
+                            <input type="text" id="cabangAsal" name="cabangAsal" class="form-control"
+                                value="{{ old('cabangAsal', Auth::user()->cabang_asal ?? '') }}" required readonly>
                         </div>
                     </div>
-                    <div class="row mb-3">
-                        <div class="col-md-4">
-                            <label for="cabangTujuan" class="form-label">Cabang Tujuan</label>
-                            <select class="form-select select2" name="cabang_tujuan" id="cabangTujuan" required>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="cabangTujuan">Cabang Tujuan</label>
+                            <select class="form-control select2" name="cabang_tujuan" id="cabangTujuan" required>
                                 <option value="" disabled selected>Pilih Cabang</option>
                                 @foreach ($cabangs as $cabang)
                                     <option value="{{ $cabang->id }}">{{ $cabang->nama_cabang }}</option>
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-4">
-                            <label for="tujuan" class="form-label">Tujuan Penugasan</label>
-                            <select class="form-select select2" name="tujuan" id="tujuan" required>
+                        <div class="form-group">
+                            <label for="tujuan">Tujuan Penugasan</label>
+                            <select class="form-control select2" name="tujuan" id="tujuan" required>
                                 <option value="" disabled selected>Pilih Tujuan</option>
                                 @foreach ($tujuans as $tujuan)
                                     <option value="{{ $tujuan->id }}">{{ $tujuan->tujuan_penugasan }}</option>
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-4">
-                            <label for="tanggalKeberangkatan" class="form-label">Tanggal Keberangkatan</label>
-                            <input type="date" class="form-control" name="tanggalKeberangkatan" id="tanggalKeberangkatan"
+                        <div class="form-group">
+                            <label for="tanggalKeberangkatan">Tanggal Keberangkatan</label>
+                            <input type="date" id="tanggalKeberangkatan" name="tanggalKeberangkatan" class="form-control"
                                 required>
                         </div>
                     </div>
-                    <div class="row mb-3">
-                        <div class="col-md-4">
-                            <label for="ditugaskanOleh" class="form-label">Ditugaskan Oleh</label>
-                            <input type="text" class="form-control" name="ditugaskanOleh" id="ditugaskanOleh" required>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="statusKoordinasi" class="form-label">Status Koordinasi</label>
-                            <input type="text" class="form-control" name="statusKoordinasi" id="statusKoordinasi"
-                                required>
-                        </div>
-                    </div>
-                    <hr class="my-4">
-                    <div class="mt-4">
-                        <div class="mt-4">
-                            <h5>Daftar Pegawai yang Berangkat</h5>
-                            <table class="table table-bordered" id="pegawaiTable">
-                                <thead>
+                </div>
+
+                <div class="card mt-4">
+                    <div class="card-header">Daftar Pegawai yang Berangkat</div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="pegawaiTable" class="table table-bordered">
+                                <thead class="thead-light">
                                     <tr>
-                                        <th style="width: 250px;">Nama</th>
-                                        <th style="width: 150px;">Departemen</th>
-                                        <th style="width: 200px;">NIK</th>
-                                        <th style="width: 200px;">Upload File</th>
+                                        <th>Nama</th>
+                                        <th>Departemen</th>
+                                        <th>NIK</th>
+                                        <th>Upload File</th>
                                         <th>Lama Keberangkatan</th>
-                                        <th>Estimasi Keterlambatan</th>
-                                        <th class="text-center">Aksi</th>
+                                        <th style="text-align: center;">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr id="rowToClone">
-                                        <td style="width: 250px;">
-                                            <select name="namaPegawai[]" class="form-select namaPegawai" required>
+                                        <td>
+                                            <select name="namaPegawai[]" class="form-control namaPegawai" required>
                                                 <option value="" disabled selected>Pilih Nama</option>
                                                 @if (auth()->user()->role !== 'nm')
                                                     @foreach ($users as $user)
@@ -94,58 +90,60 @@
                                                             data-departemen="{{ $user->departemen }}"
                                                             data-nik="{{ $user->nik }}"
                                                             data-nama="{{ $user->nama_lengkap }}">
-                                                            {{ $user->nama_lengkap }} /
-                                                            {{ $user->departemen }} / {{ $user->nik }}</option>
+                                                            {{ $user->nama_lengkap }} / {{ $user->departemen }} /
+                                                            {{ $user->nik }}
+                                                        </option>
                                                     @endforeach
                                                 @endif
+
                                                 @if (auth()->user()->role === 'nm')
                                                     @foreach ($nm as $user)
                                                         <option value="{{ $user->id }}"
                                                             data-departemen="{{ $user->departemen }}"
                                                             data-nik="{{ $user->nik }}"
                                                             data-nama="{{ $user->nama_lengkap }}">
-                                                            {{ $user->nama_lengkap }} /
-                                                            {{ $user->departemen }} / {{ $user->nik }}</option>
+                                                            {{ $user->nama_lengkap }} / {{ $user->departemen }} /
+                                                            {{ $user->nik }}
+                                                        </option>
                                                     @endforeach
                                                 @endif
                                             </select>
                                             <input type="hidden" name="namaPegawaiId[]" class="namaPegawaiId">
                                             <input type="text" class="form-control namaPegawaiDisplay" readonly>
                                         </td>
-                                        <td style="width: 150px;"><input type="text" name="departemen[]"
-                                                class="form-control departemen" readonly></td>
-                                        <td style="width: 200px;"><input type="text" name="nik[]"
-                                                class="form-control nik" readonly></td>
-                                        <td style="width: 200px;"><input type="file" name="uploadFile[]"
-                                                class="form-control"></td>
+                                        <td><input type="text" name="departemen[]" class="form-control departemen"
+                                                readonly></td>
+                                        <td><input type="text" name="nik[]" class="form-control nik" readonly></td>
+                                        <td><input type="file" name="uploadFile[]" class="form-control"></td>
                                         <td>
                                             <div class="d-flex align-items-center">
                                                 <input type="date" name="tanggalBerangkat[]" class="form-control"
                                                     required>
                                                 <span class="mx-2">s/d</span>
-                                                <input type="date" name="tanggalKembali[]" class="form-control"
-                                                    required>
+                                                <input type="date" name="tanggalKembali[]" class="form-control" required>
                                             </div>
                                         </td>
-                                        <td><input type="date" name="estimasiKeterlambatan[]" class="form-control">
-                                        </td>
-                                        <td class="text-center">
-                                            <button type="button" class="btn btn-danger btn-remove"><i
-                                                    class="bi bi-trash"></i></button>
+                                        <td style="text-align: center;">
+                                            <button type="button" class="btn btn-danger btn-remove">
+                                                <i class="bi bi-trash" style="font-size: 16px; margin-right: 4px;"></i>
+                                            </button>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
-                            <button type="button" class="btn btn-primary mt-3" id="add-field">Tambah Pegawai</button>
                         </div>
+                        <button type="button" class="btn btn-primary mt-3" id="add-field">Tambah
+                            Pegawai</button>
+                    </div>
+                </div>
 
-                        <div class="d-flex justify-content-end mt-4">
-                            <button type="submit" class="btn btn-success me-2">Submit Form</button>
-                            <button type="reset" class="btn btn-secondary">Reset Form</button>
-                        </div>
-                </form>
-            </div>
+                <div class="d-flex justify-content-end mt-4">
+                    <button type="submit" class="btn btn-success me-2">Submit Form</button>
+                    <button type="reset" class="btn btn-secondary">Reset Form</button>
+                </div>
+            </form>
         </div>
+    </div>
     </div>
     <script>
         document.querySelector('#pegawaiTable').addEventListener('change', function(event) {
@@ -228,14 +226,106 @@
     </script>
 
     <style>
-        .card-header.bg-primary {
-            background-color: #3b0100 !important;
-            /* Merah marun dari logo */
+        .container {
+            max-width: 400px;
+            /* Membuat form lebih ramping */
+            margin: 0 auto;
+            padding: 10px;
         }
 
-        hr {
-            border: 1px solid #3b0100;
-            /* Gaya garis pemisah */
+        .card-container {
+            position: relative;
+        }
+
+        .card {
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-header {
+            background-color: #3b0100;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+        }
+
+        .card-body {
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo {
+            height: 40px;
+            width: auto;
+        }
+
+        form {
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            /* Mengatur elemen dalam form menjadi vertikal */
+            gap: 10px;
+            /* Memberikan jarak antar elemen */
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            /* Input lebih tersusun ke bawah */
+        }
+
+        .form-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .select2 {
+            width: 100% !important;
+        }
+
+        .btn-container {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            /* Beri jarak antar tombol */
+        }
+
+        .btn {
+            padding: 10px;
+            font-size: 14px;
+            border: none;
+            color: white;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .btn-primary {
+            background-color: #0415f8;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
         }
     </style>
 @endsection
