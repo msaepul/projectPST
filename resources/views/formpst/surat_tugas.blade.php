@@ -100,7 +100,7 @@
                                                     {{ $form->cabang_asal }} / {{ $item->departemen }}
                                                 </td>
                                                 <td style="border: 0.5pt solid #000; padding: 0.15cm; text-align: center;">
-                                                    {{ \Carbon\Carbon::parse($item->tanggal_berangkat)->format('d') }} 
+                                                    {{ \Carbon\Carbon::parse($item->tanggal_berangkat)->format('d M') }} 
                                                         s/d 
                                                     {{ \Carbon\Carbon::parse($item->tanggal_kembali)->format('d M Y') }}
                                                 </td>
