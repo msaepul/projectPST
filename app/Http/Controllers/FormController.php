@@ -56,9 +56,11 @@ class FormController extends Controller
     $validatedData = $request->validate([
         'no_surat' => 'required|string|max:255',
         'namaPemohon' => 'required|string|max:255',
+        'yangMenugaskan' => 'required|string|max:255',
         'cabangAsal' => 'required|string|max:255',
         'cabang_tujuan' => 'required|exists:cabangs,id',
         'tujuan' => 'required|exists:tujuans,id',
+        'statusKoordinasi' => 'required|string|max:255',
         'tanggalKeberangkatan' => 'required|date',
 
         'namaPegawai.*' => 'required|string|max:255', // ID pegawai
@@ -70,14 +72,16 @@ class FormController extends Controller
         'tanggalKembali.*' => 'required|date|after_or_equal:tanggalBerangkat.*', // Tambahkan validasi tanggal kembali
     ]);
 
-    $kodeCabangTujuan = Cabang::findOrFail($validatedData['cabang_tujuan'])->kode_cabang;
+    $kodeCabangTujuan = Cabang::findOrFail($validatedData['cabang_tujuan'])->nama_cabang;
     $tujuanPenugasan = Tujuan::findOrFail($validatedData['tujuan'])->tujuan_penugasan;
 
     $form = Form::create([
         'no_surat' => $validatedData['no_surat'],
         'nama_pemohon' => $validatedData['namaPemohon'],
+        'yang_menugaskan' => $validatedData['yangMenugaskan'],
         'cabang_asal' => $validatedData['cabangAsal'],
         'cabang_tujuan' => $kodeCabangTujuan, // Menyimpan kode cabang, bukan nama
+        'status_koordinasi' => $validatedData['statusKoordinasi'],
         'tujuan' => $tujuanPenugasan,
         'tanggal_keberangkatan' => $validatedData['tanggalKeberangkatan'],
     ]);
@@ -125,9 +129,6 @@ Nama_pegawai::insert($namaPegawais);
 return redirect()->route('formpst.index_keluar', ['form' => $form->id])
     ->with('success', 'Data berhasil disimpan, dan persetujuan otomatis telah diberikan.');
 }
-
-
-    
 
 public function edit($id)
     {
@@ -484,5 +485,10 @@ public function updateStatus($itemId, $status, Request $request)
 
 
 
-}
 
+    public function ticket()
+    {
+        return view('formpst.ticket');
+    }
+
+}

@@ -78,7 +78,7 @@
                     <option value="">Pilih Cabang</option>
                     @foreach ($cabangs as $cabang)
                         <option value="{{ $cabang->id }}" {{ old('cabang_asal') == $cabang->id ? 'selected' : '' }}>
-                            {{ $cabang->nama_cabang }}
+                            {{ $cabang->nama_cabang }} - {{$cabang->kode_cabang}}
                         </option>
                     @endforeach
                 </select>

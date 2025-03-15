@@ -187,7 +187,7 @@
                                                             @if ($form->acc_bm == 'oke' && $form->acc_hrd != 'reject' && $form->acc_bm != 'reject' && $item->acc_nm == null)
                                                                 <button class="btn btn-success btn-sm"
                                                                     onclick="updateStatus({{ $item->id }}, 'oke')">
-                                                                    Setuju
+                                                                    Proses
                                                                 </button>
                                                                 <button class="btn btn-danger btn-sm"
                                                                     onclick="openRejectModal({{ $item->id }})">
@@ -202,7 +202,7 @@
                                                         @elseif ($item->acc_nm === 'tolak' || $form->acc_bm === 'reject' || $form->acc_hrd === 'reject')
                                                             <span class="text-danger">Ditolak</span>
                                                         @elseif (empty($form->acc_bm) || empty($form->acc_hrd))
-                                                            <span class="text-warning">Menunggu</span>
+                                                            <span class="text-warning">Menunggu Persetujuan</span>
                                                         @endif
                                                     </td>
 
@@ -212,7 +212,7 @@
                                                         @elseif ($item->acc_nm == 'tolak')
                                                             <span class="badge bg-danger">{{ $item->alasan }}</span>
                                                         @elseif ($item->acc_nm == '' || $form->acc_bm != 'reject')
-                                                            <span class="badge bg-warning">Menunggu</span>
+                                                            <span class="badge bg-warning">Menunggu Persetujuan</span>
                                                         @endif
                                                     </td>
                                                 </tr>
