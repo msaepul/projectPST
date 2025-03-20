@@ -239,21 +239,6 @@
     </script>
 
     <style>
-        .container {
-            max-width: 400px;
-            /* Membuat form lebih ramping */
-            margin: 0 auto;
-            padding: 10px;
-        }
-
-        .card-container {
-            position: relative;
-        }
-
-        .card {
-            position: relative;
-            z-index: 1;
-        }
 
         .card-header {
             background-color: #3b0100;
@@ -264,46 +249,14 @@
             padding: 10px 20px;
         }
 
-        .card-body {
-            padding: 20px;
-            position: relative;
-            z-index: 1;
-        }
+       
 
         .logo {
             height: 40px;
             width: auto;
         }
 
-        form {
-            border: 1px solid #ccc;
-            padding: 20px;
-            border-radius: 5px;
-            display: flex;
-            flex-direction: column;
-            /* Mengatur elemen dalam form menjadi vertikal */
-            gap: 10px;
-            /* Memberikan jarak antar elemen */
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            /* Input lebih tersusun ke bawah */
-        }
-
-        .form-group label {
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
+        
         .select2 {
             width: 100% !important;
         }
