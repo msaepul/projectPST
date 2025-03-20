@@ -381,8 +381,15 @@
 
                         <li class="nav-item">
                             <a href="{{ route('formpst.index_surat') }}" class="nav-link">
-                                <i class="nav-icon fas fa-car"></i>
+                                <i class="nav-icon fas fa-book"></i>
                                 <p>Daftar Surat Tugas </p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('formpst.ticket') }}" class="nav-link">
+                                <i class="nav-icon fas fa-car"></i>
+                                <p>Ticketing </p>
                             </a>
                         </li>
                         <li class="nav-item">

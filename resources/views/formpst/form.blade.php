@@ -31,11 +31,17 @@
                                 value="{{ old('namaPemohon', Auth::user()->nama_lengkap ?? '') }}" required readonly>
                         </div>
                         <div class="form-group">
+                            <label for="yangMenugaskan">Ditugaskan oleh</label>
+                            <input type="text" id="yangMenugaskan" name="yangMenugaskan" class="form-control"
+                                value="" required>
+                        </div>
+                        <div class="form-group">
                             <label for="cabangAsal">Cabang Asal</label>
                             <input type="text" id="cabangAsal" name="cabangAsal" class="form-control"
                                 value="{{ old('cabangAsal', Auth::user()->cabang_asal ?? '') }}" required readonly>
                         </div>
                     </div>
+
 
                     <div class="col-md-6">
                         <div class="form-group">
@@ -43,7 +49,8 @@
                             <select class="form-control select2" name="cabang_tujuan" id="cabangTujuan" required>
                                 <option value="" disabled selected>Pilih Cabang</option>
                                 @foreach ($cabangs as $cabang)
-                                    <option value="{{ $cabang->id }}">{{ $cabang->nama_cabang }}</option>
+                                    <option value="{{ $cabang->id }}">{{ $cabang->nama_cabang }} /
+                                        {{ $cabang->kode_cabang }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -60,6 +67,11 @@
                             <label for="tanggalKeberangkatan">Tanggal Keberangkatan</label>
                             <input type="date" id="tanggalKeberangkatan" name="tanggalKeberangkatan" class="form-control"
                                 required>
+                        </div>
+                        <div class="form-group">
+                            <label for="statusKoordinasi">Status Koordinasi</label>
+                            <input type="text" id="statusKoordinasi" name="statusKoordinasi" class="form-control"
+                                value="" required>
                         </div>
                     </div>
                 </div>
@@ -120,7 +132,8 @@
                                                 <input type="date" name="tanggalBerangkat[]" class="form-control"
                                                     required>
                                                 <span class="mx-2">s/d</span>
-                                                <input type="date" name="tanggalKembali[]" class="form-control" required>
+                                                <input type="date" name="tanggalKembali[]" class="form-control"
+                                                    required>
                                             </div>
                                         </td>
                                         <td style="text-align: center;">

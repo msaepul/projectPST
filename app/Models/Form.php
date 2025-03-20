@@ -11,6 +11,7 @@ class Form extends Model
     protected $fillable = [
         'no_surat',
         'nama_pemohon',
+        'yang_menugaskan',
         'cabang_asal',
         'cabang_tujuan',
         'tujuan',
@@ -20,6 +21,7 @@ class Form extends Model
         'acc_nm',
         'acc_ho',
         'acc_cabang',
+        'status_koordinasi',
         ];
     public function Nama_pegawais()
     {

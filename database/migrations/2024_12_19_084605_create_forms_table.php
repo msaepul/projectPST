@@ -27,6 +27,7 @@ return new class extends Migration
             $table->id();
             $table->string('no_surat')->unique();
             $table->string('nama_pemohon');
+            $table->string('yang_menugaskan');
             $table->string('cabang_asal');
             $table->string('cabang_tujuan');
             $table->string('tujuan');
@@ -35,6 +36,7 @@ return new class extends Migration
             $table->string('acc_nm')->default('');
             $table->string('acc_ho')->default('');
             $table->string('acc_cabang')->default('');
+            $table->string('status_koordinasi');
             $table->date('tanggal_keberangkatan');
             $table->timestamps();
         });
