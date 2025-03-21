@@ -491,4 +491,10 @@ public function updateStatus($itemId, $status, Request $request)
         return view('formpst.ticket');
     }
 
+    public function show_ticket()
+    {
+        return view('formpst.show_ticket');
+    }
+
+
 }
