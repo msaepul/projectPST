@@ -189,6 +189,12 @@
                                     </a>
                                 </li>
                             </ul>
+                            <li class="nav-item">
+                                <a href="{{ route('formpst.ticket') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-car"></i>
+                                    <p>Ticketing </p>
+                                </a>
+                            </li>
                         </li>
 
                         <li class="nav-item">
@@ -259,6 +265,13 @@
                                         class="nav-link {{ request()->is('formpst/index_surat') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Surat Tugas</p>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a href="{{ route('formpst.ticket') }}" class="nav-link">
+                                        <i class="nav-icon fas fa-car"></i>
+                                        <p>Ticketing </p>
                                     </a>
                                 </li>
                             </ul>
@@ -359,6 +372,12 @@
                                     </a>
                                 </li>
                             </ul>
+                            <li class="nav-item">
+                                <a href="{{ route('formpst.ticket') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-car"></i>
+                                    <p>Ticketing </p>
+                                </a>
+                            </li>
                         </li>
                     @endif
 

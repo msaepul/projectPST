@@ -14,9 +14,15 @@
                         <div class="form-group row">
                             <label for="no_surat" class="col-sm-4 col-form-label">No. Surat:</label>
                             <div class="col-sm-8">
-                                <input type="text" id="no_surat" class="form-control">
+                                <select id="no_surat" class="form-control">
+                                    <option value="">-- Pilih No. Surat --</option>
+                                    <option value="001">001</option>
+                                    <option value="002">002</option>
+                                    <option value="003">003</option>
+                                </select>
                             </div>
                         </div>
+                        
                         <div class="form-group row">
                             <label for="nama_pemohon" class="col-sm-4 col-form-label">Nama Pemohon:</label>
                             <div class="col-sm-8">
@@ -65,7 +71,12 @@
                         <div class="form-group row">
                             <label for="maskapai" class="col-sm-4 col-form-label">Maskapai:</label>
                             <div class="col-sm-8">
-                                <input type="text" id="maskapai" class="form-control">
+                                <select id="maskapai" class="form-control">
+                                    <option value="">-- Pilih Maskapai --</option>
+                                    <option value="001">001</option>
+                                    <option value="002">002</option>
+                                    <option value="003">003</option>
+                                </select>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -83,15 +94,25 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="kendaraan_dipilih" class="col-sm-4 col-form-label">Kendaraan yang Dipilih:</label>
+                            <label for="transport" class="col-sm-4 col-form-label">Transportasi:</label>
                             <div class="col-sm-8">
-                                <input type="text" id="kendaraan_dipilih" class="form-control">
+                                <select id="transport" class="form-control">
+                                    <option value="">-- Pilih Transportasi --</option>
+                                    <option value="001">001</option>
+                                    <option value="002">002</option>
+                                    <option value="003">003</option>
+                                </select>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="beban_biaya" class="col-sm-4 col-form-label">Beban Biaya:</label>
                             <div class="col-sm-8">
-                                <input type="text" id="beban_biaya" class="form-control">
+                                <select id="beban_biaya" class="form-control">
+                                    <option value="">-- Beban Biaya --</option>
+                                    <option value="001">Cabang 001</option>
+                                    <option value="002">Cabang 002</option>
+                                    <option value="003">Cabang 003</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -128,8 +149,13 @@
                         </div>
                         <div class="form-group col-md-4">
                             <label for="rute">Rute</label>
-                            <input type="text" id="rute" class="form-control">
+                            <div class="d-flex align-items-center">
+                                <input type="text" id="rute1" class="form-control me-2">
+                                <span>Ke</span>
+                                <input type="text" id="rute2" class="form-control ms-2">
+                            </div>
                         </div>
+                        
                         <div class="form-group col-md-4">
                             <label for="upload_tiket">Upload Tiket</label>
                             <input type="file" id="upload_tiket" class="form-control-file">
