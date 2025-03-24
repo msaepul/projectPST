@@ -43,6 +43,10 @@
                                                 class="btn btn-sm btn-outline-primary d-flex align-items-center justify-content-center">
                                                 <i class="bi bi-file-earmark-text" style="font-size: 16px;"></i>
                                             </a>
+                                            <a href="{{ route('formpst.ticket', ['id' => $item->id]) }}"
+                                                class="btn btn-sm btn-outline-primary d-flex align-items-center justify-content-center">
+                                                <i class="bi bi-airplane" style="font-size: 16px;"></i>
+                                            </a>
                                         </td>
                                     </tr>
                                 @endif
