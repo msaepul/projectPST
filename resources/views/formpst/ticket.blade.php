@@ -14,15 +14,16 @@
                         <div class="form-group row">
                             <label for="no_surat" class="col-sm-4 col-form-label">No. Surat:</label>
                             <div class="col-sm-8">
-                                <select id="no_surat" class="form-control">
-                                    <option value="">-- Pilih No. Surat --</option>
-                                    <option value="001">001</option>
-                                    <option value="002">002</option>
-                                    <option value="003">003</option>
+                                <select class="form-control select2" name="no_surat" id="no_surat" required>
+                                    <option value="" disabled selected>-- Pilih No. Surat --</option>
+                                    @foreach ($forms as $form)
+                                        <option value="{{ $form->id }}">{{ $form->no_surat }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
-                        
+
                         <div class="form-group row">
                             <label for="nama_pemohon" class="col-sm-4 col-form-label">Nama Pemohon:</label>
                             <div class="col-sm-8">
@@ -32,7 +33,7 @@
                         <div class="form-group row">
                             <label for="ditugaskan_oleh" class="col-sm-4 col-form-label">Ditugaskan Oleh:</label>
                             <div class="col-sm-8">
-                                <textarea id="ditugaskan_oleh" class="form-control"></textarea>
+                                <input type="text" id="ditugaskan_oleh" class="form-control">
                             </div>
                         </div>
                     </div>
@@ -44,7 +45,8 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="pegawai_berangkat" class="col-sm-4 col-form-label">Pegawai yang Berangkat:</label>
+                            <label for="pegawai_berangkat" class="col-sm-4 col-form-label">Pegawai yang
+                                Berangkat:</label>
                             <div class="col-sm-8">
                                 <textarea id="pegawai_berangkat" class="form-control"></textarea>
                             </div>
@@ -155,7 +157,7 @@
                                 <input type="text" id="rute2" class="form-control ms-2">
                             </div>
                         </div>
-                        
+
                         <div class="form-group col-md-4">
                             <label for="upload_tiket">Upload Tiket</label>
                             <input type="file" id="upload_tiket" class="form-control-file">

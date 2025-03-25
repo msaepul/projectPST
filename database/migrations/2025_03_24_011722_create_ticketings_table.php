@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('ticketings', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('form_id'); // Foreign key ke tabel forms
             $table->string('no_surat')->unique();
             $table->string('nama_pemohon');
             $table->string('assigned_By');

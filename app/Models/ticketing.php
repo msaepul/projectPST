@@ -9,6 +9,7 @@ class ticketing extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'form_id',
         'no_surat',
         'nama_pemohon',
         'assigned_By',

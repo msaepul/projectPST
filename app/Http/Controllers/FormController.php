@@ -488,7 +488,12 @@ public function updateStatus($itemId, $status, Request $request)
 
     public function ticket()
     {
-        return view('formpst.ticket');
+        $cabangs = Cabang::all();
+        $tujuans = Tujuan::all();
+        $departemens = Departemen::all();
+        $nama_pegawais = Nama_pegawai::all();
+        $forms = Form::all();
+        return view('formpst.ticket', compact( 'cabangs', 'tujuans', 'departemens', 'nama_pegawais','forms'));
     }
 
     public function show_ticket()
