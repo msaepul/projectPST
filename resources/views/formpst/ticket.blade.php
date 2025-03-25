@@ -7,35 +7,33 @@
                 <h4 class="text-center">FORM PENGAJUAN TIKET</h4>
             </div>
 
-            <div class="p-3"
-                style="background: url('{{ asset('dist/img/aag.jpg') }}') no-repeat center center; background-size: cover; border-radius: 10px; padding: 20px;">
-                {{-- Section 1: Form Pengajuan --}}
-                <div class="p-3">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <label for="no_surat" class="col-sm-4 col-form-label">No. Surat:</label>
-                                <div class="col-sm-8">
-                                    <select id="no_surat" class="form-control">
-                                        <option value="">-- Pilih No. Surat --</option>
-                                        <option value="001">001</option>
-                                        <option value="002">002</option>
-                                        <option value="003">003</option>
-                                    </select>
-                                </div>
+            {{-- Section 1: Form Pengajuan --}}
+            <div class="p-3">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="no_surat" class="col-sm-4 col-form-label">No. Surat:</label>
+                            <div class="col-sm-8">
+                                <select class="form-control select2" name="no_surat" id="no_surat" required>
+                                    <option value="" disabled selected>-- Pilih No. Surat --</option>
+                                    @foreach ($forms as $form)
+                                        <option value="{{ $form->id }}">{{ $form->no_surat }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
+                        </div>
 
-                            <div class="form-group row">
-                                <label for="nama_pemohon" class="col-sm-4 col-form-label">Nama Pemohon:</label>
-                                <div class="col-sm-8">
-                                    <input type="text" id="nama_pemohon" class="form-control">
-                                </div>
+                        <div class="form-group row">
+                            <label for="nama_pemohon" class="col-sm-4 col-form-label">Nama Pemohon:</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="nama_pemohon" class="form-control">
                             </div>
-                            <div class="form-group row">
-                                <label for="ditugaskan_oleh" class="col-sm-4 col-form-label">Ditugaskan Oleh:</label>
-                                <div class="col-sm-8">
-                                    <textarea id="ditugaskan_oleh" class="form-control"></textarea>
-                                </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="ditugaskan_oleh" class="col-sm-4 col-form-label">Ditugaskan Oleh:</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="ditugaskan_oleh" class="form-control">
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -45,12 +43,12 @@
                                     <input type="text" id="no_hp" class="form-control">
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <label for="pegawai_berangkat" class="col-sm-4 col-form-label">Pegawai yang
-                                    Berangkat:</label>
-                                <div class="col-sm-8">
-                                    <textarea id="pegawai_berangkat" class="form-control"></textarea>
-                                </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="pegawai_berangkat" class="col-sm-4 col-form-label">Pegawai yang
+                                Berangkat:</label>
+                            <div class="col-sm-8">
+                                <textarea id="pegawai_berangkat" class="form-control"></textarea>
                             </div>
                         </div>
                     </div>
@@ -166,6 +164,7 @@
                                 <input type="text" id="rute2" class="form-control ms-2">
                             </div>
                         </div>
+
                         <div class="form-group col-md-4">
                             <label for="upload_tiket">Upload</label>
                             <input type="file" id="upload_tiket" class="form-control-file">
