@@ -46,18 +46,6 @@
                         <button type="submit" class="btn btn-success me-2">Submit</button>
                         <button type="button" class="btn btn-danger">Cancel</button>
                     </div>
-                </form>
-            </div>
-        </div>
-
-        {{-- Detail Tiket --}}
-        <div class="card shadow-lg mb-4" style="border: 2px solid rgb(0, 155, 182); border-radius: 0;">
-            <div class="card-header bg-info text-white" style="border-radius: 0;">
-                <h5>DETAIL TIKET</h5>
-            </div>
-            <div class="card-body"
-                style="background: url('{{ asset('dist/img/aag.jpg') }}') no-repeat center center; background-size: cover; border-radius: 0;">
-                <form>
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="tanggal_issued">Issued Tiket</label>
