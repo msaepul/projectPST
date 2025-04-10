@@ -3,7 +3,7 @@
 @section('content')
     <div class="container">
         {{-- Form Pengajuan Tiket --}}
-        <div class="card shadow-lg my-4" style="border: 2px solid rgb(0, 155, 182); border-radius: 0;">
+        <div class="card shadow-lg my-4">
             <div class="card-header bg-info text-white text-center" style="border-radius: 0;">
                 <h4>FORM PENGAJUAN TIKET</h4>
             </div>
@@ -46,69 +46,61 @@
                         <button type="submit" class="btn btn-success me-2">Submit</button>
                         <button type="button" class="btn btn-danger">Cancel</button>
                     </div>
-                </form>
-            </div>
-        </div>
 
-        {{-- Detail Tiket --}}
-        <div class="card shadow-lg mb-4" style="border: 2px solid rgb(0, 155, 182); border-radius: 0;">
-            <div class="card-header bg-info text-white" style="border-radius: 0;">
-                <h5>DETAIL TIKET</h5>
-            </div>
-            <div class="card-body"
-                style="background: url('{{ asset('dist/img/aag.jpg') }}') no-repeat center center; background-size: cover; border-radius: 0;">
-                <form>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="tanggal_issued">Issued Tiket</label>
-                            <input type="date" id="tanggal_issued" class="form-control">
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="no_invoice">No. Invoice</label>
-                            <input type="text" id="no_invoice" class="form-control">
-                        </div>
-                    </div>
+                    <div class="p-3 mt-4" style="border-top: 2px solid rgb(0, 0, 0)">
 
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="maskapai">Maskapai</label>
-                            <select id="maskapai" class="form-control">
-                                <option value="">-- Pilih Maskapai --</option>
-                                <option value="001">001</option>
-                                <option value="002">002</option>
-                                <option value="003">003</option>
-                            </select>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="tanggal_issued">Issued Tiket</label>
+                                <input type="date" id="tanggal_issued" class="form-control">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="no_invoice">No. Invoice</label>
+                                <input type="text" id="no_invoice" class="form-control">
+                            </div>
                         </div>
-                        <div class="form-group col-md-6">
-                            <label for="transport">Transportasi</label>
-                            <select id="transport" class="form-control">
-                                <option value="">-- Pilih Transportasi --</option>
-                                <option value="001">001</option>
-                                <option value="002">002</option>
-                                <option value="003">003</option>
-                            </select>
-                        </div>
-                    </div>
 
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="lampiran">Lampiran</label>
-                            <textarea id="lampiran" class="form-control"></textarea>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="maskapai">Maskapai</label>
+                                <select id="maskapai" class="form-control">
+                                    <option value="">-- Pilih Maskapai --</option>
+                                    <option value="001">001</option>
+                                    <option value="002">002</option>
+                                    <option value="003">003</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="transport">Transportasi</label>
+                                <select id="transport" class="form-control">
+                                    <option value="">-- Pilih Transportasi --</option>
+                                    <option value="001">001</option>
+                                    <option value="002">002</option>
+                                    <option value="003">003</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="form-group col-md-6">
-                            <label for="beban_biaya">Beban Biaya</label>
-                            <select id="beban_biaya" class="form-control">
-                                <option value="">-- Beban Biaya --</option>
-                                <option value="001">Cabang 001</option>
-                                <option value="002">Cabang 002</option>
-                                <option value="003">Cabang 003</option>
-                            </select>
-                        </div>
-                    </div>
 
-                    <div class="d-flex justify-content-end mt-3">
-                        <button type="submit" class="btn btn-success me-2">Submit</button>
-                        <button type="button" class="btn btn-danger">Cancel</button>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="lampiran">Lampiran</label>
+                                <textarea id="lampiran" class="form-control"></textarea>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="beban_biaya">Beban Biaya</label>
+                                <select id="beban_biaya" class="form-control">
+                                    <option value="">-- Beban Biaya --</option>
+                                    <option value="001">Cabang 001</option>
+                                    <option value="002">Cabang 002</option>
+                                    <option value="003">Cabang 003</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end mt-3">
+                            <button type="submit" class="btn btn-success me-2">Submit</button>
+                            <button type="button" class="btn btn-danger">Cancel</button>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -155,4 +147,5 @@
             </div>
         </div>
     </div>
+</div>
 @endsection

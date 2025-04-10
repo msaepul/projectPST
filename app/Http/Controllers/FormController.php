@@ -54,35 +54,35 @@ class FormController extends Controller
     public function store(Request $request, $role = null)
 {
     $validatedData = $request->validate([
-        'no_surat' => 'required|string|max:255',
-        'namaPemohon' => 'required|string|max:255',
-        'yangMenugaskan' => 'required|string|max:255',
-        'cabangAsal' => 'required|string|max:255',
-        'cabang_tujuan' => 'required|exists:cabangs,id',
-        'tujuan' => 'required|exists:tujuans,id',
-        'statusKoordinasi' => 'required|string|max:255',
-        'tanggalKeberangkatan' => 'required|date',
+        'no_surat'              => 'required|string|max:255',
+        'namaPemohon'           => 'required|string|max:255',
+        'yangMenugaskan'        => 'required|string|max:255',
+        'cabangAsal'            => 'required|string|max:255',
+        'cabang_tujuan'         => 'required|exists:cabangs,id',
+        'tujuan'                => 'required|exists:tujuans,id',
+        'statusKoordinasi'      => 'required|string|max:255',
+        'tanggalKeberangkatan'  => 'required|date',
 
-        'namaPegawai.*' => 'required|string|max:255', // ID pegawai
-        'namaPegawaiNama.*' => 'required|string|max:255', // Nama lengkap pegawai
-        'departemen.*' => 'required|string|max:255',
-        'nik.*' => 'required|string|max:255',
-        'uploadFile.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-        'tanggalBerangkat.*' => 'required|date', // Tambahkan validasi tanggal berangkat
-        'tanggalKembali.*' => 'required|date|after_or_equal:tanggalBerangkat.*', // Tambahkan validasi tanggal kembali
+        'namaPegawai.*'         => 'required|string|max:255', // ID pegawai
+        'namaPegawaiNama.*'     => 'required|string|max:255', // Nama lengkap pegawai
+        'departemen.*'          => 'required|string|max:255',
+        'nik.*'                 => 'required|string|max:255',
+        'uploadFile.*'          => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+        'tanggalBerangkat.*'    => 'required|date', // Tambahkan validasi tanggal berangkat
+        'tanggalKembali.*'      => 'required|date|after_or_equal:tanggalBerangkat.*', // Tambahkan validasi tanggal kembali
     ]);
 
     $kodeCabangTujuan = Cabang::findOrFail($validatedData['cabang_tujuan'])->nama_cabang;
     $tujuanPenugasan = Tujuan::findOrFail($validatedData['tujuan'])->tujuan_penugasan;
 
     $form = Form::create([
-        'no_surat' => $validatedData['no_surat'],
-        'nama_pemohon' => $validatedData['namaPemohon'],
-        'yang_menugaskan' => $validatedData['yangMenugaskan'],
-        'cabang_asal' => $validatedData['cabangAsal'],
-        'cabang_tujuan' => $kodeCabangTujuan, // Menyimpan kode cabang, bukan nama
-        'status_koordinasi' => $validatedData['statusKoordinasi'],
-        'tujuan' => $tujuanPenugasan,
+        'no_surat'              => $validatedData['no_surat'],
+        'nama_pemohon'          => $validatedData['namaPemohon'],
+        'yang_menugaskan'       => $validatedData['yangMenugaskan'],
+        'cabang_asal'           => $validatedData['cabangAsal'],
+        'cabang_tujuan'         => $kodeCabangTujuan, // Menyimpan kode cabang, bukan nama
+        'status_koordinasi'     => $validatedData['statusKoordinasi'],
+        'tujuan'                => $tujuanPenugasan,
         'tanggal_keberangkatan' => $validatedData['tanggalKeberangkatan'],
     ]);
 
@@ -110,15 +110,15 @@ foreach ($request->namaPegawai as $index => $pegawaiId) {
 
     // Tambahkan data ke array
     $namaPegawais[] = [
-        'form_id' => $form->id,
-        'nama_pegawai' => $request->namaPegawaiNama[$index],
-        'departemen' => $request->departemen[$index],
-        'nik' => $request->nik[$index],
-        'upload_file' => $uploadFilePath,
+        'form_id'           => $form->id,
+        'nama_pegawai'      => $request->namaPegawaiNama[$index],
+        'departemen'        => $request->departemen[$index],
+        'nik'               => $request->nik[$index],
+        'upload_file'       => $uploadFilePath,
         'tanggal_berangkat' => $request->tanggalBerangkat[$index],
-        'tanggal_kembali' => $request->tanggalKembali[$index],
-        'created_at' => now(),
-        'updated_at' => now(),
+        'tanggal_kembali'   => $request->tanggalKembali[$index],
+        'created_at'        => now(),
+        'updated_at'        => now(),
     ];
 }
 
@@ -132,10 +132,10 @@ return redirect()->route('formpst.index_keluar', ['form' => $form->id])
 
 public function edit($id)
     {
-        $form = Form::findOrFail($id);
-        $cabangs = Cabang::all();
-        $tujuans = Tujuan::all();
-        $nama_pegawais = Nama_pegawai::where('form_id', $id)->get();
+        $form           = Form::findOrFail($id);
+        $cabangs        = Cabang::all();
+        $tujuans        = Tujuan::all();
+        $nama_pegawais  = Nama_pegawai::where('form_id', $id)->get();
 
         return view('formpst.edit', compact('form', 'cabangs', 'tujuans', 'nama_pegawais'));
     }
@@ -143,26 +143,26 @@ public function edit($id)
 public function update(Request $request, $id)
     {
         $request->validate([
-            'cabang_tujuan' => 'required|exists:cabangs,id',
-            'tujuan' => 'required|exists:tujuans,tujuan_penugasan',
+            'cabang_tujuan'         => 'required|exists:cabangs,id',
+            'tujuan'                => 'required|exists:tujuans,tujuan_penugasan',
             'tanggal_keberangkatan' => 'required|date',
-            'nama.*' => 'required|string',
-            'nik.*' => 'required|string',
-            'departemen.*' => 'required|string',
-            'lama_keberangkatan' => 'required|array',
+            'nama.*'                => 'required|string',
+            'nik.*'                 => 'required|string',
+            'departemen.*'          => 'required|string',
+            'lama_keberangkatan'    => 'required|array',
             'lama_keberangkatan.*.tanggal_berangkat' => 'required|date',
             'lama_keberangkatan.*.tanggal_kembali' => 'nullable|date',
-            'status.*' => 'nullable|string',
-            'keterangan.*' => 'nullable|string',
-            'file.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'status.*'              => 'nullable|string',
+            'keterangan.*'          => 'nullable|string',
+            'file.*'                => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
 
         $form = Form::findOrFail($id);
         $cabang = Cabang::findOrFail($request->cabang_tujuan);
 
         $form->update([
-            'cabang_tujuan' => $cabang->kode_cabang,
-            'tujuan' => $request->tujuan, // Simpan tujuan langsung
+            'cabang_tujuan'         => $cabang->kode_cabang,
+            'tujuan'                => $request->tujuan, // Simpan tujuan langsung
             'tanggal_keberangkatan' => $request->tanggal_keberangkatan,
         ]);
 
@@ -170,13 +170,13 @@ public function update(Request $request, $id)
         foreach ($request->nama as $pegawai_id => $nama) {
             $pegawai = Nama_pegawai::findOrFail($pegawai_id);
             $pegawai->update([
-                'nama_pegawai' => $nama,
-                'nik' => $request->nik[$pegawai_id],
-                'departemen' => $request->departemen[$pegawai_id],
+                'nama_pegawai'      => $nama,
+                'nik'               => $request->nik[$pegawai_id],
+                'departemen'        => $request->departemen[$pegawai_id],
                 'tanggal_berangkat' => $request->lama_keberangkatan[$pegawai_id]['tanggal_berangkat'] ?? now()->toDateString(),
-                'tanggal_kembali' => $request->lama_keberangkatan[$pegawai_id]['tanggal_kembali'] ?? now()->toDateString(),
-                'status' => $request->status[$pegawai_id] ?? null,
-                'keterangan' => $request->keterangan[$pegawai_id] ?? null,
+                'tanggal_kembali'   => $request->lama_keberangkatan[$pegawai_id]['tanggal_kembali'] ?? now()->toDateString(),
+                'status'            => $request->status[$pegawai_id] ?? null,
+                'keterangan'        => $request->keterangan[$pegawai_id] ?? null,
             ]);
 
             // Jika ada file yang diunggah, simpan
@@ -316,15 +316,15 @@ public function submit(Request $request, $id)
             if (!$reason) {
                 return redirect()->back()->with('error', 'Harap isi alasan pembatalan.');
             }
-            $form->acc_bm = 'cancel';
-            $form->acc_hrd = 'cancel';
-            $form->acc_ho = 'cancel';
-            $form->acc_cabang = 'cancel';
-            $form->submitted_by_bm = $user;
-            $form->submitted_by_hrd = $user;
-            $form->submitted_by_ho = $user;
-            $form->submitted_by_cabang = $user;
-            $form->cancel_reason = $reason; // Menyimpan alasan pembatalan
+            $form->acc_bm       = 'cancel';
+            $form->acc_hrd      = 'cancel';
+            $form->acc_ho       = 'cancel';
+            $form->acc_cabang   = 'cancel';
+            $form->submitted_by_bm      = $user;
+            $form->submitted_by_hrd     = $user;
+            $form->submitted_by_ho      = $user;
+            $form->submitted_by_cabang  = $user;
+            $form->cancel_reason        = $reason; // Menyimpan alasan pembatalan
             $form->save();
 
             return redirect()->route('formpst.index_keluar')->with('success', 'Semua persetujuan telah dibatalkan.');
@@ -333,8 +333,8 @@ public function submit(Request $request, $id)
             if ($form->acc_hrd !== 'oke') {
                 return redirect()->back()->with('error', 'HRD belum menyetujui.');
             }
-            $form->acc_ho = 'oke';
-            $form->submitted_by_ho = $user;
+            $form->acc_ho           = 'oke';
+            $form->submitted_by_ho  = $user;
             $form->save();
 
             return redirect()->route('formpst.index_keluar')->with('success', 'Persetujuan HO berhasil disimpan.');
@@ -410,15 +410,15 @@ public function submit_nm(Request $request, $id)
                 return redirect()->route('formpst.index_keluar')->with('success', 'Persetujuan HO ditolak.');
 
         case 'cancel':
-            $form->acc_bm = 'cancel';
-            $form->acc_hrd = 'cancel';
-            $form->acc_ho = 'cancel';
-            $form->acc_cabang = 'cancel';
-            $form->submitted_by_bm = $user;
+            $form->acc_bm           = 'cancel';
+            $form->acc_hrd          = 'cancel';
+            $form->acc_ho           = 'cancel';
+            $form->acc_cabang       = 'cancel';
+            $form->submitted_by_bm  = $user;
             $form->submitted_by_hrd = $user;
-            $form->submitted_by_ho = $user;
+            $form->submitted_by_ho  = $user;
             $form->submitted_by_cabang = $user;
-            $form->cancel_reason = $reason; // Menyimpan alasan pembatalan
+            $form->cancel_reason    = $reason; // Menyimpan alasan pembatalan
             $form->save();
 
             return redirect()->route('formpst.index_keluar')->with('success', 'Semua persetujuan telah dibatalkan.');
@@ -486,7 +486,7 @@ public function updateStatus($itemId, $status, Request $request)
 
 
 
-    public function ticket()
+public function ticket()
     {
         $cabangs = Cabang::all();
         $tujuans = Tujuan::all();
@@ -494,12 +494,63 @@ public function updateStatus($itemId, $status, Request $request)
         $nama_pegawais = Nama_pegawai::all();
         $forms = Form::all();
         return view('formpst.ticket', compact( 'cabangs', 'tujuans', 'departemens', 'nama_pegawais','forms'));
-    }
+}
 
-    public function show_ticket()
+public function store_ticket(Request $request)
+{
+    $validatedData = $request->validate([
+        'no_surat'       => 'required|string|max:255',
+        'nama_pemohon'   => 'required|string|max:255',
+        'assigned_By'    => 'required|string|max:255',
+        'hp'             => 'required|string|max:20',
+        'pegawai'        => 'required|string|max:255',
+        'issued'         => 'required|date',
+        'maskapai'       => 'required|string|max:255',
+        'lampiran'       => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
+        'invoice'        => 'required|string|max:255',
+        'transport'      => 'required|string|max:255',
+        'beban_biaya'    => 'required|string|max:255',
+        'keberangkatan'  => 'required|date',
+        'nominal'        => 'required|numeric',
+        'waktu'          => 'required|string|max:255',
+        'rute'           => 'required|string|max:255',
+        'rute_tujuan'    => 'required|string|max:255',
+        'tiket'          => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
+    ]);
+
+    // Upload file ke storage
+    $lampiranPath = $request->file('lampiran')->store('lampiran', 'public');
+    $tiketPath    = $request->file('tiket')->store('tiket', 'public');
+
+    // Simpan ke database
+    $ticketing = Ticketing::create([
+        'no_surat'      => $validatedData['no_surat'],
+        'nama_pemohon'  => $validatedData['nama_pemohon'],
+        'assigned_By'   => $validatedData['assigned_By'],
+        'hp'            => $validatedData['hp'],
+        'pegawai'       => $validatedData['pegawai'],
+        'issued'        => $validatedData['issued'],
+        'maskapai'      => $validatedData['maskapai'],
+        'lampiran'      => $lampiranPath,
+        'invoice'       => $validatedData['invoice'],
+        'transport'     => $validatedData['transport'],
+        'beban_biaya'   => $validatedData['beban_biaya'],
+        'keberangkatan' => $validatedData['keberangkatan'],
+        'nominal'       => $validatedData['nominal'],
+        'waktu'         => $validatedData['waktu'],
+        'rute'          => $validatedData['rute'],
+        'rute_tujuan'   => $validatedData['rute_tujuan'],
+        'tiket'         => $tiketPath,
+    ]);
+
+    return redirect()->back()->with('success', 'Data tiket berhasil disimpan!');
+}
+
+
+public function show_ticket()
     {
         return view('formpst.show_ticket');
-    }
+}
 
 
 }
