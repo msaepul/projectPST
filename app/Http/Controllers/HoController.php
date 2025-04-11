@@ -10,6 +10,8 @@ use App\Models\User;
 use App\Models\Pengajuan;
 use App\Models\Nama_pegawai;
 use App\Models\Form;
+use App\Models\maskapai;
+use App\Models\transport;
 use Illuminate\Support\Facades\Storage;
 
 class HoController extends Controller
@@ -313,5 +315,104 @@ class HoController extends Controller
 
      return redirect()->back()->with('success', 'Tanda tangan berhasil diunggah.');
  }
+
+ public function maskapai()
+{
+    $maskapais = Maskapai::paginate(50);
+
+    return view('ho.maskapai', compact('maskapais'));
+}
+
+public function storeMaskapai(Request $request)
+{
+    $validated = $request->validate([
+        'nama_maskapai' => 'required|string|max:255',
+        'kode_maskapai' => 'nullable|string|max:100',
+        'keterangan' => 'nullable|string',
+    ]);
+
+    Maskapai::create($validated);
+
+    return redirect()->route('ho.maskapai')->with('success', 'Maskapai baru berhasil ditambahkan!');
+}
+
+public function editMaskapai($id)
+{
+    $maskapai = Maskapai::findOrFail($id);
+
+    return view('ho.maskapai.edit', compact('maskapai'));
+}
+
+public function updateMaskapai(Request $request, $id)
+{
+    $validated = $request->validate([
+        'nama_maskapai' => 'required|string|max:255',
+        'kode_maskapai' => 'nullable|string|max:100',
+        'keterangan' => 'nullable|string',
+    ]);
+
+    $maskapai = Maskapai::findOrFail($id);
+    $maskapai->update($validated);
+
+    return redirect()->route('ho.maskapai')->with('success', 'Data maskapai berhasil diubah!');
+}
+
+public function destroyMaskapai($id)
+{
+    $maskapai = Maskapai::findOrFail($id);
+    $maskapai->delete();
+
+    return redirect()->route('ho.maskapai')->with('success', 'Data maskapai berhasil dihapus!');
+}
+
+public function transport()
+{
+    $transports = Transport::paginate(50);
+
+    return view('ho.transport', compact('transports'));
+}
+
+public function storeTransport(Request $request)
+{
+    $validated = $request->validate([
+        'nama_transport' => 'required|string|max:255',
+        'kode_transport' => 'nullable|string|max:100',
+        'keterangan' => 'nullable|string',
+    ]);
+
+    Transport::create($validated);
+
+    return redirect()->route('ho.transport')->with('success', 'Transport baru berhasil ditambahkan!');
+}
+
+public function editTransport($id)
+{
+    $transport = Transport::findOrFail($id);
+
+    return view('ho.transport.edit', compact('transport'));
+}
+
+public function updateTransport(Request $request, $id)
+{
+    $validated = $request->validate([
+        'nama_transport' => 'required|string|max:255',
+        'kode_transport' => 'nullable|string|max:100',
+        'keterangan' => 'nullable|string',
+    ]);
+
+    $transport = Transport::findOrFail($id);
+    $transport->update($validated);
+
+    return redirect()->route('ho.transport')->with('success', 'Data transport berhasil diubah!');
+}
+
+public function destroyTransport($id)
+{
+    $transport = Transport::findOrFail($id);
+    $transport->delete();
+
+    return redirect()->route('ho.transport')->with('success', 'Data transport berhasil dihapus!');
+}
+
 
 }

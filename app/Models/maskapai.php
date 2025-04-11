@@ -5,12 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class maskapai extends Model
+class Maskapai extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'id',
         'kode_maskapai',
-        'nama',
+        'nama_maskapai',
     ];
 }
