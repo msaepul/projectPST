@@ -11,10 +11,8 @@ class Data_diriController extends Controller
 {
     public function biodata(Request $request)
     {
-        // Ambil semua data cabang
         $users = Auth::user()::all(); // Ambil semua data user
 
-        // Kirimkan ke view
         return view('data_diri.biodata', compact('users'));
         
 
