@@ -7,6 +7,8 @@ use App\Models\Departemen;
 use App\Models\Tujuan;
 use App\Models\Cabang;
 use App\Models\User;
+use App\Models\Maskapai;
+use App\Models\Transport;
 use App\Models\Pengajuan;
 use App\Models\Nama_pegawai;
 use App\Models\Form;
@@ -313,5 +315,29 @@ class HoController extends Controller
 
      return redirect()->back()->with('success', 'Tanda tangan berhasil diunggah.');
  }
+    public function maskapai()
+    {
+     $maskapais = Maskapai::paginate(50);
+
+     return view('ho.maskapai', compact('maskapais'));
+    }
+    public function store_Maskapai(Request $request)
+    {
+        $validated = $request->validate([
+            'kode_maskapai' => 'required|string|max:255',
+            'nama_maskapai' => 'nullable|string|max:100',
+            'jenis_kendaraan' => 'nullable|string|max:100',
+        ]);
+
+        Maskapai::create($validated);
+
+        return redirect()->route('ho.maskapai')->with('success', 'Maskapai baru berhasil ditambahkan!');
+    }
+    public function transport()
+    {
+     $transports = Transport::paginate(50);
+
+     return view('ho.transport', compact('transports'));
+    }
 
 }
