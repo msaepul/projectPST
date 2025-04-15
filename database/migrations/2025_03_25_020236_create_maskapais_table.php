@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('kode_maskapai')->unique();
             $table->string('nama_maskapai');
+            $table->string('jenis_kendaraan');
             $table->timestamps();
         });
     }
