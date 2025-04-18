@@ -41,5 +41,9 @@ class ticketing extends Model
     {
         return $this->belongsTo(Tujuan::class);
     }
+    public function nama_pegawai()
+    {
+        return $this->belongsTo(Nama_pegawai::class);
+    }
 }
 

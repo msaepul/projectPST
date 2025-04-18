@@ -57,6 +57,8 @@ Route::middleware('auth')->group(function () {
         //routes for maskapai
         Route::get('/ho/maskapai', [HoController::class, 'maskapai'])->name('ho.maskapai');
         Route::post('/ho/maskapai', [HoController::class, 'store_Maskapai'])->name('ho.maskapai.store');
+        Route::delete('/ho/maskapai/delete/{id}', [HoController::class, 'destroy_Maskapai'])->name('ho.maskapai.destroy');
+
         //routes for transport
         Route::get('/ho/transport', [HoController::class, 'transport'])->name('ho.transport');
         Route::post('/ho/maskapai', [HoController::class, 'store_Maskapai'])->name('ho.maskapai.store');
@@ -107,7 +109,9 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/formpst/ticket', [FormController::class, 'ticket'])->name('formpst.ticket');
         Route::get('/formpst/show_ticket', [FormController::class, 'show_ticket'])->name('formpst.show_ticket');
-        Route::post('/ticketing/store', [FormController::class, 'store_ticket'])->name('store_ticket');
+        Route::post('/formpst/ticketing', [FormController::class, 'store_ticket'])->name('store_ticket');
+        Route::get('/get-pemohon/{id}', [FormController::class, 'getPemohon'])->name('get.pemohon');
+
 
 
         Route::get('/formpst/form_nm', [FormController::class, 'form_nm'])->name('formpst.form_nm');
