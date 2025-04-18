@@ -439,6 +439,20 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
+                                    <a href="{{ route('ho.maskapai') }}"
+                                        class="nav-link {{ request()->is('ho/maskapai') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Maskapai</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('ho.transport') }}"
+                                        class="nav-link {{ request()->is('ho/transport') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Transport</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
                                     <a href="{{ route('ho.user') }}"
                                         class="nav-link {{ request()->is('ho/user') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
@@ -580,6 +594,9 @@
 
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
 
     <!-- AdminLTE App -->

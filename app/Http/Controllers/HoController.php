@@ -333,6 +333,13 @@ class HoController extends Controller
 
         return redirect()->route('ho.maskapai')->with('success', 'Maskapai baru berhasil ditambahkan!');
     }
+    public function destroy_Maskapai($id)
+    {
+        $maskapais = Maskapai::findOrFail($id);
+        $maskapais->delete();
+
+        return redirect()->route('ho.maskapai')->with('success', 'Data departemen berhasil dihapus!');
+    }
     public function transport()
     {
      $transports = Transport::paginate(50);

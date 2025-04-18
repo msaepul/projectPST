@@ -12,6 +12,8 @@ use App\Models\Tujuan;
 use App\Models\Departemen;
 use App\Models\Form;
 use App\Models\User;
+use App\Models\Maskapai;
+
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -492,8 +494,10 @@ public function ticket()
         $tujuans = Tujuan::all();
         $departemens = Departemen::all();
         $nama_pegawais = Nama_pegawai::all();
+        $maskapais = Maskapai::all();
+
         $forms = Form::all();
-        return view('formpst.ticket', compact( 'cabangs', 'tujuans', 'departemens', 'nama_pegawais','forms'));
+        return view('formpst.ticket', compact( 'cabangs', 'tujuans', 'departemens', 'nama_pegawais','forms', 'maskapais'));
 }
 
 public function store_ticket(Request $request)
@@ -545,6 +549,20 @@ public function store_ticket(Request $request)
 
     return redirect()->back()->with('success', 'Data tiket berhasil disimpan!');
 }
+// YourController.php
+public function getPemohon($id)
+{
+    $form = Form::find($id);
+    $nama_pegawais = Nama_pegawai::find($form_id);
+    return response()->json([
+        'nama_pemohon' => $form->nama_pemohon,
+        'yang_menugaskan' => $form->yang_menugaskan,
+        'nama_pegawai' => $nama_pegawais->nama_pegawai,
+
+
+    ]);
+}
+
 
 
 public function show_ticket()

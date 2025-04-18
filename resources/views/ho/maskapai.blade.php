@@ -47,8 +47,8 @@
                                                 style="width: 20px; height: 20px;">
                                         </button>
 
-                                        <form action="{{ route('ho.departemen.destroy', $item->id) }}" method="POST"
-                                            onsubmit="return confirm('Apakah Anda yakin ingin menghapus departemen ini?')">
+                                        <form action="{{ route('ho.maskapai.destroy', $item->id) }}" method="POST"
+                                            onsubmit="return confirm('Apakah Anda yakin ingin menghapus maskapai ini?')">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-sm btn-outline-danger" title="Hapus">
@@ -87,8 +87,15 @@
                         </div>
                         <div class="form-group">
                             <label for="jenis_kendaraan">Jenis Kendaraan</label>
-                            <input type="text" class="form-control" id="jenis_kendaraan" name="jenis_kendaraan" required>
+                            <select class="form-control" id="jenis_kendaraan" name="jenis_kendaraan" required>
+                                <option value="">-- Pilih Jenis Kendaraan --</option>
+                                <option value="Mobil">Mobil</option>
+                                <option value="Motor">Motor</option>
+                                <option value="Bus">Bus</option>
+                                <option value="Truk">Truk</option>
+                            </select>
                         </div>
+                        
 
                     </div>
                     <div class="modal-footer">
