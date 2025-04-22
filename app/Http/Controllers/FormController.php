@@ -10,6 +10,7 @@ use App\Models\Nama_pegawai;
 use App\Models\Cabang_tujuan;
 use App\Models\Tujuan;
 use App\Models\Departemen;
+use App\Models\Ticketing;
 use App\Models\Form;
 use App\Models\User;
 use App\Models\Maskapai;
@@ -502,62 +503,32 @@ public function ticket()
 
 public function store_ticket(Request $request)
 {
-    $validatedData = $request->validate([
+    $validated = $request->validate([
         'no_surat'       => 'required|string|max:255',
         'nama_pemohon'   => 'required|string|max:255',
         'assigned_By'    => 'required|string|max:255',
         'hp'             => 'required|string|max:20',
-        'pegawai'        => 'required|string|max:255',
-        'issued'         => 'required|date',
-        'maskapai'       => 'required|string|max:255',
-        'lampiran'       => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
-        'invoice'        => 'required|string|max:255',
-        'transport'      => 'required|string|max:255',
-        'beban_biaya'    => 'required|string|max:255',
-        'keberangkatan'  => 'required|date',
-        'nominal'        => 'required|numeric',
-        'waktu'          => 'required|string|max:255',
-        'rute'           => 'required|string|max:255',
-        'rute_tujuan'    => 'required|string|max:255',
-        'tiket'          => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
+
     ]);
 
-    // Upload file ke storage
-    $lampiranPath = $request->file('lampiran')->store('lampiran', 'public');
-    $tiketPath    = $request->file('tiket')->store('tiket', 'public');
-
+    $Nosurat = Form::findOrFail($validated['no_surat'])->no_surat;
+    
     // Simpan ke database
     $ticketing = Ticketing::create([
-        'no_surat'      => $validatedData['no_surat'],
-        'nama_pemohon'  => $validatedData['nama_pemohon'],
-        'assigned_By'   => $validatedData['assigned_By'],
-        'hp'            => $validatedData['hp'],
-        'pegawai'       => $validatedData['pegawai'],
-        'issued'        => $validatedData['issued'],
-        'maskapai'      => $validatedData['maskapai'],
-        'lampiran'      => $lampiranPath,
-        'invoice'       => $validatedData['invoice'],
-        'transport'     => $validatedData['transport'],
-        'beban_biaya'   => $validatedData['beban_biaya'],
-        'keberangkatan' => $validatedData['keberangkatan'],
-        'nominal'       => $validatedData['nominal'],
-        'waktu'         => $validatedData['waktu'],
-        'rute'          => $validatedData['rute'],
-        'rute_tujuan'   => $validatedData['rute_tujuan'],
-        'tiket'         => $tiketPath,
+        'no_surat'              => $Nosurat,
+        'nama_pemohon'          => $validated['nama_pemohon'],
+        'assigned_By'           => $validated['assigned_By'],
+        'hp'                    => $validated['hp'],
     ]);
-
     return redirect()->back()->with('success', 'Data tiket berhasil disimpan!');
 }
 // YourController.php
 public function getPemohon($id)
 {
     $form = Form::find($id);
-    $nama_pegawais = Nama_pegawai::find($form_id);
     return response()->json([
         'nama_pemohon' => $form->nama_pemohon,
         'yang_menugaskan' => $form->yang_menugaskan,
-        'nama_pegawai' => $nama_pegawais->nama_pegawai,
 
 
     ]);

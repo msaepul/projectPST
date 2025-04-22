@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('nama_pemohon');
             $table->string('assigned_By');
             $table->string('hp');
-            $table->string('pegawai');
+            $table->string('pegawai')->default('');
             $table->string('lampiran')->default('');
             $table->string('issued')->default('');
             $table->string('maskapai')->default('');
