@@ -8,7 +8,7 @@
                 <h4>FORM PENGAJUAN TIKET</h4>
             </div>
             <div class="card-body"
-                 style="background: url('{{ asset('dist/img/aag.jpg') }}') no-repeat center center; background-size: cover;">
+                style="background: url('{{ asset('dist/img/aag.jpg') }}') no-repeat center center; background-size: cover;">
 
                 <form action="{{ route('store_ticket') }}" method="POST" enctype="multipart/form-data">
                     @csrf
@@ -17,9 +17,12 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="no_surat">No. Surat</label>
-                            <select class="form-control select2" name="no_surat" id="no_surat" required>
+                            {{-- <select class="form-control select2" name="no_surat" id="no_surat" required>
                                 <option value="" disabled selected>-- Pilih No. Surat --</option>
-                            </select>
+                                @foreach ($forms as $form)
+                                    <option value="{{ $form->id }}">{{ $form->no_surat }}</option>
+                                @endforeach
+                            </select> --}}
                         </div>
                         <div class="form-group col-md-6">
                             <label for="nama_pemohon">Nama Pemohon</label>
@@ -34,16 +37,16 @@
                             <input type="text" id="ditugaskan_oleh" name="assigned_by" class="form-control">
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="no_hp">No. HP</label>
-                            <input type="text" id="no_hp" name="no_hp" class="form-control">
+                            <label for="hp">No. HP</label>
+                            <input type="text" id="hp" name="hp" class="form-control">
                         </div>
                     </div>
 
-                    {{-- ROW 3 --}}
+                    {{-- ROW 3
                     <div class="form-group">
                         <label for="pegawai_berangkat">Pegawai yang Berangkat</label>
                         <textarea id="pegawai_berangkat" name="pegawai_berangkat" class="form-control"></textarea>
-                    </div>
+                    </div> --}}
 
                     {{-- SECTION: ISSUED TIKET --}}
                     <hr>
@@ -96,11 +99,12 @@
                             </select>
                         </div>
                     </div>
-                    
+
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="tanggal_keberangkatan">Tanggal Keberangkatan</label>
-                            <input type="date" id="tanggal_keberangkatan" name="tanggal_keberangkatan" class="form-control">
+                            <input type="date" id="tanggal_keberangkatan" name="tanggal_keberangkatan"
+                                class="form-control">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="nominal_tiket">Nominal Tiket</label>
@@ -111,7 +115,8 @@
                     <div class="form-row">
                         <div class="form-group col-md-4">
                             <label for="waktu_keberangkatan">Waktu Keberangkatan</label>
-                            <input type="time" id="waktu_keberangkatan" name="waktu_keberangkatan" class="form-control">
+                            <input type="time" id="waktu_keberangkatan" name="waktu_keberangkatan"
+                                class="form-control">
                         </div>
                         <div class="form-group col-md-4">
                             <label for="rute">Rute</label>
@@ -138,8 +143,7 @@
         </div>
     </div>
     <style>
-
-        .card-body{
+        .card-body {
             height: 1000px;
         }
     </style>

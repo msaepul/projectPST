@@ -538,7 +538,10 @@ public function getPemohon($id)
 
 public function show_ticket()
     {
-        return view('formpst.show_ticket');
+    $ticketing = Ticketing::all();
+
+        return view('formpst.show_ticket', compact( 'ticketing'));
+
 }
 
 
