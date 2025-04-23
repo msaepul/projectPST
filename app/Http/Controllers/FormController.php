@@ -508,6 +508,14 @@ public function store_ticket(Request $request)
         'nama_pemohon'   => 'required|string|max:255',
         'assigned_By'    => 'required|string|max:255',
         'hp'             => 'required|string|max:20',
+        'maskapai'       => 'required|string|max:20',
+        'invoice'        => 'required|string|max:20',
+        'transport'      => 'required|string|max:20',
+        'beban_biaya'    => 'required|string|max:20',
+        'nominal'        => 'required|string|max:20',
+        'waktu'          => 'required|string|max:20',
+        'rute'           => 'required|string|max:20',
+        'rute_tujuan'    => 'required|string|max:20',
 
     ]);
 
@@ -519,6 +527,14 @@ public function store_ticket(Request $request)
         'nama_pemohon'          => $validated['nama_pemohon'],
         'assigned_By'           => $validated['assigned_By'],
         'hp'                    => $validated['hp'],
+        'maskapai'              => $validated['maskapai'],
+        'invoice'               => $validated['invoice'],
+        'transport'             => $validated['transport'],
+        'beban_biaya'           => $validated['beban_biaya'],
+        'nominal'               => $validated['nominal'],
+        'waktu'                 => $validated['waktu'],
+        'rute'                  => $validated['rute'],
+        'rute_tujuan'           => $validated['rute_tujuan'],
     ]);
     return redirect()->back()->with('success', 'Data tiket berhasil disimpan!');
 }
