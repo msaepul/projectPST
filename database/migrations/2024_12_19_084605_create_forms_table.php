@@ -39,6 +39,7 @@ return new class extends Migration
             $table->string('status_koordinasi');
             $table->date('tanggal_keberangkatan');
             $table->timestamps();
+
         });
     }
 
