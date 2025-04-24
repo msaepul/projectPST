@@ -502,53 +502,51 @@ public function ticket()
 public function store_ticket(Request $request)
 {
     $validated = $request->validate([
-        'no_surat'         => 'required|string|max:255',
-        'nama_pemohon'     => 'required|string|max:255',
-        'assigned_by'      => 'required|string|max:255',
-        'hp'               => 'required|string|max:20',
-        'maskapai'         => 'required|string|max:20',
-        'invoice'          => 'required|string|max:20',
-        'transport'        => 'required|string|max:20',
-        'beban_biaya'      => 'required|string|max:20',
-        'nominal_tiket'    => 'required|string|max:20',
+        'no_surat'       => 'required|string|max:255',
+        'nama_pemohon'   => 'required|string|max:255',
+        'assigned_By'    => 'required|string|max:255',
+        'hp'             => 'required|string|max:20',
+        'maskapai'       => 'required|string|max:20',
+        'invoice'        => 'required|string|max:20',
+        'transport'      => 'required|string|max:20',
+        'beban_biaya'    => 'required|string|max:20',
+        'nominal'        => 'required|string|max:20',
+        'waktu'          => 'required|string|max:20',
         'waktu_keberangkatan' => 'required|string|max:20',
-        'rute1'            => 'required|string|max:20',
-        'rute2'            => 'required|string|max:20',
-        'issued'           => 'required|date',
+        'rute'           => 'required|string|max:20',
+        'rute_tujuan'    => 'required|string|max:20',
+        'lampiran'       => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
         'tanggal_keberangkatan' => 'required|date',
         'upload_tiket'     => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
+    
     ]);
 
     $Nosurat = Form::findOrFail($validated['no_surat'])->no_surat;
 
-    $tiketFileName = null;
-    if ($request->hasFile('upload_tiket')) {
-        $file = $request->file('upload_tiket');
-        $tiketFileName = time() . '_' . $file->getClientOriginalName();
-        $file->storeAs('uploads/tiket', $tiketFileName, 'public');
+    $lampiranPath = null;
+    if ($request->hasFile('lampiran')) {
+        $lampiranPath = $request->file('lampiran')->store('uploads/lampiran', 'public');
     }
 
-    Ticketing::create([
-        'no_surat'         => $Nosurat,
-        'nama_pemohon'     => $validated['nama_pemohon'],
-        'assigned_by'      => $validated['assigned_by'],
-        'hp'               => $validated['hp'],
-        'maskapai'         => $validated['maskapai'],
-        'invoice'          => $validated['invoice'],
-        'transport'        => $validated['transport'],
-        'beban_biaya'      => $validated['beban_biaya'],
-        'nominal'          => $validated['nominal_tiket'],
-        'waktu'            => $validated['waktu_keberangkatan'],
-        'rute'             => $validated['rute1'],
-        'rute_tujuan'      => $validated['rute2'],
-        'issued'           => $validated['issued'],
-        'keberangkatan'    => $validated['tanggal_keberangkatan'],
-        'tiket'            => $tiketFileName,
+    $ticketing = Ticketing::create([
+        'no_surat'              => $Nosurat,
+        'nama_pemohon'          => $validated['nama_pemohon'],
+        'assigned_By'           => $validated['assigned_By'],
+        'hp'                    => $validated['hp'],
+        'maskapai'              => $validated['maskapai'],
+        'invoice'               => $validated['invoice'],
+        'transport'             => $validated['transport'],
+        'beban_biaya'           => $validated['beban_biaya'],
+        'nominal'               => $validated['nominal'],
+        'waktu'                 => $validated['waktu'],
+        'rute'                  => $validated['rute'],
+        'rute_tujuan'           => $validated['rute_tujuan'],
+        'lampiran'              => $lampiranPath, 
+
     ]);
 
     return redirect()->back()->with('success', 'Data tiket berhasil disimpan!');
 }
-// YourController.php
 public function getPemohon($id)
 {
     $form = Form::find($id);

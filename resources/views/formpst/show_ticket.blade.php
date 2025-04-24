@@ -2,10 +2,10 @@
 
 @section('content')
     <div class="container">
-        {{-- ========== FORM PENGAJUAN TIKET ========== --}}
-        <div class="card shadow-lg my-4">
-            <div class="card-header bg-info text-white text-center">
-                <h4>FORM PENGAJUAN TIKET</h4>
+        <div class="card my-4"
+            style="background: url('{{ asset('dist/img/aag.jpg') }}') no-repeat center center; background-size: cover; border-radius: 10px;">
+            <div class="card-body bg-info text-white text-center py-3">
+                <h5 class="card-title m-0">DETAIL TIKET</h5>
             </div>
             <div class="card-body"
                 style="background: url('{{ asset('dist/img/aag.jpg') }}') no-repeat center center; background-size: cover;">
@@ -66,84 +66,36 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="maskapai">Maskapai</label>
-                            <select id="maskapai" name="maskapai" class="form-control">
+                            <select id="maskapai" class="form-control">
                                 <option value="">-- Pilih Maskapai --</option>
                                 <option value="001">001</option>
                                 <option value="002">002</option>
                                 <option value="003">003</option>
                             </select>
                         </div>
-                        <div class="form-group col-md-6">
-                            <label for="transport">Transportasi</label>
-                            <select id="transport" name="transport" class="form-control">
-                                <option value="">-- Pilih Transportasi --</option>
-                                <option value="001">001</option>
-                                <option value="002">002</option>
-                                <option value="003">003</option>
-                            </select>
+                        <div class="col-md-4 mb-3">
+                            <label for="tujuan">Tujuan</label>
+                            <input type="text" class="form-control" id="tujuan">
                         </div>
                     </div>
-
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="lampiran">Lampiran</label>
-                            <textarea id="lampiran" name="lampiran" class="form-control"></textarea>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="beban_biaya">Beban Biaya</label>
-                            <select id="beban_biaya" name="beban_biaya" class="form-control">
-                                <option value="">-- Beban Biaya --</option>
-                                <option value="001">Cabang 001</option>
-                                <option value="002">Cabang 002</option>
-                                <option value="003">Cabang 003</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="tanggal_keberangkatan">Tanggal Keberangkatan</label>
-                            <input type="date" id="tanggal_keberangkatan" name="tanggal_keberangkatan"
-                                class="form-control">
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="nominal_tiket">Nominal Tiket</label>
-                            <input type="text" id="nominal_tiket" name="nominal_tiket" class="form-control">
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group col-md-4">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
                             <label for="waktu_keberangkatan">Waktu Keberangkatan</label>
-                            <input type="time" id="waktu_keberangkatan" name="waktu_keberangkatan" class="form-control">
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label for="rute">Rute</label>
                             <div class="d-flex align-items-center">
-                                <input type="text" id="rute1" name="rute1" class="form-control me-2">
-                                <span class="mx-2">Ke</span>
-                                <input type="text" id="rute2" name="rute2" class="form-control">
+                                <input type="time" id="waktu_keberangkatan_dari" class="form-control me-2"
+                                    style="width: 150px;">
+                                <span class="mx-2">s/d</span>
+                                <input type="time" id="waktu_keberangkatan_sampai" class="form-control ms-2"
+                                    style="width: 150px;">
                             </div>
                         </div>
-                        <div class="form-group col-md-4">
-                            <label for="upload_tiket">Upload Tiket</label>
-                            <input type="file" id="upload_tiket" name="upload_tiket" class="form-control-file">
+                        <div class="col-md-4 mb-3">
+                            <label for="lihat_tiket">Lihat Tiket</label>
+                            <input type="text" class="form-control" id="lihat_tiket">
                         </div>
                     </div>
-
-                    {{-- Submit Buttons --}}
-                    <div class="d-flex justify-content-end mt-4">
-                        <button type="submit" class="btn btn-success me-2">Submit</button>
-                        <button type="reset" class="btn btn-danger">Cancel</button>
-                    </div>
                 </form>
-
             </div>
         </div>
     </div>
-    <style>
-        .card-body {
-            height: 1000px;
-        }
-    </style>
 @endsection
