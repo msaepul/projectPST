@@ -55,11 +55,11 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="tanggal_issued">Tanggal Issued</label>
-                            <input type="date" id="issued" name="issued" class="form-control">
+                            <input type="date" id="tanggal_issued" name="tanggal_issued" class="form-control">
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="invoice">No. Invoice</label>
-                            <input type="text" id="invoice" name="invoice" class="form-control">
+                            <label for="no_invoice">No. Invoice</label>
+                            <input type="text" id="no_invoice" name="no_invoice" class="form-control">
                         </div>
                     </div>
 
@@ -115,7 +115,8 @@
                     <div class="form-row">
                         <div class="form-group col-md-4">
                             <label for="waktu_keberangkatan">Waktu Keberangkatan</label>
-                            <input type="time" id="waktu_keberangkatan" name="waktu_keberangkatan" class="form-control">
+                            <input type="time" id="waktu_keberangkatan" name="waktu_keberangkatan"
+                                class="form-control">
                         </div>
                         <div class="form-group col-md-4">
                             <label for="rute">Rute</label>
