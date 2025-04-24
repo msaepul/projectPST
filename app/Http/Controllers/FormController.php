@@ -487,8 +487,6 @@ public function updateStatus($itemId, $status, Request $request)
 }
 
 
-
-
 public function ticket()
     {
         $cabangs = Cabang::all();
@@ -514,10 +512,13 @@ public function store_ticket(Request $request)
         'beban_biaya'    => 'required|string|max:20',
         'nominal'        => 'required|string|max:20',
         'waktu'          => 'required|string|max:20',
+        'waktu_keberangkatan' => 'required|string|max:20',
         'rute'           => 'required|string|max:20',
         'rute_tujuan'    => 'required|string|max:20',
         'lampiran'       => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-        'tiket'   => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048', 
+        'tanggal_keberangkatan' => 'required|date',
+        'upload_tiket'     => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
+    
     ]);
 
     $Nosurat = Form::findOrFail($validated['no_surat'])->no_surat;
@@ -541,6 +542,7 @@ public function store_ticket(Request $request)
         'rute'                  => $validated['rute'],
         'rute_tujuan'           => $validated['rute_tujuan'],
         'lampiran'              => $lampiranPath, 
+
     ]);
 
     return redirect()->back()->with('success', 'Data tiket berhasil disimpan!');

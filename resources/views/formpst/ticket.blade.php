@@ -5,38 +5,46 @@
         {{-- ========== FORM PENGAJUAN TIKET ========== --}}
         <div class="card shadow-lg my-4">
             <div class="card-header bg-info text-white text-center">
-                <h4>Form Pengajuan Tiket</h4>
+                <h4>FORM PENGAJUAN TIKET</h4>
             </div>
-            <div class="card-body" style="background: url('{{ asset('dist/img/aag.jpg') }}') no-repeat center center; background-size: cover;">
+            <div class="card-body"
+                style="background: url('{{ asset('dist/img/flight.jpg') }}') no-repeat center center; background-size: cover;">
+
                 <form action="{{ route('store_ticket') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
-                    {{-- ROW 1 --}}
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="no_surat">No. Surat</label>
-                            <select class="form-control select2" name="no_surat" id="no_surat" required>
-                                <option value="" disabled selected>-- Pilih No. Surat --</option>
-                                @foreach ($forms as $form)
-                                    <option value="{{ $form->id }}">{{ $form->no_surat }}</option>
-                                @endforeach
-                            </select>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="nama_pemohon">Nama Pemohon</label>
+                                <input type="text" id="nama_pemohon" name="nama_pemohon" class="form-control" required>
+                            </div>
                         </div>
-                        <div class="form-group col-md-6">
-                            <label for="nama_pemohon">Nama Pemohon</label>
-                            <input type="text" id="nama_pemohon" name="nama_pemohon" class="form-control" required>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="hp">No. HP</label>
+                                <input type="text" id="hp" name="hp" class="form-control" required>
+                            </div>
                         </div>
                     </div>
 
-                    {{-- ROW 2 --}}
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="yang_menugaskan">Ditugaskan Oleh</label>
-                            <input type="text" id="yang_menugaskan" name="assigned_By" class="form-control" required>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="yang_menugaskan">Ditugaskan Oleh</label>
+                                <input type="text" id="yang_menugaskan" name="assigned_By" class="form-control" required>
+                            </div>
                         </div>
-                        <div class="form-group col-md-6">
-                            <label for="hp">No. HP</label>
-                            <input type="text" id="hp" name="hp" class="form-control" required>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="no_surat">No. Surat</label>
+                                <select class="form-control select2" name="no_surat" id="no_surat" required>
+                                    <option value="" disabled selected>-- Pilih No. Surat --</option>
+                                    @foreach ($forms as $form)
+                                        <option value="{{ $form->id }}">{{ $form->no_surat }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
                     </div>
 
@@ -133,6 +141,7 @@
                         <button type="submit" class="btn btn-success me-2">Submit</button>
                         <button type="reset" class="btn btn-danger">Cancel</button>
                     </div>
+
                 </form>
             </div>
         </div>
@@ -284,3 +293,4 @@ hr {
  
     </style>
 @endsection
+
