@@ -516,12 +516,17 @@ public function store_ticket(Request $request)
         'waktu'          => 'required|string|max:20',
         'rute'           => 'required|string|max:20',
         'rute_tujuan'    => 'required|string|max:20',
-
+        'lampiran'       => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+        'tiket'   => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048', 
     ]);
 
     $Nosurat = Form::findOrFail($validated['no_surat'])->no_surat;
-    
-    // Simpan ke database
+
+    $lampiranPath = null;
+    if ($request->hasFile('lampiran')) {
+        $lampiranPath = $request->file('lampiran')->store('uploads/lampiran', 'public');
+    }
+
     $ticketing = Ticketing::create([
         'no_surat'              => $Nosurat,
         'nama_pemohon'          => $validated['nama_pemohon'],
@@ -535,10 +540,11 @@ public function store_ticket(Request $request)
         'waktu'                 => $validated['waktu'],
         'rute'                  => $validated['rute'],
         'rute_tujuan'           => $validated['rute_tujuan'],
+        'lampiran'              => $lampiranPath, 
     ]);
+
     return redirect()->back()->with('success', 'Data tiket berhasil disimpan!');
 }
-// YourController.php
 public function getPemohon($id)
 {
     $form = Form::find($id);
