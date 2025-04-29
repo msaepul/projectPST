@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('no_surat')->unique();
             $table->string('nama_pemohon');
             $table->string('assigned_By');
-            $table->string('hp');
+            $table->string('hp')->default('');
             $table->string('pegawai')->default('');
             $table->string('lampiran')->default('');
             $table->string('issued')->default('');

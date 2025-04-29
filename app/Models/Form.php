@@ -27,6 +27,10 @@ class Form extends Model
     {
         return $this->hasMany(Nama_pegawai::class);
     }
+    public function Ticketings()
+    {
+        return $this->hasMany(Ticketing::class);
+    }
     public function cabangAsal()
     {
         return $this->belongsTo(Cabang::class, 'cabang_asal');

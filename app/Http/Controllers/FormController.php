@@ -89,6 +89,13 @@ class FormController extends Controller
         'tanggal_keberangkatan' => $validatedData['tanggalKeberangkatan'],
     ]);
 
+    $namaPegawais[] = [
+        'form_id'               => $form->id,
+        'no_surat'              => $validatedData['no_surat'],
+        'nama_pemohon'          => $validatedData['namaPemohon'],
+        'assigned_By'           => $validatedData['yangMenugaskan'],
+    ];
+
 // Tentukan persetujuan berdasarkan peran
 if ($role === 'nm') {
     $form->acc_nm = 'oke';
@@ -154,7 +161,7 @@ public function update(Request $request, $id)
             'departemen.*'          => 'required|string',
             'lama_keberangkatan'    => 'required|array',
             'lama_keberangkatan.*.tanggal_berangkat' => 'required|date',
-            'lama_keberangkatan.*.tanggal_kembali' => 'nullable|date',
+            'lama_keberangkatan.*.tanggal_kembali'   => 'nullable|date',
             'status.*'              => 'nullable|string',
             'keterangan.*'          => 'nullable|string',
             'file.*'                => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
@@ -516,11 +523,26 @@ public function store_ticket(Request $request)
         'waktu'          => 'required|string|max:20',
         'rute'           => 'required|string|max:20',
         'rute_tujuan'    => 'required|string|max:20',
-
+        'lampiran'       => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048', // Validasi lampiran
+        'upload_tiket'   => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048', // Validasi upload tiket
     ]);
 
     $Nosurat = Form::findOrFail($validated['no_surat'])->no_surat;
     
+    // Simpan file lampiran jika ada
+    $lampiranPath = null;
+    if ($request->hasFile('lampiran')) {
+        $lampiranFile = $request->file('lampiran');
+        $lampiranPath = $lampiranFile->store('lampiran', 'public'); // Simpan di storage/app/public/lampiran
+    }
+
+    // Simpan file tiket jika ada
+    $uploadTiketPath = null;
+    if ($request->hasFile('upload_tiket')) {
+        $uploadTiketFile = $request->file('upload_tiket');
+        $uploadTiketPath = $uploadTiketFile->store('upload_tiket', 'public'); // Simpan di storage/app/public/upload_tiket
+    }
+
     // Simpan ke database
     $ticketing = Ticketing::create([
         'no_surat'              => $Nosurat,
@@ -535,7 +557,10 @@ public function store_ticket(Request $request)
         'waktu'                 => $validated['waktu'],
         'rute'                  => $validated['rute'],
         'rute_tujuan'           => $validated['rute_tujuan'],
+        'lampiran'              => $lampiranPath, // Simpan path lampiran
+        'upload_tiket'          => $uploadTiketPath, // Simpan path upload tiket
     ]);
+
     return redirect()->back()->with('success', 'Data tiket berhasil disimpan!');
 }
 // YourController.php
