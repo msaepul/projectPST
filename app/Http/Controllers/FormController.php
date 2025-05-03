@@ -66,13 +66,13 @@ class FormController extends Controller
         'statusKoordinasi'      => 'required|string|max:255',
         'tanggalKeberangkatan'  => 'required|date',
 
-        'namaPegawai.*'         => 'required|string|max:255', // ID pegawai
-        'namaPegawaiNama.*'     => 'required|string|max:255', // Nama lengkap pegawai
+        'namaPegawai.*'         => 'required|string|max:255', 
+        'namaPegawaiNama.*'     => 'required|string|max:255', 
         'departemen.*'          => 'required|string|max:255',
         'nik.*'                 => 'required|string|max:255',
         'uploadFile.*'          => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-        'tanggalBerangkat.*'    => 'required|date', // Tambahkan validasi tanggal berangkat
-        'tanggalKembali.*'      => 'required|date|after_or_equal:tanggalBerangkat.*', // Tambahkan validasi tanggal kembali
+        'tanggalBerangkat.*'    => 'required|date', 
+        'tanggalKembali.*'      => 'required|date|after_or_equal:tanggalBerangkat.*', 
     ]);
 
     $kodeCabangTujuan = Cabang::findOrFail($validatedData['cabang_tujuan'])->nama_cabang;
@@ -83,61 +83,56 @@ class FormController extends Controller
         'nama_pemohon'          => $validatedData['namaPemohon'],
         'yang_menugaskan'       => $validatedData['yangMenugaskan'],
         'cabang_asal'           => $validatedData['cabangAsal'],
-        'cabang_tujuan'         => $kodeCabangTujuan, // Menyimpan kode cabang, bukan nama
+        'cabang_tujuan'         => $kodeCabangTujuan, 
         'status_koordinasi'     => $validatedData['statusKoordinasi'],
         'tujuan'                => $tujuanPenugasan,
         'tanggal_keberangkatan' => $validatedData['tanggalKeberangkatan'],
     ]);
 
-    $namaPegawais[] = [
+    $ticketing = [
         'form_id'               => $form->id,
         'no_surat'              => $validatedData['no_surat'],
         'nama_pemohon'          => $validatedData['namaPemohon'],
         'assigned_By'           => $validatedData['yangMenugaskan'],
     ];
 
-// Tentukan persetujuan berdasarkan peran
-if ($role === 'nm') {
-    $form->acc_nm = 'oke';
-} else {
-    $form->acc_hrd = 'oke';
-}
-
-$form->submitted_by_hrd = auth()->user()->nama_lengkap;
-$form->save();
-
-// Siapkan data pegawai untuk insert batch
-$namaPegawais = [];
-
-foreach ($request->namaPegawai as $index => $pegawaiId) {
-    $uploadFilePath = null;
-
-    // Upload file jika ada
-    if ($request->hasFile("uploadFile.$index")) {
-        $originalName = $request->file("uploadFile.$index")->getClientOriginalName();
-        $uploadFilePath = $request->file("uploadFile.$index")->storeAs('uploads', $originalName, 'public');
+    if ($role === 'nm') {
+        $form->acc_nm = 'oke';
+    } else {
+        $form->acc_hrd = 'oke';
     }
 
-    // Tambahkan data ke array
-    $namaPegawais[] = [
-        'form_id'           => $form->id,
-        'nama_pegawai'      => $request->namaPegawaiNama[$index],
-        'departemen'        => $request->departemen[$index],
-        'nik'               => $request->nik[$index],
-        'upload_file'       => $uploadFilePath,
-        'tanggal_berangkat' => $request->tanggalBerangkat[$index],
-        'tanggal_kembali'   => $request->tanggalKembali[$index],
-        'created_at'        => now(),
-        'updated_at'        => now(),
-    ];
-}
+    $form->submitted_by_hrd = auth()->user()->nama_lengkap;
+    $form->save();
 
-// Masukkan data pegawai ke database
-Nama_pegawai::insert($namaPegawais);
+    $namaPegawais = [];
 
-// Redirect dengan pesan sukses
-return redirect()->route('formpst.index_keluar', ['form' => $form->id])
-    ->with('success', 'Data berhasil disimpan, dan persetujuan otomatis telah diberikan.');
+    foreach ($request->namaPegawai as $index => $pegawaiId) {
+        $uploadFilePath = null;
+
+        if ($request->hasFile("uploadFile.$index")) {
+            $originalName = $request->file("uploadFile.$index")->getClientOriginalName();
+            $uploadFilePath = $request->file("uploadFile.$index")->storeAs('uploads', $originalName, 'public');
+        }
+
+        $namaPegawais[] = [
+            'form_id'           => $form->id,
+            'nama_pegawai'      => $request->namaPegawaiNama[$index],
+            'departemen'        => $request->departemen[$index],
+            'nik'               => $request->nik[$index],
+            'upload_file'       => $uploadFilePath,
+            'tanggal_berangkat' => $request->tanggalBerangkat[$index],
+            'tanggal_kembali'   => $request->tanggalKembali[$index],
+            'created_at'        => now(),
+            'updated_at'        => now(),
+        ];
+    }
+
+    Nama_pegawai::insert($namaPegawais);
+    Ticketing::insert($ticketing);
+
+    return redirect()->route('formpst.index_keluar', ['form' => $form->id])
+        ->with('success', 'Data berhasil disimpan, dan persetujuan otomatis telah diberikan.');
 }
 
 public function edit($id)
@@ -172,7 +167,7 @@ public function update(Request $request, $id)
 
         $form->update([
             'cabang_tujuan'         => $cabang->kode_cabang,
-            'tujuan'                => $request->tujuan, // Simpan tujuan langsung
+            'tujuan'                => $request->tujuan, 
             'tanggal_keberangkatan' => $request->tanggal_keberangkatan,
         ]);
 
@@ -189,14 +184,11 @@ public function update(Request $request, $id)
                 'keterangan'        => $request->keterangan[$pegawai_id] ?? null,
             ]);
 
-            // Jika ada file yang diunggah, simpan
             if ($request->hasFile("file.$pegawai_id")) {
-                // Hapus file lama jika ada
                 if ($pegawai->upload_file) {
                     Storage::disk('public')->delete($pegawai->upload_file);
                 }
 
-                // Simpan file baru
                 $filePath = $request->file("file.$pegawai_id")->store('uploads', 'public');
                 $pegawai->update(['upload_file' => $filePath]);
 

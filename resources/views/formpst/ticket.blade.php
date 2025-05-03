@@ -24,160 +24,154 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
-                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="nama_pemohon">Nama Pemohon</label>
                                 <input type="text" id="nama_pemohon" name="nama_pemohon" class="form-control" required>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="yang_menugaskan">Ditugaskan Oleh</label>
-                                <input type="text" id="yang_menugaskan" name="assigned_By" class="form-control" required>
+                                <input type="text" id="yang_menugaskan" name="yang_menugaskan" class="form-control"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label for="hp">No. HP</label>
+                                <input type="tel" id="hp" name="hp" class="form-control" pattern="[0-9]+"
+                                    required>
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="hp">No. HP</label>
-                                <input type="text" id="hp" name="hp" class="form-control" required>
-                            </div>
+                            <label for="lampiran">Lampiran</label>
+                            @for ($i = 1; $i <= 3; $i++)
+                                <div class="mb-2">
+                                    <label for="lampiran_{{ $i }}" class="form-label d-block">Lampiran
+                                        {{ $i }}</label>
+                                    <input type="file" id="lampiran_{{ $i }}"
+                                        name="lampiran_{{ $i }}" class="form-control-file"
+                                        onchange="previewFile(this, 'preview-lampiran-{{ $i }}', 'file-name-lampiran-{{ $i }}')">
+                                    <div id="preview-lampiran-{{ $i }}" class="mt-2 preview-area"></div>
+                                    <div id="file-name-lampiran-{{ $i }}" class="mt-1 text-muted">Tidak ada file
+                                        yang dipilih</div>
+                                </div>
+                            @endfor
+                            <div id="additional-attachments-lampiran"></div>
                         </div>
                     </div>
 
                     <hr class="my-4" style="border-top: 6px solid #fffcfc;">
                     {{-- SECTION: ISSUED TIKET --}}
-                    <h5 class="mt-0 mb-3">Issued Tiket</h5>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="tanggal_issued">Tanggal Issued</label>
-                                <input type="date" id="issued" name="issued" class="form-control" required>
-                            </div>
-                        </div>
 
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="invoice">No. Invoice</label>
-                                <input type="text" id="invoice" name="invoice" class="form-control" required>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="card mt-4 transparent-card">
+                        <div class="card-body">
+                            <h5 class="mt-0 mb-3">Issued Tiket</h5>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="Agent">Agen</label>
+                                        <select id="Agent" name="Agent" class="form-control" required>
+                                            <option value="" disabled selected>-- Pilih Agensi Perjalanan --
+                                            </option>
+                                            <option value="TxTravel">TxTravel</option>
+                                            <option value="Traveloka">Traveloka</option>
+                                        </select>
+                                    </div>
+                                </div>
 
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="maskapai">Maskapai</label>
-                                <select id="maskapai" name="maskapai" class="form-control" required>
-                                    <option value="" disabled selected>-- Pilih Maskapai --</option>
-                                    @foreach ($maskapais as $maskapai)
-                                        <option value="{{ $maskapai->kode_maskapai }}">{{ $maskapai->nama_maskapai }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="transport">Transportasi</label>
-                                <select id="transport" name="transport" class="form-control" required>
-                                    <option value="" disabled selected>-- Pilih Transportasi --</option>
-                                    <option value="Bus">Bus</option>
-                                    <option value="Kereta">Kereta</option>
-                                    <option value="Pesawat">Pesawat</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="tanggal_keberangkatan">Tanggal Keberangkatan</label>
-                                <input type="date" id="keberangkatan" name="keberangkatan" class="form-control" required>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="waktu_keberangkatan">Waktu Keberangkatan</label>
-                                <input type="time" id="waktu" name="waktu" class="form-control" required>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="nominal_tiket">Nominal Tiket</label>
-                                <input type="text" id="nominal" name="nominal" class="form-control" required>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="beban_biaya">Beban Biaya</label>
-                                <select id="beban_biaya" name="beban_biaya" class="form-control" required>
-                                    <option value="" disabled selected>-- Pilih Cabang --</option>
-                                    @foreach ($cabangs as $cabang)
-                                        <option value="{{ $cabang->nama_cabang }}">{{ $cabang->nama_cabang }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="rute">Rute</label>
-                                <div class="d-flex align-items-center">
-                                    <input type="text" id="rute" name="rute" class="form-control me-2"
-                                        placeholder="Dari" required>
-                                    <span class="mx-2">Ke</span>
-                                    <input type="text" id="rute_tujuan" name="rute_tujuan" class="form-control"
-                                        placeholder="Tujuan" required>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="tanggal_issued">Tanggal Issued</label>
+                                        <input type="date" id="issued" name="issued" class="form-control" required>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="lampiran" class="form-label"><strong>Lampiran</strong></label>
-                                <div id="drop-area" class="border p-3 text-center"
-                                    style="border-style: dashed; border-radius: 10px;">
-                                    <p>Seret dan jatuhkan file di sini atau <span class="text-primary"
-                                            style="cursor: pointer;"
-                                            onclick="document.getElementById('lampiran').click()">klik untuk memilih
-                                            file</span></p>
-                                    <input type="file" id="lampiran" name="lampiran" class="form-control d-none"
-                                        onchange="handleFiles(event)">
-                                    <div id="file-list" class="mt-2"></div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="transport">Transportasi</label>
+                                        <select id="transport" name="transport" class="form-control" required>
+                                            <option value="" disabled selected>-- Pilih Transportasi --</option>
+                                            <option value="Bus">Bus</option>
+                                            <option value="Kereta">Kereta</option>
+                                            <option value="Pesawat">Pesawat</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="maskapai">Maskapai</label>
+                                        <select id="maskapai" name="maskapai" class="form-control" required>
+                                            <option value="" disabled selected>-- Pilih Maskapai --</option>
+                                            @foreach ($maskapais as $maskapai)
+                                                <option value="{{ $maskapai->kode_maskapai }}">
+                                                    {{ $maskapai->nama_maskapai }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="upload_tiket">Upload Tiket</label>
-                                <input type="file" id="upload_tiket" name="upload_tiket" class="form-control-file">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="invoice">No Invoice</label>
+                                        <input type="text" id="invoice" name="invoice" class="form-control" required>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="nominal_tiket">Nominal Tiket</label>
+                                        <input type="text" id="nominal" name="nominal" class="form-control"
+                                            required>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        {{-- Anda bisa menambahkan kolom kosong jika ingin elemen terakhir tidak memenuhi satu baris penuh --}}
-                        <div class="col-md-6">
-                            {{-- Kosong --}}
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="beban_biaya">Beban Biaya</label>
+                                        <select id="beban_biaya" name="beban_biaya" class="form-control" required>
+                                            <option value="" disabled selected>-- Pilih Cabang --</option>
+                                            @foreach ($cabangs as $cabang)
+                                                <option value="{{ $cabang->nama_cabang }}">{{ $cabang->nama_cabang }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="detail">Detail Perjalanan</label>
+                                        <textarea id="detail" name="detail" class="form-control" rows="4" required></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="upload_tiket">Upload Tiket</label>
+                                        <input type="file" id="upload_tiket" name="upload_tiket"
+                                            class="form-control-file">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    {{-- Kosong --}}
+                                </div>
+                            </div>
+
+                            {{-- Submit Buttons --}}
+
                         </div>
                     </div>
-
-                    {{-- Submit Buttons --}}
                     <div class="d-flex justify-content-end mt-4">
                         <button type="submit" class="btn btn-success me-2">Submit</button>
                         <button type="reset" class="btn btn-danger">Cancel</button>
                     </div>
                 </form>
+
             </div>
         </div>
     </div>
@@ -292,6 +286,11 @@
         #file-list img {
             display: block;
             margin-top: 10px;
+        }
+
+        .transparent-card {
+            background-color: rgba(255, 255, 255, 0.6);
+            backdrop-filter: saturate(70%) blur(10px);
         }
     </style>
 @endsection
