@@ -488,17 +488,35 @@ public function updateStatus($itemId, $status, Request $request)
 
 
 
-public function ticket()
+public function ticket($id = null)
     {
         $cabangs = Cabang::all();
         $tujuans = Tujuan::all();
         $departemens = Departemen::all();
         $nama_pegawais = Nama_pegawai::all();
         $maskapais = Maskapai::all();
-
         $forms = Form::all();
-        return view('formpst.ticket', compact( 'cabangs', 'tujuans', 'departemens', 'nama_pegawais','forms', 'maskapais'));
-}
+
+        $prefill = null;
+        if ($id) {
+            // Assuming 'FormPst' is the model related to the form data including no_surat, nama_pemohon, yang_menugaskan
+            $prefill = Form::find($id);
+            if (!$prefill) {
+                // Optional: handle case when ID not found, e.g. redirect or show error
+                return redirect()->route('formpst.ticket')->with('error', 'Data not found');
+            }
+        }
+
+        return view('formpst.ticket', compact(
+            'cabangs',
+            'tujuans',
+            'departemens',
+            'nama_pegawais',
+            'forms',
+            'maskapais',
+            'prefill'
+        ));
+    }
 
 public function store_ticket(Request $request)
 {
@@ -507,15 +525,21 @@ public function store_ticket(Request $request)
         'nama_pemohon'   => 'required|string|max:255',
         'assigned_By'    => 'required|string|max:255',
         'hp'             => 'required|string|max:20',
-        'maskapai'       => 'required|string|max:20',
-        'invoice'        => 'required|string|max:20',
-        'transport'      => 'required|string|max:20',
-        'beban_biaya'    => 'required|string|max:20',
-        'nominal'        => 'required|string|max:20',
-        'waktu'          => 'required|string|max:20',
-        'rute'           => 'required|string|max:20',
-        'rute_tujuan'    => 'required|string|max:20',
-        'lampiran'       => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048', // Validasi lampiran
+        'agent'          => 'required|string|max:20',
+        'issued'         => 'required|date|max:20',
+        'transport'      => 'required|string|max:255',
+        'maskapai'       => 'required|string|max:255',
+        'invoice'        => 'required|string|max:255',
+        'nominal'        => 'required|string|max:255',
+        'beban_biaya'    => 'required|string|max:255',
+        'detail'         => 'required|string|max:255',
+        'kode_kendaraan' => 'required|string|max:255',
+        'rute'           => 'required|string|max:255',
+        'tgl_keberangkatan' => 'required|string|max:255',
+        'jam_keberangkatan' => 'required|string|max:255',
+        'lampiran1'       => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048', // Validasi lampiran
+        'lampiran2'       => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048', // Validasi lampiran
+        'lampiran3'       => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048', // Validasi lampiran
         'upload_tiket'   => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048', // Validasi upload tiket
     ]);
 
@@ -541,14 +565,18 @@ public function store_ticket(Request $request)
         'nama_pemohon'          => $validated['nama_pemohon'],
         'assigned_By'           => $validated['assigned_By'],
         'hp'                    => $validated['hp'],
+        'agent'                 => $validated['agent'],
+        'issued'                => $validated['issued'],
+        'transport'             => $validated['transport'],
         'maskapai'              => $validated['maskapai'],
         'invoice'               => $validated['invoice'],
-        'transport'             => $validated['transport'],
-        'beban_biaya'           => $validated['beban_biaya'],
         'nominal'               => $validated['nominal'],
-        'waktu'                 => $validated['waktu'],
+        'beban_biaya'           => $validated['beban_biaya'],
+        'detail'                => $validated['detail'],
+        'kode_kendaraan'        => $validated['kode_kendaraan'],
         'rute'                  => $validated['rute'],
-        'rute_tujuan'           => $validated['rute_tujuan'],
+        'tgl_keberangkatan'     => $validated['tgl_keberangkatan'],
+        'jam_keberangkatan'     => $validated['jam_keberangkatan'],
         'lampiran'              => $lampiranPath, // Simpan path lampiran
         'upload_tiket'          => $uploadTiketPath, // Simpan path upload tiket
     ]);
@@ -566,8 +594,6 @@ public function getPemohon($id)
 
     ]);
 }
-
-
 
 public function show_ticket()
     {

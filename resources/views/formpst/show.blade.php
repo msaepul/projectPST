@@ -173,7 +173,9 @@
                                                     </td>
                                                     <td>
                                                         @if ($item->upload_file)
-                                                            <a href="#" class="preview-file" data-file="{{ asset('storage/' . $item->upload_file) }}">Lihat File</a>
+                                                            <a href="#" class="preview-file"
+                                                                data-file="{{ asset('storage/' . $item->upload_file) }}">Lihat
+                                                                File</a>
                                                         @else
                                                             Tidak ada file
                                                         @endif
@@ -348,8 +350,10 @@
             </div>
         </div>
         <!-- Modal untuk pratinjau file -->
-        <div id="filePreviewModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.7); z-index:1000;">
-            <div style="position:relative; margin: auto; top: 50%; transform: translateY(-50%); width:80%; max-width:800px; background:white; padding:20px;">
+        <div id="filePreviewModal"
+            style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.7); z-index:1000;">
+            <div
+                style="position:relative; margin: auto; top: 50%; transform: translateY(-50%); width:80%; max-width:800px; background:white; padding:20px;">
                 <span id="closeModal" style="cursor:pointer; position:absolute; top:10px; right:10px;">&times;</span>
                 <iframe id="filePreview" width="100%" height="400" style="border: none;"></iframe>
             </div>
@@ -522,32 +526,32 @@
                 document.getElementById('actionForm').submit();
             });
             document.addEventListener('DOMContentLoaded', function() {
-        const previewLinks = document.querySelectorAll('.preview-file');
-        const modal = document.getElementById('filePreviewModal');
-        const filePreview = document.getElementById('filePreview');
-        const closeModal = document.getElementById('closeModal');
+                const previewLinks = document.querySelectorAll('.preview-file');
+                const modal = document.getElementById('filePreviewModal');
+                const filePreview = document.getElementById('filePreview');
+                const closeModal = document.getElementById('closeModal');
 
-        previewLinks.forEach(link => {
-            link.addEventListener('click', function(event) {
-                event.preventDefault(); 
-                const fileUrl = this.getAttribute('data-file');
-                filePreview.src = fileUrl; 
-                modal.style.display = 'block'; 
+                previewLinks.forEach(link => {
+                    link.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        const fileUrl = this.getAttribute('data-file');
+                        filePreview.src = fileUrl;
+                        modal.style.display = 'block';
+                    });
+                });
+
+                closeModal.addEventListener('click', function() {
+                    modal.style.display = 'none';
+                    filePreview.src = '';
+                });
+
+                window.addEventListener('click', function(event) {
+                    if (event.target === modal) {
+                        modal.style.display = 'none';
+                        filePreview.src = '';
+                    }
+                });
             });
-        });
-
-        closeModal.addEventListener('click', function() {
-            modal.style.display = 'none'; 
-            filePreview.src = ''; 
-        });
-
-        window.addEventListener('click', function(event) {
-            if (event.target === modal) {
-                modal.style.display = 'none';
-                filePreview.src = '';
-            }
-        });
-    });
         </script>
 
         <style>
