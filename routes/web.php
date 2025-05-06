@@ -108,6 +108,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/update-status/{itemId}/{status}', [FormController::class, 'updateStatus'])->name('update.status');
 
         Route::get('/formpst/ticket', [FormController::class, 'ticket'])->name('formpst.ticket');
+        Route::get('/formpst/ticket/{id?}', [FormController::class, 'ticket'])->name('formpst.ticket');
         Route::get('/formpst/show_ticket', [FormController::class, 'show_ticket'])->name('formpst.show_ticket');
         Route::post('/formpst/ticketing', [FormController::class, 'store_ticket'])->name('store_ticket');
         Route::get('/get-pemohon/{id}', [FormController::class, 'getPemohon'])->name('get.pemohon');
