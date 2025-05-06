@@ -1,150 +1,172 @@
 @extends('layouts.main')
-
 @section('content')
-    <div class="container">
-        {{-- ========== FORM PENGAJUAN TIKET ========== --}}
-        <div class="card shadow-lg my-4">
-            <div class="card-header bg-info text-white text-center">
-                <h4>FORM PENGAJUAN TIKET</h4>
-            </div>
-            <div class="card-body"
-                style="background: url('{{ asset('dist/img/aag.jpg') }}') no-repeat center center; background-size: cover;">
+    {{ Breadcrumbs::render('Form') }}
 
-                <form action="{{ route('store_ticket') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
+    <div class="card mt-4 rounded-3 shadow custom-card">
+        <div class="card-header bg-light py-3">
+            <h4 class="mb-0 fw-bold">Daftar Keberangkatan</h4>
+        </div>
+        <div class="card-body p-4">
+            <div class="table-responsive">
+                <table id="dataTable" class="table table-bordered table-hover custom-table">
+                    <thead>
+                        <tr class="table-primary text-white">
+                            <th scope="col">No</th>
+                            <th scope="col">No. Surat</th>
+                            <th scope="col">Nama Pemohon</th>
+                            <th scope="col">Agen</th>
+                            <th scope="col">Tanggal Issued</th>
+                            <th scope="col">Transportasi</th>
+                            <th scope="col">Maskapai</th>
+                            <th scope="col">Detail Perjalanan</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php
+                            $dummyDepartures = [
+                                [
+                                    'id' => 1,
+                                    'no_surat' => 'SRT-001',
+                                    'nama_pemohon' => 'John Doe',
+                                    'agen' => 'Travel A',
+                                    'tanggal_issued' => '2025-05-01',
+                                    'transport' => 'Pesawat',
+                                    'maskapai' => 'Garuda Indonesia',
+                                    'detail_url' => '#',
+                                ],
+                                [
+                                    'id' => 2,
+                                    'no_surat' => 'SRT-002',
+                                    'nama_pemohon' => 'Jane Smith',
+                                    'agen' => 'Travel B',
+                                    'tanggal_issued' => '2025-05-03',
+                                    'transport' => 'Kereta',
+                                    'maskapai' => 'PT KAI',
+                                    'detail_url' => '#',
+                                ],
+                                // Tambahkan data dummy lainnya jika perlu
+                            ];
+                        @endphp
 
-                    {{-- ROW 1 --}}
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="no_surat">No. Surat</label>
-                            {{-- <select class="form-control select2" name="no_surat" id="no_surat" required>
-                                <option value="" disabled selected>-- Pilih No. Surat --</option>
-                                @foreach ($forms as $form)
-                                    <option value="{{ $form->id }}">{{ $form->no_surat }}</option>
-                                @endforeach
-                            </select> --}}
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="nama_pemohon">Nama Pemohon</label>
-                            <input type="text" id="nama_pemohon" name="nama_pemohon" class="form-control">
-                        </div>
-                    </div>
-
-                    {{-- ROW 2 --}}
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="ditugaskan_oleh">Ditugaskan Oleh</label>
-                            <input type="text" id="ditugaskan_oleh" name="assigned_by" class="form-control">
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="hp">No. HP</label>
-                            <input type="text" id="hp" name="hp" class="form-control">
-                        </div>
-                    </div>
-
-                    {{-- ROW 3
-                    <div class="form-group">
-                        <label for="pegawai_berangkat">Pegawai yang Berangkat</label>
-                        <textarea id="pegawai_berangkat" name="pegawai_berangkat" class="form-control"></textarea>
-                    </div> --}}
-
-                    {{-- SECTION: ISSUED TIKET --}}
-                    <hr>
-                    <h5 class="mt-4">Issued Tiket</h5>
-
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="tanggal_issued">Tanggal Issued</label>
-                            <input type="date" id="tanggal_issued" name="tanggal_issued" class="form-control">
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="no_invoice">No. Invoice</label>
-                            <input type="text" id="no_invoice" name="no_invoice" class="form-control">
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="maskapai">Maskapai</label>
-                            <select id="maskapai" name="maskapai" class="form-control">
-                                <option value="">-- Pilih Maskapai --</option>
-                                <option value="001">001</option>
-                                <option value="002">002</option>
-                                <option value="003">003</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="transport">Transportasi</label>
-                            <select id="transport" name="transport" class="form-control">
-                                <option value="">-- Pilih Transportasi --</option>
-                                <option value="001">001</option>
-                                <option value="002">002</option>
-                                <option value="003">003</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="lampiran">Lampiran</label>
-                            <textarea id="lampiran" name="lampiran" class="form-control"></textarea>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="beban_biaya">Beban Biaya</label>
-                            <select id="beban_biaya" name="beban_biaya" class="form-control">
-                                <option value="">-- Beban Biaya --</option>
-                                <option value="001">Cabang 001</option>
-                                <option value="002">Cabang 002</option>
-                                <option value="003">Cabang 003</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="tanggal_keberangkatan">Tanggal Keberangkatan</label>
-                            <input type="date" id="tanggal_keberangkatan" name="tanggal_keberangkatan"
-                                class="form-control">
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="nominal_tiket">Nominal Tiket</label>
-                            <input type="text" id="nominal_tiket" name="nominal_tiket" class="form-control">
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group col-md-4">
-                            <label for="waktu_keberangkatan">Waktu Keberangkatan</label>
-                            <input type="time" id="waktu_keberangkatan" name="waktu_keberangkatan"
-                                class="form-control">
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label for="rute">Rute</label>
-                            <div class="d-flex align-items-center">
-                                <input type="text" id="rute1" name="rute1" class="form-control me-2">
-                                <span class="mx-2">Ke</span>
-                                <input type="text" id="rute2" name="rute2" class="form-control">
-                            </div>
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label for="upload_tiket">Upload Tiket</label>
-                            <input type="file" id="upload_tiket" name="upload_tiket" class="form-control-file">
-                        </div>
-                    </div>
-
-                    {{-- Submit Buttons --}}
-                    <div class="d-flex justify-content-end mt-4">
-                        <button type="submit" class="btn btn-success me-2">Submit</button>
-                        <button type="reset" class="btn btn-danger">Cancel</button>
-                    </div>
-                </form>
-
+                        @forelse ($dummyDepartures as $index => $departure)
+                            <tr>
+                                <td>{{ $index + 1 }}</td>
+                                <td>{{ $departure['no_surat'] }}</td>
+                                <td>{{ $departure['nama_pemohon'] }}</td>
+                                <td>{{ $departure['agen'] }}</td>
+                                <td>{{ \Carbon\Carbon::parse($departure['tanggal_issued'])->format('d-m-Y') }}</td>
+                                <td>{{ $departure['transport'] }}</td>
+                                <td>{{ $departure['maskapai'] }}</td>
+                                <td>
+                                    {{-- <a href="{{ route('departures.show', $departure['id']) }}" --}}
+                                    {{-- class="btn btn-sm btn-outline-primary d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-eye" style="font-size: 16px;"></i> --}}
+                                    </a>
+                                </td>
+                                <td>
+                                    <select class="form-select status-select" data-departure-id="{{ $departure['id'] }}">
+                                        {{-- <option {{ $departure['status'] === 'On Time' ? 'selected' : '' }}>On Time</option>
+                                        <option {{ $departure['status'] === 'Delay' ? 'selected' : '' }}>Delay</option>
+                                        <option {{ $departure['status'] === 'Cancelled' ? 'selected' : '' }}>Cancelled
+                                        </option> Opsi Cancelled --}}
+                                    </select>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="9" class="text-center py-3">Tidak ada data ditemukan.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
+
+    {{-- <script>
+        $(document).ready(function() {
+            $('#dataTable').DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+                "language": {
+                    "search": "Cari:",
+                    "lengthMenu": "Tampilkan _MENU_ data per halaman",
+                    "info": "Menampilkan _START_ hingga _END_ dari _TOTAL_ data",
+                    "infoEmpty": "Tidak ada data tersedia",
+                    "paginate": {
+                        "first": "Pertama",
+                        "last": "Terakhir",
+                        "next": "Berikutnya",
+                        "previous": "Sebelumnya"
+                    }
+                }
+            });
+        });
+    </script> --}}
+
     <style>
-        .card-body {
-            height: 1000px;
+        .custom-table {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .custom-table thead tr {
+            background-color: #6a5acd;
+            /* Warna ungu kebiruan */
+            color: white;
+            text-align: left;
+        }
+
+        .custom-table thead th {
+            padding: 12px 16px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .custom-table tbody tr {
+            background-color: #f8f6ff;
+            /* Ungu muda */
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .custom-table tbody tr:nth-child(even) {
+            background-color: white;
+        }
+
+        .custom-table tbody tr:hover {
+            background-color: #e6e1ff;
+            /* Warna ungu yang lebih terang */
+        }
+
+        .custom-table tbody td {
+            padding: 12px 16px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .custom-table thead tr:first-child th:first-child {
+            border-top-left-radius: 12px;
+        }
+
+        .custom-table thead tr:first-child th:last-child {
+            border-top-right-radius: 12px;
+        }
+
+        .custom-table tbody tr:last-child td:first-child {
+            border-bottom-left-radius: 12px;
+        }
+
+        .custom-table tbody tr:last-child td:last-child {
+            border-bottom-right-radius: 12px;
         }
     </style>
 @endsection
