@@ -89,12 +89,12 @@ class FormController extends Controller
         'tanggal_keberangkatan' => $validatedData['tanggalKeberangkatan'],
     ]);
 
-    $ticketing = [
-        'form_id'               => $form->id,
-        'no_surat'              => $validatedData['no_surat'],
-        'nama_pemohon'          => $validatedData['namaPemohon'],
-        'assigned_By'           => $validatedData['yangMenugaskan'],
-    ];
+    // $ticketing = [
+    //     'form_id'               => $form->id,
+    //     'no_surat'              => $validatedData['no_surat'],
+    //     'nama_pemohon'          => $validatedData['namaPemohon'],
+    //     'assigned_By'           => $validatedData['yangMenugaskan'],
+    // ];
 
     if ($role === 'nm') {
         $form->acc_nm = 'oke';
@@ -129,7 +129,7 @@ class FormController extends Controller
     }
 
     Nama_pegawai::insert($namaPegawais);
-    Ticketing::insert($ticketing);
+    // Ticketing::insert($ticketing);
 
     return redirect()->route('formpst.index_keluar', ['form' => $form->id])
         ->with('success', 'Data berhasil disimpan, dan persetujuan otomatis telah diberikan.');
@@ -532,32 +532,9 @@ public function store_ticket(Request $request)
         'invoice'        => 'required|string|max:255',
         'nominal'        => 'required|string|max:255',
         'beban_biaya'    => 'required|string|max:255',
-        'detail'         => 'required|string|max:255',
-        'kode_kendaraan' => 'required|string|max:255',
-        'rute'           => 'required|string|max:255',
-        'tgl_keberangkatan' => 'required|string|max:255',
-        'jam_keberangkatan' => 'required|string|max:255',
-        'lampiran1'       => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048', // Validasi lampiran
-        'lampiran2'       => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048', // Validasi lampiran
-        'lampiran3'       => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048', // Validasi lampiran
-        'upload_tiket'   => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048', // Validasi upload tiket
     ]);
 
     $Nosurat = Form::findOrFail($validated['no_surat'])->no_surat;
-    
-    // Simpan file lampiran jika ada
-    $lampiranPath = null;
-    if ($request->hasFile('lampiran')) {
-        $lampiranFile = $request->file('lampiran');
-        $lampiranPath = $lampiranFile->store('lampiran', 'public'); // Simpan di storage/app/public/lampiran
-    }
-
-    // Simpan file tiket jika ada
-    $uploadTiketPath = null;
-    if ($request->hasFile('upload_tiket')) {
-        $uploadTiketFile = $request->file('upload_tiket');
-        $uploadTiketPath = $uploadTiketFile->store('upload_tiket', 'public'); // Simpan di storage/app/public/upload_tiket
-    }
 
     // Simpan ke database
     $ticketing = Ticketing::create([
@@ -572,13 +549,6 @@ public function store_ticket(Request $request)
         'invoice'               => $validated['invoice'],
         'nominal'               => $validated['nominal'],
         'beban_biaya'           => $validated['beban_biaya'],
-        'detail'                => $validated['detail'],
-        'kode_kendaraan'        => $validated['kode_kendaraan'],
-        'rute'                  => $validated['rute'],
-        'tgl_keberangkatan'     => $validated['tgl_keberangkatan'],
-        'jam_keberangkatan'     => $validated['jam_keberangkatan'],
-        'lampiran'              => $lampiranPath, // Simpan path lampiran
-        'upload_tiket'          => $uploadTiketPath, // Simpan path upload tiket
     ]);
 
     return redirect()->back()->with('success', 'Data tiket berhasil disimpan!');

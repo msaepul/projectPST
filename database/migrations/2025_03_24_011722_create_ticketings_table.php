@@ -25,11 +25,6 @@ return new class extends Migration
             $table->string('invoice')->default('');
             $table->string('nominal')->default('');
             $table->string('beban_biaya')->default('');
-            $table->string('detail')->default('');
-            $table->string('kode_kendaraan')->default('');
-            $table->string('rute')->default('');
-            $table->string('tgl_keberangkatan')->default('');
-            $table->string('jam_keberangkatan')->default('');
             $table->string('lampiran1')->default('');
             $table->string('lampiran2')->default('');
             $table->string('lampiran3')->default('');
