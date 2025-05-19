@@ -21,10 +21,11 @@ class ticketing extends Model
         'invoice',
         'nominal',
         'beban_biaya',
-        'lampiran1',
-        'lampiran2',
-        'lampiran3',
-        'upload_tiket',
+        'kode_kendaraan',
+        'rute',
+        'tanggal_keberangkatan',
+        'bulan_keberangkatan',
+        'waktu_keberangkatan',
 
 
     ];

@@ -532,6 +532,11 @@ public function store_ticket(Request $request)
         'invoice'        => 'required|string|max:255',
         'nominal'        => 'required|string|max:255',
         'beban_biaya'    => 'required|string|max:255',
+        'kode_kendaraan'    => 'required|string|max:255',
+        'rute'    => 'required|string|max:255',
+        'tanggal_keberangkatan'    => 'required|string|max:255',
+        'bulan_keberangkatan'    => 'required|string|max:255',
+        'waktu_keberangkatan'    => 'required|string|max:255',
     ]);
 
     $Nosurat = Form::findOrFail($validated['no_surat'])->no_surat;
@@ -549,6 +554,11 @@ public function store_ticket(Request $request)
         'invoice'               => $validated['invoice'],
         'nominal'               => $validated['nominal'],
         'beban_biaya'           => $validated['beban_biaya'],
+        'kode_kendaraan'           => $validated['kode_kendaraan'],
+        'rute'           => $validated['rute'],
+        'tanggal_keberangkatan'           => $validated['beban_biaya'],
+        'bulan_keberangkatan'           => $validated['bulan_keberangkatan'],
+        'waktu_keberangkatan'           => $validated['waktu_keberangkatan'],
     ]);
 
     return redirect()->back()->with('success', 'Data tiket berhasil disimpan!');
