@@ -3,8 +3,8 @@
 @section('content')
     <div class="container pt-4">
         <div class="card mb-4 rounded-3 shadow">
-            <div class="card-header bg-light text-white py-3">
-                <h4 class="mb-0 fw-bold">Data User</h4>
+            <div class="card-header bg-light py-3">
+                <h4 class="Judul mb-0 fw-bold text-dark">Data User</h4>
             </div>
 
             <div class="card-body">
