@@ -563,17 +563,19 @@ public function store_ticket(Request $request)
 
     return redirect()->back()->with('success', 'Data tiket berhasil disimpan!');
 }
-// YourController.php
 public function getPemohon($id)
 {
-    $form = Form::find($id);
+    $form = Form::findOrFail($id);
+    // dd($form);
+
+
     return response()->json([
         'nama_pemohon' => $form->nama_pemohon,
         'yang_menugaskan' => $form->yang_menugaskan,
-
-
+        // 'tujuan' => $form->tujuan,
     ]);
 }
+
 
 public function show_ticket()
     {

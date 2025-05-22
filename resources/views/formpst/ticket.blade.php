@@ -45,11 +45,6 @@
                                     value="{{ old('yang_menugaskan', $prefill->yang_menugaskan ?? '') }}">
                             </div>
 
-                            <div class="form-group mb-3">
-                                <label for="tujuan" class="form-label">Tujuan Penugasan</label>
-                                <input type="text" id="tujuan" name="tujuan" class="form-control"
-                                    value="{{ old('tujuan', $prefill->tujuan ?? '') }}">
-                            </div>
                         </div>
                     </div>
 
@@ -226,7 +221,7 @@
                                     success: function(data) {
                                         $('#nama_pemohon').val(data.nama_pemohon);
                                         $('#yang_menugaskan').val(data.yang_menugaskan);
-                                        $('#tujuan').val(data.tujuan);
+                                        // $('#tujuan').val(data.tujuan);
                                         $('#lampiranSection').hide();
                                     },
                                     error: function() {
