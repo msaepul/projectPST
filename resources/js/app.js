@@ -1,4 +1,6 @@
 import './bootstrap';
+import './form.js';
+
 
 import Alpine from 'alpinejs';
 

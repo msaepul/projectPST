@@ -13,27 +13,20 @@ return new class extends Migration
     {
         Schema::create('ticketings', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('form_id'); // Foreign key ke tabel forms
-            $table->string('no_surat')->unique();
+            $table->string('no_surat');
             $table->string('nama_pemohon');
             $table->string('assigned_By');
-            $table->string('hp')->default('');
-            $table->string('agent')->default('');
-            $table->string('issued')->default('');
-            $table->string('transport')->default('');
-            $table->string('maskapai')->default('');
-            $table->string('invoice')->default('');
-            $table->string('nominal')->default('');
-            $table->string('beban_biaya')->default('');
-            $table->string('kode_kendaraan')->default('');
-            $table->string('rute')->default('');
-            $table->string('tanggal_keberangkatan')->default('');
-            $table->string('bulan_keberangkatan')->default('');
-            $table->string('waktu_keberangkatan')->default('');
-
-
+            $table->string('invoice');
+            $table->date('issued');
+            $table->decimal('nominal', 15, 2);
+            $table->string('beban_biaya');
+            $table->string('agent');
+            $table->string('kendaraan')->nullable();
+            $table->string('maskapai');
+            $table->string('class');
             $table->timestamps();
         });
+        
     }
 
     /**

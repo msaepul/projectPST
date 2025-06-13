@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('upload_file')->default('');
             $table->date('tanggal_berangkat');
             $table->date('tanggal_kembali');
+            $table->string('estimasi');
             $table->string('acc_nm')->default('');
             $table->string('alasan')->default('');
 

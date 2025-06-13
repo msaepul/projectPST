@@ -1,47 +1,3 @@
-.container {
-    max-width: 1200px;
-    padding: 20px;
-}
-
-.form-group label {
-    font-weight: bold;
-}
-
-.form-control {
-    border-radius: 5px;
-}
-
-.btn-container {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin: 30px 0 20px 0;
-    /* Atas: 30px, Bawah: 20px */
-    padding: 10px 20px;
-    /* Tambah padding kiri & kanan */
-}
-
-.btn {
-    padding: 10px;
-    font-size: 14px;
-    border: none;
-    color: white;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-.btn-success {
-    background-color: #28a745;
-}
-
-.btn-secondary {
-    background-color: #6c757d;
-}
-
-.btn-danger {
-    background-color: #dc3545;
-}
-
 .card-header {
     background-color: #3b0100;
     color: white;
@@ -56,24 +12,38 @@
     width: auto;
 }
 
-.table-responsive {
-    overflow-x: auto;
-    white-space: nowrap;
+.select2 {
+    width: 100% !important;
 }
 
-.table {
-    min-width: 1200px;
-    /* Sesuaikan dengan kebutuhan */
-}
-
-.file-actions {
+.btn-container {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    gap: 5px;
 }
 
-.file-link {
-    display: inline-flex;
-    align-items: center;
-    margin-right: 10px;
-    /* Tambahkan margin kanan untuk memberi jarak */
+.btn {
+    padding: 10px;
+    font-size: 14px;
+    border: none;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.btn-primary {
+    background-color: #0415f8;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+}
+
+.btn-success {
+    background-color: #28a745;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
 }

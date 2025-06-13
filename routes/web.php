@@ -88,6 +88,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/formpst/form', [FormController::class, 'form'])->name('formpst.form');
         Route::get('/formpst/show', [FormController::class, 'show'])->name('formpst.show');
         Route::get('/formpst/show/{id}', [FormController::class, 'show'])->name('formpst.show');
+        Route::get('/form/{id}/export-csv', [FormController::class, 'exportCSV'])->name('form.export.csv');
+
 
         Route::get('/formpst/show_nm', [FormController::class, 'show_nm'])->name('formpst.show_nm');
         Route::get('/formpst/show_nm/{id}', [FormController::class, 'show_nm'])->name('formpst.show_nm');
@@ -110,8 +112,16 @@ Route::middleware('auth')->group(function () {
         Route::get('/formpst/ticket', [FormController::class, 'ticket'])->name('formpst.ticket');
         Route::get('/formpst/ticket/{id?}', [FormController::class, 'ticket'])->name('formpst.ticket');
         Route::get('/formpst/show_ticket', [FormController::class, 'show_ticket'])->name('formpst.show_ticket');
+        Route::get('/formpst/detail_ticket', [FormController::class, 'detail_ticket'])->name('formpst.detail_ticket');
         Route::post('/formpst/ticketing', [FormController::class, 'store_ticket'])->name('store_ticket');
         Route::get('/get-pemohon/{id}', [FormController::class, 'getPemohon'])->name('get.pemohon');
+        Route::get('/get-employees/{formId}', [FormController::class, 'getEmployeesByFormId']);
+        Route::post('/store-ticket', [FormController::class, 'store_ticket'])->name('store-ticket');
+        Route::get('/ticketing/detail/{id}', [FormController::class, 'getTicketDetails'])->name('ticketing.details');
+
+
+
+
 
 
 

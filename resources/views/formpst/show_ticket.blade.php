@@ -1,172 +1,124 @@
 @extends('layouts.main')
+
 @section('content')
-    {{ Breadcrumbs::render('Form') }}
+    <div class="container pt-4">
+        <div class="card mb-4 rounded-3 shadow">
+            <div class="card-header bg-light py-3">
+                <h4 class="Judul mb-0 fw-bold text-dark">List Keberangkatan</h4>
+            </div>
 
-    <div class="card mt-4 rounded-3 shadow custom-card">
-        <div class="card-header bg-light py-3">
-            <h4 class="mb-0 fw-bold">Daftar Keberangkatan</h4>
-        </div>
-        <div class="card-body p-4">
-            <div class="table-responsive">
-                <table id="dataTable" class="table table-bordered table-hover custom-table">
-                    <thead>
-                        <tr class="table-primary text-white">
-                            <th scope="col">No</th>
-                            <th scope="col">No. Surat</th>
-                            <th scope="col">Nama Pemohon</th>
-                            <th scope="col">Agen</th>
-                            <th scope="col">Tanggal Issued</th>
-                            <th scope="col">Transportasi</th>
-                            <th scope="col">Maskapai</th>
-                            <th scope="col">Detail Perjalanan</th>
-                            <th scope="col">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @php
-                            $dummyDepartures = [
-                                [
-                                    'id' => 1,
-                                    'no_surat' => 'SRT-001',
-                                    'nama_pemohon' => 'John Doe',
-                                    'agen' => 'Travel A',
-                                    'tanggal_issued' => '2025-05-01',
-                                    'transport' => 'Pesawat',
-                                    'maskapai' => 'Garuda Indonesia',
-                                    'detail_url' => '#',
-                                ],
-                                [
-                                    'id' => 2,
-                                    'no_surat' => 'SRT-002',
-                                    'nama_pemohon' => 'Jane Smith',
-                                    'agen' => 'Travel B',
-                                    'tanggal_issued' => '2025-05-03',
-                                    'transport' => 'Kereta',
-                                    'maskapai' => 'PT KAI',
-                                    'detail_url' => '#',
-                                ],
-                                // Tambahkan data dummy lainnya jika perlu
-                            ];
-                        @endphp
-
-                        @forelse ($dummyDepartures as $index => $departure)
-                            <tr>
-                                <td>{{ $index + 1 }}</td>
-                                <td>{{ $departure['no_surat'] }}</td>
-                                <td>{{ $departure['nama_pemohon'] }}</td>
-                                <td>{{ $departure['agen'] }}</td>
-                                <td>{{ \Carbon\Carbon::parse($departure['tanggal_issued'])->format('d-m-Y') }}</td>
-                                <td>{{ $departure['transport'] }}</td>
-                                <td>{{ $departure['maskapai'] }}</td>
-                                <td>
-                                    {{-- <a href="{{ route('departures.show', $departure['id']) }}" --}}
-                                    {{-- class="btn btn-sm btn-outline-primary d-flex align-items-center justify-content-center">
-                                    <i class="bi bi-eye" style="font-size: 16px;"></i> --}}
-                                    </a>
-                                </td>
-                                <td>
-                                    <select class="form-select status-select" data-departure-id="{{ $departure['id'] }}">
-                                        {{-- <option {{ $departure['status'] === 'On Time' ? 'selected' : '' }}>On Time</option>
-                                        <option {{ $departure['status'] === 'Delay' ? 'selected' : '' }}>Delay</option>
-                                        <option {{ $departure['status'] === 'Cancelled' ? 'selected' : '' }}>Cancelled
-                                        </option> Opsi Cancelled --}}
-                                    </select>
-                                </td>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="userTable" class="table table-bordered table-hover">
+                        <thead>
+                            <tr class="table-primary text-white">
+                                <th scope="col" style="text-align: center;">No. surat</th>
+                                <th scope="col" style="text-align: center;">Nama Pemohon</th>
+                                <th scope="col" style="text-align: center;">Kendaraan</th>
+                                <th scope="col" style="text-align: center;">Agent</th>
+                                <th scope="col" style="text-align: center;">Aksi</th>
                             </tr>
-                        @empty
-                            <tr>
-                                <td colspan="9" class="text-center py-3">Tidak ada data ditemukan.</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach ($data as $info)
+                                {{-- @if ($info->nama_pemohon->contains('nama_pegawai', auth()->user()->nama_lengkap)) --}}
+                                    <tr>
+                                        <td>{{ $info->no_surat }}</td>
+                                        <td>{{ $info->nama_pemohon }}</td>
+                                        <td>{{ $info->kendaraan }}</td>
+                                        <td>{{ $info->agent }}</td>
+                                        <td class="text-center d-flex justify-content-center gap-2 text-nowrap">
+                                            <button
+                                                class="btn btn-sm btn-outline-primary d-flex align-items-center justify-content-center"
+                                                data-bs-toggle="modal" data-bs-target="#ticketModal"
+                                                data-id="{{ $info->id }}" data-nama="{{ $info->nama_pemohon }}">
+                                                <i class="bi bi-airplane" style="font-size: 16px;"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {{-- @endif --}}
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 
-    {{-- <script>
-        $(document).ready(function() {
-            $('#dataTable').DataTable({
-                "paging": true,
-                "lengthChange": true,
-                "searching": true,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false,
-                "responsive": true,
-                "language": {
-                    "search": "Cari:",
-                    "lengthMenu": "Tampilkan _MENU_ data per halaman",
-                    "info": "Menampilkan _START_ hingga _END_ dari _TOTAL_ data",
-                    "infoEmpty": "Tidak ada data tersedia",
-                    "paginate": {
-                        "first": "Pertama",
-                        "last": "Terakhir",
-                        "next": "Berikutnya",
-                        "previous": "Sebelumnya"
-                    }
-                }
+    <!-- Modal -->
+    <div class="modal fade" id="ticketModal" tabindex="-1" aria-labelledby="ticketModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ticketModalLabel">Detail Tiket</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="modalContent">Loading...</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+@section('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ticketModal = document.getElementById('ticketModal');
+
+            ticketModal.addEventListener('show.bs.modal', function(event) {
+                const button = event.relatedTarget;
+                const id = button.getAttribute('data-id');
+                const nama = button.getAttribute('data-nama');
+                const modalContent = document.getElementById('modalContent');
+
+                modalContent.innerHTML = 'Loading...';
+
+                fetch(`/ticketing/detail/${id}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.ticket || data.details.length === 0) {
+                            modalContent.innerHTML =
+                                `<p>Detail tiket untuk <strong>${nama}</strong> tidak ditemukan.</p>`;
+                            return;
+                        }
+
+                        let html = `
+        <strong>Nama Pemohon:</strong> ${data.ticket.nama_pemohon}<br>
+        <strong>Agent:</strong> ${data.ticket.agent}<br>
+        <strong>Invoice:</strong> ${data.ticket.invoice}<br>
+        <hr>
+        <strong>Detail Tiket:</strong>
+        <ul class="list-group mt-2">
+    `;
+
+                        data.details.forEach(detail => {
+                            html += `
+        <li class="list-group-item">
+            <strong>Penumpang:</strong> ${detail.passenger_name}<br>
+            <strong>Flight:</strong> ${detail.flight_number}<br>
+            <strong>Tanggal:</strong> ${detail.flight_date}<br>
+            <strong>Waktu:</strong> ${detail.departure_time}<br>
+            ${detail.file_name ? `
+                <a href="/storage/tickets/${detail.file_name}" target="_blank" class="btn btn-sm btn-outline-success mt-2">
+                    <i class="bi bi-file-earmark-pdf"></i> Lihat Tiket
+                </a>
+            ` : ''}
+
+        </li>
+    `;
+                        });
+
+
+                        html += '</ul>';
+
+                        modalContent.innerHTML = html;
+                    })
+
             });
         });
-    </script> --}}
-
-    <style>
-        .custom-table {
-            border-collapse: separate;
-            border-spacing: 0;
-            width: 100%;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        .custom-table thead tr {
-            background-color: #6a5acd;
-            /* Warna ungu kebiruan */
-            color: white;
-            text-align: left;
-        }
-
-        .custom-table thead th {
-            padding: 12px 16px;
-            font-size: 16px;
-            font-weight: bold;
-        }
-
-        .custom-table tbody tr {
-            background-color: #f8f6ff;
-            /* Ungu muda */
-            transition: background-color 0.3s ease-in-out;
-        }
-
-        .custom-table tbody tr:nth-child(even) {
-            background-color: white;
-        }
-
-        .custom-table tbody tr:hover {
-            background-color: #e6e1ff;
-            /* Warna ungu yang lebih terang */
-        }
-
-        .custom-table tbody td {
-            padding: 12px 16px;
-            font-size: 14px;
-            color: #333;
-        }
-
-        .custom-table thead tr:first-child th:first-child {
-            border-top-left-radius: 12px;
-        }
-
-        .custom-table thead tr:first-child th:last-child {
-            border-top-right-radius: 12px;
-        }
-
-        .custom-table tbody tr:last-child td:first-child {
-            border-bottom-left-radius: 12px;
-        }
-
-        .custom-table tbody tr:last-child td:last-child {
-            border-bottom-right-radius: 12px;
-        }
-    </style>
+    </script>
+@endsection
 @endsection

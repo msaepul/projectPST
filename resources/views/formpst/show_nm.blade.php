@@ -219,21 +219,19 @@
                         <div class="status-bar mb-4" style="position: sticky; top: 70px;">
 
                             {{-- ACC HO  --}}
-                            @if ($form->acc_nm == 'oke')
-                                <div class="status-step">
-                                    <img src="{{ $form->acc_ho == 'oke' ? asset('dist/img/oke.png') : ($form->acc_ho == 'reject' ? asset('dist/img/reject.png') : asset('dist/img/no.png')) }}"
-                                        alt="Status HO" class="thumb-icon" width="50">
-                                    <div class="status-name">
-                                        @if ($form->acc_ho == 'oke')
-                                            {{ $form->submitted_by_ho }} (HRD HO) - Setuju
-                                        @elseif ($form->acc_ho == 'reject')
-                                            {{ $form->submitted_by_ho }} (HRD HO) - Ditolak
-                                        @else
-                                            HRD HO - Menunggu
-                                        @endif
-                                    </div>
+                            <div class="status-step">
+                                <img src="{{ $form->acc_ho == 'oke' ? asset('dist/img/oke.png') : ($form->acc_ho == 'reject' ? asset('dist/img/reject.png') : asset('dist/img/no.png')) }}"
+                                    alt="Status HO" class="thumb-icon" width="50">
+                                <div class="status-name">
+                                    @if ($form->acc_ho == 'oke')
+                                        {{ $form->submitted_by_ho }} (HRD HO) - Setuju
+                                    @elseif ($form->acc_ho == 'reject')
+                                        {{ $form->submitted_by_ho }} (HRD HO) - Ditolak
+                                    @else
+                                        HRD HO - Menunggu
+                                    @endif
                                 </div>
-                            @endif
+                            </div>
 
                             {{-- ACC CABANG --}}
                             @if ($form->acc_ho == 'oke')

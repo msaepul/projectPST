@@ -13,27 +13,56 @@ use App\Models\Pengajuan;
 use App\Models\Nama_pegawai;
 use App\Models\Form;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
+
 
 class HoController extends Controller
 {
-    // Dashboard
-    public function dashboard()
-    {
-        $jumlahCabang = Cabang::count();
-        $jumlahDepartemen = Departemen::count();
 
-    // Hitung jumlah surat masuk (acc_ho = 'oke')
+    
+        // Dashboard
+        public function dashboard()
+        {
+            $jumlahCabang = Cabang::count();
+            $jumlahDepartemen = Departemen::count();
+    
+            // Hitung jumlah surat masuk (acc_ho = 'oke')
+            $jumlahSuratMasuk = Form::where('acc_ho', 'oke')
+                ->where('cabang_tujuan', auth()->user()->cabang_asal)
+                ->count();
+    
+            // Hitung jumlah surat keluar
+            $jumlahSuratKeluar = Form::where('cabang_asal', auth()->user()->cabang_asal)->count();
+    
+            // Hitung jumlah surat tugas
+            $jumlahSuratTugas = Form::where('acc_cabang', 'oke')
+                ->where(function ($query) {
+                    $query->where('cabang_asal', auth()->user()->cabang_asal)
+                        ->orWhere('cabang_tujuan', auth()->user()->cabang_asal);
+                })
+                ->count();
+    
+            // Calculate branch-specific counts only for HRD in HO
+            if (Auth::user()->role === 'hrd' && Auth::user()->cabang_asal === 'HO') {
+                $cabangCounts = Form::groupBy('cabang_asal')
+                    ->selectRaw('cabang_asal, count(*) as count')
+                    ->pluck('count', 'cabang_asal')
+                    ->toArray();
+            } else {
+                $cabangCounts = []; // Empty array if not HRD in HO
+            }
+    
+            return view('dashboard', compact(
+                'jumlahCabang',
+                'jumlahDepartemen',
+                'jumlahSuratMasuk',
+                'jumlahSuratKeluar',
+                'jumlahSuratTugas',
+                'cabangCounts' // Pass the branch counts to the view
+            ));
+        }
 
-    $jumlahSuratMasuk = Form::where('acc_ho', 'oke')->where('cabang_tujuan', auth()->user()->cabang_asal)->count();
-
-    // Hitung jumlah surat keluar (misalnya semua data Form dianggap surat keluar)
-    $jumlahSuratKeluar = Form::where('cabang_asal', auth()->user()->cabang_asal)->count();
-
-    $jumlahSuratTugas = Form::where('acc_cabang', 'oke')->where(function ($query) {$query->where('cabang_asal', auth()->user()->cabang_asal)->orWhere('cabang_tujuan', auth()->user()->cabang_asal);})->count();
-
-
-    return view('dashboard', compact('jumlahCabang', 'jumlahDepartemen', 'jumlahSuratMasuk', 'jumlahSuratKeluar','jumlahSuratTugas'));
-    }
+    
 
     // Cabang
     public function cabang()
@@ -249,40 +278,39 @@ class HoController extends Controller
     }
 
     public function storeUser(Request $request)
-{
-    // Validasi input data user
-    $validated = $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email',
-        'password' => 'required|min:6',
-        'nik' => 'required|string|unique:users,nik',
-        'departemen' => 'required|exists:departemens,id',
-        'cabang_asal' => 'required|exists:cabangs,id',
-        'no_hp' => 'required|string',
-        'role' => 'required|in:admin,user,bm,hrd,nm,pegawai',
-        'nama_lengkap' => 'required|string|max:255',
-    ]);
-
-    // Ambil kode cabang dan nama departemen berdasarkan ID yang divalidasi
-    $cabangAsalKode = Cabang::findOrFail($validated['cabang_asal'])->nama_cabang;
-    $departemenNama = Departemen::findOrFail($validated['departemen'])->nama_departemen;
-
-    // Membuat user baru
-    User::create([
-        'name' => $request->name,
-        'email' => $request->email,
-        'password' => bcrypt($request->password),
-        'nik' => $request->nik,
-        'departemen' => $departemenNama, // Menggunakan nama departemen yang valid
-        'cabang_asal' => $cabangAsalKode, // Menyimpan kode cabang, bukan nama
-        'no_hp' => $request->no_hp,
-        'role' => $request->role,
-        'nama_lengkap' => $request->nama_lengkap,
-    ]);
-
-    // Redirect dengan pesan sukses setelah user berhasil ditambahkan
-    return redirect()->route('ho.user')->with('success', 'User berhasil ditambahkan!');
-}
+    {
+        // Validasi input data user
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:6',
+            'nik' => 'required|string|unique:users,nik',
+            'departemen' => 'required|exists:departemens,id',
+            'cabang_asal' => 'required|exists:cabangs,kode_cabang', // Ubah ini
+            'no_hp' => 'required|string',
+            'role' => 'required|in:admin,user,bm,hrd,nm,pegawai',
+            'nama_lengkap' => 'required|string|max:255',
+        ]);
+    
+        // Ambil nama departemen dari ID
+        $departemenNama = Departemen::findOrFail($validated['departemen'])->nama_departemen;
+    
+        // Buat user baru
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'nik' => $request->nik,
+            'departemen' => $departemenNama,
+            'cabang_asal' => $validated['cabang_asal'], // Langsung simpan kode_cabang
+            'no_hp' => $request->no_hp,
+            'role' => $request->role,
+            'nama_lengkap' => $request->nama_lengkap,
+        ]);
+    
+        return redirect()->route('ho.user')->with('success', 'User berhasil ditambahkan!');
+    }
+    
  // Fungsi untuk menghapus user
  public function destroyuser($id)
  {

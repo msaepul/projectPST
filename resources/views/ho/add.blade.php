@@ -72,13 +72,14 @@
             </div>
 
             <!-- Cabang Asal Selection -->
+            
             <div class="form-group">
                 <label>Cabang Asal:</label>
                 <select class="form-control" name="cabang_asal" required>
                     <option value="">Pilih Cabang</option>
                     @foreach ($cabangs as $cabang)
-                        <option value="{{ $cabang->id }}" {{ old('cabang_asal') == $cabang->id ? 'selected' : '' }}>
-                            {{ $cabang->nama_cabang }} - {{$cabang->kode_cabang}}
+                        <option value="{{ $cabang->kode_cabang }}" {{ old('cabang_asal') == $cabang->kode_cabang ? 'selected' : '' }}>
+                            {{ $cabang->nama_cabang }} - {{ $cabang->kode_cabang }}
                         </option>
                     @endforeach
                 </select>
@@ -86,7 +87,7 @@
                     <span class="error-message">{{ $message }}</span>
                 @enderror
             </div>
-
+            
             <!-- Row 3: No HP and Role -->
             <div class="form-row">
                 <div class="form-group">

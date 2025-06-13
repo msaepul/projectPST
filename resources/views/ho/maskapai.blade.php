@@ -1,7 +1,6 @@
 @extends('layouts.main')
 
 @section('content_header')
-    {{ Breadcrumbs::render('departemen') }}
     <h1 class="card-title">Master Data Maskapai</h1>
 @endsection
 
@@ -26,8 +25,8 @@
                     <thead class="table-primary text-white">
                         <tr>
                             <th scope="col" style="text-align: center;">No</th>
-                            <th scope="col">Nama Maskapai</th>
-                            <th scope="col">Kode Maskapai</th>
+                            <th scope="col">Kode Operator</th>
+                            <th scope="col">Nama Operator</th>
                             <th scope="col">Jenis kendaraan</th>
                             <th scope="col" style="text-align: center; width: 120px;">Aksi</th>
                         </tr>
@@ -78,21 +77,21 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="kode_maskapai">Kode Maskapai</label>
+                            <label for="kode_maskapai">Kode Operator</label>
                             <input type="text" class="form-control" id="kode_maskapai" name="kode_maskapai" required>
                         </div>
                         <div class="form-group">
-                            <label for="nama_maskapai">Nama Maskapai</label>
+                            <label for="nama_maskapai">Nama Operator</label>
                             <input type="text" class="form-control" id="nama_maskapai" name="nama_maskapai" required>
                         </div>
                         <div class="form-group">
                             <label for="jenis_kendaraan">Jenis Kendaraan</label>
                             <select class="form-control" id="jenis_kendaraan" name="jenis_kendaraan" required>
                                 <option value="">-- Pilih Jenis Kendaraan --</option>
-                                <option value="Mobil">Mobil</option>
-                                <option value="Motor">Motor</option>
+                                <option value="Travel">Travel</option>
                                 <option value="Bus">Bus</option>
-                                <option value="Truk">Truk</option>
+                                <option value="Kereta">Kereta</option>
+                                <option value="Pesawat">Pesawat</option>
                             </select>
                         </div>
                         
