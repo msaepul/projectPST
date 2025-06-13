@@ -14,9 +14,9 @@
         <div class="card-body">
             @php
             $actionRoute = route('formpst.store', ['role' => auth()->user()->role]);
-        @endphp
+            @endphp
 
-        <form id="suratTugasForm" action="{{ $actionRoute }}" method="POST" enctype="multipart/form-data">
+            <form id="suratTugasForm" action="{{ $actionRoute }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="row">
                     <div class="col-md-6">
@@ -177,26 +177,16 @@
             }
         });
 
-        document.querySelector('#pegawaiTable').addEventListener('click', function(event) {
-            if (event.target.classList.contains('namaPegawaiDisplay')) {
-                const row = event.target.closest('tr');
-                const dropdown = row.querySelector('.namaPegawai');
-                dropdown.style.display = 'block';
-                event.target.style.display = 'none';
+        document.getElementById('add-field').addEventListener('click', function() {
+            const templateRow = document.querySelector('#pegawaiTemplate');
+            if (templateRow) {
+                const newRow = templateRow.cloneNode(true);
+                newRow.removeAttribute('id');
+                newRow.style.display = '';
+                document.querySelector('#pegawaiTable tbody').appendChild(newRow);
+                $(newRow).find('.select2').select2();
             }
         });
-
-        document.getElementById('add-field').addEventListener('click', function() {
-    const templateRow = document.querySelector('#pegawaiTemplate');
-    if (templateRow) {
-        const newRow = templateRow.cloneNode(true);
-        newRow.removeAttribute('id');
-        newRow.style.display = '';
-        document.querySelector('#pegawaiTable tbody').appendChild(newRow);
-        $(newRow).find('.select2').select2();
-    }
-});
-
 
         document.querySelector('#pegawaiTable').addEventListener('click', function(event) {
             if (event.target.classList.contains('btn-remove')) {
@@ -205,33 +195,32 @@
         });
 
         document.querySelector('form').addEventListener('submit', function(e) {
-    const namaPegawaiInputs = document.querySelectorAll('.namaPegawai');
-    let isValid = true; // Flag to check if the form is valid
+            const namaPegawaiInputs = document.querySelectorAll('.namaPegawai');
+            let isValid = true; // Flag to check if the form is valid
 
-    // Check if all required fields are filled
-    namaPegawaiInputs.forEach((select, index) => {
-        const selectedOption = select.options[select.selectedIndex];
-        if (!selectedOption) {
-            isValid = false; // If any select is not selected, set isValid to false
-        } else {
-            const nama = selectedOption.getAttribute('data-nama');
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = `namaPegawaiNama[${index}]`;
-            input.value = nama;
-            this.appendChild(input);
-        }
-    });
+            // Check if all required fields are filled
+            namaPegawaiInputs.forEach((select, index) => {
+                const selectedOption = select.options[select.selectedIndex];
+                if (!selectedOption) {
+                    isValid = false; // If any select is not selected, set isValid to false
+                } else {
+                    const nama = selectedOption.getAttribute('data-nama');
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = `namaPegawaiNama[${index}]`;
+                    input.value = nama;
+                    this.appendChild(input);
+                }
+            });
 
-    // If the form is not valid, prevent submission
-    if (!isValid) {
-        e.preventDefault(); // Prevent form submission
-        alert('Please fill all required fields.'); // Alert the user
-    } else {
-        console.log('Form is valid, submitting...'); // Debugging log
-    }
-});
-
+            // If the form is not valid, prevent submission
+            if (!isValid) {
+                e.preventDefault(); // Prevent form submission
+                alert('Please fill all required fields.'); // Alert the user
+            } else {
+                console.log('Form is valid, submitting...'); // Debugging log
+            }
+        });
 
         $(document).ready(function() {
             $('.select2').select2();

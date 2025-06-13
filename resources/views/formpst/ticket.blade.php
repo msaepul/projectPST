@@ -219,6 +219,89 @@
 
 
     <script>
+                document.getElementById("ticketForm").addEventListener("submit", function(e) {
+            const tableRows = document.querySelectorAll("#tickets-table-body tr");
+            const parsedTickets = [];
+    
+            tableRows.forEach(row => {
+                const cells = row.querySelectorAll("td");
+                parsedTickets.push({
+                    nama_file: row.dataset.filename || cells[0]?.innerText || "",
+                    nama_penumpang: cells[1]?.innerText || "",
+                    nomor_penerbangan: cells[2]?.innerText || "",
+                    tanggal: cells[3]?.innerText || "",
+                    waktu_berangkat: cells[4]?.innerText || "",
+                    bandara_asal: cells[5]?.innerText || "",
+                    bandara_tujuan: cells[6]?.innerText || ""
+                });
+            });
+    
+            document.getElementById("tickets_data").value = JSON.stringify(parsedTickets);
+    
+            const container = document.getElementById('pegawaiContainer');
+            container.innerHTML = '';
+    
+            const pegawaiList = document.querySelectorAll("#listPegawai .list-group-item");
+    
+            pegawaiList.forEach(function(item, index) {
+                const nama = item.dataset.nama;
+                const departemen = item.dataset.departemen;
+    
+                container.innerHTML += `
+                    <input type="hidden" name="pegawai[${index}][nama_pegawai]" value="${nama}">
+                    <input type="hidden" name="pegawai[${index}][departemen]" value="${departemen}">
+                `;
+            });
+        });
+    
+        @if (empty($prefill))
+            $('#no_surat').on('change', function() {
+                let form_id = $(this).val();
+                if (form_id) {
+                    if (form_id === 'lainnya') {
+                        $('#lampiranSection').show();
+                    } else {
+                        $.ajax({
+                            url: '{{ url('/get-pemohon') }}/' + form_id,
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function(data) {
+                                $('#nama_pemohon').val(data.nama_pemohon);
+                                $('#yang_menugaskan').val(data.yang_menugaskan);
+                                $('#lampiranSection').hide();
+                            },
+                            error: function() {
+                                alert('Gagal mengambil data pemohon');
+                            }
+                        });
+    
+                        $.ajax({
+                            url: '{{ url('/get-employees') }}/' + form_id,
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function(employees) {
+                                const listPegawai = $('#listPegawai');
+                                listPegawai.empty();
+                                if (employees.length > 0) {
+                                    employees.forEach(employee => {
+                                        listPegawai.append(
+                                            `<li class="list-group-item" data-nama="${employee.nama_pegawai}" data-departemen="${employee.departemen}"> ${employee.nama_pegawai} - ${employee.departemen}</li>`
+                                        );
+                                    });
+                                } else {
+                                    listPegawai.append(
+                                        '<li class="list-group-item">Tidak ada pegawai yang ditemukan.</li>'
+                                    );
+                                }
+                            },
+                            error: function() {
+                                alert('Gagal mengambil data pegawai');
+                            }
+                        });
+                    }
+                }
+            });
+        @endif
         document.getElementById("ticketForm").addEventListener("submit", function(e) {
             const tableRows = document.querySelectorAll("#tickets-table-body tr");
             const parsedTickets = [];
