@@ -13,7 +13,7 @@
 
         <div class="card-body">
             @php
-            $actionRoute = route('formpst.store', ['role' => auth()->user()->role]);
+                $actionRoute = route('formpst.store', ['role' => auth()->user()->role]);
             @endphp
 
             <form id="suratTugasForm" action="{{ $actionRoute }}" method="POST" enctype="multipart/form-data">
@@ -98,7 +98,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr id="pegawaiTemplate" style="display: none;">
+                                        <tr>
                                             <td>
                                                 <select name="namaPegawai[]"
                                                     class="form-control namaPegawai form-control-sm" required>
@@ -109,7 +109,8 @@
                                                                 data-departemen="{{ $user->departemen }}"
                                                                 data-nik="{{ $user->nik }}"
                                                                 data-nama="{{ $user->nama_lengkap }}">
-                                                                {{ $user->nama_lengkap }} / {{ $user->departemen }} / {{ $user->nik }}
+                                                                {{ $user->nama_lengkap }} / {{ $user->departemen }} /
+                                                                {{ $user->nik }}
                                                             </option>
                                                         @endforeach
                                                     @else
@@ -118,20 +119,32 @@
                                                                 data-departemen="{{ $user->departemen }}"
                                                                 data-nik="{{ $user->nik }}"
                                                                 data-nama="{{ $user->nama_lengkap }}">
-                                                                {{ $user->nama_lengkap }} / {{ $user->departemen }} / {{ $user->nik }}
+                                                                {{ $user->nama_lengkap }} / {{ $user->departemen }} /
+                                                                {{ $user->nik }}
                                                             </option>
                                                         @endforeach
                                                     @endif
                                                 </select>
                                             </td>
-                                            <td><input type="text" name="departemen[]" class="form-control departemen form-control-sm" readonly></td>
-                                            <td><input type="text" name="nik[]" class="form-control nik form-control-sm" readonly></td>
-                                            <td><input type="file" name="uploadFile[]" class="form-control form-control-sm"></td>
+                                            <td>
+                                                <input type="text" name="departemen[]"
+                                                    class="form-control departemen form-control-sm" readonly>
+                                            </td>
+                                            <td>
+                                                <input type="text" name="nik[]"
+                                                    class="form-control nik form-control-sm" readonly>
+                                            </td>
+                                            <td>
+                                                <input type="file" name="uploadFile[]"
+                                                    class="form-control form-control-sm">
+                                            </td>
                                             <td>
                                                 <div class="d-flex align-items-center">
-                                                    <input type="date" name="tanggalBerangkat[]" class="form-control form-control-sm" required>
+                                                    <input type="date" name="tanggalBerangkat[]"
+                                                        class="form-control form-control-sm" required>
                                                     <span class="mx-2">s/d</span>
-                                                    <input type="date" name="tanggalKembali[]" class="form-control form-control-sm" required>
+                                                    <input type="date" name="tanggalKembali[]"
+                                                        class="form-control form-control-sm" required>
                                                 </div>
                                             </td>
                                             <td class="d-flex align-items-center">
@@ -141,7 +154,8 @@
                                             </td>
                                             <td class="text-center">
                                                 <button type="button" class="btn btn-danger btn-remove btn-sm">
-                                                    <i class="bi bi-trash" style="font-size: 16px; margin-right: 4px;"></i>
+                                                    <i class="bi bi-trash"
+                                                        style="font-size: 16px; margin-right: 4px;"></i>
                                                 </button>
                                             </td>
                                         </tr>
@@ -177,12 +191,20 @@
             }
         });
 
+        document.querySelector('#pegawaiTable').addEventListener('click', function(event) {
+            if (event.target.classList.contains('namaPegawaiDisplay')) {
+                const row = event.target.closest('tr');
+                const dropdown = row.querySelector('.namaPegawai');
+                dropdown.style.display = 'block';
+                event.target.style.display = 'none';
+            }
+        });
+
         document.getElementById('add-field').addEventListener('click', function() {
-            const templateRow = document.querySelector('#pegawaiTemplate');
-            if (templateRow) {
-                const newRow = templateRow.cloneNode(true);
-                newRow.removeAttribute('id');
-                newRow.style.display = '';
+            const rowToClone = document.querySelector('#pegawaiTable tbody tr');
+            if (rowToClone) {
+                const newRow = rowToClone.cloneNode(true);
+                newRow.querySelectorAll('input, select').forEach(input => input.value = '');
                 document.querySelector('#pegawaiTable tbody').appendChild(newRow);
                 $(newRow).find('.select2').select2();
             }
@@ -196,30 +218,15 @@
 
         document.querySelector('form').addEventListener('submit', function(e) {
             const namaPegawaiInputs = document.querySelectorAll('.namaPegawai');
-            let isValid = true; // Flag to check if the form is valid
-
-            // Check if all required fields are filled
             namaPegawaiInputs.forEach((select, index) => {
                 const selectedOption = select.options[select.selectedIndex];
-                if (!selectedOption) {
-                    isValid = false; // If any select is not selected, set isValid to false
-                } else {
-                    const nama = selectedOption.getAttribute('data-nama');
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = `namaPegawaiNama[${index}]`;
-                    input.value = nama;
-                    this.appendChild(input);
-                }
+                const nama = selectedOption.getAttribute('data-nama');
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = `namaPegawaiNama[${index}]`;
+                input.value = nama;
+                this.appendChild(input);
             });
-
-            // If the form is not valid, prevent submission
-            if (!isValid) {
-                e.preventDefault(); // Prevent form submission
-                alert('Please fill all required fields.'); // Alert the user
-            } else {
-                console.log('Form is valid, submitting...'); // Debugging log
-            }
         });
 
         $(document).ready(function() {
