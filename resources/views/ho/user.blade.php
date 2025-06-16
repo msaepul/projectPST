@@ -37,7 +37,7 @@
                                         (auth()->user()->cabang_asal === 'HO' || auth()->user()->cabang_asal === $user->cabang_asal)) ||
                                         auth()->user()->role === 'admin')
                                     <tr>
-                                        <td class="text-center"></td> {{-- Indeks akan diisi oleh DataTables --}}
+                                        <td class="text-center"></td> 
                                         <td>{{ $user->nama_lengkap }}</td>
                                         <td>{{ $user->name }}</td>
                                         <td>{{ $user->email }}</td>

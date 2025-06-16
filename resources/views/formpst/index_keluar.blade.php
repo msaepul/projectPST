@@ -18,7 +18,7 @@
                             <th>Cabang Tujuan</th>
                             <th>Tujuan Pelatihan</th>
                             <th>Status</th>
-                            <th>Status Pegawai</th>
+                            {{-- <th>Status Pegawai</th> --}}
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -38,23 +38,37 @@
                                                 <span class="badge bg-success">Sudah Diverifikasi</span>
                                             @elseif ($item->acc_ho == 'reject')
                                                 <span class="badge bg-danger">Verifikasi Ditolak HO</span>
+                                                @if ($item->reason_ho)
+                                                    <br><small>Alasan: {{ $item->reason_ho }}</small>
+                                                @endif
+                                            @elseif ($item->acc_bm == 'reject')
+                                                <span class="badge bg-danger">Verifikasi Ditolak BM</span>
+                                                @if ($item->reason_bm)
+                                                    <br><small>Alasan: {{ $item->reason_bm }}</small>
+                                                @endif
+                                            @elseif (in_array($item->acc_bm, ['cancel', 'reject']) ||
+                                                     in_array($item->acc_ho, ['cancel']) ||
+                                                     in_array($item->acc_cabang, ['cancel']))
+                                                <span class="badge bg-danger">Cancel</span>
+                                                @if ($item->acc_bm == 'cancel' && $item->alasan_cancel_bm)
+                                                    <br><small>Alasan BM: {{ $item->alasan_cancel_bm }}</small>
+                                                @elseif ($item->acc_ho == 'cancel' && $item->alasan_cancel_ho)
+                                                    <br><small>Alasan HO: {{ $item->alasan_cancel_ho }}</small>
+                                                @elseif ($item->acc_cabang == 'cancel' && $item->alasan_cancel_cabang)
+                                                    <br><small>Alasan Cabang: {{ $item->alasan_cancel_cabang }}</small>
+                                                @endif
                                             @elseif ($item->acc_ho == 'oke' && $item->acc_cabang != 'oke')
                                                 <span class="badge bg-warning text-dark">Menunggu Verifikasi Cabang</span>
                                             @elseif ($item->acc_bm == 'oke' && $item->acc_ho != 'oke')
                                                 <span class="badge bg-warning text-dark">Menunggu Verifikasi HO</span>
-                                            @elseif ($item->acc_bm == 'reject')
-                                                <span class="badge bg-danger">Verifikasi Ditolak BM</span>
                                             @elseif ($item->acc_bm != 'oke' && $item->acc_hrd == 'oke')
                                                 <span class="badge bg-warning text-dark">Menunggu Verifikasi BM</span>
-                                            @elseif (in_array($item->acc_bm, ['cancel', 'reject']) ||
-                                                    in_array($item->acc_ho, ['cancel']) ||
-                                                    in_array($item->acc_cabang, ['cancel']))
-                                                <span class="badge bg-danger">Cancel</span>
                                             @else
                                                 <span class="badge bg-danger">Belum Diverifikasi</span>
                                             @endif
                                         </td>
-                                        <td class="text-center">
+                                        
+                                        {{-- <td class="text-center">
                                             @php
                                                 $formRejected =
                                                     in_array($item->acc_cabang, ['reject', 'cancel']) ||
@@ -82,7 +96,7 @@
                                             @elseif ($anyAccepted)
                                                 <span class="badge bg-success">Semua Pegawai Diterima</span>
                                             @endif
-                                        </td>
+                                        </td> --}}
                                         <td class="text-center">
                                             <div class="d-flex justify-content-center gap-2">
                                                 <a href="{{ route($item->cabang_asal === 'HO' ? 'formpst.show_nm' : 'formpst.show', ['id' => $item->id]) }}" class="btn btn-sm btn-outline-primary">Detail</a>

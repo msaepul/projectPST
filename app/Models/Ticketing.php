@@ -13,19 +13,14 @@ class ticketing extends Model
         'no_surat',
         'nama_pemohon',
         'assigned_By',
-        'hp',
-        'agent',
-        'issued',
-        'transport',
-        'maskapai',
         'invoice',
+        'issued',
         'nominal',
         'beban_biaya',
-        'kode_kendaraan',
-        'rute',
-        'tanggal_keberangkatan',
-        'bulan_keberangkatan',
-        'waktu_keberangkatan',
+        'agent',
+        'transport',
+        'maskapai',
+        'class',
 
 
     ];
@@ -45,5 +40,15 @@ class ticketing extends Model
     {
         return $this->belongsTo(Nama_pegawai::class);
     }
+    public function Nama_pegawai_t()
+    {
+        return $this->hasMany(Nama_pegawai_t::class);
+    }
+
+    public function Detail_ticket()
+{
+    return $this->hasMany(Detail_ticket::class, 'ticket_id');
+}
+
 }
 

@@ -64,6 +64,13 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.15.349/pdf.min.js"></script>
+
+<!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Bundle JS (sudah termasuk Popper.js) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 
 
@@ -105,11 +112,12 @@
 
         <!-- Sidebar -->
         <aside class="main-sidebar sidebar-dark-navy elevation-4">
-            <a href="{{ route('dashboard') }}" class="brand-link">
+            {{-- <a href="{{ route('dashboard') }}" class="brand-link">
                 <img src="{{ asset('dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo"
                     class="brand-image img-circle elevation-3" style="opacity: .8">
                 <span class="brand-text font-weight-light">FormPST</span>
-            </a>
+            </a> --}}
+            
             <!-- Sidebar user panel (optional) -->
             <div class="user-panel mt-3 pb-3 mb-3 d-flex align-items-center">
                 <div class="image me-3">
@@ -202,6 +210,12 @@
                                     <p>Ticketing </p>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('formpst.show_ticket') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-car"></i>
+                                    <p>List keberangkatan </p>
+                                </a>
+                            </li>
                         </li>
 
                         <li class="nav-item">
@@ -275,13 +289,20 @@
                                     </a>
                                 </li>
 
-                                <li class="nav-item">
-                                    <a href="{{ route('formpst.ticket') }}" class="nav-link">
-                                        <i class="nav-icon fas fa-car"></i>
-                                        <p>Ticketing </p>
-                                    </a>
-                                </li>
+                                
                             </ul>
+                            <li class="nav-item">
+                                <a href="{{ route('formpst.ticket') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-car"></i>
+                                    <p>Ticketing </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('formpst.show_ticket') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-plane"></i>
+                                    <p>List keberangkatan </p>
+                                </a>
+                            </li>
                         </li>
                     @endif
 
@@ -323,6 +344,12 @@
                                     </a>
                                 </li>
                             </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('formpst.show_ticket') }}" class="nav-link">
+                                <i class="nav-icon fas fa-plane"></i>
+                                <p>List keberangkatan </p>
+                            </a>
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
@@ -385,6 +412,12 @@
                                     <p>Ticketing </p>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('formpst.show_ticket') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-car"></i>
+                                    <p>List keberangkatan </p>
+                                </a>
+                            </li>
                         </li>
                     @endif
 
@@ -416,6 +449,12 @@
                             <a href="{{ route('formpst.ticket') }}" class="nav-link">
                                 <i class="nav-icon fas fa-car"></i>
                                 <p>Ticketing </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('formpst.show_ticket') }}" class="nav-link">
+                                <i class="nav-icon fas fa-plane"></i>
+                                <p>List keberangkatan </p>
                             </a>
                         </li>
                         <li class="nav-item">
@@ -529,6 +568,8 @@
         <!-- Main content -->
         <section class="content">
             @yield('content')
+            @yield('scripts')
+
         </section>
     </div>
 
@@ -591,6 +632,12 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/js/select2.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+<script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+</script>
+
 
     {{-- Tambahkan DataTables JS --}}
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>

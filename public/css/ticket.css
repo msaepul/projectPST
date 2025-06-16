@@ -1,0 +1,222 @@
+                .main-card-body {
+                    background-color: rgba(255, 255, 255, 0.75);
+                    padding: 2rem;
+                    border-radius: 12px;
+                }
+
+                .container {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    max-width: 1000px;
+                    margin: 0 auto;
+                }
+
+                .transparent-card {
+                    background-color: rgba(255, 255, 255, 0.85);
+                    backdrop-filter: saturate(90%) blur(8px);
+                    border-radius: 12px;
+                }
+
+                .form-label {
+                    font-weight: 600;
+                    color: #333;
+                }
+
+                .form-control {
+                    /* border: 1.5px solid #ccc;
+                    border-radius: 6px;
+                    padding: 10px 14px; */
+                    /* font-size: 13px; */
+                    transition: border-color 0.3s;
+                }
+
+                .form-control:focus {
+                    border-color: #007acc;
+                    outline: none;
+                    box-shadow: 0 0 6px #007acc88;
+                }
+
+                .btn {
+                    font-weight: 600;
+                    font-size: 13px;
+                    border-radius: 6px;
+                    padding: 10px 18px;
+                    transition: background-color 0.3s;
+                    cursor: pointer;
+                }
+
+                .btn-secondary.btn-sm {
+                    font-size: 12px;
+                    padding: 6px 10px;
+                }
+
+                .btn:hover,
+                .btn:focus {
+                    background-color: #005f99 !important;
+                }
+
+                .btn-success {
+                    background-color: #28a745;
+                    border: none;
+                    color: white;
+                }
+
+                .btn-success:hover {
+                    background-color: #1e7e34;
+                }
+
+                .btn-danger {
+                    background-color: #dc3545;
+                    border: none;
+                    color: white;
+                }
+
+                .btn-danger:hover {
+                    background-color: #bd2130;
+                }
+
+                .card {
+                    border-radius: 12px;
+                }
+
+                .issued {
+                    width: 950px;
+                }
+
+                .shadow-sm {
+                    box-shadow: 0 0.125rem 0.25rem rgb(0 0 0 / 0.075) !important;
+                }
+
+                .issued {
+                    background: rgba(255, 255, 255, 0.1);
+                    backdrop-filter: blur(10px);
+                    border-radius: 12px;
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                }
+
+                h5,
+                h6 {
+                    font-weight: 700;
+                    color: #2c3e50;
+                }
+
+                label {
+                    font-weight: 600;
+                }
+
+                .table thead {
+                    background-color: #3498db;
+                    color: #fff;
+                }
+
+                .btn-primary {
+                    background: linear-gradient(45deg, #3498db, #2980b9);
+                    border: none;
+                    box-shadow: 0 4px 8px #2980b9aa;
+                }
+
+                .btn-primary:hover {
+                    background: linear-gradient(45deg, #2980b9, #2471a3);
+                }
+
+                #previewTable {
+                    width: 100%;
+                    border-collapse: collapse;
+                    font-size: 14px;
+                }
+
+                #previewTable thead {
+                    background-color: #f8f9fa;
+                }
+
+                #previewTable th,
+                #previewTable td {
+                    vertical-align: middle;
+                    padding: 8px;
+                    border: 1px solid #dee2e6;
+                    white-space: nowrap;
+                    text-align: center;
+                }
+
+                #previewTable td.wrap-text {
+                    white-space: normal;
+                    word-wrap: break-word;
+                    max-width: 200px;
+                }
+
+                .btn-delete {
+                    color: white;
+                    background-color: #dc3545;
+                    border: none;
+                    padding: 4px 10px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                }
+
+                .btn-delete:hover {
+                    background-color: #c82333;
+                }
+/* Styles for the upload section */
+.upload-section {
+    background-color: #f8f9fa; /* Light background for contrast */
+    border: 1px solid #ced4da; /* Border for definition */
+    border-radius: 5px; /* Rounded corners */
+    padding: 20px; /* Padding for spacing */
+    margin-top: 20px; /* Space above the section */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+/* Label styles */
+.upload-section label {
+    font-weight: bold; /* Bold text for labels */
+    margin-bottom: 10px; /* Space below labels */
+    display: block; /* Block display for labels */
+}
+
+/* Input file styles */
+.upload-section input[type="file"] {
+    display: block; /* Block display for better layout */
+    margin-top: 10px; /* Space above the input */
+}
+
+.tabel-section {
+    background-color: #f8f9fa; /* Light background for contrast */
+    border: 1px solid #ced4da; /* Border for definition */
+    border-radius: 5px; /* Rounded corners */
+    padding: 20px; /* Padding for spacing */
+    margin-top: 20px; /* Space above the section */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+/* Styles for the info card */
+.info-card {
+    background-color: #ffffff; /* White background for the card */
+    border: 1px solid #ced4da; /* Border for definition */
+    border-radius: 5px; /* Rounded corners */
+    padding: 20px; /* Padding for spacing */
+    margin-top: 20px; /* Space above the card */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+/* Styles for the info rows */
+.info-row {
+    display: flex; /* Flexbox for alignment */
+    justify-content: space-between; /* Space between label and value */
+    margin-bottom: 10px; /* Space below each row */
+}
+
+/* Label styles in info card */
+.info-label {
+    font-weight: bold; /* Bold text for labels */
+}
+
+/* Error message styles */
+.error-message {
+    color: red; /* Red color for errors */
+    margin-top: 10px; /* Space above error message */
+}
+
+/* Subtitle styles */
+.subtitle {
+    font-style: italic; /* Italic style for subtitle */
+    margin-bottom: 20px; /* Space below subtitle */
+}

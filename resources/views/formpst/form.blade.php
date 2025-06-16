@@ -93,6 +93,7 @@
                                             <th>NIK</th>
                                             <th>KTP</th>
                                             <th>Lama Keberangkatan</th>
+                                            <th>Estimasi Lama Penugasan</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -145,6 +146,11 @@
                                                     <input type="date" name="tanggalKembali[]"
                                                         class="form-control form-control-sm" required>
                                                 </div>
+                                            </td>
+                                            <td class="d-flex align-items-center">
+                                                <input type="number" name="estimasi[]" min="0"
+                                                    class="form-control form-control-sm estimasi" placeholder="Estimasi">
+                                                <span class="ms-1">hari</span>
                                             </td>
                                             <td class="text-center">
                                                 <button type="button" class="btn btn-danger btn-remove btn-sm">

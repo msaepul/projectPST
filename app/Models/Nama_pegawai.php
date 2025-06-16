@@ -16,6 +16,7 @@ class Nama_pegawai extends Model
         'upload_file',
         'tanggal_berangkat',
         'tanggal_kembali',
+        'estimasi',
         'acc_nm',
         'alasan',
     ];

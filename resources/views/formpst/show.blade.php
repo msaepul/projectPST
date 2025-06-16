@@ -1,6 +1,18 @@
 @extends('layouts.main')
 
 @section('content')
+    <div class="mb-3">
+        <form action="{{ route('form.export.csv', $form->id) }}" method="GET">
+            <button type="submit" class="btn btn-success">
+                Export ke CSV
+            </button>
+        </form>
+    </div>
+
+
+    <head>
+        <link rel="stylesheet" href={{ asset('css/show.css') }}>
+    </head>
     <div class="container-fluid pt-4">
         <div class="row justify-content-center">
             <div class="col-md-12">
@@ -149,6 +161,7 @@
                                             <th>NIK</th>
                                             <th>Departemen</th>
                                             <th>Lama Keberangkatan</th>
+                                            <th>Estimasi Lama Penugasan</th>
                                             <th>KTP</th>
                                             <th>Status</th>
                                             <th>Keterangan</th>
@@ -171,6 +184,8 @@
                                                         s/d
                                                         {{ \Carbon\Carbon::parse($item->tanggal_kembali)->format('d M Y') }}
                                                     </td>
+                                                    <td>{{ $item->estimasi }} HARI</td>
+
                                                     <td>
                                                         @if ($item->upload_file)
                                                             <a href="#" class="preview-file"
@@ -206,7 +221,6 @@
                                                             <span class="text-warning">Menunggu Persetujuan</span>
                                                         @endif
                                                     </td>
-
                                                     <td>
                                                         @if ($item->acc_nm == 'oke')
                                                             <span class="badge bg-success">Diterima</span>
@@ -358,411 +372,201 @@
                 <iframe id="filePreview" width="100%" height="400" style="border: none;"></iframe>
             </div>
         </div>
+    </div>
 
-        <script>
-            var itemIdToReject = null;
+    <script>
+        var itemIdToReject = null;
 
-            function openRejectModal(itemId) {
-                itemIdToReject = itemId;
-                $('#rejectModal').modal('show');
+        function openRejectModal(itemId) {
+            itemIdToReject = itemId;
+            $('#rejectModal').modal('show');
+        }
+
+        document.getElementById('submitRejection').addEventListener('click', function() {
+            var rejectionReason = document.getElementById('rejectionReason').value;
+            if (!rejectionReason) {
+                alert('Alasan penolakan wajib diisi');
+                return;
             }
 
-            document.getElementById('submitRejection').addEventListener('click', function() {
-                var rejectionReason = document.getElementById('rejectionReason').value;
-                if (!rejectionReason) {
-                    alert('Alasan penolakan wajib diisi');
-                    return;
-                }
+            if (!confirm("Apakah Anda yakin ingin menolak?")) {
+                alert("Aksi dibatalkan.");
+                return;
+            }
 
-                if (!confirm("Apakah Anda yakin ingin menolak?")) {
-                    alert("Aksi dibatalkan.");
-                    return;
-                }
-
-                $.ajax({
-                    url: '/update-status/' + itemIdToReject + '/tolak',
-                    type: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        alasan: rejectionReason
-                    },
-                    success: function(response) {
-                        if (response && response.message) {
-                            alert(response.message);
-                        } else {
-                            alert(
-                                'Status berhasil diperbarui.'
-                            ); // Pesan default jika tidak ada response.message
-                        }
-                        $('#rejectModal').modal('hide');
-                        location.reload();
-                    },
-                    error: function(xhr, status, error) {
-                        if (xhr.responseJSON && xhr.responseJSON.message) {
-                            alert('Terjadi kesalahan: ' + xhr.responseJSON.message);
-                        } else {
-                            alert('Terjadi kesalahan: ' +
-                                error); // Pesan default jika tidak ada xhr.responseJSON.message
-                        }
+            $.ajax({
+                url: '/update-status/' + itemIdToReject + '/tolak',
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    alasan: rejectionReason
+                },
+                success: function(response) {
+                    if (response && response.message) {
+                        alert(response.message);
+                    } else {
+                        alert(
+                            'Status berhasil diperbarui.'
+                        ); // Pesan default jika tidak ada response.message
                     }
-                });
+                    $('#rejectModal').modal('hide');
+                    location.reload();
+                },
+                error: function(xhr, status, error) {
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        alert('Terjadi kesalahan: ' + xhr.responseJSON.message);
+                    } else {
+                        alert('Terjadi kesalahan: ' +
+                            error); // Pesan default jika tidak ada xhr.responseJSON.message
+                    }
+                }
             });
+        });
 
-            function updateStatus(itemId, status) {
-                let message = status === 'oke' ? "Apakah Anda yakin ingin menyetujui?" : "Apakah Anda yakin ingin menolak?";
+        function updateStatus(itemId, status) {
+            let message = status === 'oke' ? "Apakah Anda yakin ingin menyetujui?" : "Apakah Anda yakin ingin menolak?";
 
-                if (!confirm(message)) {
-                    alert("Aksi dibatalkan.");
-                    return;
-                }
-
-                $.ajax({
-                    url: '/update-status/' + itemId + '/' + status,
-                    type: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                    },
-                    success: function(response) {
-                        if (response && response.message) {
-                            alert(response.message);
-                        } else {
-                            alert('Status berhasil diperbarui.'); // Pesan default jika tidak ada response.message
-                        }
-                        location.reload();
-                    },
-                    error: function(xhr, status, error) {
-                        if (xhr.responseJSON && xhr.responseJSON.message) {
-                            alert('Terjadi kesalahan: ' + xhr.responseJSON.message);
-                        } else {
-                            alert('Terjadi kesalahan: ' +
-                                error); // Pesan default jika tidak ada xhr.responseJSON.message
-                        }
-                    }
-                });
+            if (!confirm(message)) {
+                alert("Aksi dibatalkan.");
+                return;
             }
 
-            document.addEventListener('DOMContentLoaded', function() {
-                function updateSubmitHoButton() {
-                    const submitHoButton = document.getElementById('submitHoButton');
-                    const rows = document.querySelectorAll('.item-table tbody tr');
-                    let allReviewed = true;
-
-                    rows.forEach(row => {
-                        const statusCell = row.querySelector('td span.badge');
-                        if (statusCell && statusCell.classList.contains('bg-warning')) {
-                            allReviewed = false;
-                        }
-                    });
-
-                    submitHoButton.disabled = !allReviewed;
+            $.ajax({
+                url: '/update-status/' + itemId + '/' + status,
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                },
+                success: function(response) {
+                    if (response && response.message) {
+                        alert(response.message);
+                    } else {
+                        alert('Status berhasil diperbarui.'); // Pesan default jika tidak ada response.message
+                    }
+                    location.reload();
+                },
+                error: function(xhr, status, error) {
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        alert('Terjadi kesalahan: ' + xhr.responseJSON.message);
+                    } else {
+                        alert('Terjadi kesalahan: ' +
+                            error); // Pesan default jika tidak ada xhr.responseJSON.message
+                    }
                 }
+            });
+        }
 
+        document.addEventListener('DOMContentLoaded', function() {
+            function updateSubmitHoButton() {
+                const submitHoButton = document.getElementById('submitHoButton');
+                const rows = document.querySelectorAll('.item-table tbody tr');
+                let allReviewed = true;
+
+                rows.forEach(row => {
+                    const statusCell = row.querySelector('td span.badge');
+                    if (statusCell && statusCell.classList.contains('bg-warning')) {
+                        allReviewed = false;
+                    }
+                });
+
+                submitHoButton.disabled = !allReviewed;
+            }
+
+            updateSubmitHoButton();
+
+            $(document).ajaxSuccess(function() {
                 updateSubmitHoButton();
-
-                $(document).ajaxSuccess(function() {
-                    updateSubmitHoButton();
-                });
-
-                function changeStep(index) {
-                    let steps = document.querySelectorAll('.step');
-                    steps.forEach(step => step.classList.remove('active'));
-                    steps[index].classList.add('active');
-                }
             });
 
-            function confirmAction(actionType) {
-                Swal.fire({
-                    title: actionType === 'tolak' ? 'Alasan Penolakan' : 'Alasan Cancel',
-                    input: 'textarea',
-                    inputPlaceholder: 'Masukkan alasan...',
-                    showCancelButton: true,
-                    confirmButtonText: 'Kirim',
-                    cancelButtonText: 'Batal',
-                    preConfirm: (reason) => {
-                        if (!reason) {
-                            Swal.showValidationMessage('Alasan wajib diisi!');
-                        }
-                        return reason;
-                    }
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Kirim alasan ke backend
-                        fetch('/your-route', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                                },
-                                body: JSON.stringify({
-                                    action: actionType,
-                                    reason: result.value
-                                })
-                            }).then(response => response.json())
-                            .then(data => {
-                                Swal.fire('Sukses!', data.message, 'success');
-                            }).catch(error => {
-                                Swal.fire('Error!', 'Terjadi kesalahan.', 'error');
-                            });
-                    }
-                });
+            function changeStep(index) {
+                let steps = document.querySelectorAll('.step');
+                steps.forEach(step => step.classList.remove('active'));
+                steps[index].classList.add('active');
             }
-            let actionType = '';
+        });
 
-            function showReasonModal(action) {
-                actionType = action;
-                $('#reasonModal').modal('show');
-            }
-
-            document.getElementById('submitReasonButton').addEventListener('click', function() {
-                let reason = document.getElementById('reasonInput').value;
-
-                if (reason.trim() === '') {
-                    alert('Harap masukkan alasan terlebih dahulu.');
-                    return;
+        function confirmAction(actionType) {
+            Swal.fire({
+                title: actionType === 'tolak' ? 'Alasan Penolakan' : 'Alasan Cancel',
+                input: 'textarea',
+                inputPlaceholder: 'Masukkan alasan...',
+                showCancelButton: true,
+                confirmButtonText: 'Kirim',
+                cancelButtonText: 'Batal',
+                preConfirm: (reason) => {
+                    if (!reason) {
+                        Swal.showValidationMessage('Alasan wajib diisi!');
+                    }
+                    return reason;
                 }
-
-                document.getElementById('actionInput').value = actionType;
-                document.getElementById('reasonHiddenInput').value = reason;
-                document.getElementById('actionForm').submit();
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Kirim alasan ke backend
+                    fetch('/your-route', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({
+                                action: actionType,
+                                reason: result.value
+                            })
+                        }).then(response => response.json())
+                        .then(data => {
+                            Swal.fire('Sukses!', data.message, 'success');
+                        }).catch(error => {
+                            Swal.fire('Error!', 'Terjadi kesalahan.', 'error');
+                        });
+                }
             });
-            document.addEventListener('DOMContentLoaded', function() {
-                const previewLinks = document.querySelectorAll('.preview-file');
-                const modal = document.getElementById('filePreviewModal');
-                const filePreview = document.getElementById('filePreview');
-                const closeModal = document.getElementById('closeModal');
+        }
+        let actionType = '';
 
-                previewLinks.forEach(link => {
-                    link.addEventListener('click', function(event) {
-                        event.preventDefault();
-                        const fileUrl = this.getAttribute('data-file');
-                        filePreview.src = fileUrl;
-                        modal.style.display = 'block';
-                    });
+        function showReasonModal(action) {
+            actionType = action;
+            $('#reasonModal').modal('show');
+        }
+
+        document.getElementById('submitReasonButton').addEventListener('click', function() {
+            let reason = document.getElementById('reasonInput').value;
+
+            if (reason.trim() === '') {
+                alert('Harap masukkan alasan terlebih dahulu.');
+                return;
+            }
+
+            document.getElementById('actionInput').value = actionType;
+            document.getElementById('reasonHiddenInput').value = reason;
+            document.getElementById('actionForm').submit();
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+            const previewLinks = document.querySelectorAll('.preview-file');
+            const modal = document.getElementById('filePreviewModal');
+            const filePreview = document.getElementById('filePreview');
+            const closeModal = document.getElementById('closeModal');
+
+            previewLinks.forEach(link => {
+                link.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    const fileUrl = this.getAttribute('data-file');
+                    filePreview.src = fileUrl;
+                    modal.style.display = 'block';
                 });
+            });
 
-                closeModal.addEventListener('click', function() {
+            closeModal.addEventListener('click', function() {
+                modal.style.display = 'none';
+                filePreview.src = '';
+            });
+
+            window.addEventListener('click', function(event) {
+                if (event.target === modal) {
                     modal.style.display = 'none';
                     filePreview.src = '';
-                });
-
-                window.addEventListener('click', function(event) {
-                    if (event.target === modal) {
-                        modal.style.display = 'none';
-                        filePreview.src = '';
-                    }
-                });
+                }
             });
-        </script>
+        });
+    </script>
 
-        <style>
-            .form-details {
-                width: 100%;
-                max-width: 100%;
-            }
-
-            .package-container {
-                width: 100%;
-            }
-
-            .item-table table {
-                width: 100%;
-            }
-
-            .card {
-                max-width: 100%;
-            }
-
-            .status-bar {
-                display: flex;
-                justify-content: space-evenly;
-            }
-
-            .form-details {
-                border: 1px solid #000;
-                padding: 15px;
-                margin-bottom: 20px;
-                background-color: #f8f9fa;
-            }
-
-            .detail-group {
-                margin-bottom: 8px;
-                display: flex;
-                align-items: baseline;
-            }
-
-            .detail-label {
-                font-weight: bold;
-                width: 150px;
-            }
-
-            .detail-value {
-                flex-grow: 1;
-                border-bottom: 1px dotted #ccc;
-                padding-bottom: 3px;
-            }
-
-            .package-container {
-                border: 1px solid #000;
-                border-radius: 8px;
-                padding: 20px;
-                margin-bottom: 20px;
-                box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-            }
-
-            .item-table table {
-                width: 100%;
-                margin-bottom: 0;
-                border-collapse: collapse;
-            }
-
-            .item-table th,
-            .item-table td {
-                padding: 10px;
-                text-align: left;
-                vertical-align: middle;
-                border: 1px solid #000;
-            }
-
-            .item-table th {
-                background-color: #e9ecef;
-            }
-
-            td.text-center {
-                text-align: center;
-            }
-
-            .btn {
-                padding: 5px 10px;
-                margin: 0 3px;
-                border: 1px solid #ccc;
-                cursor: pointer;
-                border-radius: 3px;
-            }
-
-            .btn-success {
-                background-color: #dff0d8;
-                border-color: #d6e9c6;
-                color: #3c763d;
-            }
-
-            .btn-danger {
-                background-color: #f2dede;
-                border-color: #ebccd1;
-                color: #a94442;
-            }
-
-            .status-bar {
-                display: flex;
-                justify-content: space-around;
-                margin-bottom: 20px;
-            }
-
-            .status-step {
-                text-align: center;
-            }
-
-            .thumb-icon {
-                width: 250px;
-            }
-
-            .status-name {
-                margin-top: 5px;
-                font-size: 14px;
-                color: #555;
-            }
-
-            /* Breadcrumb styles */
-            .breadcrumb {
-                background-color: #f8f9fa;
-                /* Light gray background */
-                padding: 10px 15px;
-                border-radius: 5px;
-                display: flex;
-                /* Enable flexbox for horizontal layout */
-            }
-
-            .breadcrumb-item {
-                margin-right: 10px;
-                position: relative;
-                /* For positioning the triangle */
-                display: flex;
-                /* Ensure items are displayed as flex containers */
-                align-items: center;
-                /* Vertically align items */
-                background-color: #ffffff;
-                /* Light gray background for box */
-                padding: 5px 15px;
-                /* Adjust padding as needed */
-                border-radius: 3px;
-                /* Rounded corners */
-            }
-
-            .breadcrumb-step {
-                display: inline-block;
-                padding: 8px 12px;
-                border-radius: 4px;
-            }
-
-            .breadcrumb-active {
-                background-color: #368df0;
-                /* Warna biru Bootstrap */
-                color: white !important;
-            }
-
-            .breadcrumb-item+.breadcrumb-item::before {
-                content: "";
-                position: absolute;
-                left: -15px;
-                /* Adjust position of the triangle */
-                top: 50%;
-                transform: translateY(-50%);
-                border-top: 10px solid transparent;
-                border-bottom: 10px solid transparent;
-                border-left: 15px solid #c3e0fd;
-                ;
-                /* Match the box background color */
-            }
-
-            .breadcrumb-link {
-                color: #007bff;
-                /* Blue link color */
-                text-decoration: none;
-            }
-
-            .breadcrumb-link:hover {
-                color: #0056b3;
-                /* Darker blue on hover */
-            }
-
-            .breadcrumb-item.active .breadcrumb-text {
-                color: #6c757d;
-                /* Gray for active item */
-                font-weight: 500;
-            }
-
-            .breadcrumb-text.text-danger {
-                color: #dc3545 !important;
-            }
-
-            /* Responsive adjustments (example) */
-            @media (max-width: 768px) {
-                .breadcrumb {
-                    flex-wrap: wrap;
-                }
-
-                .breadcrumb-item {
-                    margin-bottom: 5px;
-                }
-
-                .breadcrumb-item+.breadcrumb-item::before {
-                    display: inline-block;
-                    /* Show arrows on small screens */
-                    border: none;
-                    /* Remove default triangle on smaller screens */
-                    content: "\f105";
-                    /* Use Font Awesome icon */
-                    font-family: "FontAwesome";
-                }
-            }
-        </style>
-    @endsection
+@endsection
