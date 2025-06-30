@@ -33,7 +33,7 @@
                         <tbody>
                             @foreach ($users as $user)
                                 @if (
-                                    (auth()->user()->role === 'hrd' &&
+                                    (auth()->user()->departemen === 'HRD' &&
                                         (auth()->user()->cabang_asal === 'HO' || auth()->user()->cabang_asal === $user->cabang_asal)) ||
                                         auth()->user()->role === 'admin')
                                     <tr>

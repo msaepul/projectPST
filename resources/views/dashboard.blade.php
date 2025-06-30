@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('content')
-    {{ Breadcrumbs::render('dashboard') }}
+    {{-- {{ Breadcrumbs::render('dashboard') }} --}}
 
     <div class="container-fluid mt-4">
         <div class="row">

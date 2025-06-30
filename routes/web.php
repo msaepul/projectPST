@@ -9,7 +9,7 @@ use App\Http\Controllers\Data_diriController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 })->name('home');
 
 Route::get('/dashboard', [HoController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
@@ -118,11 +118,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/get-employees/{formId}', [FormController::class, 'getEmployeesByFormId']);
         Route::post('/store-ticket', [FormController::class, 'store_ticket'])->name('store-ticket');
         Route::get('/ticketing/detail/{id}', [FormController::class, 'getTicketDetails'])->name('ticketing.details');
-
-
-
-
-
+        Route::get('/ticketing/detail/edit/{id}', [FormController::class, 'editTicketDetail'])->name('ticket.detail.edit');
+        Route::put('/ticketing/detail/{id}', [FormController::class, 'updateTicketDetail'])->name('ticket.detail.update');
 
 
         Route::get('/formpst/form_nm', [FormController::class, 'form_nm'])->name('formpst.form_nm');

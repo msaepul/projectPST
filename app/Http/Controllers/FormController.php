@@ -83,11 +83,12 @@ class FormController extends Controller
 
     $kodeCabangTujuan = Cabang::findOrFail($validatedData['cabang_tujuan'])->kode_cabang;
     $tujuanPenugasan = Tujuan::findOrFail($validatedData['tujuan'])->tujuan_penugasan;
+    $yangMenugaskan = User::findOrFail($validatedData['yangMenugaskan'])->nama_lengkap;
 
     $form = Form::create([
         'no_surat'              => $validatedData['no_surat'],
         'nama_pemohon'          => $validatedData['namaPemohon'],
-        'yang_menugaskan'       => $validatedData['yangMenugaskan'],
+        'yang_menugaskan'       => $yangMenugaskan,
         'cabang_asal'           => $validatedData['cabangAsal'],
         'cabang_tujuan'         => $kodeCabangTujuan, 
         'status_koordinasi'     => $validatedData['statusKoordinasi'],
@@ -689,6 +690,24 @@ public function getTicketDetails($id)
         'details' => $details
     ]);
 }
+
+public function updateTicketDetail(Request $request, $id)
+{
+    $validated = $request->validate([
+        'passenger_name' => 'required|string|max:255',
+        'flight_number' => 'required|string|max:255',
+        'flight_date' => 'required|date',
+        'departure_time' => 'required|date_format:H:i',
+    ]);
+    $detail = Ticket_detail::findOrFail($id);
+    $detail->update($validated);
+    return response()->json([
+        'success' => true,
+        'message' => 'Detail tiket berhasil diperbarui',
+        'detail' => $detail
+    ]);
+}
+
 
 public function exportCSV($id)
 {
