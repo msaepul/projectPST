@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('ticketings', function (Blueprint $table) {
             $table->id();
-            $table->string('no_surat');
+            $table->string('no_surat')->default('');
             $table->string('nama_pemohon');
             $table->string('assigned_By');
             $table->string('invoice');

@@ -133,6 +133,10 @@
                                 <div class="detail-value">{{ $form->no_surat }}</div>
                             </div>
                             <div class="detail-group">
+                                <label class="detail-label">Ditugaskan Oleh:</label>
+                                <div class="detail-value">{{ $form->yang_menugaskan }}</div>
+                            </div>
+                            <div class="detail-group">
                                 <label class="detail-label">Cabang Asal:</label>
                                 <div class="detail-value">{{ $form->cabang_asal }}</div>
                             </div>

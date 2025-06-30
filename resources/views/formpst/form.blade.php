@@ -32,7 +32,14 @@
                         </div>
                         <div class="form-group">
                             <label for="yangMenugaskan">Ditugaskan oleh</label>
-                            <input type="text" id="yangMenugaskan" name="yangMenugaskan" class="form-control" required>
+                            <select class="form-control select2" name="yangMenugaskan" id="yangMenugaskan" required>
+                                <option value="" disabled selected>Pilih Nama</option>
+                                @foreach ($users as $user)
+                                    <option value="{{ $user->id }}">{{ $user->nama_lengkap }} -
+                                        {{ $user->departemen }} - {{ $user->cabang_asal }}</option>
+                                @endforeach
+                            </select>
+
                         </div>
                         <div class="form-group">
                             <label for="cabangAsal">Cabang Asal</label>
