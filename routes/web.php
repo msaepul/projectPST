@@ -9,7 +9,7 @@ use App\Http\Controllers\Data_diriController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('auth.login');
+    return view('/dashboard');
 })->name('home');
 
 Route::get('/dashboard', [HoController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
