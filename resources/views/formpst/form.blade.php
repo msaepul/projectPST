@@ -35,11 +35,13 @@
                             <select class="form-control select2" name="yangMenugaskan" id="yangMenugaskan" required>
                                 <option value="" disabled selected>Pilih Nama</option>
                                 @foreach ($users as $user)
-                                    <option value="{{ $user->id }}">{{ $user->nama_lengkap }} -
-                                        {{ $user->departemen }} - {{ $user->cabang_asal }}</option>
+                                    @if(in_array($user->role, ['bm', 'nm']))
+                                        <option value="{{ $user->id }}">
+                                            {{ $user->nama_lengkap }} - {{ $user->departemen }} - {{ $user->cabang_asal }}
+                                        </option>
+                                    @endif
                                 @endforeach
-                            </select>
-
+                            </select>                            
                         </div>
                         <div class="form-group">
                             <label for="cabangAsal">Cabang Asal</label>
@@ -99,7 +101,7 @@
                                             <th>Departemen</th>
                                             <th>NIK</th>
                                             <th>KTP</th>
-                                            <th>Lama Keberangkatan</th>
+                                            <th>Lama Penugasan</th>
                                             <th>Estimasi Lama Penugasan</th>
                                             <th>Aksi</th>
                                         </tr>

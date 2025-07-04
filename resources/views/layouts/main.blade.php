@@ -165,6 +165,22 @@
                                 <p>List keberangkatan</p>
                             </a>
                         </li>
+
+                        <li class="nav-item">
+                            <a href="#" class="nav-link {{ request()->is('ho/*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-building"></i>
+                                <p>Master Data<i class="fas fa-angle-left right"></i></p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                
+                                <li class="nav-item">
+                                    <a href="{{ route('ho.user') }}" class="nav-link {{ request()->is('ho/user') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>User</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                     @endif
 
                     @if (auth()->user()->role === 'nm')

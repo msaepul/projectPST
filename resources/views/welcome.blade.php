@@ -74,21 +74,19 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
-<body class="antialiased">
-    <div class="container">
-        <i class="fas fa-envelope-open-text icon-surat"></i>
-        <h1>Selamat Datang</h1>
-        <p>Website ini dibuat untuk mempermudah proses pengajuan surat tugas. Anda dapat mengajukan surat tugas secara
-            online dengan mudah dan cepat. Silakan login untuk memulai proses pengajuan.</p>
-
-        @if (Route::has('login'))
-            @auth
-                <a href="{{ url('/dashboard') }}" class="login-button">Dashboard</a>
-            @else
-                <a href="{{ route('login') }}" class="login-button">Log in</a>
-            @endauth
-        @endif
-    </div>
+<body>
+    @if (Route::has('login'))
+        @auth
+            <script>
+                window.location.href = "{{ url('/dashboard') }}";
+            </script>
+        @else
+            <script>
+                window.location.href = "{{ route('login') }}";
+            </script>
+        @endauth
+    @endif
 </body>
+
 
 </html>
