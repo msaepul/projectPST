@@ -1,8 +1,38 @@
 @extends('layouts.main')
 @section('content')
-    {{ Breadcrumbs::render('Form') }}
+<div class="card mb-3">
+    <div class="card-body">
+        <form id="filterForm" method="GET" action="{{ route('formpst.index_surat') }}" class="row g-2">
+            <div class="col-md">
+                <select name="cabang" class="form-select">
+                    <option value="">Semua</option>
+                    @foreach ($cabangList as $cabang)
+                        <option value="{{ $cabang }}" @selected(request('cabang')==$cabang)>{{ $cabang }}</option>
+                    @endforeach
+                </select>
+            </div>
 
+            <div class="col-md">
+                <select name="status" class="form-select">
+                    <option value="">Semua</option>
+                    <option value="oke"     @selected(request('status')=='oke')>Disetujui</option>
+                    <option value="reject"  @selected(request('status')=='reject')>Ditolak</option>
+                    <option value="cancel"  @selected(request('status')=='cancel')>Dibatalkan</option>
+                </select>
+            </div>
+
+            <div class="col-md">
+                <input type="date" name="tanggal" value="{{ request('tanggal') }}" class="form-control">
+            </div>
+
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </div>
+        </form>
+    </div>
+</div>
     <div class="card mt-4 rounded-3 shadow custom-card">
+        
         <div class="card-header bg-light py-3">
             <h5 class="mb-0 fw-bold">Hasil Pencarian</h5>
         </div>
