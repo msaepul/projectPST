@@ -8,34 +8,42 @@
 
     <title>Form Persetujuan</title>
 
-    <!-- Link ke file CSS -->
-    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"
+        rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-    <link rel="stylesheet" href="{{ asset('plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
+
+    <!-- Bootstrap & AdminLTE -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
+
+    <!-- Plugin Styles -->
     <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/css/select2.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <link href="https://unpkg.com/nice-forms.css/nice-forms.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet"
+        href="{{ asset('plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/jqvmap/jqvmap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/daterangepicker/daterangepicker.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.min.css') }}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/ionicons@5.5.2/dist/css/ionicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
 
-    <!-- jQuery -->
+    <!-- Custom CSS -->
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+    <link href="https://unpkg.com/nice-forms.css/nice-forms.css" rel="stylesheet">
+
+    <!-- jQuery & Select2 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <!-- Bootstrap Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </head>
+
 
 <body class="hold-transition sidebar-mini layout-fixed">
 
@@ -61,15 +69,18 @@
             </ul>
         </nav>
         <!-- Sidebar -->
-        <aside class="main-sidebar sidebar-dark-navy elevation-4">
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+            <!-- User Panel -->
             <div class="user-panel mt-3 pb-3 mb-3 d-flex align-items-center px-3">
                 <div class="image me-3">
-                    <div class="profile-initials" style="width: 35px; height: 35px; background-color: #80bdc2; color: white; font-size: 18px; display: flex; align-items: center; justify-content: center; border-radius: 50%; text-transform: uppercase;">
+                    <div class="profile-initials"
+                        style="width: 35px; height: 35px; background-color: #80bdc2; color: white; font-size: 18px; display: flex; align-items: center; justify-content: center; border-radius: 50%; text-transform: uppercase;">
                         {{ strtoupper(substr(Auth::user()->nama_lengkap, 0, 1)) }}
                     </div>
                 </div>
                 <div class="info" style="min-width: 0;">
-                    <a href="#" class="d-block text-white fw-bold" style="font-size: 15px; white-space: normal; word-break: break-word;">
+                    <a href="#" class="d-block text-white fw-bold"
+                        style="font-size: 15px; white-space: normal; word-break: break-word;">
                         {{ Auth::user()->nama_lengkap }}
                     </a>
                     <p class="status text-light mb-1" style="font-size: 12px;">
@@ -81,9 +92,11 @@
 
             <!-- Sidebar Menu -->
             <nav class="mt-2">
-                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                    data-accordion="false">
                     <li class="nav-item">
-                        <a href="{{ route('dashboard') }}" class="nav-link {{ request()->is('dashboard') ? 'active' : '' }}">
+                        <a href="{{ route('dashboard') }}"
+                            class="nav-link {{ request()->is('dashboard') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-tachometer-alt"></i>
                             <p>Dashboard</p>
                         </a>
@@ -97,19 +110,22 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{ route('formpst.index_keluar') }}" class="nav-link {{ request()->is('formpst/index_keluar') ? 'active' : '' }}">
+                                    <a href="{{ route('formpst.index_keluar') }}"
+                                        class="nav-link {{ request()->is('formpst/index_keluar') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Surat Keluar</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ route('formpst.index_masuk') }}" class="nav-link {{ request()->is('formpst/index_masuk') ? 'active' : '' }}">
+                                    <a href="{{ route('formpst.index_masuk') }}"
+                                        class="nav-link {{ request()->is('formpst/index_masuk') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Surat Masuk</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ route('formpst.index_surat') }}" class="nav-link {{ request()->is('formpst/index_surat') ? 'active' : '' }}">
+                                    <a href="{{ route('formpst.index_surat') }}"
+                                        class="nav-link {{ request()->is('formpst/index_surat') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Surat Tugas</p>
                                     </a>
@@ -118,7 +134,8 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="{{ route('formpst.show_ticket') }}" class="nav-link {{ request()->is('formpst/show_ticket') ? 'active' : '' }}">
+                            <a href="{{ route('formpst.show_ticket') }}"
+                                class="nav-link {{ request()->is('formpst/show_ticket') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-plane"></i>
                                 <p>List keberangkatan</p>
                             </a>
@@ -127,7 +144,8 @@
 
                     @if (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal !== 'HO')
                         <li class="nav-item">
-                            <a href="{{ route('formpst.form') }}" class="nav-link {{ request()->is('formpst/form') ? 'active' : '' }}">
+                            <a href="{{ route('formpst.form') }}"
+                                class="nav-link {{ request()->is('formpst/form') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-copy"></i>
                                 <p>Pengajuan Surat Tugas</p>
                             </a>
@@ -139,19 +157,22 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{ route('formpst.index_keluar') }}" class="nav-link {{ request()->is('formpst/index_keluar') ? 'active' : '' }}">
+                                    <a href="{{ route('formpst.index_keluar') }}"
+                                        class="nav-link {{ request()->is('formpst/index_keluar') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Surat Keluar</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ route('formpst.index_masuk') }}" class="nav-link {{ request()->is('formpst/index_masuk') ? 'active' : '' }}">
+                                    <a href="{{ route('formpst.index_masuk') }}"
+                                        class="nav-link {{ request()->is('formpst/index_masuk') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Surat Masuk</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ route('formpst.index_surat') }}" class="nav-link {{ request()->is('formpst/index_surat') ? 'active' : '' }}">
+                                    <a href="{{ route('formpst.index_surat') }}"
+                                        class="nav-link {{ request()->is('formpst/index_surat') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Surat Tugas</p>
                                     </a>
@@ -160,7 +181,8 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="{{ route('formpst.show_ticket') }}" class="nav-link {{ request()->is('formpst/show_ticket') ? 'active' : '' }}">
+                            <a href="{{ route('formpst.show_ticket') }}"
+                                class="nav-link {{ request()->is('formpst/show_ticket') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-plane"></i>
                                 <p>List keberangkatan</p>
                             </a>
@@ -185,7 +207,8 @@
 
                     @if (auth()->user()->role === 'nm')
                         <li class="nav-item">
-                            <a href="{{ route('formpst.form') }}" class="nav-link {{ request()->is('formpst/form') ? 'active' : '' }}">
+                            <a href="{{ route('formpst.form') }}"
+                                class="nav-link {{ request()->is('formpst/form') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-copy"></i>
                                 <p>Pengajuan Surat Tugas</p>
                             </a>
@@ -197,19 +220,22 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{ route('formpst.index_keluar') }}" class="nav-link {{ request()->is('formpst/index_keluar') ? 'active' : '' }}">
+                                    <a href="{{ route('formpst.index_keluar') }}"
+                                        class="nav-link {{ request()->is('formpst/index_keluar') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Surat Keluar</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ route('formpst.index_masuk') }}" class="nav-link {{ request()->is('formpst/index_masuk') ? 'active' : '' }}">
+                                    <a href="{{ route('formpst.index_masuk') }}"
+                                        class="nav-link {{ request()->is('formpst/index_masuk') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Surat Masuk</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ route('formpst.index_surat') }}" class="nav-link {{ request()->is('formpst/index_surat') ? 'active' : '' }}">
+                                    <a href="{{ route('formpst.index_surat') }}"
+                                        class="nav-link {{ request()->is('formpst/index_surat') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Surat Tugas</p>
                                     </a>
@@ -217,13 +243,15 @@
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('formpst.ticket') }}" class="nav-link {{ request()->is('formpst/ticket') ? 'active' : '' }}">
+                            <a href="{{ route('formpst.ticket') }}"
+                                class="nav-link {{ request()->is('formpst/ticket') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-car"></i>
                                 <p>Ticketing </p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('formpst.show_ticket') }}" class="nav-link {{ request()->is('formpst/show_ticket') ? 'active' : '' }}">
+                            <a href="{{ route('formpst.show_ticket') }}"
+                                class="nav-link {{ request()->is('formpst/show_ticket') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-car"></i>
                                 <p>List keberangkatan </p>
                             </a>
@@ -231,32 +259,37 @@
                     @endif
 
                     @if ((auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'HO') || auth()->user()->role === 'admin')
-                        <li class="nav-item">
-                            <a href="{{ route('formpst.form') }}" class="nav-link {{ request()->is('formpst/form') ? 'active' : '' }}">
+                        {{-- <li class="nav-item">
+                            <a href="{{ route('formpst.form') }}"
+                                class="nav-link {{ request()->is('formpst/form') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-copy"></i>
                                 <p>Pengajuan Surat Tugas</p>
                             </a>
-                        </li>
+                        </li> --}}
                         <li class="nav-item">
-                            <a href="{{ route('formpst.index_keluar') }}" class="nav-link {{ request()->is('formpst/index_keluar') ? 'active' : '' }}">
+                            <a href="{{ route('formpst.index_keluar') }}"
+                                class="nav-link {{ request()->is('formpst/index_keluar') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-envelope"></i>
                                 <p>Daftar Pengajuan Surat </p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('formpst.index_surat') }}" class="nav-link {{ request()->is('formpst/index_surat') ? 'active' : '' }}">
+                            <a href="{{ route('formpst.index_surat') }}"
+                                class="nav-link {{ request()->is('formpst/index_surat') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-book"></i>
                                 <p>Daftar Surat Tugas </p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('formpst.ticket') }}" class="nav-link {{ request()->is('formpst/ticket') ? 'active' : '' }}">
+                            <a href="{{ route('formpst.ticket') }}"
+                                class="nav-link {{ request()->is('formpst/ticket') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-car"></i>
                                 <p>Ticketing </p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('formpst.show_ticket') }}" class="nav-link {{ request()->is('formpst/show_ticket') ? 'active' : '' }}">
+                            <a href="{{ route('formpst.show_ticket') }}"
+                                class="nav-link {{ request()->is('formpst/show_ticket') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-plane"></i>
                                 <p>List keberangkatan </p>
                             </a>
@@ -268,37 +301,43 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{ route('ho.cabang') }}" class="nav-link {{ request()->is('ho/cabang') ? 'active' : '' }}">
+                                    <a href="{{ route('ho.cabang') }}"
+                                        class="nav-link {{ request()->is('ho/cabang') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Cabang</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ route('ho.tujuan') }}" class="nav-link {{ request()->is('ho/tujuan') ? 'active' : '' }}">
+                                    <a href="{{ route('ho.tujuan') }}"
+                                        class="nav-link {{ request()->is('ho/tujuan') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Daftar Penugasan</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ route('ho.departemen') }}" class="nav-link {{ request()->is('ho/departemen') ? 'active' : '' }}">
+                                    <a href="{{ route('ho.departemen') }}"
+                                        class="nav-link {{ request()->is('ho/departemen') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Departemen</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ route('ho.maskapai') }}" class="nav-link {{ request()->is('ho/maskapai') ? 'active' : '' }}">
+                                    <a href="{{ route('ho.maskapai') }}"
+                                        class="nav-link {{ request()->is('ho/maskapai') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Maskapai</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ route('ho.transport') }}" class="nav-link {{ request()->is('ho/transport') ? 'active' : '' }}">
+                                    <a href="{{ route('ho.transport') }}"
+                                        class="nav-link {{ request()->is('ho/transport') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Transport</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ route('ho.user') }}" class="nav-link {{ request()->is('ho/user') ? 'active' : '' }}">
+                                    <a href="{{ route('ho.user') }}"
+                                        class="nav-link {{ request()->is('ho/user') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>User</p>
                                     </a>
@@ -315,45 +354,51 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{ route('formpst.index_keluar') }}" class="nav-link {{ request()->is('formpst/index_keluar') ? 'active' : '' }}">
+                                    <a href="{{ route('formpst.index_keluar') }}"
+                                        class="nav-link {{ request()->is('formpst/index_keluar') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Surat Keluar</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ route('formpst.index_masuk') }}" class="nav-link {{ request()->is('formpst/index_masuk') ? 'active' : '' }}">
+                                    <a href="{{ route('formpst.index_masuk') }}"
+                                        class="nav-link {{ request()->is('formpst/index_masuk') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Surat Masuk</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ route('formpst.index_surat') }}" class="nav-link {{ request()->is('formpst/index_surat') ? 'active' : '' }}">
+                                    <a href="{{ route('formpst.index_surat') }}"
+                                        class="nav-link {{ request()->is('formpst/index_surat') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Surat Tugas</p>
                                     </a>
                                 </li>
                             </ul>
                             @if (auth()->user()->departemen === 'QCT')
-                                <li class="nav-item">
-                                    <a href="{{ route('formpst.index_surat') }}" class="nav-link {{ request()->is('formpst/index_surat') ? 'active' : '' }}">
-                                        <i class="nav-icon fas fa-book"></i>
-                                        <p>Daftar Surat Tugas </p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('formpst.ticket') }}" class="nav-link {{ request()->is('formpst/ticket') ? 'active' : '' }}">
-                                        <i class="nav-icon fas fa-car"></i>
-                                        <p>Ticketing </p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('formpst.show_ticket') }}" class="nav-link {{ request()->is('formpst/show_ticket') ? 'active' : '' }}">
-                                        <i <i class="nav-icon fas fa-plane"></i>
-                                        <p>List keberangkatan </p>
-                                    </a>
-                                </li>
-                            @endif
+                        <li class="nav-item">
+                            <a href="{{ route('formpst.index_surat') }}"
+                                class="nav-link {{ request()->is('formpst/index_surat') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-book"></i>
+                                <p>Daftar Surat Tugas </p>
+                            </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('formpst.ticket') }}"
+                                class="nav-link {{ request()->is('formpst/ticket') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-car"></i>
+                                <p>Ticketing </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('formpst.show_ticket') }}"
+                                class="nav-link {{ request()->is('formpst/show_ticket') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-plane"></i>
+                                <p>List keberangkatan </p>
+                            </a>
+                        </li>
+                    @endif
+                    </li>
                     @endif
                 </ul>
             </nav>
@@ -377,14 +422,16 @@
 
             <!-- Main content -->
             <section class="content">
-                @yield('content')
-                @yield('scripts')
+                <div class="container-fluid">
+                    @yield('content')
+                    @yield('scripts')
+                </div>
             </section>
         </div>
 
         <!-- Footer -->
-        <footer class="main-footer">
-            {{-- <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io"></a>.</strong> --}}
+        <footer class="main-footer text-center py-2 bg-white">
+            <strong>&copy; {{ date('Y') }} PT. Adonai Alfa Omega</strong>
         </footer>
     </div>
 
@@ -447,6 +494,7 @@
 
     <!-- AdminLTE App -->
     <script src="{{ asset('dist/js/adminlte.js') }}"></script>
+
 
     <!-- Inisialisasi Plugin dan Fitur -->
     <script>

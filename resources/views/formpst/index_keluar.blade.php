@@ -1,6 +1,34 @@
 @extends('layouts.main')
 
 @section('content')
+    {{-- {{ Breadcrumbs::render('Form') }} --}}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="d-flex gap-4">
+            <div class="card shadow-sm p-3 text-white"
+                style="background-color: #a9a2e6; border-radius: 12px; min-width: 150px;">
+                <div class="small">Surat Tugas</div>
+                <div class="fw-bold fs-4">{{ $jumlahSuratTugas ?? 0 }}</div>
+
+            </div>
+            <a href="{{ route('formpst.index_masuk') }}" class="text-decoration-none">
+                <div class="card shadow-sm p-3 text-white"
+                    style="background-color: #1cc88a; border-radius: 12px; min-width: 150px;">
+                    <div class="small">Surat Masuk</div>
+                    <div class="fw-bold fs-4">{{ $jumlahSuratMasuk ?? 0 }}</div>
+                </div>
+            </a>
+            <div class="card shadow-sm p-3 text-white"
+                style="background-color: #ffa844; border-radius: 12px; min-width: 150px;">
+                <div class="small">Surat Keluar</div>
+                <div class="fw-bold fs-4">{{ $jumlahSuratKeluar ?? 0 }}</div>
+            </div>
+        </div>
+        <div>
+            <a href="{{ route('formpst.form') }}" class="btn btn-primary">
+                + Tambah Surat Tugas
+            </a>
+        </div>
+    </div>
     <div class="ticket-wrapper container-fluid">
 
 
@@ -26,10 +54,9 @@
             <button type="submit" class="btn btn-sm btn-outline-primary px-3">Filter</button>
         </form>
     </div>
-        
-        
 
-    <div class="card mt-4 rounded-3 shadow custom-card">
+
+<div class="card mt-4 rounded-3 shadow custom-card">
         <div class="card-body p-4">
 
             <div class="table-responsive">
@@ -114,11 +141,30 @@
                         @endforelse
                     </tbody>
                 </table>
-            </div>
-        </div>
+    </div>
+    </div>
     </div>
 
     <script>
+        $(document).ready(function() {
+            $('#dataTable').DataTable({
+                lengthMenu: [10, 25, 50, 100],
+                language: {
+                    lengthMenu: "Tampilkan _MENU_ data per halaman",
+                    search: "Cari:",
+                    info: "Menampilkan _START_ hingga _END_ dari _TOTAL_ data",
+                    infoEmpty: "Tidak ada data",
+                    paginate: {
+                        first: "Awal",
+                        last: "Akhir",
+                        next: "Berikutnya",
+                        previous: "Sebelumnya"
+                    }
+                },
+                initComplete: function() {
+                    $('.dataTables_length select').addClass('form-select form-select-sm');
+                }
+            });
         $(function () {
     $('#dataTable').DataTable({
         destroy: true, 
@@ -154,6 +200,13 @@
             width: 100%;
             border-radius: 12px;
             overflow: hidden;
+        }
+
+        .card.shadow-sm.p-3 {
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            min-width: 130px;
+            text-align: center;
         }
 
         .custom-table thead tr {
@@ -264,4 +317,3 @@
     }
     </style>
 @endsection
-
