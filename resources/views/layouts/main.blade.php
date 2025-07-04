@@ -40,7 +40,26 @@
 <body class="hold-transition sidebar-mini layout-fixed">
 
     <div class="wrapper">
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    {{-- <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
+                            class="fas fa-bars"></i></a> --}}
+                </li>
+            </ul>
 
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link" data-toggle="dropdown" href="#">
+                        <i class="fa fa-caret-down"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        <a href="{{ route('data_diri.biodata') }}" class="dropdown-item">Show Profile</a>
+                        <a href="{{ url('logout') }}" class="dropdown-item">Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
         <!-- Sidebar -->
         <aside class="main-sidebar sidebar-dark-navy elevation-4">
             <div class="user-panel mt-3 pb-3 mb-3 d-flex align-items-center px-3">
@@ -145,6 +164,22 @@
                                 <i class="nav-icon fas fa-plane"></i>
                                 <p>List keberangkatan</p>
                             </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="#" class="nav-link {{ request()->is('ho/*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-building"></i>
+                                <p>Master Data<i class="fas fa-angle-left right"></i></p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                
+                                <li class="nav-item">
+                                    <a href="{{ route('ho.user') }}" class="nav-link {{ request()->is('ho/user') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>User</p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                     @endif
 

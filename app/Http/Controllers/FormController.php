@@ -228,7 +228,6 @@ public function index_keluar(Request $request)
 {
     $query = Form::query();
 
-
     if ($request->filled('namaPemohon')) {
         $query->where('nama_pemohon', 'like', '%' . $request->namaPemohon . '%');
     }
@@ -237,18 +236,31 @@ public function index_keluar(Request $request)
         $query->where('tujuan', $request->tujuan);
     }
 
-    $data = $query->get();
+    if ($request->filled('cabang')) {
+        $query->where('cabang_asal', $request->cabang);
+    }
+
+    if ($request->filled('status')) {
+        $query->where('acc_cabang', $request->status);
+    }
+
+    if ($request->filled('tanggal')) {
+        $query->whereDate('created_at', Carbon::parse($request->tanggal));
+    }
+
+    $data = $query->latest()->get();
     $tujuans = Tujuan::all();
     $forms = Form::all();
+    $cabangList = Form::select('cabang_asal')->distinct()->pluck('cabang_asal');
 
-    return view('formpst.index_keluar', compact('data', 'tujuans','forms'));
+    return view('formpst.index_keluar', compact('data', 'tujuans', 'forms', 'cabangList'));
 }
+
 
 public function index_masuk(Request $request)
 {
     $query = Form::where('acc_ho', 'oke');
 
-
     if ($request->filled('namaPemohon')) {
         $query->where('nama_pemohon', 'like', '%' . $request->namaPemohon . '%');
     }
@@ -257,18 +269,31 @@ public function index_masuk(Request $request)
         $query->where('tujuan', $request->tujuan);
     }
 
-    $data = $query->get();
+    if ($request->filled('cabang')) {
+        $query->where('cabang_asal', $request->cabang);
+    }
+
+    if ($request->filled('status')) {
+        $query->where('acc_cabang', $request->status); // atau acc_ho tergantung kebutuhan
+    }
+
+    if ($request->filled('tanggal')) {
+        $query->whereDate('created_at', Carbon::parse($request->tanggal));
+    }
+
+    $data = $query->latest()->get();
     $tujuans = Tujuan::all();
     $forms = Form::all();
+    $cabangList = Form::select('cabang_asal')->distinct()->pluck('cabang_asal');
 
-    return view('formpst.index_masuk', compact('data', 'tujuans','forms'));
+    return view('formpst.index_masuk', compact('data', 'tujuans', 'forms', 'cabangList'));
 }
+
 
 public function index_surat(Request $request)
 {
     $query = Form::where('acc_cabang', 'oke');
 
-
     if ($request->filled('namaPemohon')) {
         $query->where('nama_pemohon', 'like', '%' . $request->namaPemohon . '%');
     }
@@ -277,12 +302,26 @@ public function index_surat(Request $request)
         $query->where('tujuan', $request->tujuan);
     }
 
-    $data = $query->get();
+    if ($request->filled('cabang')) {
+        $query->where('cabang_asal', $request->cabang);
+    }
+
+    if ($request->filled('status')) {
+        $query->where('acc_cabang', $request->status);
+    }
+
+    if ($request->filled('tanggal')) {
+        $query->whereDate('created_at', Carbon::parse($request->tanggal));
+    }
+
+    $data = $query->latest()->get();
     $tujuans = Tujuan::all();
     $forms = Form::all();
+    $cabangList = Form::select('cabang_asal')->distinct()->pluck('cabang_asal');
 
-    return view('formpst.index_surat', compact('data', 'tujuans','forms'));
+    return view('formpst.index_surat', compact('data', 'tujuans', 'forms', 'cabangList'));
 }
+
 
 public function show($id)
 {

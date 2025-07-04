@@ -1,13 +1,39 @@
 @extends('layouts.main')
 
 @section('content')
-    {{-- {{ Breadcrumbs::render('Form') }} --}}
+    <div class="ticket-wrapper container-fluid">
+
+
+        {{-- === FILTER BAR ======================================================== --}}
+        <form method="GET" action="{{ route('formpst.index_keluar') }}" class="d-flex flex-wrap align-items-center gap-2 p-2 border rounded bg-white filter-bar">
+
+            <select name="cabang" class="form-select form-select-sm w-auto">
+                <option value="">Semua Cabang</option>
+                @foreach ($cabangList as $cabang)
+                    <option value="{{ $cabang }}" @selected(request('cabang') == $cabang)>{{ $cabang }}</option>
+                @endforeach
+            </select>
+        
+            <select name="status" class="form-select form-select-sm w-auto">
+                <option value="">Semua Status</option>
+                <option value="oke"    @selected(request('status')=='oke')>Disetujui</option>
+                <option value="reject" @selected(request('status')=='reject')>Ditolak</option>
+                <option value="cancel" @selected(request('status')=='cancel')>Dibatalkan</option>
+            </select>
+        
+            <input type="date" name="tanggal" value="{{ request('tanggal') }}" class="form-control form-control-sm w-auto">
+        
+            <button type="submit" class="btn btn-sm btn-outline-primary px-3">Filter</button>
+        </form>
+    </div>
+        
+        
 
     <div class="card mt-4 rounded-3 shadow custom-card">
         <div class="card-body p-4">
 
             <div class="table-responsive">
-                <table id="dataTable" class="table table-bordered table-hover custom-table">
+                <table id="dataTable" class="table table-bordered table-hover align-middle mb-0 custom-table">
                     <thead>
                         <tr class="table-primary text-white">
                             <th>Tanggal Dibuat</th>
@@ -93,29 +119,27 @@
     </div>
 
     <script>
-        $(document).ready(function() {
-            $('#dataTable').DataTable({
-    lengthMenu: [10, 25, 50, 100],
-    language: {
-        lengthMenu: "Tampilkan _MENU_ data per halaman",
-        search: "Cari:",
-        info: "Menampilkan _START_ hingga _END_ dari _TOTAL_ data",
-        infoEmpty: "Tidak ada data",
-        paginate: {
-            first: "Awal",
-            last: "Akhir",
-            next: "Berikutnya",
-            previous: "Sebelumnya"
+        $(function () {
+    $('#dataTable').DataTable({
+        destroy: true, 
+        lengthMenu : [10,25,50,100],
+        language   : {
+            lengthMenu : 'Tampilkan _MENU_ data per halaman',
+            search     : 'Cari:',
+            info       : 'Menampilkan _START_–_END_ dari _TOTAL_ data',
+            infoEmpty  : 'Tidak ada data',
+            paginate   : { first:'«', last:'»', next:'›', previous:'‹' }
+        },
+        createdRow : function (row) {
+            const status = $('td:eq(6) span', row).text().trim();
+            if      (status === 'Selesai')                    $(row).addClass('table-success');
+            else if (status.startsWith('Menunggu'))          $(row).addClass('table-warning');
+            else if (status === 'Cancel' || status.startsWith('Ditolak')) $(row).addClass('table-danger');
         }
-    },
-    initComplete: function () {
-        $('.dataTables_length select').addClass('form-select form-select-sm');
-    }
+    });
 });
 
-
-        });
-    </script>
+        </script>
 
     <style>
         .custom-card {
@@ -203,6 +227,41 @@
             background-color: #ffc107;
             color: black;
         }
+        .minimal-filter select,
+    .minimal-filter input[type="date"] {
+        min-width: 140px;
+    }
+
+    .minimal-filter button {
+        white-space: nowrap;
+    }
+
+    @media (max-width: 576px) {
+        .minimal-filter {
+            flex-direction: column;
+            align-items: stretch;
+        }
+    }
+    .filter-bar {
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        max-width: 100%;
+    }
+
+    .filter-bar select,
+    .filter-bar input[type="date"] {
+        min-width: 130px;
+    }
+
+    .filter-bar button {
+        min-width: 70px;
+    }
+
+    @media (max-width: 576px) {
+        .filter-bar {
+            flex-direction: column;
+            align-items: stretch;
+        }
+    }
     </style>
 @endsection
 
