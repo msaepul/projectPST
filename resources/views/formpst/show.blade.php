@@ -9,7 +9,6 @@
         </form>
     </div>
 
-
     <head>
         <link rel="stylesheet" href={{ asset('css/show.css') }}>
     </head>
@@ -108,274 +107,280 @@
                                     @endif
                                 @endif
 
-                                @if ($form->acc_cabang != 'oke')
+                                {{-- @if ($form->acc_cabang != 'oke')
                                     <button type="button" class="btn btn-danger" onclick="showReasonModal('cancel')">
                                         Cancel
                                     </button>
-                                @endif
+                                @endif --}}
                             </form>
                         </div>
-
-
-                        <h5 class="text-center mb-8">
-                            @if ($form->acc_ho == 'oke')
-                                Form Persetujuan Cabang
-                            @elseif ($form->acc_bm == 'oke')
-                                Form Persetujuan HO
-                            @else
-                                Form Persetujuan
-                            @endif
-                        </h5>
-
-                        <div class="form-details">
-                            <div class="detail-group">
-                                <label class="detail-label">No Surat:</label>
-                                <div class="detail-value">{{ $form->no_surat }}</div>
-                            </div>
-                            <div class="detail-group">
-                                <label class="detail-label">Ditugaskan Oleh:</label>
-                                <div class="detail-value">{{ $form->yang_menugaskan }}</div>
-                            </div>
-                            <div class="detail-group">
-                                <label class="detail-label">Cabang Asal:</label>
-                                <div class="detail-value">{{ $form->cabang_asal }}</div>
-                            </div>
-                            <div class="detail-group">
-                                <label class="detail-label">Cabang Tujuan:</label>
-                                <div class="detail-value">{{ $form->cabang_tujuan }}</div>
-                            </div>
-                            <div class="detail-group">
-                                <label class="detail-label">Tujuan Penugasan:</label>
-                                <div class="detail-value">{{ $form->tujuan }}</div>
-                            </div>
-                            <div class="detail-group">
-                                <label class="detail-label">Tanggal Keberangkatan:</label>
-                                <div class="detail-value">
-                                    {{ \Carbon\Carbon::parse($form->tanggal_keberangkatan)->format('d M Y') }}</div>
-                            </div>
+                        <div class="col text-end">
+                            <a href="{{ route('formpst.edit', $form->id) }}" class="btn btn-warning">
+                                <i class="fas fa-edit"></i> Edit Form
+                            </a>
                         </div>
+                    </div>
 
-                        {{-- tabel list pegawai --}}
-                        <div class="package-container">
-                            <div class="item-table">
-                                <table class="table table-bordered">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>Nama</th>
-                                            <th>NIK</th>
-                                            <th>Departemen</th>
-                                            <th>Lama Keberangkatan</th>
-                                            <th>Estimasi Lama Penugasan</th>
-                                            <th>KTP</th>
-                                            <th>Status</th>
-                                            <th>Keterangan</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @forelse ($data as $item)
-                                            @if (
-                                                (auth()->user()->role === 'nm' && auth()->user()->departemen === $item->departemen) ||
-                                                    auth()->user()->role === 'admin' ||
-                                                    auth()->user()->role === 'user' ||
-                                                    auth()->user()->role === 'bm' ||
-                                                    auth()->user()->role === 'hrd' ||
-                                                    auth()->user()->role === 'pegawai')
-                                                <tr>
-                                                    <td>{{ $item->nama_pegawai }}</td>
-                                                    <td>{{ $item->nik }}</td>
-                                                    <td>{{ $item->departemen }}</td>
-                                                    <td>{{ \Carbon\Carbon::parse($item->tanggal_berangkat)->format('d M') }}
-                                                        s/d
-                                                        {{ \Carbon\Carbon::parse($item->tanggal_kembali)->format('d M Y') }}
-                                                    </td>
-                                                    <td>{{ $item->estimasi }} HARI</td>
 
-                                                    <td>
-                                                        @if ($item->upload_file)
-                                                            <a href="#" class="preview-file"
-                                                                data-file="{{ asset('storage/' . $item->upload_file) }}">Lihat
-                                                                File</a>
-                                                        @else
-                                                            Tidak ada file
-                                                        @endif
-                                                    </td>
+                    <h5 class="text-center mb-8">
+                        @if ($form->acc_ho == 'oke')
+                            Form Persetujuan Cabang
+                        @elseif ($form->acc_bm == 'oke')
+                            Form Persetujuan HO
+                        @else
+                            Form Persetujuan
+                        @endif
+                    </h5>
 
-                                                    <td>
-                                                        @if (
-                                                            (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'HO') ||
-                                                                (auth()->user()->role === 'nm' && auth()->user()->departemen === $item->departemen))
-                                                            @if ($form->acc_bm == 'oke' && $form->acc_hrd != 'reject' && $form->acc_bm != 'reject' && $item->acc_nm == null)
-                                                                <button class="btn btn-success btn-sm"
-                                                                    onclick="updateStatus({{ $item->id }}, 'oke')">
-                                                                    Proses
-                                                                </button>
-                                                                <button class="btn btn-danger btn-sm"
-                                                                    onclick="openRejectModal({{ $item->id }})">
-                                                                    Tolak
-                                                                </button>
-                                                            @endif
-                                                        @endif
+                    <div class="form-details">
+                        <div class="detail-group">
+                            <label class="detail-label">No Surat:</label>
+                            <div class="detail-value">{{ $form->no_surat }}</div>
+                        </div>
+                        <div class="detail-group">
+                            <label class="detail-label">Ditugaskan Oleh:</label>
+                            <div class="detail-value">{{ $form->yang_menugaskan }}</div>
+                        </div>
+                        <div class="detail-group">
+                            <label class="detail-label">Cabang Asal:</label>
+                            <div class="detail-value">{{ $form->cabang_asal }}</div>
+                        </div>
+                        <div class="detail-group">
+                            <label class="detail-label">Cabang Tujuan:</label>
+                            <div class="detail-value">{{ $form->cabang_tujuan }}</div>
+                        </div>
+                        <div class="detail-group">
+                            <label class="detail-label">Tujuan Penugasan:</label>
+                            <div class="detail-value">{{ $form->tujuan }}</div>
+                        </div>
+                        <div class="detail-group">
+                            <label class="detail-label">Tanggal Keberangkatan:</label>
+                            <div class="detail-value">
+                                {{ \Carbon\Carbon::parse($form->tanggal_keberangkatan)->format('d M Y') }}</div>
+                        </div>
+                    </div>
 
-                                                        {{-- Status Teks --}}
-                                                        @if ($item->acc_nm === 'oke')
-                                                            <span class="text-success">Diterima</span>
-                                                        @elseif ($item->acc_nm === 'tolak' || $form->acc_bm === 'reject' || $form->acc_hrd === 'reject')
-                                                            <span class="text-danger">Ditolak</span>
-                                                        @elseif (empty($form->acc_bm) || empty($form->acc_hrd))
-                                                            <span class="text-warning">Menunggu Persetujuan</span>
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        @if ($item->acc_nm == 'oke')
-                                                            <span class="badge bg-success">Diterima</span>
-                                                        @elseif ($item->acc_nm == 'tolak')
-                                                            <span class="badge bg-danger">{{ $item->alasan }}</span>
-                                                        @elseif ($item->acc_nm == '' || $form->acc_bm != 'reject')
-                                                            <span class="badge bg-warning">Menunggu Persetujuan</span>
-                                                        @endif
-                                                    </td>
-                                                </tr>
-                                            @endif
-
-                                        @empty
+                    {{-- tabel list pegawai --}}
+                    <div class="package-container">
+                        <div class="item-table">
+                            <table class="table table-bordered">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Nama</th>
+                                        <th>NIK</th>
+                                        <th>Departemen</th>
+                                        <th>Lama Keberangkatan</th>
+                                        <th>Estimasi Lama Penugasan</th>
+                                        <th>KTP</th>
+                                        <th>Status</th>
+                                        <th>Keterangan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse ($data as $item)
+                                        @if (
+                                            (auth()->user()->role === 'nm' && auth()->user()->departemen === $item->departemen) ||
+                                                auth()->user()->role === 'admin' ||
+                                                auth()->user()->role === 'user' ||
+                                                auth()->user()->role === 'bm' ||
+                                                auth()->user()->role === 'hrd' ||
+                                                auth()->user()->role === 'pegawai')
                                             <tr>
-                                                <td colspan="7" class="text-center">Tidak ada data untuk Form ID:
-                                                    {{ $targetFormId }}.</td>
-                                            </tr>
-                                        @endforelse
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                                                <td>{{ $item->nama_pegawai }}</td>
+                                                <td>{{ $item->nik }}</td>
+                                                <td>{{ $item->departemen }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($item->tanggal_berangkat)->format('d M') }}
+                                                    s/d
+                                                    {{ \Carbon\Carbon::parse($item->tanggal_kembali)->format('d M Y') }}
+                                                </td>
+                                                <td>{{ $item->estimasi }} HARI</td>
 
-                        <!-- Bar Status -->
-                        <div class="status-bar mb-4" style="position: sticky; top: 70px;">
-                            <!-- ACC HRD -->
+                                                <td>
+                                                    @if ($item->upload_file)
+                                                        <a href="#" class="preview-file"
+                                                            data-file="{{ asset('storage/' . $item->upload_file) }}">Lihat
+                                                            File</a>
+                                                    @else
+                                                        Tidak ada file
+                                                    @endif
+                                                </td>
+
+                                                <td>
+                                                    @if (
+                                                        (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'HO') ||
+                                                            (auth()->user()->role === 'nm' && auth()->user()->departemen === $item->departemen))
+                                                        @if ($form->acc_bm == 'oke' && $form->acc_hrd != 'reject' && $form->acc_bm != 'reject' && $item->acc_nm == null)
+                                                            <button class="btn btn-success btn-sm"
+                                                                onclick="updateStatus({{ $item->id }}, 'oke')">
+                                                                Proses
+                                                            </button>
+                                                            <button class="btn btn-danger btn-sm"
+                                                                onclick="openRejectModal({{ $item->id }})">
+                                                                Tolak
+                                                            </button>
+                                                        @endif
+                                                    @endif
+
+                                                    {{-- Status Teks --}}
+                                                    @if ($item->acc_nm === 'oke')
+                                                        <span class="text-success">Diterima</span>
+                                                    @elseif ($item->acc_nm === 'tolak' || $form->acc_bm === 'reject' || $form->acc_hrd === 'reject')
+                                                        <span class="text-danger">Ditolak</span>
+                                                    @elseif (empty($form->acc_bm) || empty($form->acc_hrd))
+                                                        <span class="text-warning">Menunggu Persetujuan</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if ($item->acc_nm == 'oke')
+                                                        <span class="badge bg-success">Diterima</span>
+                                                    @elseif ($item->acc_nm == 'tolak')
+                                                        <span class="badge bg-danger">{{ $item->alasan }}</span>
+                                                    @elseif ($item->acc_nm == '' || $form->acc_bm != 'reject')
+                                                        <span class="badge bg-warning">Menunggu Persetujuan</span>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endif
+
+                                    @empty
+                                        <tr>
+                                            <td colspan="7" class="text-center">Tidak ada data untuk Form ID:
+                                                {{ $targetFormId }}.</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Bar Status -->
+                    <div class="status-bar mb-4" style="position: sticky; top: 70px;">
+                        <!-- ACC HRD -->
+                        <div class="status-step">
+                            <img src="{{ $form->acc_hrd == 'oke' ? asset('dist/img/oke.png') : ($form->acc_hrd == 'reject' ? asset('dist/img/reject.png') : asset('dist/img/no.png')) }}"
+                                alt="Status HRD" class="thumb-icon" width="50">
+                            <div class="status-name">
+                                @if ($form->acc_hrd == 'oke')
+                                    {{ $form->submitted_by_hrd }} (HRD) - Setuju
+                                @elseif ($form->acc_hrd == 'reject')
+                                    {{ $form->submitted_by_hrd }} (HRD) - Ditolak
+                                @else
+                                    HRD - Menunggu
+                                @endif
+                            </div>
+
+                        </div>
+                        <!-- ACC BM -->
+                        @if ($form->acc_hrd == 'oke')
                             <div class="status-step">
-                                <img src="{{ $form->acc_hrd == 'oke' ? asset('dist/img/oke.png') : ($form->acc_hrd == 'reject' ? asset('dist/img/reject.png') : asset('dist/img/no.png')) }}"
-                                    alt="Status HRD" class="thumb-icon" width="50">
+                                <img src="{{ $form->acc_bm == 'oke' ? asset('dist/img/oke.png') : ($form->acc_bm == 'reject' ? asset('dist/img/reject.png') : asset('dist/img/no.png')) }}"
+                                    alt="Status BM" class="thumb-icon" width="50">
                                 <div class="status-name">
-                                    @if ($form->acc_hrd == 'oke')
-                                        {{ $form->submitted_by_hrd }} (HRD) - Setuju
-                                    @elseif ($form->acc_hrd == 'reject')
-                                        {{ $form->submitted_by_hrd }} (HRD) - Ditolak
+                                    @if ($form->acc_bm == 'oke')
+                                        {{ $form->submitted_by_bm }} (BM) - Setuju
+                                    @elseif ($form->acc_bm == 'reject')
+                                        {{ $form->submitted_by_bm }} (BM) - Ditolak
                                     @else
-                                        HRD - Menunggu
+                                        BM - Menunggu
                                     @endif
                                 </div>
-
                             </div>
-                            <!-- ACC BM -->
-                            @if ($form->acc_hrd == 'oke')
-                                <div class="status-step">
-                                    <img src="{{ $form->acc_bm == 'oke' ? asset('dist/img/oke.png') : ($form->acc_bm == 'reject' ? asset('dist/img/reject.png') : asset('dist/img/no.png')) }}"
-                                        alt="Status BM" class="thumb-icon" width="50">
-                                    <div class="status-name">
-                                        @if ($form->acc_bm == 'oke')
-                                            {{ $form->submitted_by_bm }} (BM) - Setuju
-                                        @elseif ($form->acc_bm == 'reject')
-                                            {{ $form->submitted_by_bm }} (BM) - Ditolak
-                                        @else
-                                            BM - Menunggu
-                                        @endif
-                                    </div>
-                                </div>
-                            @endif
+                        @endif
 
 
-                            {{-- ACC HO  --}}
-                            @if ($form->acc_bm == 'oke')
-                                <div class="status-step">
-                                    <img src="{{ $form->acc_ho == 'oke' ? asset('dist/img/oke.png') : ($form->acc_ho == 'reject' ? asset('dist/img/reject.png') : asset('dist/img/no.png')) }}"
-                                        alt="Status HO" class="thumb-icon" width="50">
-                                    <div class="status-name">
-                                        @if ($form->acc_ho == 'oke')
-                                            {{ $form->submitted_by_ho }} (HRD HO) - Setuju
-                                        @elseif ($form->acc_ho == 'reject')
-                                            {{ $form->submitted_by_ho }} (HRD HO) - Ditolak
-                                        @else
-                                            HRD HO - Menunggu
-                                        @endif
-                                    </div>
+                        {{-- ACC HO  --}}
+                        @if ($form->acc_bm == 'oke')
+                            <div class="status-step">
+                                <img src="{{ $form->acc_ho == 'oke' ? asset('dist/img/oke.png') : ($form->acc_ho == 'reject' ? asset('dist/img/reject.png') : asset('dist/img/no.png')) }}"
+                                    alt="Status HO" class="thumb-icon" width="50">
+                                <div class="status-name">
+                                    @if ($form->acc_ho == 'oke')
+                                        {{ $form->submitted_by_ho }} (HRD HO) - Setuju
+                                    @elseif ($form->acc_ho == 'reject')
+                                        {{ $form->submitted_by_ho }} (HRD HO) - Ditolak
+                                    @else
+                                        HRD HO - Menunggu
+                                    @endif
                                 </div>
-                            @endif
+                            </div>
+                        @endif
 
-                            {{-- ACC CABANG --}}
-                            @if ($form->acc_ho == 'oke')
-                                <div class="status-step">
-                                    <img src="{{ $form->acc_cabang == 'oke' ? asset('dist/img/oke.png') : ($form->acc_cabang == 'reject' ? asset('dist/img/reject.png') : asset('dist/img/no.png')) }}"
-                                        alt="Status CABANG" class="thumb-icon" width="50">
-                                    <div class="status-name">
-                                        @if ($form->acc_cabang == 'oke')
-                                            {{ $form->submitted_by_cabang }} (CABANG) - Setuju
-                                        @elseif ($form->acc_cabang == 'reject')
-                                            {{ $form->submitted_by_cabang }} (CABANG)- Ditolak
-                                        @else
-                                            CABANG- Menunggu
-                                        @endif
-                                    </div>
+                        {{-- ACC CABANG --}}
+                        @if ($form->acc_ho == 'oke')
+                            <div class="status-step">
+                                <img src="{{ $form->acc_cabang == 'oke' ? asset('dist/img/oke.png') : ($form->acc_cabang == 'reject' ? asset('dist/img/reject.png') : asset('dist/img/no.png')) }}"
+                                    alt="Status CABANG" class="thumb-icon" width="50">
+                                <div class="status-name">
+                                    @if ($form->acc_cabang == 'oke')
+                                        {{ $form->submitted_by_cabang }} (CABANG) - Setuju
+                                    @elseif ($form->acc_cabang == 'reject')
+                                        {{ $form->submitted_by_cabang }} (CABANG)- Ditolak
+                                    @else
+                                        CABANG- Menunggu
+                                    @endif
                                 </div>
-                            @endif
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal untuk alasan penolakan -->
+    <div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="rejectModalLabel">Alasan Penolakan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="rejectForm">
+                        <div class="mb-3">
+                            <label for="rejectionReason" class="form-label">Alasan Penolakan</label>
+                            <textarea id="rejectionReason" class="form-control" rows="3" required></textarea>
                         </div>
-                    </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-danger" id="submitRejection">Tolak Pegawai</button>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Modal untuk alasan penolakan -->
-        <div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="rejectModalLabel">Alasan Penolakan</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="rejectForm">
-                            <div class="mb-3">
-                                <label for="rejectionReason" class="form-label">Alasan Penolakan</label>
-                                <textarea id="rejectionReason" class="form-control" rows="3" required></textarea>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                        <button type="button" class="btn btn-danger" id="submitRejection">Tolak Pegawai</button>
-                    </div>
+    {{-- Modal Alasan --}}
+    <div class="modal fade" id="reasonModal" tabindex="-1" role="dialog" aria-labelledby="reasonModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reasonModalLabel">Masukkan Alasan</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <textarea id="reasonInput" class="form-control" rows="3" placeholder="Masukkan alasan"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary" id="submitReasonButton">Kirim</button>
                 </div>
             </div>
         </div>
-
-        {{-- Modal Alasan --}}
-        <div class="modal fade" id="reasonModal" tabindex="-1" role="dialog" aria-labelledby="reasonModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="reasonModalLabel">Masukkan Alasan</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <textarea id="reasonInput" class="form-control" rows="3" placeholder="Masukkan alasan"></textarea>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                        <button type="button" class="btn btn-primary" id="submitReasonButton">Kirim</button>
-                    </div>
-                </div>
-            </div>
+    </div>
+    <!-- Modal untuk pratinjau file -->
+    <div id="filePreviewModal"
+        style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.7); z-index:1000;">
+        <div
+            style="position:relative; margin: auto; top: 50%; transform: translateY(-50%); width:80%; max-width:800px; background:white; padding:20px;">
+            <span id="closeModal" style="cursor:pointer; position:absolute; top:10px; right:10px;">&times;</span>
+            <iframe id="filePreview" width="100%" height="400" style="border: none;"></iframe>
         </div>
-        <!-- Modal untuk pratinjau file -->
-        <div id="filePreviewModal"
-            style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.7); z-index:1000;">
-            <div
-                style="position:relative; margin: auto; top: 50%; transform: translateY(-50%); width:80%; max-width:800px; background:white; padding:20px;">
-                <span id="closeModal" style="cursor:pointer; position:absolute; top:10px; right:10px;">&times;</span>
-                <iframe id="filePreview" width="100%" height="400" style="border: none;"></iframe>
-            </div>
-        </div>
+    </div>
     </div>
 
     <script>

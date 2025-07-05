@@ -6,10 +6,10 @@
         <div class="d-flex gap-4">
             <div class="card shadow-sm p-3 text-white"
                 style="background-color: #a9a2e6; border-radius: 12px; min-width: 150px;">
-                <div class="small">Surat Tugas</div>
+                <div class="small">Total Surat</div>
                 <div class="fw-bold fs-4">{{ $jumlahSuratTugas ?? 0 }}</div>
-
             </div>
+
             <a href="{{ route('formpst.index_masuk') }}" class="text-decoration-none">
                 <div class="card shadow-sm p-3 text-white"
                     style="background-color: #1cc88a; border-radius: 12px; min-width: 150px;">
@@ -17,23 +17,37 @@
                     <div class="fw-bold fs-4">{{ $jumlahSuratMasuk ?? 0 }}</div>
                 </div>
             </a>
+
             <div class="card shadow-sm p-3 text-white"
                 style="background-color: #ffa844; border-radius: 12px; min-width: 150px;">
                 <div class="small">Surat Keluar</div>
                 <div class="fw-bold fs-4">{{ $jumlahSuratKeluar ?? 0 }}</div>
             </div>
+
+            {{-- Tambahan Sudah Keluar --}}
+            <a href="{{ route('formpst.index_surat') }}" class="text-decoration-none">
+                <div class="card shadow-sm p-3 text-white"
+                    style="background-color: #4aa3df; border-radius: 12px; min-width: 150px;">
+                    <div class="small">Surat Tugas Ready</div>
+                    <div class="fw-bold fs-4">{{ $jumlahSuratSudahKeluar ?? 0 }}</div>
+                </div>
+            </a>
         </div>
+
         <div>
             <a href="{{ route('formpst.form') }}" class="btn btn-primary">
                 + Tambah Surat Tugas
             </a>
         </div>
     </div>
+
     <div class="ticket-wrapper container-fluid">
 
 
+
         {{-- === FILTER BAR ======================================================== --}}
-        <form method="GET" action="{{ route('formpst.index_keluar') }}" class="d-flex flex-wrap align-items-center gap-2 p-2 border rounded bg-white filter-bar">
+        <form method="GET" action="{{ route('formpst.index_keluar') }}"
+            class="d-flex flex-wrap align-items-center gap-2 p-2 border rounded bg-white filter-bar">
 
             <select name="cabang" class="form-select form-select-sm w-auto">
                 <option value="">Semua Cabang</option>
@@ -41,22 +55,24 @@
                     <option value="{{ $cabang }}" @selected(request('cabang') == $cabang)>{{ $cabang }}</option>
                 @endforeach
             </select>
-        
+
             <select name="status" class="form-select form-select-sm w-auto">
                 <option value="">Semua Status</option>
-                <option value="oke"    @selected(request('status')=='oke')>Disetujui</option>
-                <option value="reject" @selected(request('status')=='reject')>Ditolak</option>
-                <option value="cancel" @selected(request('status')=='cancel')>Dibatalkan</option>
+                <option value="oke" @selected(request('status') == 'oke')>Disetujui</option>
+                <option value="reject" @selected(request('status') == 'reject')>Ditolak</option>
+                <option value="cancel" @selected(request('status') == 'cancel')>Dibatalkan</option>
             </select>
-        
-            <input type="date" name="tanggal" value="{{ request('tanggal') }}" class="form-control form-control-sm w-auto">
-        
-            <button type="submit" class="btn btn-sm btn-outline-primary px-3">Filter</button>
+
+            <input type="date" name="tanggal" value="{{ request('tanggal') }}"
+                class="form-control form-control-sm w-auto">
+            <button type="submit" class="btn btn-sm btn-outline-primary px-3" title="Filter">
+                <i class="fas fa-filter"></i>
+            </button>
         </form>
     </div>
 
 
-<div class="card mt-4 rounded-3 shadow custom-card">
+    <div class="card mt-4 rounded-3 shadow custom-card">
         <div class="card-body p-4">
 
             <div class="table-responsive">
@@ -125,13 +141,17 @@
                                     <td class="text-center">
                                         <div class="d-flex justify-content-center gap-2">
                                             <a href="{{ route($item->cabang_asal === 'HO' ? 'formpst.show_nm' : 'formpst.show', ['id' => $item->id]) }}"
-                                                class="btn btn-sm btn-outline-primary">Detail</a>
+                                                class="btn btn-sm btn-outline-primary" title="Detail">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
                                             @if (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === $item->cabang_asal && $item->acc_cabang !== 'oke')
-                                                <a href="{{ route('formpst.edit', ['id' => $item->id]) }}"
-                                                    class="btn btn-sm btn-outline-primary">Edit</a>
+                                                {{-- <a href="{{ route('formpst.edit', ['id' => $item->id]) }}"
+                                                    class="btn btn-sm btn-outline-primary" title="Edit">
+                                                    <i class="fas fa-edit"></i>
+                                                </a> --}}
                                             @endif
                                         </div>
-                                    </td>
+                                    </td>>
                                 </tr>
                             @endif
                         @empty
@@ -141,51 +161,57 @@
                         @endforelse
                     </tbody>
                 </table>
-    </div>
-    </div>
+            </div>
+        </div>
     </div>
 
     <script>
         $(document).ready(function() {
-            $('#dataTable').DataTable({
-                lengthMenu: [10, 25, 50, 100],
-                language: {
-                    lengthMenu: "Tampilkan _MENU_ data per halaman",
-                    search: "Cari:",
-                    info: "Menampilkan _START_ hingga _END_ dari _TOTAL_ data",
-                    infoEmpty: "Tidak ada data",
-                    paginate: {
-                        first: "Awal",
-                        last: "Akhir",
-                        next: "Berikutnya",
-                        previous: "Sebelumnya"
-                    }
-                },
-                initComplete: function() {
-                    $('.dataTables_length select').addClass('form-select form-select-sm');
-                }
-            });
-        $(function () {
-    $('#dataTable').DataTable({
-        destroy: true, 
-        lengthMenu : [10,25,50,100],
-        language   : {
-            lengthMenu : 'Tampilkan _MENU_ data per halaman',
-            search     : 'Cari:',
-            info       : 'Menampilkan _START_–_END_ dari _TOTAL_ data',
-            infoEmpty  : 'Tidak ada data',
-            paginate   : { first:'«', last:'»', next:'›', previous:'‹' }
-        },
-        createdRow : function (row) {
-            const status = $('td:eq(6) span', row).text().trim();
-            if      (status === 'Selesai')                    $(row).addClass('table-success');
-            else if (status.startsWith('Menunggu'))          $(row).addClass('table-warning');
-            else if (status === 'Cancel' || status.startsWith('Ditolak')) $(row).addClass('table-danger');
-        }
-    });
-});
-
-        </script>
+                    $('#dataTable').DataTable({
+                        lengthMenu: [10, 25, 50, 100],
+                        language: {
+                            lengthMenu: "Tampilkan _MENU_ data per halaman",
+                            search: "Cari:",
+                            info: "Menampilkan _START_ hingga _END_ dari _TOTAL_ data",
+                            infoEmpty: "Tidak ada data",
+                            paginate: {
+                                first: "Awal",
+                                last: "Akhir",
+                                next: "Berikutnya",
+                                previous: "Sebelumnya"
+                            }
+                        },
+                        initComplete: function() {
+                            $('.dataTables_length select').addClass('form-select form-select-sm');
+                        }
+                    });
+                    $(function() {
+                        $('#dataTable').DataTable({
+                            destroy: true,
+                            lengthMenu: [10, 25, 50, 100],
+                            language: {
+                                lengthMenu: 'Tampilkan _MENU_ data per halaman',
+                                search: 'Cari:',
+                                info: 'Menampilkan _START_–_END_ dari _TOTAL_ data',
+                                infoEmpty: 'Tidak ada data',
+                                paginate: {
+                                    first: '«',
+                                    last: '»',
+                                    next: '›',
+                                    previous: '‹'
+                                }
+                            },
+                            createdRow: function(row) {
+                                const status = $('td:eq(6) span', row).text().trim();
+                                if (status === 'Selesai') $(row).addClass('table-success');
+                                else if (status.startsWith('Menunggu')) $(row).addClass(
+                                    'table-warning');
+                                else if (status === 'Cancel' || status.startsWith('Ditolak')) $(row)
+                                    .addClass('table-danger');
+                            }
+                        });
+                    });
+    </script>
 
     <style>
         .custom-card {
@@ -280,40 +306,42 @@
             background-color: #ffc107;
             color: black;
         }
+
         .minimal-filter select,
-    .minimal-filter input[type="date"] {
-        min-width: 140px;
-    }
-
-    .minimal-filter button {
-        white-space: nowrap;
-    }
-
-    @media (max-width: 576px) {
-        .minimal-filter {
-            flex-direction: column;
-            align-items: stretch;
+        .minimal-filter input[type="date"] {
+            min-width: 140px;
         }
-    }
-    .filter-bar {
-        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        max-width: 100%;
-    }
 
-    .filter-bar select,
-    .filter-bar input[type="date"] {
-        min-width: 130px;
-    }
+        .minimal-filter button {
+            white-space: nowrap;
+        }
 
-    .filter-bar button {
-        min-width: 70px;
-    }
+        @media (max-width: 576px) {
+            .minimal-filter {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
 
-    @media (max-width: 576px) {
         .filter-bar {
-            flex-direction: column;
-            align-items: stretch;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            max-width: 100%;
         }
-    }
+
+        .filter-bar select,
+        .filter-bar input[type="date"] {
+            min-width: 130px;
+        }
+
+        .filter-bar button {
+            min-width: 70px;
+        }
+
+        @media (max-width: 576px) {
+            .filter-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
     </style>
 @endsection
