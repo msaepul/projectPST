@@ -1,6 +1,11 @@
 @extends('layouts.main')
 
 @section('content')
+
+    @push('styles')
+        <link rel="stylesheet" href="{{ asset('css/nice-forms.min.css') }}">
+    @endpush
+
     {{-- {{ Breadcrumbs::render('Form') }} --}}
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div class="d-flex gap-4">
@@ -34,42 +39,40 @@
             </a>
         </div>
 
-        <div>
-            <a href="{{ route('formpst.form') }}" class="btn btn-primary">
-                + Tambah Surat Tugas
-            </a>
-        </div>
+
     </div>
 
     <div class="ticket-wrapper container-fluid">
 
-
-
-        {{-- === FILTER BAR ======================================================== --}}
         <form method="GET" action="{{ route('formpst.index_keluar') }}"
-            class="d-flex flex-wrap align-items-center gap-2 p-2 border rounded bg-white filter-bar">
+            class="d-flex flex-wrap align-items-center justify-content-between gap-2 p-3 border rounded bg-white shadow-sm filter-bar mb-3">
 
-            <select name="cabang" class="form-select form-select-sm w-auto">
-                <option value="">Semua Cabang</option>
-                @foreach ($cabangList as $cabang)
-                    <option value="{{ $cabang }}" @selected(request('cabang') == $cabang)>{{ $cabang }}</option>
-                @endforeach
-            </select>
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                <select name="cabang" class="form-select form-select-sm w-auto">
+                    <option value="">Semua Cabang</option>
+                    @foreach ($cabangList as $cabang)
+                        <option value="{{ $cabang }}" @selected(request('cabang') == $cabang)>{{ $cabang }}</option>
+                    @endforeach
+                </select>
 
-            <select name="status" class="form-select form-select-sm w-auto">
-                <option value="">Semua Status</option>
-                <option value="oke" @selected(request('status') == 'oke')>Disetujui</option>
-                <option value="reject" @selected(request('status') == 'reject')>Ditolak</option>
-                <option value="cancel" @selected(request('status') == 'cancel')>Dibatalkan</option>
-            </select>
+                <select name="status" class="form-select form-select-sm w-auto">
+                    <option value="">Semua Status</option>
+                    <option value="oke" @selected(request('status') == 'oke')>Disetujui</option>
+                    <option value="reject" @selected(request('status') == 'reject')>Ditolak</option>
+                    <option value="cancel" @selected(request('status') == 'cancel')>Dibatalkan</option>
+                </select>
 
-            <input type="date" name="tanggal" value="{{ request('tanggal') }}"
-                class="form-control form-control-sm w-auto">
-            <button type="submit" class="btn btn-sm btn-outline-primary px-3" title="Filter">
-                <i class="fas fa-filter"></i>
-            </button>
+                <input type="date" name="tanggal" value="{{ request('tanggal') }}"
+                    class="form-control form-control-sm w-auto">
+
+                <button type="submit" class="btn btn-sm btn-outline-primary px-3">Filter</button>
+                <a href="{{ route('formpst.form') }}" class="btn btn-sm btn-outline-primary px-3">
+                    + Buat Pengajuan
+                </a>
+            </div>
         </form>
     </div>
+
 
 
     <div class="card mt-4 rounded-3 shadow custom-card">
@@ -95,64 +98,122 @@
                                     ((auth()->user()->role !== 'pegawai' ||
                                         $item->nama_pegawais->contains('nama_pegawai', auth()->user()->nama_lengkap)) &&
                                         (auth()->user()->cabang_asal === $item->cabang_asal || auth()->user()->cabang_asal === 'HO')))
-                                <tr
-                                    class="{{ $item->acc_cabang === 'oke' ? 'table-success' : ($item->acc_cabang === 'reject' || $item->acc_ho === 'reject' || $item->acc_bm === 'reject' ? 'table-warning' : ($item->acc_cabang === 'cancel' || $item->acc_ho === 'cancel' || $item->acc_bm === 'cancel' ? 'table-danger' : '')) }} hover-row">
-                                    <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}</td>
-                                    <td>{{ $item->no_surat }}</td>
-                                    <td>{{ $item->nama_pemohon }}</td>
-                                    <td>{{ $item->cabang_asal }}</td>
-                                    <td>{{ $item->cabang_tujuan }}</td>
-                                    <td>{{ $item->tujuan }}</td>
-                                    <td class="text-center">
-                                        @if ($item->acc_cabang == 'oke')
-                                            <span class="badge bg-success">Selesai</span>
-                                        @elseif ($item->acc_ho == 'reject')
-                                            <span class="badge bg-danger">Verifikasi Ditolak HO</span>
-                                            @if ($item->reason_ho)
-                                                <br><small>Alasan: {{ $item->reason_ho }}</small>
-                                            @endif
-                                        @elseif ($item->acc_bm == 'reject')
-                                            <span class="badge bg-danger">Verifikasi Ditolak BM</span>
-                                            @if ($item->reason_bm)
-                                                <br><small>Alasan: {{ $item->reason_bm }}</small>
-                                            @endif
-                                        @elseif (in_array($item->acc_bm, ['cancel', 'reject']) ||
-                                                in_array($item->acc_ho, ['cancel']) ||
-                                                in_array($item->acc_cabang, ['cancel']))
-                                            <span class="badge bg-danger">Cancel</span>
-                                            @if ($item->acc_bm == 'cancel' && $item->alasan_cancel_bm)
-                                                <br><small>Alasan BM: {{ $item->alasan_cancel_bm }}</small>
-                                            @elseif ($item->acc_ho == 'cancel' && $item->alasan_cancel_ho)
-                                                <br><small>Alasan HO: {{ $item->alasan_cancel_ho }}</small>
-                                            @elseif ($item->acc_cabang == 'cancel' && $item->alasan_cancel_cabang)
-                                                <br><small>Alasan Cabang: {{ $item->alasan_cancel_cabang }}</small>
-                                            @endif
-                                        @elseif ($item->acc_ho == 'oke' && $item->acc_cabang != 'oke')
-                                            <span class="badge bg-warning text-dark">Menunggu Verifikasi Cabang</span>
-                                        @elseif ($item->acc_bm == 'oke' && $item->acc_ho != 'oke')
-                                            <span class="badge bg-warning text-dark">Menunggu Verifikasi HO</span>
-                                        @elseif ($item->acc_bm != 'oke' && $item->acc_hrd == 'oke')
-                                            <span class="badge bg-warning text-dark">Menunggu Verifikasi BM</span>
-                                        @else
-                                            <span class="badge bg-danger">Belum Diverifikasi</span>
-                                        @endif
-                                    </td>
+                                @php
+                                    $user = auth()->user();
+                                    $bolehTampil = false;
 
-                                    <td class="text-center">
-                                        <div class="d-flex justify-content-center gap-2">
-                                            <a href="{{ route($item->cabang_asal === 'HO' ? 'formpst.show_nm' : 'formpst.show', ['id' => $item->id]) }}"
-                                                class="btn btn-sm btn-outline-primary" title="Detail">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                            @if (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === $item->cabang_asal && $item->acc_cabang !== 'oke')
-                                                {{-- <a href="{{ route('formpst.edit', ['id' => $item->id]) }}"
-                                                    class="btn btn-sm btn-outline-primary" title="Edit">
-                                                    <i class="fas fa-edit"></i>
-                                                </a> --}}
+                                    if ($user->role === 'admin') {
+                                        $bolehTampil = true;
+                                    } elseif ($user->role === 'hrd' && $user->cabang_asal === 'HO') {
+                                        $bolehTampil = $item->acc_bm === 'oke'; // hanya yang sudah diverifikasi BM
+                                    } elseif (
+                                        $user->role !== 'pegawai' ||
+                                        ($item->nama_pegawais->contains('nama_pegawai', $user->nama_lengkap) &&
+                                            ($user->cabang_asal === $item->cabang_asal || $user->cabang_asal === 'HO'))
+                                    ) {
+                                        $bolehTampil = true;
+                                    }
+                                @endphp
+
+                                @if ($bolehTampil)
+                                    <tr
+                                        class="{{ $item->acc_cabang === 'oke' ? 'table-success' : ($item->acc_cabang === 'reject' || $item->acc_ho === 'reject' || $item->acc_bm === 'reject' ? 'table-warning' : ($item->acc_cabang === 'cancel' || $item->acc_ho === 'cancel' || $item->acc_bm === 'cancel' ? 'table-danger' : '')) }} hover-row">
+                                        <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}</td>
+                                        <td>{{ $item->no_surat }}</td>
+                                        <td>{{ $item->nama_pemohon }}</td>
+                                        <td>{{ $item->cabang_asal }}</td>
+                                        <td>{{ $item->cabang_tujuan }}</td>
+                                        <td>{{ $item->tujuan }}</td>
+                                        <td class="text-center">
+                                            @if ($item->acc_cabang == 'oke')
+                                                <span class="badge bg-success">Selesai</span>
+                                            @elseif ($item->acc_ho == 'reject')
+                                                <span class="badge bg-danger">Verifikasi Ditolak HO</span>
+                                                @if ($item->reason_ho)
+                                                    <br><small>Alasan: {{ $item->reason_ho }}</small>
+                                                @endif
+                                            @elseif ($item->acc_bm == 'reject')
+                                                <span class="badge bg-danger">Verifikasi Ditolak BM</span>
+                                                @if ($item->reason_bm)
+                                                    <br><small>Alasan: {{ $item->reason_bm }}</small>
+                                                @endif
+                                            @elseif (in_array($item->acc_bm, ['cancel', 'reject']) ||
+                                                    in_array($item->acc_ho, ['cancel']) ||
+                                                    in_array($item->acc_cabang, ['cancel']))
+                                                <span class="badge bg-danger">Cancel</span>
+                                                @if ($item->acc_bm == 'cancel' && $item->alasan_cancel_bm)
+                                                    <br><small>Alasan BM: {{ $item->alasan_cancel_bm }}</small>
+                                                @elseif ($item->acc_ho == 'cancel' && $item->alasan_cancel_ho)
+                                                    <br><small>Alasan HO: {{ $item->alasan_cancel_ho }}</small>
+                                                @elseif ($item->acc_cabang == 'cancel' && $item->alasan_cancel_cabang)
+                                                    <br><small>Alasan Cabang: {{ $item->alasan_cancel_cabang }}</small>
+                                                @endif
+                                            @elseif ($item->acc_ho == 'oke' && $item->acc_cabang != 'oke')
+                                                <span class="badge bg-warning text-dark">Menunggu Verifikasi Cabang</span>
+                                            @elseif ($item->acc_bm == 'oke' && $item->acc_ho != 'oke')
+                                                <span class="badge bg-warning text-dark">Menunggu Verifikasi HO</span>
+                                            @elseif ($item->acc_bm != 'oke' && $item->acc_hrd == 'oke')
+                                                <span class="badge bg-warning text-dark">Menunggu Verifikasi BM</span>
+                                            @else
+                                                <span class="badge bg-danger">Belum Diverifikasi</span>
                                             @endif
+                                        </td>
+
+                                        <td class="text-center">
+                                            <div class="d-flex justify-content-center gap-2">
+                                                <a href="{{ route($item->cabang_asal === 'HO' ? 'formpst.show_nm' : 'formpst.show', ['id' => $item->id]) }}"
+                                                    class="btn btn-sm btn-outline-primary">Detail</a>
+                                                <!-- Tambahkan ini dalam <div class="d-flex justify-content-center gap-2"> -->
+                                                <button type="button" class="btn btn-sm btn-outline-secondary"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#modalPegawai{{ $item->id }}">
+                                                    Lihat Pegawai
+                                                </button>
+
+                                                @if (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === $item->cabang_asal && $item->acc_cabang !== 'oke')
+                                                    <a href="{{ route('formpst.edit', ['id' => $item->id]) }}"
+                                                        class="btn btn-sm btn-outline-primary">Edit</a>
+                                                @endif
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <!-- Modal per item -->
+                                    <div class="modal fade" id="modalPegawai{{ $item->id }}" tabindex="-1"
+                                        aria-labelledby="modalLabel{{ $item->id }}" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-scrollable">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="modalLabel{{ $item->id }}">Daftar
+                                                        Pegawai
+                                                        dalam Pengajuan Ini</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Tutup"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    @if ($item->nama_pegawais && count($item->nama_pegawais))
+                                                        <ul class="list-group">
+                                                            @foreach ($item->nama_pegawais as $pegawai)
+                                                                <li class="list-group-item">
+                                                                    {{ $pegawai->nama_pegawai }} /
+                                                                    {{ $pegawai->departemen }}
+
+                                                                </li>
+                                                            @endforeach
+                                                        </ul>
+                                                    @else
+                                                        <p class="text-muted">Tidak ada data pegawai untuk pengajuan ini.
+                                                        </p>
+                                                    @endif
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Tutup</button>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </td>>
-                                </tr>
+
+                                    </div>
+                                @endif
                             @endif
                         @empty
                             <tr>
@@ -165,52 +226,55 @@
         </div>
     </div>
 
+
     <script>
         $(document).ready(function() {
-                    $('#dataTable').DataTable({
-                        lengthMenu: [10, 25, 50, 100],
-                        language: {
-                            lengthMenu: "Tampilkan _MENU_ data per halaman",
-                            search: "Cari:",
-                            info: "Menampilkan _START_ hingga _END_ dari _TOTAL_ data",
-                            infoEmpty: "Tidak ada data",
-                            paginate: {
-                                first: "Awal",
-                                last: "Akhir",
-                                next: "Berikutnya",
-                                previous: "Sebelumnya"
-                            }
-                        },
-                        initComplete: function() {
-                            $('.dataTables_length select').addClass('form-select form-select-sm');
+
+            $('#dataTable').DataTable({
+                lengthMenu: [10, 25, 50, 100],
+                language: {
+                    lengthMenu: "Tampilkan _MENU_ data per halaman",
+                    search: "Cari:",
+                    info: "Menampilkan _START_ hingga _END_ dari _TOTAL_ data",
+                    infoEmpty: "Tidak ada data",
+                    paginate: {
+                        first: "Awal",
+                        last: "Akhir",
+                        next: "Berikutnya",
+                        previous: "Sebelumnya"
+                    }
+                },
+                initComplete: function() {
+                    $('.dataTables_length select').addClass('form-select form-select-sm');
+                }
+            });
+            $(function() {
+                $('#dataTable').DataTable({
+                    destroy: true,
+                    lengthMenu: [10, 25, 50, 100],
+                    language: {
+                        lengthMenu: 'Tampilkan _MENU_ data per halaman',
+                        search: 'Cari:',
+                        info: 'Menampilkan _START_–_END_ dari _TOTAL_ data',
+                        infoEmpty: 'Tidak ada data',
+                        paginate: {
+                            first: '«',
+                            last: '»',
+                            next: '›',
+                            previous: '‹'
                         }
-                    });
-                    $(function() {
-                        $('#dataTable').DataTable({
-                            destroy: true,
-                            lengthMenu: [10, 25, 50, 100],
-                            language: {
-                                lengthMenu: 'Tampilkan _MENU_ data per halaman',
-                                search: 'Cari:',
-                                info: 'Menampilkan _START_–_END_ dari _TOTAL_ data',
-                                infoEmpty: 'Tidak ada data',
-                                paginate: {
-                                    first: '«',
-                                    last: '»',
-                                    next: '›',
-                                    previous: '‹'
-                                }
-                            },
-                            createdRow: function(row) {
-                                const status = $('td:eq(6) span', row).text().trim();
-                                if (status === 'Selesai') $(row).addClass('table-success');
-                                else if (status.startsWith('Menunggu')) $(row).addClass(
-                                    'table-warning');
-                                else if (status === 'Cancel' || status.startsWith('Ditolak')) $(row)
-                                    .addClass('table-danger');
-                            }
-                        });
-                    });
+                    },
+                    createdRow: function(row) {
+                        const status = $('td:eq(6) span', row).text().trim();
+                        if (status === 'Selesai') $(row).addClass('table-success');
+                        else if (status.startsWith('Menunggu')) $(row).addClass(
+                            'table-warning');
+                        else if (status === 'Cancel' || status.startsWith('Ditolak')) $(row)
+                            .addClass('table-danger');
+                    }
+                });
+            });
+        });
     </script>
 
     <style>
