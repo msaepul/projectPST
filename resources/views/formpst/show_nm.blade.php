@@ -81,12 +81,13 @@
                                         </button>
                                     @endif
                                 @endif
-
-                                @if ($form->acc_cabang != 'oke')
-                                    <button type="button" class="btn btn-danger" onclick="showReasonModal('cancel')">
-                                        Cancel
-                                    </button>
-                                @endif
+{{-- 
+                                @if ($form->acc_bm !== 'oke' || $form->acc_ho !== 'oke' || $form->acc_hrd !== 'oke')
+                                <button type="button" class="btn btn-danger" onclick="showReasonModal('cancel')">
+                                    Cancel
+                                </button>
+                            @endif --}}
+                                
                             </form>
                         </div>
 
