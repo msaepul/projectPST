@@ -81,15 +81,22 @@
                                         </button>
                                     @endif
                                 @endif
-{{-- 
-                                @if ($form->acc_bm !== 'oke' || $form->acc_ho !== 'oke' || $form->acc_hrd !== 'oke')
-                                <button type="button" class="btn btn-danger" onclick="showReasonModal('cancel')">
-                                    Cancel
-                                </button>
-                            @endif --}}
-                                
+
+                                {{-- @if ($form->acc_cabang != 'oke')
+                                    <button type="button" class="btn btn-danger" onclick="showReasonModal('cancel')">
+                                        Cancel
+                                    </button>
+                                @endif --}}
+
                             </form>
                         </div>
+                        @if (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === $form->cabang_asal && $form->acc_cabang !== 'oke')
+                            <div class="mb-4 text-end">
+                                <a href="{{ route('formpst.edit', ['id' => $form->id]) }}" class="btn btn-warning">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                            </div>
+                        @endif
 
 
                         <h5 class="text-center mb-8">

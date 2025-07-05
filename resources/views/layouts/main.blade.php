@@ -194,9 +194,10 @@
                                 <p>Master Data<i class="fas fa-angle-left right"></i></p>
                             </a>
                             <ul class="nav nav-treeview">
-                                
+
                                 <li class="nav-item">
-                                    <a href="{{ route('ho.user') }}" class="nav-link {{ request()->is('ho/user') ? 'active' : '' }}">
+                                    <a href="{{ route('ho.user') }}"
+                                        class="nav-link {{ request()->is('ho/user') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>User</p>
                                     </a>
@@ -213,34 +214,34 @@
                                 <p>Pengajuan Surat Tugas</p>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a href="#" class="nav-link {{ request()->is('formpst/*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-envelope"></i>
                                 <p> Surat Tugas<i class="fas fa-angle-left right"></i></p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="{{ route('formpst.index_keluar') }}"
-                                        class="nav-link {{ request()->is('formpst/index_keluar') ? 'active' : '' }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Surat Keluar</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('formpst.index_masuk') }}"
-                                        class="nav-link {{ request()->is('formpst/index_masuk') ? 'active' : '' }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Surat Masuk</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('formpst.index_surat') }}"
-                                        class="nav-link {{ request()->is('formpst/index_surat') ? 'active' : '' }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Surat Tugas</p>
-                                    </a>
-                                </li>
-                            </ul>
+                            </a> --}}
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{ route('formpst.index_keluar') }}"
+                                    class="nav-link {{ request()->is('formpst/index_keluar') ? 'active' : '' }}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Surat Keluar</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('formpst.index_masuk') }}"
+                                    class="nav-link {{ request()->is('formpst/index_masuk') ? 'active' : '' }}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Surat Masuk</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('formpst.index_surat') }}"
+                                    class="nav-link {{ request()->is('formpst/index_surat') ? 'active' : '' }}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Surat Tugas</p>
+                                </a>
+                            </li>
+                        </ul>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('formpst.ticket') }}"
@@ -259,6 +260,7 @@
                     @endif
 
                     @if ((auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'HO') || auth()->user()->role === 'admin')
+
 
     <!-- List Surat (Gabungan HO dan Cabang) -->
     @php

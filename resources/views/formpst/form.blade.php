@@ -35,13 +35,13 @@
                             <select class="form-control select2" name="yangMenugaskan" id="yangMenugaskan" required>
                                 <option value="" disabled selected>Pilih Nama</option>
                                 @foreach ($users as $user)
-                                    @if(in_array($user->role, ['bm', 'nm']))
+                                    @if (in_array($user->role, ['bm', 'nm']))
                                         <option value="{{ $user->id }}">
                                             {{ $user->nama_lengkap }} - {{ $user->departemen }} - {{ $user->cabang_asal }}
                                         </option>
                                     @endif
                                 @endforeach
-                            </select>                            
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="cabangAsal">Cabang Asal</label>
@@ -145,7 +145,7 @@
                                             </td>
                                             <td>
                                                 <input type="file" name="uploadFile[]"
-                                                    class="form-control form-control-sm">
+                                                    class="form-control form-control-sm" required>
                                             </td>
                                             <td>
                                                 <div class="d-flex align-items-center">

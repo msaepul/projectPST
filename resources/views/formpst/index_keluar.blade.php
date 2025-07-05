@@ -11,10 +11,10 @@
         <div class="d-flex gap-4">
             <div class="card shadow-sm p-3 text-white"
                 style="background-color: #a9a2e6; border-radius: 12px; min-width: 150px;">
-                <div class="small">Surat Tugas</div>
+                <div class="small">Total Surat</div>
                 <div class="fw-bold fs-4">{{ $jumlahSuratTugas ?? 0 }}</div>
-
             </div>
+
             <a href="{{ route('formpst.index_masuk') }}" class="text-decoration-none">
                 <div class="card shadow-sm p-3 text-white"
                     style="background-color: #1cc88a; border-radius: 12px; min-width: 150px;">
@@ -22,14 +22,26 @@
                     <div class="fw-bold fs-4">{{ $jumlahSuratMasuk ?? 0 }}</div>
                 </div>
             </a>
+
             <div class="card shadow-sm p-3 text-white"
                 style="background-color: #ffa844; border-radius: 12px; min-width: 150px;">
                 <div class="small">Surat Keluar</div>
                 <div class="fw-bold fs-4">{{ $jumlahSuratKeluar ?? 0 }}</div>
             </div>
+
+            {{-- Tambahan Sudah Keluar --}}
+            <a href="{{ route('formpst.index_surat') }}" class="text-decoration-none">
+                <div class="card shadow-sm p-3 text-white"
+                    style="background-color: #4aa3df; border-radius: 12px; min-width: 150px;">
+                    <div class="small">Surat Tugas Ready</div>
+                    <div class="fw-bold fs-4">{{ $jumlahSuratSudahKeluar ?? 0 }}</div>
+                </div>
+            </a>
         </div>
 
+
     </div>
+
     <div class="ticket-wrapper container-fluid">
 
         <form method="GET" action="{{ route('formpst.index_keluar') }}"
@@ -58,10 +70,8 @@
                     + Buat Pengajuan
                 </a>
             </div>
-
         </form>
     </div>
-
 
 
 
@@ -201,6 +211,7 @@
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
                                 @endif
                             @endif
@@ -218,6 +229,7 @@
 
     <script>
         $(document).ready(function() {
+
             $('#dataTable').DataTable({
                 lengthMenu: [10, 25, 50, 100],
                 language: {
