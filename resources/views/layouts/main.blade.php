@@ -34,7 +34,7 @@
 
     <!-- Custom CSS -->
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
-    <link href="https://unpkg.com/nice-forms.css/nice-forms.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/nice-forms.css@1.1.0/nice-forms.min.css" rel="stylesheet">
 
     <!-- jQuery & Select2 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -259,92 +259,116 @@
                     @endif
 
                     @if ((auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'HO') || auth()->user()->role === 'admin')
-                        {{-- <li class="nav-item">
-                            <a href="{{ route('formpst.form') }}"
-                                class="nav-link {{ request()->is('formpst/form') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-copy"></i>
-                                <p>Pengajuan Surat Tugas</p>
-                            </a>
-                        </li> --}}
-                        <li class="nav-item">
-                            <a href="{{ route('formpst.index_keluar') }}"
-                                class="nav-link {{ request()->is('formpst/index_keluar') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-envelope"></i>
-                                <p>Daftar Pengajuan Surat </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('formpst.index_surat') }}"
-                                class="nav-link {{ request()->is('formpst/index_surat') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-book"></i>
-                                <p>Daftar Surat Tugas </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('formpst.ticket') }}"
-                                class="nav-link {{ request()->is('formpst/ticket') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-car"></i>
-                                <p>Ticketing </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('formpst.show_ticket') }}"
-                                class="nav-link {{ request()->is('formpst/show_ticket') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-plane"></i>
-                                <p>List keberangkatan </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link {{ request()->is('ho/*') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-building"></i>
-                                <p>Master Data<i class="fas fa-angle-left right"></i></p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="{{ route('ho.cabang') }}"
-                                        class="nav-link {{ request()->is('ho/cabang') ? 'active' : '' }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Cabang</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('ho.tujuan') }}"
-                                        class="nav-link {{ request()->is('ho/tujuan') ? 'active' : '' }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Daftar Penugasan</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('ho.departemen') }}"
-                                        class="nav-link {{ request()->is('ho/departemen') ? 'active' : '' }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Departemen</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('ho.maskapai') }}"
-                                        class="nav-link {{ request()->is('ho/maskapai') ? 'active' : '' }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Maskapai</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('ho.transport') }}"
-                                        class="nav-link {{ request()->is('ho/transport') ? 'active' : '' }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Transport</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('ho.user') }}"
-                                        class="nav-link {{ request()->is('ho/user') ? 'active' : '' }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>User</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                    @endif
+
+    <!-- List Surat (Gabungan HO dan Cabang) -->
+    @php
+    // cocokkan semua URL/formpst/index_keluar…
+    $isListSurat = request()->is('formpst/index_keluar*');
+@endphp
+
+<li class="nav-item {{ $isListSurat ? 'menu-open' : '' }}">
+    <a href="#" class="nav-link {{ $isListSurat ? 'active' : '' }}">
+        <i class="nav-icon fas fa-envelope"></i>
+        <p>
+            List Surat
+            <i class="fas fa-angle-left right"></i>
+        </p>
+    </a>
+
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="{{ route('formpst.index_keluar', ['tipe' => 'cabang']) }}"
+               class="nav-link {{ request()->fullUrlIs('*tipe=cabang*') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Surat Cabang</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('formpst.index_keluar', ['tipe' => 'ho']) }}"
+               class="nav-link {{ request()->fullUrlIs('*tipe=ho*') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Surat HO</p>
+            </a>
+        </li>
+    </ul>
+</li>
+
+    <!-- Menu lainnya tetap -->
+    <li class="nav-item">
+        <a href="{{ route('formpst.index_surat') }}"
+            class="nav-link {{ request()->is('formpst/index_surat') ? 'active' : '' }}">
+            <i class="nav-icon fas fa-book"></i>
+            <p>Daftar Surat Tugas</p>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="{{ route('formpst.ticket') }}"
+            class="nav-link {{ request()->is('formpst/ticket') ? 'active' : '' }}">
+            <i class="nav-icon fas fa-car"></i>
+            <p>Ticketing</p>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="{{ route('formpst.show_ticket') }}"
+            class="nav-link {{ request()->is('formpst/show_ticket') ? 'active' : '' }}">
+            <i class="nav-icon fas fa-plane"></i>
+            <p>List Keberangkatan</p>
+        </a>
+    </li>
+
+    <!-- Master Data -->
+    <li class="nav-item">
+        <a href="#" class="nav-link {{ request()->is('ho/*') ? 'active' : '' }}">
+            <i class="nav-icon fas fa-building"></i>
+            <p>Master Data<i class="fas fa-angle-left right"></i></p>
+        </a>
+        <ul class="nav nav-treeview">
+            <li class="nav-item">
+                <a href="{{ route('ho.cabang') }}"
+                    class="nav-link {{ request()->is('ho/cabang') ? 'active' : '' }}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Cabang</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ route('ho.tujuan') }}"
+                    class="nav-link {{ request()->is('ho/tujuan') ? 'active' : '' }}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Daftar Penugasan</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ route('ho.departemen') }}"
+                    class="nav-link {{ request()->is('ho/departemen') ? 'active' : '' }}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Departemen</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ route('ho.maskapai') }}"
+                    class="nav-link {{ request()->is('ho/maskapai') ? 'active' : '' }}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Maskapai</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ route('ho.transport') }}"
+                    class="nav-link {{ request()->is('ho/transport') ? 'active' : '' }}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Transport</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ route('ho.user') }}"
+                    class="nav-link {{ request()->is('ho/user') ? 'active' : '' }}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>User</p>
+                </a>
+            </li>
+        </ul>
+    </li>
+@endif
+
 
                     @if (auth()->user()->role === 'pegawai')
                         <li class="nav-item">
