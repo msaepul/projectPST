@@ -144,89 +144,75 @@
 
     <div class="container-fluid mt-4">
         <div class="row">
-            <div class="col-md-12 mb-4">
-                <div class="welcome-box">
-                    <div>
-                        <h3>Selamat Datang, {{ Auth::user()->name }}</h3>
-                        <p>{{ Auth::user()->role }}</p>
-                    </div>
-                    <i class="fas fa-home fa-2x" style="color: #6c5ce7;"></i>
-                </div>
-            </div>
-        </div>
-
-        @if (auth()->user()->role != 'hrd' || auth()->user()->cabang_asal != 'HO')
-            <div class="row">
-                <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
-                    <div class="small-box bg-purple">
-                        <div class="inner">
-                            <h3 id="countSuratKeluar">{{ $jumlahSuratKeluar }}</h3>
-                            <p>Jumlah Surat Keluar</p>
-                        </div>
-                        <div class="icon">
-                            <i class="fas fa-paper-plane"></i>
-                        </div>
-                        <a href="{{ route('formpst.index_keluar') }}" class="small-box-footer">
-                            Lihat Detail <i class="fas fa-arrow-circle-right"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
-                    <div class="small-box bg-blue">
-                        <div class="inner">
-                            <h3 id="countSuratMasuk">{{ $jumlahSuratMasuk }}</h3>
-                            <p>Jumlah Surat Masuk</p>
-                        </div>
-                        <div class="icon">
-                            <i class="fas fa-envelope"></i>
-                        </div>
-                        <a href="{{ route('formpst.index_masuk') }}" class="small-box-footer">
-                            Lihat Detail <i class="fas fa-arrow-circle-right"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
-                    <div class="small-box bg-teal">
-                        <div class="inner">
-                            <h3 id="countSuratTugas">{{ $jumlahSuratTugas }}</h3>
-                            <p>Jumlah Surat Tugas</p>
-                        </div>
-                        <div class="icon">
-                            <i class="fas fa-file-alt"></i>
-                        </div>
-                        <a href="{{ route('formpst.index_surat') }}" class="small-box-footer">
-                            Lihat Detail <i class="fas fa-arrow-circle-right"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        @endif
-
-        @if (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'HO')
-            <div class="row">
-                @foreach ($cabangCounts as $cabang => $count)
-                    <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
-                        <div class="small-box bg-info">
-                            <div class="inner">
-                                <h3 id="countSuratKeluarCabang{{ Str::slug($cabang) }}">{{ $count }}</h3>
-                                <p>Surat Keluar dari Cabang {{ $cabang }}</p>
+            <div class="col-lg-8">
+                @if (auth()->user()->role != 'hrd' || auth()->user()->cabang_asal != 'HO')
+                    <div class="row">
+                        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                            <div class="small-box bg-purple">
+                                <div class="inner">
+                                    <h3 id="countSuratKeluar">{{ $jumlahSuratKeluar }}</h3>
+                                    <p>Jumlah Surat Keluar</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-paper-plane"></i>
+                                </div>
+                                <a href="{{ route('formpst.index_keluar') }}" class="small-box-footer">
+                                    Lihat Detail <i class="fas fa-arrow-circle-right"></i>
+                                </a>
                             </div>
-                            <div class="icon">
-                                <i class="fas fa-building"></i>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                            <div class="small-box bg-blue">
+                                <div class="inner">
+                                    <h3 id="countSuratMasuk">{{ $jumlahSuratMasuk }}</h3>
+                                    <p>Jumlah Surat Masuk</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <a href="{{ route('formpst.index_masuk') }}" class="small-box-footer">
+                                    Lihat Detail <i class="fas fa-arrow-circle-right"></i>
+                                </a>
                             </div>
-                            <a href="{{ route('formpst.index_keluar') }}" class="small-box-footer">
-                                More info <i class="fas fa-arrow-circle-right"></i>
-                            </a>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                            <div class="small-box bg-teal">
+                                <div class="inner">
+                                    <h3 id="countSuratTugas">{{ $jumlahSuratTugas }}</h3>
+                                    <p>Jumlah Surat Tugas</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-file-alt"></i>
+                                </div>
+                                <a href="{{ route('formpst.index_surat') }}" class="small-box-footer">
+                                    Lihat Detail <i class="fas fa-arrow-circle-right"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
-                @endforeach
-            </div>
-        @endif
+                @endif
 
-        <div class="row mt-4">
-            <div class="col-lg-8 mb-4">
+                @if (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'HO')
+                    <div class="row">
+                        @foreach ($cabangCounts as $cabang => $count)
+                            <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                                <div class="small-box bg-info">
+                                    <div class="inner">
+                                        <h3 id="countSuratKeluarCabang{{ Str::slug($cabang) }}">{{ $count }}</h3>
+                                        <p>Surat Keluar dari Cabang {{ $cabang }}</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fas fa-building"></i>
+                                    </div>
+                                    <a href="{{ route('formpst.index_keluar') }}" class="small-box-footer">
+                                        More info <i class="fas fa-arrow-circle-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+
                 <div class="card">
                     <div class="card-header bg-white">
                         <h3 class="card-title">
@@ -242,6 +228,7 @@
                     </div>
                 </div>
             </div>
+
 
 
             <div class="col-lg-4 mb-4">
@@ -260,7 +247,6 @@
                                     <p>Jakarta • 3 Juli 2025 • Berangkat</p>
                                 </div>
                             </div>
-
                             <div class="timeline-item">
                                 <div class="timeline-icon bg-success text-white">
                                     <i class="fas fa-car-side"></i>
@@ -270,7 +256,6 @@
                                     <p>Bandung • 4 Juli 2025 • Proses Tiket</p>
                                 </div>
                             </div>
-
                             <div class="timeline-item">
                                 <div class="timeline-icon bg-warning text-white">
                                     <i class="fas fa-train"></i>
@@ -281,6 +266,15 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header bg-white">
+                        <h4 class="card-title mb-0">Kalender</h4>
+                    </div>
+                    <div class="card-body">
+                        <div id="calendar"></div>
                     </div>
                 </div>
             </div>
@@ -381,11 +375,20 @@
                             }
                         }
                     }
-                });
+                                    });
             @endif
+
+            // === Tambahkan Kalender di sini ===
+            var calendarEl = document.getElementById('calendar');
+            if (calendarEl) { // cek kalau elemen-nya ada
+                var calendar = new FullCalendar.Calendar(calendarEl, {
+                    initialView: 'dayGridMonth',
+                    height: 400
+                });
+                calendar.render();
+            }
         });
     </script>
-
 
 
 @endsection

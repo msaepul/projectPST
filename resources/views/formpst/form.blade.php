@@ -109,33 +109,16 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                                <select name="namaPegawai[]"
-                                                    class="form-control namaPegawai form-control-sm select2" required>
+                                                <input type="text" name="namaPegawai[]" list="listPegawai"
+                                                    class="form-control namaPegawai form-control-sm" required>
+                                                <datalist id="listPegawai">
+                                                    @foreach ($users as $user)
+                                                        <option value="{{ $user->nama_lengkap }}">
+                                                    @endforeach
+                                                </datalist>
 
-                                                    <option value="" disabled selected>Pilih Nama</option>
-                                                    @if (auth()->user()->role !== 'nm')
-                                                        @foreach ($users as $user)
-                                                            <option value="{{ $user->id }}"
-                                                                data-departemen="{{ $user->departemen }}"
-                                                                data-nik="{{ $user->nik }}"
-                                                                data-nama="{{ $user->nama_lengkap }}">
-                                                                {{ $user->nama_lengkap }} / {{ $user->departemen }} /
-                                                                {{ $user->nik }}
-                                                            </option>
-                                                        @endforeach
-                                                    @else
-                                                        @foreach ($nm as $user)
-                                                            <option value="{{ $user->id }}"
-                                                                data-departemen="{{ $user->departemen }}"
-                                                                data-nik="{{ $user->nik }}"
-                                                                data-nama="{{ $user->nama_lengkap }}">
-                                                                {{ $user->nama_lengkap }} / {{ $user->departemen }} /
-                                                                {{ $user->nik }}
-                                                            </option>
-                                                        @endforeach
-                                                    @endif
-                                                </select>
                                             </td>
+
                                             <td>
                                                 <input type="text" name="departemen[]"
                                                     class="form-control departemen form-control-sm" readonly>
@@ -187,24 +170,25 @@
     </div>
 
     <script>
-$(document).on('select2:select', '.namaPegawai', function (e) {
-    const selectedOption = e.params.data.element;
-    const row = $(this).closest('tr');
-    const departemenInput = row.find('.departemen');
-    const nikInput = row.find('.nik');
+        const pegawaiData = @json($users);
 
-    if (selectedOption && departemenInput.length && nikInput.length) {
-        departemenInput.val($(selectedOption).data('departemen'));
-        nikInput.val($(selectedOption).data('nik'));
-    }
-});
-
-        document.querySelector('#pegawaiTable').addEventListener('click', function(event) {
-            if (event.target.classList.contains('namaPegawaiDisplay')) {
+        document.querySelector('#pegawaiTable').addEventListener('input', function(event) {
+            if (event.target.classList.contains('namaPegawai')) {
+                const selectedName = event.target.value;
                 const row = event.target.closest('tr');
-                const dropdown = row.querySelector('.namaPegawai');
-                dropdown.style.display = 'block';
-                event.target.style.display = 'none';
+                const departemenInput = row.querySelector('.departemen');
+                const nikInput = row.querySelector('.nik');
+
+                const found = pegawaiData.find(user => user.nama_lengkap === selectedName);
+
+
+                if (found) {
+                    departemenInput.value = found.departemen;
+                    nikInput.value = found.nik;
+                } else {
+                    departemenInput.value = '';
+                    nikInput.value = '';
+                }
             }
         });
         document.getElementById('add-field').addEventListener('click', function () {
@@ -239,6 +223,14 @@ $(document).on('select2:select', '.namaPegawai', function (e) {
 
 
 
+        document.getElementById('add-field').addEventListener('click', function() {
+            const rowToClone = document.querySelector('#pegawaiTable tbody tr');
+            if (rowToClone) {
+                const newRow = rowToClone.cloneNode(true);
+                newRow.querySelectorAll('input').forEach(input => input.value = '');
+                document.querySelector('#pegawaiTable tbody').appendChild(newRow);
+            }
+        });
 
         document.querySelector('#pegawaiTable').addEventListener('click', function(event) {
             if (event.target.classList.contains('btn-remove')) {
@@ -248,14 +240,13 @@ $(document).on('select2:select', '.namaPegawai', function (e) {
 
         document.querySelector('form').addEventListener('submit', function(e) {
             const namaPegawaiInputs = document.querySelectorAll('.namaPegawai');
-            namaPegawaiInputs.forEach((select, index) => {
-                const selectedOption = select.options[select.selectedIndex];
-                const nama = selectedOption.getAttribute('data-nama');
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = `namaPegawaiNama[${index}]`;
-                input.value = nama;
-                this.appendChild(input);
+            namaPegawaiInputs.forEach((input, index) => {
+                const nama = input.value;
+                const hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = `namaPegawaiNama[${index}]`;
+                hiddenInput.value = nama;
+                this.appendChild(hiddenInput);
             });
         });
 
@@ -269,6 +260,7 @@ $(document).on('select2:select', '.namaPegawai', function (e) {
         });
     </script>
     
+
 
     <style>
         .card-header {

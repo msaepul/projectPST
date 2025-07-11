@@ -70,12 +70,12 @@ class FormController extends Controller
         'statusKoordinasi'      => 'required|string|max:255',
         'tanggalKeberangkatan'  => 'required|date',
 
-        'namaPegawai.*'         => 'required|string|max:255', 
-        'namaPegawaiNama.*'     => 'required|string|max:255', 
+        'namaPegawai.*'         => 'required|string|max:255',
+        'namaPegawaiNama.*'     => 'required|string|max:255',
         'departemen.*'          => 'required|string|max:255',
         'nik.*'                 => 'required|string|max:255',
         'uploadFile.*'          => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-        'tanggalBerangkat.*'    => 'required|date', 
+        'tanggalBerangkat.*'    => 'required|date',
         'tanggalKembali.*'      => 'required|date|after_or_equal:tanggalBerangkat.*',
         'estimasi.*'            => 'required|string|max:255',
 
@@ -90,7 +90,7 @@ class FormController extends Controller
         'nama_pemohon'          => $validatedData['namaPemohon'],
         'yang_menugaskan'       => $yangMenugaskan,
         'cabang_asal'           => $validatedData['cabangAsal'],
-        'cabang_tujuan'         => $kodeCabangTujuan, 
+        'cabang_tujuan'         => $kodeCabangTujuan,
         'status_koordinasi'     => $validatedData['statusKoordinasi'],
         'tujuan'                => $tujuanPenugasan,
         'tanggal_keberangkatan' => $validatedData['tanggalKeberangkatan'],
@@ -109,7 +109,7 @@ class FormController extends Controller
     } else {
         $form->acc_hrd = 'oke';
     }
-    
+
     if ($role === 'hrd' && $validatedData['cabangAsal'] != 'HO'){
     $form->submitted_by_hrd = auth()->user()->nama_lengkap;
     $form->save();
@@ -158,7 +158,7 @@ return redirect()->route($route, ['form' => $form->id])
 public function edit($id)
 {
     $form = Form::findOrFail($id);
-    
+
     $cabangs = Cabang::all();
     $tujuans = Tujuan::all();
     $nama_pegawais = Nama_pegawai::where('form_id', $id)->get();
@@ -679,11 +679,11 @@ public function ticket($id = null)
             'agent' => 'required|string',
             'maskapai' => 'required|string',
             'class' => 'required|string',
-    
+
             'pegawai' => 'nullable|array',
             'pegawai.*.nama_pegawai' => 'required_with:pegawai|string',
             'pegawai.*.departemen' => 'required_with:pegawai|string',
-    
+
             'tickets' => 'nullable|array',
             'tickets.*.file_name' => 'nullable|string',
             'tickets.*.passenger_name' => 'required_with:tickets|string',
@@ -693,10 +693,10 @@ public function ticket($id = null)
             'tickets.*.departure_airport' => 'required_with:tickets|string',
             'tickets.*.arrival_airport' => 'required_with:tickets|string',
         ]);
-    
-        $forms = Form::find($request->no_surat); 
+
+        $forms = Form::find($request->no_surat);
         $noSuratTeks = $forms ? $forms->no_surat : null;
-    
+
         $ticket = new Ticketing();
         $ticket->no_surat = $noSuratTeks;
         $ticket->nama_pemohon = $request->nama_pemohon;
@@ -706,14 +706,14 @@ public function ticket($id = null)
         $ticket->nominal = $request->nominal;
         $ticket->beban_biaya = $request->beban_biaya;
         $ticket->agent = $request->agent;
-    
+
         $kendaraan = $request->input('kendaraan');
         $ticket->kendaraan = is_array($kendaraan) ? implode(',', $kendaraan) : $kendaraan;
-    
+
         $ticket->maskapai = $request->maskapai;
         $ticket->class = $request->class;
         $ticket->save();
-    
+
         // Simpan data pegawai
         if ($request->filled('pegawai')) {
             foreach ($request->pegawai as $p) {
@@ -724,22 +724,22 @@ public function ticket($id = null)
                 ]);
             }
         }
-    
+
         // Ambil data tiket
         $tickets = $request->input('tickets', []);
-    
+
         // Upload PDF dan set file_name ke array $tickets
         if ($request->hasFile('pdf_files')) {
             foreach ($request->file('pdf_files') as $index => $pdf) {
                 $filename = time() . '_' . $index . '_' . $pdf->getClientOriginalName();
                 $pdf->storeAs('public/tickets', $filename);
-    
+
                 if (isset($tickets[$index])) {
                     $tickets[$index]['file_name'] = $filename;
                 }
             }
         }
-    
+
         // Simpan tiket detail ke tabel
         foreach ($tickets as $detail) {
             Ticket_detail::create([
@@ -753,13 +753,13 @@ public function ticket($id = null)
                 'arrival_airport' => $detail['arrival_airport'],
             ]);
         }
-    
+
         return redirect()->back()->with('success', 'Ticket dan detail berhasil disimpan.');
     }
-    
-    
-    
-    
+
+
+
+
 public function getPemohon($id)
 {
     $form = Form::findOrFail($id);
