@@ -136,6 +136,8 @@ class FormController extends Controller
             'tanggal_berangkat' => $request->tanggalBerangkat[$index],
             'tanggal_kembali'   => $request->tanggalKembali[$index],
             'estimasi'          => $request->estimasi[$index],
+            'acc_nm'            => $validatedData['cabangAsal'] === 'HO' ? 'oke' : null, // ← ini dia!
+
             'created_at'        => now(),
             'updated_at'        => now(),
         ];
@@ -144,9 +146,14 @@ class FormController extends Controller
     Nama_pegawai::insert($namaPegawais);
     // Ticketing::insert($ticketing);
 
-    return redirect()->route('formpst.index_keluar', ['form' => $form->id])
-        ->with('success', 'Data berhasil disimpan, dan persetujuan otomatis telah diberikan.');
-}
+    $route = $validatedData['cabangAsal'] === 'HO' 
+    ? 'formpst.index_keluar_ho' 
+    : 'formpst.index_keluar';
+
+return redirect()->route($route, ['form' => $form->id])
+    ->with('success', 'Data berhasil disimpan, dan persetujuan otomatis telah diberikan.');
+
+}    
 
 public function edit($id)
 {
@@ -241,7 +248,27 @@ public function index_keluar(Request $request)
     }
 
     if ($request->filled('status')) {
-        $query->where('acc_cabang', $request->status);
+        $status = $request->status;
+
+        if ($status === 'oke') {
+            $query->where(function ($q) {
+                $q->where('acc_bm', 'oke')
+                  ->where('acc_ho', 'oke')
+                  ->where('acc_cabang', 'oke');
+            });
+        } elseif ($status === 'reject') {
+            $query->where(function ($q) {
+                $q->where('acc_bm', 'reject')
+                  ->orWhere('acc_ho', 'reject')
+                  ->orWhere('acc_cabang', 'reject');
+            });
+        } elseif ($status === 'cancel') {
+            $query->where(function ($q) {
+                $q->where('acc_bm', 'cancel')
+                  ->orWhere('acc_ho', 'cancel')
+                  ->orWhere('acc_cabang', 'cancel');
+            });
+        }
     }
 
     if ($request->filled('tanggal')) {
@@ -250,11 +277,64 @@ public function index_keluar(Request $request)
 
     $data = $query->latest()->get();
     $tujuans = Tujuan::all();
-    $forms = Form::all();
     $cabangList = Form::select('cabang_asal')->distinct()->pluck('cabang_asal');
 
-    return view('formpst.index_keluar', compact('data', 'tujuans', 'forms', 'cabangList'));
+    return view('formpst.index_keluar', compact('data', 'tujuans', 'cabangList'));
 }
+
+public function index_keluar_ho(Request $request)
+{
+    $query = Form::query()
+        ->where('cabang_asal', 'HO'); // ⬅️ Filter cabang HO di awal
+
+    if ($request->filled('namaPemohon')) {
+        $query->where('nama_pemohon', 'like', '%' . $request->namaPemohon . '%');
+    }
+
+    if ($request->filled('tujuan')) {
+        $query->where('tujuan', $request->tujuan);
+    }
+
+    if ($request->filled('cabang')) {
+        $query->where('cabang_asal', $request->cabang);
+    }
+
+    if ($request->filled('status')) {
+        $status = $request->status;
+
+        if ($status === 'oke') {
+            $query->where(function ($q) {
+                $q->where('acc_bm', 'oke')
+                  ->where('acc_ho', 'oke')
+                  ->where('acc_cabang', 'oke');
+            });
+        } elseif ($status === 'reject') {
+            $query->where(function ($q) {
+                $q->where('acc_bm', 'reject')
+                  ->orWhere('acc_ho', 'reject')
+                  ->orWhere('acc_cabang', 'reject');
+            });
+        } elseif ($status === 'cancel') {
+            $query->where(function ($q) {
+                $q->where('acc_bm', 'cancel')
+                  ->orWhere('acc_ho', 'cancel')
+                  ->orWhere('acc_cabang', 'cancel');
+            });
+        }
+    }
+
+    if ($request->filled('tanggal')) {
+        $query->whereDate('created_at', Carbon::parse($request->tanggal));
+    }
+
+    $data = $query->latest()->get();
+    $tujuans = Tujuan::all();
+    $cabangList = Form::where('cabang_asal', 'HO')->select('cabang_asal')->distinct()->pluck('cabang_asal');
+
+    return view('formpst.index_keluar_ho', compact('data', 'tujuans', 'cabangList'));
+}
+
+
 
 
 public function index_masuk(Request $request)

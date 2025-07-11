@@ -110,7 +110,8 @@
                                         <tr>
                                             <td>
                                                 <select name="namaPegawai[]"
-                                                    class="form-control namaPegawai form-control-sm" required>
+                                                    class="form-control namaPegawai form-control-sm select2" required>
+
                                                     <option value="" disabled selected>Pilih Nama</option>
                                                     @if (auth()->user()->role !== 'nm')
                                                         @foreach ($users as $user)
@@ -186,19 +187,17 @@
     </div>
 
     <script>
-        document.querySelector('#pegawaiTable').addEventListener('change', function(event) {
-            if (event.target.classList.contains('namaPegawai')) {
-                const selectedOption = event.target.options[event.target.selectedIndex];
-                const row = event.target.closest('tr');
-                const departemenInput = row.querySelector('.departemen');
-                const nikInput = row.querySelector('.nik');
+$(document).on('select2:select', '.namaPegawai', function (e) {
+    const selectedOption = e.params.data.element;
+    const row = $(this).closest('tr');
+    const departemenInput = row.find('.departemen');
+    const nikInput = row.find('.nik');
 
-                if (selectedOption && departemenInput && nikInput) {
-                    departemenInput.value = selectedOption.getAttribute('data-departemen');
-                    nikInput.value = selectedOption.getAttribute('data-nik');
-                }
-            }
-        });
+    if (selectedOption && departemenInput.length && nikInput.length) {
+        departemenInput.val($(selectedOption).data('departemen'));
+        nikInput.val($(selectedOption).data('nik'));
+    }
+});
 
         document.querySelector('#pegawaiTable').addEventListener('click', function(event) {
             if (event.target.classList.contains('namaPegawaiDisplay')) {
@@ -208,16 +207,38 @@
                 event.target.style.display = 'none';
             }
         });
+        document.getElementById('add-field').addEventListener('click', function () {
+    const rowToClone = document.querySelector('#pegawaiTable tbody tr');
+    if (rowToClone) {
+        // 1. Clone baris terlebih dahulu
+        const newRow = rowToClone.cloneNode(true);
 
-        document.getElementById('add-field').addEventListener('click', function() {
-            const rowToClone = document.querySelector('#pegawaiTable tbody tr');
-            if (rowToClone) {
-                const newRow = rowToClone.cloneNode(true);
-                newRow.querySelectorAll('input, select').forEach(input => input.value = '');
-                document.querySelector('#pegawaiTable tbody').appendChild(newRow);
-                $(newRow).find('.select2').select2();
-            }
-        });
+        // 2. Hapus nilai input dan reset select
+        newRow.querySelectorAll('input').forEach(input => input.value = '');
+        newRow.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+
+        // 3. Tangani Select2 yang lama
+        const oldSelect = newRow.querySelector('.namaPegawai');
+
+        // Clone ulang elemen select agar tidak bawa sisa Select2 lama
+        const clonedSelect = oldSelect.cloneNode(true);
+        clonedSelect.selectedIndex = 0;
+
+        // Hapus container Select2 lama
+        $(oldSelect).next('.select2-container').remove();
+        $(oldSelect).replaceWith(clonedSelect);
+
+        // 4. Tambahkan row baru ke tabel
+        document.querySelector('#pegawaiTable tbody').appendChild(newRow);
+
+        // 5. Inisialisasi ulang Select2 pada select yang baru
+        $(clonedSelect).select2();
+    }
+});
+
+
+
+
 
         document.querySelector('#pegawaiTable').addEventListener('click', function(event) {
             if (event.target.classList.contains('btn-remove')) {
@@ -242,6 +263,12 @@
             $('.select2').select2();
         });
     </script>
+    <script defer>
+        document.addEventListener('DOMContentLoaded', function () {
+            $('.select2').select2();
+        });
+    </script>
+    
 
     <style>
         .card-header {
@@ -292,6 +319,10 @@
 
         .btn-secondary {
             background-color: #6c757d;
+        }
+
+        .select2-container {
+            width: 100% !important;
         }
     </style>
 @endsection

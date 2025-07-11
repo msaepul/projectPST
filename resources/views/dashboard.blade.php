@@ -229,13 +229,20 @@
             <div class="col-lg-8 mb-4">
                 <div class="card">
                     <div class="card-header bg-white">
-                        <h3 class="card-title">Grafik Keberangkatan per Cabang</h3>
+                        <h3 class="card-title">
+                            @if (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'HO')
+                                Grafik Keberangkatan per Cabang
+                            @else
+                                Grafik Surat Keluar & Masuk
+                            @endif
+                        </h3>
                     </div>
                     <div class="card-body">
-                        <canvas id="departureChart" height="150"></canvas>
+                        <canvas id="mainChart" height="150"></canvas>
                     </div>
                 </div>
             </div>
+
 
             <div class="col-lg-4 mb-4">
                 <div class="card">
@@ -281,6 +288,12 @@
     </div>
 
 
+    @if (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'HO')
+        <script>
+            const cabangLabels = {!! json_encode(array_keys($cabangCounts)) !!};
+            const cabangData = {!! json_encode(array_values($cabangCounts)) !!};
+        </script>
+    @endif
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
@@ -300,7 +313,6 @@
                 }, 50);
             };
 
-            // Animasi Box
             animateCount('countSuratTugas', {{ $jumlahSuratTugas }}, 2000);
             animateCount('countSuratMasuk', {{ $jumlahSuratMasuk }}, 2000);
             animateCount('countSuratKeluar', {{ $jumlahSuratKeluar }}, 2000);
@@ -309,30 +321,71 @@
                 @foreach ($cabangCounts as $cabang => $count)
                     animateCount('countSuratKeluarCabang{{ Str::slug($cabang) }}', {{ $count }}, 2000);
                 @endforeach
-            @endif
 
-            // Chart Keberangkatan
-            const ctx = document.getElementById('departureChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Jakarta', 'Bandung', 'Surabaya', 'Yogyakarta', 'Bali'],
-                    datasets: [{
-                        label: 'Jumlah Keberangkatan',
-                        data: [12, 19, 7, 5, 9],
-                        backgroundColor: '#74b9ff'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true
+                // Chart: Surat per Cabang
+                const cabangLabels = {!! json_encode(array_keys($cabangCounts)) !!};
+                const cabangData = {!! json_encode(array_values($cabangCounts)) !!};
+                new Chart(document.getElementById('mainChart').getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: cabangLabels,
+                        datasets: [{
+                            label: 'Jumlah Surat Tugas',
+                            data: cabangData,
+                            backgroundColor: '#74b9ff',
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Jumlah'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Cabang Asal'
+                                }
+                            }
                         }
                     }
-                }
-            });
+                });
+            @else
+                // Chart: Surat Keluar vs Masuk
+                new Chart(document.getElementById('mainChart').getContext('2d'), {
+                    type: 'pie',
+                    data: {
+                        labels: ['Surat Keluar', 'Surat Masuk'],
+                        datasets: [{
+                            label: 'Surat',
+                            data: [{{ $jumlahSuratKeluar }}, {{ $jumlahSuratMasuk }}],
+                            backgroundColor: ['#a29bfe', '#55efc4'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+            @endif
         });
     </script>
+
+
 
 @endsection
