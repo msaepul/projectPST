@@ -23,7 +23,7 @@ class Form extends Model
         'acc_cabang',
         'status_koordinasi',
         ];
-    public function Nama_pegawais()
+    public function nama_pegawais()
     {
         return $this->hasMany(Nama_pegawai::class);
     }
