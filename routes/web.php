@@ -95,6 +95,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/formpst/show_nm/{id}', [FormController::class, 'show_nm'])->name('formpst.show_nm');
 
         Route::get('/formpst/index_keluar', [FormController::class, 'index_keluar'])->name('formpst.index_keluar');
+        Route::get('/formpst/index_keluar_ho', [FormController::class, 'index_keluar_ho'])->name('formpst.index_keluar_ho');
+
         Route::get('/formpst/index_masuk', [FormController::class, 'index_masuk'])->name('formpst.index_masuk');
         Route::get('/formpst/index_surat', [FormController::class, 'index_surat'])->name('formpst.index_surat');
 

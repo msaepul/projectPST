@@ -116,6 +116,7 @@
                                                         <option value="{{ $user->nama_lengkap }}">
                                                     @endforeach
                                                 </datalist>
+
                                             </td>
 
                                             <td>
@@ -180,6 +181,7 @@
 
                 const found = pegawaiData.find(user => user.nama_lengkap === selectedName);
 
+
                 if (found) {
                     departemenInput.value = found.departemen;
                     nikInput.value = found.nik;
@@ -189,6 +191,37 @@
                 }
             }
         });
+        document.getElementById('add-field').addEventListener('click', function () {
+    const rowToClone = document.querySelector('#pegawaiTable tbody tr');
+    if (rowToClone) {
+        // 1. Clone baris terlebih dahulu
+        const newRow = rowToClone.cloneNode(true);
+
+        // 2. Hapus nilai input dan reset select
+        newRow.querySelectorAll('input').forEach(input => input.value = '');
+        newRow.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+
+        // 3. Tangani Select2 yang lama
+        const oldSelect = newRow.querySelector('.namaPegawai');
+
+        // Clone ulang elemen select agar tidak bawa sisa Select2 lama
+        const clonedSelect = oldSelect.cloneNode(true);
+        clonedSelect.selectedIndex = 0;
+
+        // Hapus container Select2 lama
+        $(oldSelect).next('.select2-container').remove();
+        $(oldSelect).replaceWith(clonedSelect);
+
+        // 4. Tambahkan row baru ke tabel
+        document.querySelector('#pegawaiTable tbody').appendChild(newRow);
+
+        // 5. Inisialisasi ulang Select2 pada select yang baru
+        $(clonedSelect).select2();
+    }
+});
+
+
+
 
         document.getElementById('add-field').addEventListener('click', function() {
             const rowToClone = document.querySelector('#pegawaiTable tbody tr');
@@ -221,6 +254,12 @@
             $('.select2').select2();
         });
     </script>
+    <script defer>
+        document.addEventListener('DOMContentLoaded', function () {
+            $('.select2').select2();
+        });
+    </script>
+    
 
 
     <style>
@@ -272,6 +311,10 @@
 
         .btn-secondary {
             background-color: #6c757d;
+        }
+
+        .select2-container {
+            width: 100% !important;
         }
     </style>
 @endsection

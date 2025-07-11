@@ -148,13 +148,13 @@
                     @endif
 
                     @if (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal !== 'HO')
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a href="{{ route('formpst.form') }}"
                                 class="nav-link {{ request()->is('formpst/form') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-copy"></i>
                                 <p>Pengajuan Surat Tugas</p>
                             </a>
-                        </li>
+                        </li> --}}
                         <li class="nav-item">
                             <a href="#" class="nav-link {{ request()->is('formpst/*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-envelope"></i>
@@ -175,13 +175,13 @@
                                         <p>Surat Masuk</p>
                                     </a>
                                 </li>
-                                <li class="nav-item">
+                                {{-- <li class="nav-item">
                                     <a href="{{ route('formpst.index_surat') }}"
                                         class="nav-link {{ request()->is('formpst/index_surat') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Surat Tugas</p>
                                     </a>
-                                </li>
+                                </li> --}}
                             </ul>
                         </li>
 
@@ -285,27 +285,29 @@
                                     <a href="{{ route('formpst.index_keluar', ['tipe' => 'cabang']) }}"
                                         class="nav-link {{ request()->fullUrlIs('*tipe=cabang*') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Surat Cabang</p>
+
+                                        <p>Surat dari cabang</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ route('formpst.index_keluar', ['tipe' => 'ho']) }}"
-                                        class="nav-link {{ request()->fullUrlIs('*tipe=ho*') ? 'active' : '' }}">
+                                    <a href="{{ route('formpst.index_keluar_ho', ['cabang' => 'HO']) }}"
+                                        class="nav-link {{ request()->get('cabang') === 'HO' ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Surat HO</p>
+                                        <p>Surat dari HO</p>
                                     </a>
                                 </li>
+                                
+
                             </ul>
                         </li>
 
-                        <!-- Menu lainnya tetap -->
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a href="{{ route('formpst.index_surat') }}"
                                 class="nav-link {{ request()->is('formpst/index_surat') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-book"></i>
                                 <p>Daftar Surat Tugas</p>
                             </a>
-                        </li>
+                        </li> --}}
                         <li class="nav-item">
                             <a href="{{ route('formpst.ticket') }}"
                                 class="nav-link {{ request()->is('formpst/ticket') ? 'active' : '' }}">

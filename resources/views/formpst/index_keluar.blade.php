@@ -4,87 +4,49 @@
 
     @push('styles')
         <link rel="stylesheet" href="{{ asset('css/nice-forms.min.css') }}">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     @endpush
 
     {{-- {{ Breadcrumbs::render('Form') }} --}}
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <div class="d-flex gap-4">
-            <div class="card shadow-sm p-3 text-white"
-                style="background-color: #a9a2e6; border-radius: 12px; min-width: 150px;">
-                <div class="small">Total Surat</div>
-                <div class="fw-bold fs-4">{{ $jumlahSuratTugas ?? 0 }}</div>
-            </div>
-
-            <a href="{{ route('formpst.index_masuk') }}" class="text-decoration-none">
-                <div class="card shadow-sm p-3 text-white"
-                    style="background-color: #1cc88a; border-radius: 12px; min-width: 150px;">
-                    <div class="small">Surat Masuk</div>
-                    <div class="fw-bold fs-4">{{ $jumlahSuratMasuk ?? 0 }}</div>
-                </div>
-            </a>
-
-            <div class="card shadow-sm p-3 text-white"
-                style="background-color: #ffa844; border-radius: 12px; min-width: 150px;">
-                <div class="small">Surat Keluar</div>
-                <div class="fw-bold fs-4">{{ $jumlahSuratKeluar ?? 0 }}</div>
-            </div>
-
-            {{-- Tambahan Sudah Keluar --}}
-            <a href="{{ route('formpst.index_surat') }}" class="text-decoration-none">
-                <div class="card shadow-sm p-3 text-white"
-                    style="background-color: #4aa3df; border-radius: 12px; min-width: 150px;">
-                    <div class="small">Surat Tugas Ready</div>
-                    <div class="fw-bold fs-4">{{ $jumlahSuratSudahKeluar ?? 0 }}</div>
-                </div>
-            </a>
-        </div>
-
-
-    </div>
-
-    <div class="ticket-wrapper container-fluid">
-
-        <form method="GET" action="{{ route('formpst.index_keluar') }}"
-            class="d-flex flex-wrap align-items-center justify-content-between gap-2 p-3 border rounded bg-white shadow-sm filter-bar mb-3">
-
-            <div class="d-flex flex-wrap align-items-center gap-2">
-                <select name="cabang" class="form-select form-select-sm w-auto">
-                    <option value="">Semua Cabang</option>
-                    @foreach ($cabangList as $cabang)
-                        <option value="{{ $cabang }}" @selected(request('cabang') == $cabang)>{{ $cabang }}</option>
-                    @endforeach
-                </select>
-
-                <select name="status" class="form-select form-select-sm w-auto">
-                    <option value="">Semua Status</option>
-                    <option value="oke" @selected(request('status') == 'oke')>Disetujui</option>
-                    <option value="reject" @selected(request('status') == 'reject')>Ditolak</option>
-                    <option value="cancel" @selected(request('status') == 'cancel')>Dibatalkan</option>
-                </select>
-
-                <input type="date" name="tanggal" value="{{ request('tanggal') }}"
-                    class="form-control form-control-sm w-auto">
-
-                <button type="submit" class="btn btn-sm btn-outline-primary px-3">Filter</button>
-                <a href="{{ route('formpst.form') }}" class="btn btn-sm btn-outline-primary px-3">
-                    + Buat Pengajuan
-                </a>
-            </div>
-        </form>
-    </div>
-
-
 
     <div class="card mt-4 rounded-3 shadow custom-card">
         <div class="card-body p-4">
+            <!-- Filter Bar -->
+            <form method="GET" action="{{ route('formpst.index_keluar') }}"
+                class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4 filter-bar">
+                <div class="d-flex flex-wrap align-items-center gap-2">
+                    <select name="cabang" class="form-select form-select-sm w-auto">
+                        <option value="">Semua Cabang</option>
+                        @foreach ($cabangList as $cabang)
+                            <option value="{{ $cabang }}" @selected(request('cabang') == $cabang)>{{ $cabang }}</option>
+                        @endforeach
+                    </select>
 
+                    <select name="status" class="form-select form-select-sm w-auto">
+                        <option value="">Semua Status</option>
+                        <option value="oke" @selected(request('status') == 'oke')>Disetujui</option>
+                        <option value="reject" @selected(request('status') == 'reject')>Ditolak</option>
+                        <option value="cancel" @selected(request('status') == 'cancel')>Dibatalkan</option>
+                    </select>
+
+                    <input type="date" name="tanggal" value="{{ request('tanggal') }}"
+                        class="form-control form-control-sm w-auto">
+
+                    <button type="submit" class="btn btn-sm btn-outline-primary px-3">Filter</button>
+                    <a href="{{ route('formpst.form') }}" class="btn btn-sm btn-outline-primary px-3">
+                        + Buat Pengajuan
+                    </a>
+                </div>
+            </form>
+
+            <!-- Table -->
             <div class="table-responsive">
                 <table id="dataTable" class="table table-bordered table-hover align-middle mb-0 custom-table">
                     <thead>
                         <tr class="table-primary text-white">
                             <th>Tanggal Dibuat</th>
                             <th>No Surat</th>
-                            <th>Nama Pemohon</th>
+                            <th>Ditugaskan Oleh</th>
                             <th>Cabang Asal</th>
                             <th>Cabang Tujuan</th>
                             <th>Tujuan Pelatihan</th>
@@ -120,7 +82,7 @@
                                         class="{{ $item->acc_cabang === 'oke' ? 'table-success' : ($item->acc_cabang === 'reject' || $item->acc_ho === 'reject' || $item->acc_bm === 'reject' ? 'table-warning' : ($item->acc_cabang === 'cancel' || $item->acc_ho === 'cancel' || $item->acc_bm === 'cancel' ? 'table-danger' : '')) }} hover-row">
                                         <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}</td>
                                         <td>{{ $item->no_surat }}</td>
-                                        <td>{{ $item->nama_pemohon }}</td>
+                                        <td>{{ $item->yang_menugaskan }}</td>
                                         <td>{{ $item->cabang_asal }}</td>
                                         <td>{{ $item->cabang_tujuan }}</td>
                                         <td>{{ $item->tujuan }}</td>
@@ -158,72 +120,104 @@
                                                 <span class="badge bg-danger">Belum Diverifikasi</span>
                                             @endif
                                         </td>
-
                                         <td class="text-center">
                                             <div class="d-flex justify-content-center gap-2">
+
+                                                {{-- Detail --}}
                                                 <a href="{{ route($item->cabang_asal === 'HO' ? 'formpst.show_nm' : 'formpst.show', ['id' => $item->id]) }}"
-                                                    class="btn btn-sm btn-outline-primary">Detail</a>
-                                                <!-- Tambahkan ini dalam <div class="d-flex justify-content-center gap-2"> -->
+                                                    class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip"
+                                                    data-bs-placement="top" title="Lihat Detail Surat">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+
+                                                {{-- Lihat Pegawai (modal trigger) --}}
                                                 <button type="button" class="btn btn-sm btn-outline-secondary"
                                                     data-bs-toggle="modal"
-                                                    data-bs-target="#modalPegawai{{ $item->id }}">
-                                                    Lihat Pegawai
+                                                    data-bs-target="#modalPegawai{{ $item->id }}"
+                                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Lihat Pegawai">
+                                                    <i class="bi bi-person-lines-fill"></i>
                                                 </button>
 
-                                                @if (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === $item->cabang_asal && $item->acc_cabang !== 'oke')
+                                                {{-- Edit (khusus HRD yang sesuai cabang dan belum acc) --}}
+                                                {{-- @if (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === $item->cabang_asal && $item->acc_cabang !== 'oke')
                                                     <a href="{{ route('formpst.edit', ['id' => $item->id]) }}"
-                                                        class="btn btn-sm btn-outline-primary">Edit</a>
-                                                @endif
+                                                        class="btn btn-sm btn-outline-warning" data-bs-toggle="tooltip"
+                                                        data-bs-placement="top" title="Edit Surat">
+                                                        <i class="bi bi-pencil-square"></i>
+                                                    </a>
+                                                @endif --}}
+
+                                                {{-- Lihat Surat Tugas --}}
+                                                <a href="{{ route('formpst.surat_tugas', ['id' => $item->id]) }}"
+                                                    class="btn btn-sm btn-outline-success" data-bs-toggle="tooltip"
+                                                    data-bs-placement="top" title="Lihat Surat Tugas">
+                                                    <i class="bi bi-file-earmark-text"></i>
+                                                </a>
                                             </div>
                                         </td>
+
                                     </tr>
                                     <!-- Modal per item -->
                                     <div class="modal fade" id="modalPegawai{{ $item->id }}" tabindex="-1"
                                         aria-labelledby="modalLabel{{ $item->id }}" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-scrollable">
+                                        <div class="modal-dialog modal-dialog-scrollable modal-md">
                                             <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="modalLabel{{ $item->id }}">Daftar
-                                                        Pegawai
-                                                        dalam Pengajuan Ini</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                        aria-label="Tutup"></button>
+                                                <div class="modal-header bg-primary text-white">
+                                                    <h5 class="modal-title d-flex align-items-center gap-2"
+                                                        id="modalLabel{{ $item->id }}">
+                                                        <i class="bi bi-people-fill"></i>
+                                                        Daftar Pegawai dalam Pengajuan
+                                                    </h5>
+                                                    <button type="button" class="btn-close btn-close-white"
+                                                        data-bs-dismiss="modal" aria-label="Tutup"></button>
                                                 </div>
                                                 <div class="modal-body">
                                                     @if ($item->nama_pegawais && count($item->nama_pegawais))
-                                                        <ul class="list-group">
+                                                        <div class="list-group list-group-flush">
                                                             @foreach ($item->nama_pegawais as $pegawai)
-                                                                <li class="list-group-item">
-                                                                    {{ $pegawai->nama_pegawai }} /
-                                                                    {{ $pegawai->departemen }}
-
-                                                                </li>
+                                                                <div
+                                                                    class="list-group-item d-flex justify-content-between align-items-center">
+                                                                    <div>
+                                                                        <i
+                                                                            class="bi bi-person-circle me-2 text-secondary"></i>
+                                                                        {{ $pegawai->nama_pegawai }}
+                                                                    </div>
+                                                                    <span
+                                                                        class="badge bg-info text-dark">{{ $pegawai->departemen }}</span>
+                                                                </div>
                                                             @endforeach
-                                                        </ul>
+                                                        </div>
                                                     @else
-                                                        <p class="text-muted">Tidak ada data pegawai untuk pengajuan ini.
-                                                        </p>
+                                                        <div class="alert alert-warning d-flex align-items-center gap-2"
+                                                            role="alert">
+                                                            <i class="bi bi-exclamation-circle-fill"></i>
+                                                            Tidak ada data pegawai untuk pengajuan ini.
+                                                        </div>
                                                     @endif
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary"
-                                                        data-bs-dismiss="modal">Tutup</button>
+                                                        data-bs-dismiss="modal">
+                                                        <i class="bi bi-x-circle"></i> Tutup
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
-                                @endif
-                            @endif
-                        @empty
-                            <tr>
-                                <td colspan="8" class="text-center py-3">Tidak ada data ditemukan.</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+
+
             </div>
+            @endif
+            @endif
+        @empty
+            <tr>
+                <td colspan="8" class="text-center py-3">Tidak ada data ditemukan.</td>
+            </tr>
+            @endforelse
+            </tbody>
+            </table>
         </div>
+    </div>
     </div>
 
 
@@ -274,6 +268,12 @@
                     }
                 });
             });
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            tooltipTriggerList.forEach(function(tooltipTriggerEl) {
+                new bootstrap.Tooltip(tooltipTriggerEl)
+            })
         });
     </script>
 
