@@ -116,8 +116,8 @@
                                                         <option value="{{ $user->nama_lengkap }}">
                                                     @endforeach
                                                 </datalist>
-
                                             </td>
+                                                                                
 
                                             <td>
                                                 <input type="text" name="departemen[]"
@@ -170,18 +170,19 @@
     </div>
 
     <script>
+        // Data pegawai dari server untuk autofill
         const pegawaiData = @json($users);
-
+    
+        // Autofill departemen & nik saat input nama pegawai
         document.querySelector('#pegawaiTable').addEventListener('input', function(event) {
             if (event.target.classList.contains('namaPegawai')) {
                 const selectedName = event.target.value;
                 const row = event.target.closest('tr');
                 const departemenInput = row.querySelector('.departemen');
                 const nikInput = row.querySelector('.nik');
-
+    
                 const found = pegawaiData.find(user => user.nama_lengkap === selectedName);
-
-
+    
                 if (found) {
                     departemenInput.value = found.departemen;
                     nikInput.value = found.nik;
@@ -191,53 +192,29 @@
                 }
             }
         });
-        document.getElementById('add-field').addEventListener('click', function () {
-    const rowToClone = document.querySelector('#pegawaiTable tbody tr');
-    if (rowToClone) {
-        // 1. Clone baris terlebih dahulu
-        const newRow = rowToClone.cloneNode(true);
-
-        // 2. Hapus nilai input dan reset select
-        newRow.querySelectorAll('input').forEach(input => input.value = '');
-        newRow.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
-
-        // 3. Tangani Select2 yang lama
-        const oldSelect = newRow.querySelector('.namaPegawai');
-
-        // Clone ulang elemen select agar tidak bawa sisa Select2 lama
-        const clonedSelect = oldSelect.cloneNode(true);
-        clonedSelect.selectedIndex = 0;
-
-        // Hapus container Select2 lama
-        $(oldSelect).next('.select2-container').remove();
-        $(oldSelect).replaceWith(clonedSelect);
-
-        // 4. Tambahkan row baru ke tabel
-        document.querySelector('#pegawaiTable tbody').appendChild(newRow);
-
-        // 5. Inisialisasi ulang Select2 pada select yang baru
-        $(clonedSelect).select2();
-    }
-});
-
-
-
-
+    
+        // Clone baris pegawai baru (tanpa select2)
         document.getElementById('add-field').addEventListener('click', function() {
             const rowToClone = document.querySelector('#pegawaiTable tbody tr');
             if (rowToClone) {
                 const newRow = rowToClone.cloneNode(true);
+    
+                // Reset semua input value di baris baru
                 newRow.querySelectorAll('input').forEach(input => input.value = '');
+                
+                // Append baris ke tabel
                 document.querySelector('#pegawaiTable tbody').appendChild(newRow);
             }
         });
-
+    
+        // Hapus baris pegawai
         document.querySelector('#pegawaiTable').addEventListener('click', function(event) {
             if (event.target.classList.contains('btn-remove')) {
                 event.target.closest('tr').remove();
             }
         });
-
+    
+        // Tambahkan hidden input saat submit untuk namaPegawai[]
         document.querySelector('form').addEventListener('submit', function(e) {
             const namaPegawaiInputs = document.querySelectorAll('.namaPegawai');
             namaPegawaiInputs.forEach((input, index) => {
@@ -249,11 +226,8 @@
                 this.appendChild(hiddenInput);
             });
         });
-
-        $(document).ready(function() {
-            $('.select2').select2();
-        });
     </script>
+    
     <script defer>
         document.addEventListener('DOMContentLoaded', function () {
             $('.select2').select2();
