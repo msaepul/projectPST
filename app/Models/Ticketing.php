@@ -46,9 +46,10 @@ class ticketing extends Model
     }
 
     public function Detail_ticket()
-{
-    return $this->hasMany(Detail_ticket::class, 'ticket_id');
-}
+    {
+        return $this->hasMany(Ticket_detail::class, 'ticket_id');
+    }
+    
 
 }
 
