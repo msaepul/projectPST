@@ -83,7 +83,7 @@
                     </div>
                 </div>
 
-                <div class="card">
+                <div class="card mt-4">
                     <div class="card-header d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center">
                             <img src="{{ asset('dist/img/arnon.png') }}" alt="Logo Arnon" class="logo">
@@ -117,8 +117,6 @@
                                                     @endforeach
                                                 </datalist>
                                             </td>
-                                                                                
-
                                             <td>
                                                 <input type="text" name="departemen[]"
                                                     class="form-control departemen form-control-sm" readonly>
@@ -147,8 +145,7 @@
                                             </td>
                                             <td class="text-center">
                                                 <button type="button" class="btn btn-danger btn-remove btn-sm">
-                                                    <i class="bi bi-trash"
-                                                        style="font-size: 16px; margin-right: 4px;"></i>
+                                                    <i class="bi bi-trash" style="font-size: 16px; margin-right: 4px;"></i>
                                                 </button>
                                             </td>
                                         </tr>
@@ -172,7 +169,7 @@
     <script>
         // Data pegawai dari server untuk autofill
         const pegawaiData = @json($users);
-    
+
         // Autofill departemen & nik saat input nama pegawai
         document.querySelector('#pegawaiTable').addEventListener('input', function(event) {
             if (event.target.classList.contains('namaPegawai')) {
@@ -180,9 +177,9 @@
                 const row = event.target.closest('tr');
                 const departemenInput = row.querySelector('.departemen');
                 const nikInput = row.querySelector('.nik');
-    
+
                 const found = pegawaiData.find(user => user.nama_lengkap === selectedName);
-    
+
                 if (found) {
                     departemenInput.value = found.departemen;
                     nikInput.value = found.nik;
@@ -192,28 +189,24 @@
                 }
             }
         });
-    
-        // Clone baris pegawai baru (tanpa select2)
+
+        // Clone baris pegawai baru
         document.getElementById('add-field').addEventListener('click', function() {
             const rowToClone = document.querySelector('#pegawaiTable tbody tr');
             if (rowToClone) {
                 const newRow = rowToClone.cloneNode(true);
-    
-                // Reset semua input value di baris baru
                 newRow.querySelectorAll('input').forEach(input => input.value = '');
-                
-                // Append baris ke tabel
                 document.querySelector('#pegawaiTable tbody').appendChild(newRow);
             }
         });
-    
+
         // Hapus baris pegawai
         document.querySelector('#pegawaiTable').addEventListener('click', function(event) {
             if (event.target.classList.contains('btn-remove')) {
                 event.target.closest('tr').remove();
             }
         });
-    
+
         // Tambahkan hidden input saat submit untuk namaPegawai[]
         document.querySelector('form').addEventListener('submit', function(e) {
             const namaPegawaiInputs = document.querySelectorAll('.namaPegawai');
@@ -227,14 +220,12 @@
             });
         });
     </script>
-    
+
     <script defer>
         document.addEventListener('DOMContentLoaded', function () {
             $('.select2').select2();
         });
     </script>
-    
-
 
     <style>
         .card-header {
@@ -253,12 +244,6 @@
 
         .select2 {
             width: 100% !important;
-        }
-
-        .btn-container {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
         }
 
         .btn {

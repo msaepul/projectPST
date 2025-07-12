@@ -9,6 +9,9 @@ use App\Models\Cabang;
 use App\Models\User;
 use App\Models\Maskapai;
 use App\Models\Transport;
+use App\Models\Ticket_detail;
+use App\Models\Ticketing;
+
 use App\Models\Pengajuan;
 use App\Models\Nama_pegawai;
 use App\Models\Form;
@@ -20,50 +23,49 @@ class HoController extends Controller
 {
 
     
-        // Dashboard
-        public function dashboard()
-        {
-            $jumlahCabang = Cabang::count();
-            $jumlahDepartemen = Departemen::count();
+    public function dashboard()
+    {
+        $jumlahCabang = Cabang::count();
+        $jumlahDepartemen = Departemen::count();
     
-            // Hitung jumlah surat masuk (acc_ho = 'oke')
-            $jumlahSuratMasuk = Form::where('acc_ho', 'oke')
-                ->where('cabang_tujuan', auth()->user()->cabang_asal)
-                ->count();
+        $jumlahSuratMasuk = Form::where('acc_ho', 'oke')
+            ->where('cabang_tujuan', auth()->user()->cabang_asal)
+            ->count();
     
-            // Hitung jumlah surat keluar
-            $jumlahSuratKeluar = Form::where('cabang_asal', auth()->user()->cabang_asal)->count();
+        $jumlahSuratKeluar = Form::where('cabang_asal', auth()->user()->cabang_asal)->count();
     
-            // Hitung jumlah surat tugas
-            $jumlahSuratTugas = Form::where('acc_cabang', 'oke')
-                ->where(function ($query) {
-                    $query->where('cabang_asal', auth()->user()->cabang_asal)
-                        ->orWhere('cabang_tujuan', auth()->user()->cabang_asal);
-                })
-                ->count();
+        $jumlahSuratTugas = Form::where('acc_cabang', 'oke')
+            ->where(function ($query) {
+                $query->where('cabang_asal', auth()->user()->cabang_asal)
+                    ->orWhere('cabang_tujuan', auth()->user()->cabang_asal);
+            })
+            ->count();
     
-            // Calculate branch-specific counts only for HRD in HO
-            if (Auth::user()->role === 'hrd' && Auth::user()->cabang_asal === 'HO') {
-                $cabangCounts = Form::groupBy('cabang_asal')
-                    ->selectRaw('cabang_asal, count(*) as count')
-                    ->pluck('count', 'cabang_asal')
-                    ->toArray();
-            } else {
-                $cabangCounts = []; // Empty array if not HRD in HO
-            }
-    
-            return view('dashboard', compact(
-                'jumlahCabang',
-                'jumlahDepartemen',
-                'jumlahSuratMasuk',
-                'jumlahSuratKeluar',
-                'jumlahSuratTugas',
-                'cabangCounts' // Pass the branch counts to the view
-            ));
+        $cabangCounts = [];
+        if (Auth::user()->role === 'hrd' && Auth::user()->cabang_asal === 'HO') {
+            $cabangCounts = Form::groupBy('cabang_asal')
+                ->selectRaw('cabang_asal, count(*) as count')
+                ->pluck('count', 'cabang_asal')
+                ->toArray();
         }
-
     
-
+        // Ambil data keberangkatan (dengan relasi Detail_ticket)
+        $timelineDetails = Ticketing::with('Detail_ticket')
+        ->orderByDesc('created_at')
+        ->take(5)
+        ->get();
+    
+        return view('dashboard', compact(
+            'jumlahCabang',
+            'jumlahDepartemen',
+            'jumlahSuratMasuk',
+            'jumlahSuratKeluar',
+            'jumlahSuratTugas',
+            'cabangCounts',
+            'timelineDetails'
+        ));
+    }
+    
     // Cabang
     public function cabang()
     {
