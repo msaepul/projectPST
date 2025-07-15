@@ -292,6 +292,79 @@
                 }
             });
         });
+        $(function() {
+            // DataTables
+            $('#example1').DataTable({
+                responsive: true,
+                lengthChange: false,
+                autoWidth: false,
+                buttons: [{
+                        extend: 'print',
+                        text: 'Print',
+                        exportOptions: {
+                            columns: ':not(:last-child)'
+                        }
+                    },
+                    'copy', 'csv', 'excel', 'pdf'
+                ],
+                columnDefs: [{
+                    targets: -1,
+                    orderable: false
+                }]
+            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+            // Select2
+            $('#tujuan, #cabang, #cabang_asal').select2({
+                placeholder: "Pilih...",
+                allowClear: true,
+                width: 'auto'
+            });
+
+            // SweetAlert Toast Example
+            var Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+
+            $('.swalDefaultSuccess').click(function() {
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Berhasil disimpan!'
+                });
+            });
+
+            $(document).ready(function() {
+                $('#tujuan').select2({
+                    placeholder: "Pilih Tujuan",
+                    allowClear: true,
+                });
+            });
+
+            $(document).ready(function() {
+                $('#cabang').select2({
+                    placeholder: "Pilih cabang",
+                    allowClear: true,
+                });
+
+            });
+            $(document).ready(function() {
+                $('#cabang_asal').select2({
+                    placeholder: "Pilih cabang",
+                    allowClear: true,
+                    width: 'auto'
+                });
+            });
+
+            // Menjaga menu tetap terbuka saat item diklik
+            $('.nav-link').on('click', function() {
+                var $this = $(this);
+                if ($this.next('.nav-treeview').length) {
+                    $this.next('.nav-treeview').toggle();
+                }
+            });
+        });
     </script>
 
     @stack('scripts')
