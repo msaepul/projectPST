@@ -37,7 +37,7 @@
                                         (auth()->user()->cabang_asal === 'HO' || auth()->user()->cabang_asal === $user->cabang_asal)) ||
                                         auth()->user()->role === 'admin')
                                     <tr>
-                                        <td class="text-center"></td> 
+                                        <td class="text-center"></td>
                                         <td>{{ $user->nama_lengkap }}</td>
                                         <td>{{ $user->name }}</td>
                                         <td>{{ $user->email }}</td>
@@ -48,40 +48,51 @@
                                         <td>{{ $user->role }}</td>
                                         <td class="text-center">
                                             <div class="d-flex justify-content-center" style="gap: 5px;">
-                                                <a href="{{ route('ho.user.edit', $user->id) }}"
-                                                    class="btn btn-sm btn-outline-warning" title="Edit">
-                                                    <img src="{{ asset('icons/create-outline.svg') }}" alt="Edit"
-                                                        style="width: 20px; height: 20px;">
-                                                </a>
-                                                <button type="button" class="btn btn-sm btn-outline-primary" title="Upload Tanda Tangan" data-bs-toggle="modal" data-bs-target="#uploadSignatureModal{{ $user->id }}">
-                                                    <img src="{{ asset('icons/upload-outline.svg') }}" alt="Upload"
-                                                        style="width: 20px; height: 20px;">
-                                                </button>
-                                                <form action="{{ route('ho.user.destroy', $user->id) }}" method="POST"
-                                                    onsubmit="return confirm('Apakah Anda yakin ingin menghapus user ini?');">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Hapus">
-                                                        <img src="{{ asset('icons/trash-outline.svg') }}" alt="Delete"
-                                                            style="width: 20px; height: 20px;">
-                                                    </button>
-                                                </form>
+<!-- Edit -->
+<a href="{{ route('ho.user.edit', $user->id) }}"
+    class="btn btn-sm btn-outline-warning action-btn" title="Edit">
+    <i class="bi bi-pencil-square"></i>
+</a>
+
+<!-- Upload Tanda Tangan -->
+<button type="button" class="btn btn-sm btn-outline-primary action-btn"
+    title="Upload Tanda Tangan" data-bs-toggle="modal"
+    data-bs-target="#uploadSignatureModal{{ $user->id }}">
+    <i class="bi bi-upload"></i>
+</button>
+
+<!-- Delete -->
+<form action="{{ route('ho.user.destroy', $user->id) }}" method="POST"
+    onsubmit="return confirm('Apakah Anda yakin ingin menghapus user ini?');" class="d-inline">
+    @csrf
+    @method('DELETE')
+    <button type="submit" class="btn btn-sm btn-outline-danger action-btn"
+        title="Hapus">
+        <i class="bi bi-trash3"></i>
+    </button>
+</form>
+
                                             </div>
                                         </td>
                                     </tr>
                                     <!-- Modal Upload Tanda Tangan -->
-                                    <div class="modal fade" id="uploadSignatureModal{{ $user->id }}" tabindex="-1" aria-labelledby="uploadSignatureLabel{{ $user->id }}" aria-hidden="true">
+                                    <div class="modal fade" id="uploadSignatureModal{{ $user->id }}" tabindex="-1"
+                                        aria-labelledby="uploadSignatureLabel{{ $user->id }}" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="uploadSignatureLabel{{ $user->id }}">Upload Tanda Tangan</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    <h5 class="modal-title" id="uploadSignatureLabel{{ $user->id }}">
+                                                        Upload Tanda Tangan</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <form action="{{ route('ho.user.uploadSignature', $user->id) }}" method="POST" enctype="multipart/form-data">
+                                                    <form action="{{ route('ho.user.uploadSignature', $user->id) }}"
+                                                        method="POST" enctype="multipart/form-data">
                                                         @csrf
                                                         <label for="ttd">Upload Tanda Tangan:</label>
-                                                        <input type="file" name="ttd" id="ttd" accept="image/png, image/jpeg" required>
+                                                        <input type="file" name="ttd" id="ttd"
+                                                            accept="image/png, image/jpeg" required>
                                                         <button type="submit" class="btn btn-primary">Upload</button>
                                                     </form>
                                                 </div>
@@ -97,38 +108,85 @@
         </div>
     </div>
 
+    @push('styles')
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
+    @endpush
+    
+    @push('scripts')
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             var table = $('#userTable').DataTable({
-                "language": {
-                    "lengthMenu": "Tampilkan _MENU_ entri per halaman",
-                    "zeroRecords": "Tidak ada data yang ditemukan",
-                    "info": "Menampilkan _PAGE_ dari _PAGES_ halaman",
-                    "infoEmpty": "Tidak ada data tersedia",
-                    "infoFiltered": "(disaring dari _MAX_ total entri)",
-                    "search": "Cari:",
-                    "paginate": {
-                        "first": "Pertama",
-                        "last": "Terakhir",
-                        "next": "Berikutnya",
-                        "previous": "Sebelumnya"
+                dom: 'Bfrtip',
+                buttons: ['print', 'copyHtml5', 'csvHtml5', 'excelHtml5', 'pdfHtml5'],
+                language: {
+                    lengthMenu: "Tampilkan _MENU_ entri per halaman",
+                    zeroRecords: "Tidak ada data yang ditemukan",
+                    info: "Menampilkan _PAGE_ dari _PAGES_ halaman",
+                    infoEmpty: "Tidak ada data tersedia",
+                    infoFiltered: "(disaring dari _MAX_ total entri)",
+                    search: "Cari:",
+                    paginate: {
+                        first: "Pertama",
+                        last: "Terakhir",
+                        next: "Berikutnya",
+                        previous: "Sebelumnya"
                     }
                 },
-                "columnDefs": [{
-                    "searchable": false,
-                    "orderable": false,
-                    "targets": 0 // Kolom pertama untuk nomor
+                columnDefs: [{
+                    searchable: false,
+                    orderable: false,
+                    targets: 0
                 }],
-                "order": [[1, 'asc']] // Urutkan berdasarkan nama
+                order: [[1, 'asc']]
             });
     
-            // Tambahkan event listener agar nomor selalu diurutkan dari 1
-            table.on('order.dt search.dt', function() {
-                table.column(0, {search:'applied', order:'applied'}).nodes().each(function(cell, i) {
+            table.on('order.dt search.dt', function () {
+                table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
                     cell.innerHTML = i + 1;
                 });
             }).draw();
         });
     </script>
+    @endpush
+    <style>
+        .action-btn i {
+            font-size: 16px;
+            transition: transform 0.2s ease, color 0.2s ease;
+        }
+    
+        .action-btn:hover i {
+            transform: scale(1.2);
+        }
+    
+        .btn-outline-warning:hover i {
+            color: #ffc107;
+        }
+    
+        .btn-outline-primary:hover i {
+            color: #0d6efd;
+        }
+    
+        .btn-outline-danger:hover i {
+            color: #dc3545;
+        }
+    
+        .btn-outline-warning,
+        .btn-outline-primary,
+        .btn-outline-danger {
+            padding: 5px 10px;
+            border-radius: 8px;
+        }
+    </style>
+    
     
 @endsection

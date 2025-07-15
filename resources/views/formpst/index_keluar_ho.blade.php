@@ -11,30 +11,44 @@
         <div class="card-body p-4">
 
             <!-- Filter Bar -->
-            <form method="GET" action="{{ route('formpst.index_keluar_ho') }}"
-                class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4 filter-bar">
+            <form method="GET" action="{{ route('formpst.index_keluar_ho') }}" class="mb-4">
                 <div class="d-flex flex-wrap align-items-center gap-2">
-                    <select name="cabang" class="form-select form-select-sm w-auto" disabled>
-                        <option value="HO" selected>Cabang HO</option>
-                    </select>
-                    <input type="hidden" name="cabang" value="HO">
-
-                    <select name="status" class="form-select form-select-sm w-auto">
-                        <option value="">Semua Status</option>
-                        <option value="oke" @selected(request('status') == 'oke')>Disetujui</option>
-                        <option value="reject" @selected(request('status') == 'reject')>Ditolak</option>
-                        <option value="cancel" @selected(request('status') == 'cancel')>Dibatalkan</option>
-                    </select>
-
-                    <input type="date" name="tanggal" value="{{ request('tanggal') }}"
-                        class="form-control form-control-sm w-auto">
-
-                    <button type="submit" class="btn btn-sm btn-outline-primary px-3">Filter</button>
-                    <a href="{{ route('formpst.form') }}" class="btn btn-sm btn-outline-primary px-3">
-                        + Buat Pengajuan
+                    <button type="button"
+                        class="btn btn-sm btn-outline-primary px-3 d-inline-flex align-items-center gap-2 btn-animated-filter"
+                        data-bs-toggle="collapse" data-bs-target="#filterCollapse" aria-expanded="false"
+                        aria-controls="filterCollapse" data-bs-toggle="tooltip" title="Filter pencarian">
+                        <i class="bi bi-funnel"></i>
+                    </button>
+            
+                    <a href="{{ route('formpst.form') }}"
+                        class="btn btn-sm btn-outline-primary px-3 d-inline-flex align-items-center gap-2 btn-animated-envelope"
+                        data-bs-toggle="tooltip" title="Buat pengajuan baru">
+                        <i class="bi bi-envelope-plus animated-envelope"></i>
                     </a>
                 </div>
+            
+                <!-- Filter collapse -->
+                <div class="collapse mt-3" id="filterCollapse">
+                    <div class="d-flex flex-wrap align-items-center gap-2 filter-bar">
+                        <input type="hidden" name="cabang" value="HO">
+            
+                        <select name="status" class="form-select form-select-sm w-auto">
+                            <option value="">Semua Status</option>
+                            <option value="oke" @selected(request('status') == 'oke')>Disetujui</option>
+                            <option value="reject" @selected(request('status') == 'reject')>Ditolak</option>
+                            <option value="cancel" @selected(request('status') == 'cancel')>Dibatalkan</option>
+                        </select>
+            
+                        <input type="date" name="tanggal" value="{{ request('tanggal') }}"
+                            class="form-control form-control-sm w-auto">
+            
+                        <button type="submit" class="btn btn-sm btn-primary">
+                            <i class="bi bi-search"></i> Terapkan Filter
+                        </button>
+                    </div>
+                </div>
             </form>
+            
 
             <!-- Table -->
             <div class="table-responsive">
@@ -90,7 +104,7 @@
                                             <br><small>Alasan Cabang: {{ $item->alasan_cancel_cabang }}</small>
                                         @endif
                                     @elseif ($item->acc_ho == 'oke' && $item->acc_cabang != 'oke')
-                                        <span class="badge bg-warning text-dark">Menunggu Cabang</span>
+                                        <span class="badge bg-warning text-dark">konfirmasi Cabang</span>
                                     @elseif ($item->acc_bm == 'oke' && $item->acc_ho != 'oke')
                                         <span class="badge bg-warning text-dark">Menunggu HO</span>
                                     @elseif ($item->acc_bm != 'oke' && $item->acc_hrd == 'oke')
@@ -227,5 +241,30 @@
         .hover-row:hover {
             background-color: #e6e1ff !important;
         }
+        .btn-animated-envelope:hover .animated-envelope {
+        transform: translateY(-3px) rotate(-5deg);
+    }
+
+    .btn-animated-filter i {
+        transition: transform 0.3s ease;
+    }
+
+    .btn-animated-filter:hover i {
+        transform: rotate(15deg);
+    }
+
+    .btn-animated-filter {
+        transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .btn-animated-filter:hover {
+        background-color: #4a69bd;
+        color: #fff;
+        border-color: #4a69bd;
+    }
+
+    #filterCollapse {
+        transition: all 0.3s ease-in-out;
+    }
     </style>
 @endsection

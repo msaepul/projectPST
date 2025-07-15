@@ -304,15 +304,12 @@ public function index_keluar_ho(Request $request)
 
         if ($status === 'oke') {
             $query->where(function ($q) {
-                $q->where('acc_bm', 'oke')
-                  ->where('acc_ho', 'oke')
+                $q->where('acc_ho', 'oke')
                   ->where('acc_cabang', 'oke');
             });
         } elseif ($status === 'reject') {
             $query->where(function ($q) {
-                $q->where('acc_bm', 'reject')
-                  ->orWhere('acc_ho', 'reject')
-                  ->orWhere('acc_cabang', 'reject');
+                $q->Where('acc_cabang', 'reject');
             });
         } elseif ($status === 'cancel') {
             $query->where(function ($q) {

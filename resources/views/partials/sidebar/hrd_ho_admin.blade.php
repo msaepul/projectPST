@@ -1,10 +1,12 @@
 @php
-    $isListSurat = request()->is('formpst/index_keluar*') || request()->is('formpst/index_keluar_ho*');
-    $isMasterData = request()->is('ho/*');
+    use Illuminate\Support\Str;
+
+    $currentPath = request()->path();
+    $isListSurat = Str::contains($currentPath, ['formpst/index_keluar', 'formpst/index_keluar_ho']);
+    $isMasterData = Str::startsWith($currentPath, 'ho/');
 @endphp
 
-
-<!-- List Surat -->
+<!-- === List Surat === -->
 <li class="nav-item has-treeview {{ $isListSurat ? 'menu-open' : '' }}">
     <a href="#" class="nav-link {{ $isListSurat ? 'active' : '' }}">
         <i class="nav-icon fas fa-envelope"></i>
@@ -13,7 +15,7 @@
             <i class="fas fa-angle-left right"></i>
         </p>
     </a>
-    <ul class="nav nav-treeview" style="{{ $isListSurat ? 'display: block;' : 'display: none;' }}">
+    <ul class="nav nav-treeview">
         <li class="nav-item">
             <a href="{{ route('formpst.index_keluar', ['tipe' => 'cabang']) }}"
                class="nav-link {{ request()->fullUrlIs('*tipe=cabang*') ? 'active' : '' }}">
@@ -31,7 +33,7 @@
     </ul>
 </li>
 
-<!-- Ticketing -->
+<!-- === Ticketing === -->
 <li class="nav-item">
     <a href="{{ route('formpst.ticket') }}"
        class="nav-link {{ request()->is('formpst/ticket') ? 'active' : '' }}">
@@ -40,7 +42,7 @@
     </a>
 </li>
 
-<!-- List Keberangkatan -->
+<!-- === List Keberangkatan === -->
 <li class="nav-item">
     <a href="{{ route('formpst.show_ticket') }}"
        class="nav-link {{ request()->is('formpst/show_ticket') ? 'active' : '' }}">
@@ -49,7 +51,7 @@
     </a>
 </li>
 
-<!-- Master Data -->
+<!-- === Master Data === -->
 <li class="nav-item has-treeview {{ $isMasterData ? 'menu-open' : '' }}">
     <a href="#" class="nav-link {{ $isMasterData ? 'active' : '' }}">
         <i class="nav-icon fas fa-building"></i>
@@ -58,7 +60,7 @@
             <i class="fas fa-angle-left right"></i>
         </p>
     </a>
-    <ul class="nav nav-treeview" style="{{ $isMasterData ? 'display: block;' : 'display: none;' }}">
+    <ul class="nav nav-treeview">
         <li class="nav-item">
             <a href="{{ route('ho.cabang') }}"
                class="nav-link {{ request()->is('ho/cabang') ? 'active' : '' }}">
@@ -97,3 +99,23 @@
         </li>
     </ul>
 </li>
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.nav-item.has-treeview > a').forEach(function (link) {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const parent = this.closest('.has-treeview');
+                const submenu = parent.querySelector('.nav-treeview');
+
+                parent.classList.toggle('menu-open');
+                if (submenu) {
+                    submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
+                }
+            });
+        });
+    });
+</script>
+@endpush
+
