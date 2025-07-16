@@ -6,7 +6,6 @@
     <div class="card mb-4">
         <div class="card-header d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center">
-                {{-- <img src="{{ asset('dist/img/arnon.png') }}" alt="Logo Arnon" class="logo"> --}}
                 <h4 class="mb-0 ms-2">Form Permintaan</h4>
             </div>
         </div>
@@ -87,7 +86,6 @@
                 <div class="card mt-4">
                     <div class="card-header d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center">
-                            {{-- <img src="{{ asset('dist/img/arnon.png') }}" alt="Logo Arnon" class="logo"> --}}
                             <h4 class="mb-0 ms-2">Pegawai yang berangkat</h4>
                         </div>
                     </div>
@@ -106,56 +104,69 @@
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <select name="namaPegawai[]" class="form-control form-control-sm namaPegawai"
-                                                required>
-                                                <option value="" disabled selected>Pilih Nama</option>
-                                                @foreach (auth()->user()->role !== 'nm' ? $users : $nm as $user)
-                                                    <option value="{{ $user->id }}"
-                                                        data-departemen="{{ $user->departemen }}"
-                                                        data-nik="{{ $user->nik }}"
-                                                        data-nama="{{ $user->nama_lengkap }}">
-                                                        {{ $user->nama_lengkap }} / {{ $user->departemen }} /
-                                                        {{ $user->nik }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </td>
-                                        <td><input type="text" name="departemen[]"
-                                                class="form-control form-control-sm departemen" readonly></td>
-                                        <td><input type="text" name="nik[]" class="form-control form-control-sm nik"
-                                                readonly></td>
-                                        <td><input type="file" name="uploadFile[]" class="form-control form-control-sm">
-                                        </td>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <input type="date" name="tanggalBerangkat[]"
-                                                    class="form-control form-control-sm" required>
-                                                <span class="mx-2">s/d</span>
-                                                <input type="date" name="tanggalKembali[]"
-                                                    class="form-control form-control-sm" required>
-                                            </div>
-                                        </td>
-                                        <td class="d-flex align-items-center">
-                                            <input type="number" name="estimasi[]" min="0"
-                                                class="form-control form-control-sm estimasi" placeholder="Estimasi">
-                                            <span class="ms-1">hari</span>
-                                        </td>
-                                        <td class="text-center">
-                                            <button type="button" class="btn btn-danger btn-remove btn-sm">
-                                                <i class="bi bi-trash" style="font-size: 16px;"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
+                                <tbody></tbody>
+
                             </table>
                         </div>
                     </div>
                 </div>
+                <!-- Modal Tambah Pegawai -->
+                <!-- Modal Tambah Pegawai -->
+                <div class="modal fade" id="modalTambahPegawai" tabindex="-1" aria-labelledby="modalTambahPegawaiLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header bg-primary text-white">
+                                <h5 class="modal-title" id="modalTambahPegawaiLabel">Tambah Pegawai</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label>Nama Pegawai</label>
+                                        <select id="modalNamaPegawai" class="form-control select2">
+                                            <option value="" disabled selected>Pilih Nama</option>
+                                            @foreach ($users as $user)
+                                                <option value="{{ $user->id }}" data-nama="{{ $user->nama_lengkap }}"
+                                                    data-nik="{{ $user->nik }}"
+                                                    data-departemen="{{ $user->departemen }}">
+                                                    {{ $user->nama_lengkap }} / {{ $user->departemen }} /
+                                                    {{ $user->nik }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
 
-                <button type="button" class="btn btn-primary mt-3" id="add-field">Tambah Pegawai</button>
+                                    <div class="col-md-6">
+                                        <label>Tanggal Berangkat</label>
+                                        <input type="date" id="modalTanggalBerangkat" class="form-control">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label>Tanggal Kembali</label>
+                                        <input type="date" id="modalTanggalKembali" class="form-control">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label>Estimasi Hari</label>
+                                        <input type="number" id="modalEstimasi" class="form-control"
+                                            placeholder="Jumlah hari">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" id="btnSimpanPegawai" class="btn btn-success">Tambah ke
+                                    Tabel</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal"
+                    data-bs-target="#modalTambahPegawai">
+                    Tambah Pegawai
+                </button>
 
                 <div class="d-flex justify-content-end mt-4">
                     <button type="submit" class="btn btn-success me-2">Submit Form</button>
@@ -165,53 +176,97 @@
         </div>
     </div>
 
-    @push('scripts')
-        <script>
-            $(document).ready(function() {
-                $('.select2').select2();
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2({
+                width: '100%'
+            });
 
-                // Isi otomatis departemen dan nik
-                $('#pegawaiTable').on('change', '.namaPegawai', function() {
-                    const selected = $(this).find(':selected');
-                    const row = $(this).closest('tr');
-                    row.find('.departemen').val(selected.data('departemen'));
-                    row.find('.nik').val(selected.data('nik'));
-                });
-
-                $('#add-field').on('click', function() {
-                    const row = $('#pegawaiTable tbody tr:first').clone();
-
-                    row.find('input[type="text"], input[type="number"], input[type="file"], input[type="date"]')
-                        .val('');
-                    row.find('select').val('');
-
-                    $('#pegawaiTable tbody').append(row);
-                });
-
-
-
-
-                $('#pegawaiTable').on('click', '.btn-remove', function() {
-                    if ($('#pegawaiTable tbody tr').length > 1) {
-                        $(this).closest('tr').remove();
-                    }
-                });
-
-                $('#suratTugasForm').on('submit', function(e) {
-                    $('.namaPegawai').each(function(index) {
-                        const nama = $(this).find(':selected').data('nama');
-                        if (nama) {
-                            $('<input>').attr({
-                                type: 'hidden',
-                                name: `namaPegawaiNama[${index}]`,
-                                value: nama
-                            }).appendTo('#suratTugasForm');
-                        }
-                    });
+            $('#modalTambahPegawai').on('shown.bs.modal', function() {
+                $('#modalNamaPegawai').select2({
+                    dropdownParent: $('#modalTambahPegawai'),
+                    width: '100%'
                 });
             });
-        </script>
-    @endpush
+
+            $('#btnSimpanPegawai').on('click', function() {
+                const selected = $('#modalNamaPegawai').find(':selected');
+                const id = selected.val();
+                const nama = selected.data('nama');
+                const nik = selected.data('nik');
+                const departemen = selected.data('departemen');
+                const tglBerangkat = $('#modalTanggalBerangkat').val();
+                const tglKembali = $('#modalTanggalKembali').val();
+                const estimasi = $('#modalEstimasi').val();
+
+                if (!id || !tglBerangkat || !tglKembali) {
+                    alert('Mohon lengkapi semua data.');
+                    return;
+                }
+
+                let newRow = `
+                    <tr class="pegawai-row border-bottom align-middle">
+                        <td>
+                            <input type="text" name="namaPegawaiNama[]" class="form-control" value="${nama}" required>
+                            <input type="hidden" name="namaPegawai[]" value="${id}">
+
+                        </td>
+
+                        <td>
+                            <input type="text" name="departemen[]" class="form-control" value="${departemen}" required>
+                        </td>
+                        <td>
+                            <input type="text" name="nik[]" class="form-control" value="${nik}" required>
+                        </td>
+
+                        <td>
+                            <input type="file" name="uploadFile[]" class="form-control form-control-sm bg-light" required>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <input type="date" name="tanggalBerangkat[]" class="form-control form-control-sm bg-light" value="${tglBerangkat}" required>
+                                <span class="text-muted">s/d</span>
+                                <input type="date" name="tanggalKembali[]" class="form-control form-control-sm bg-light" value="${tglKembali}" required>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <input type="number" name="estimasi[]" class="form-control form-control-sm bg-light" value="${estimasi}" required style="width: 70px;">
+                                <span class="ms-1 text-muted">hari</span>
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            <button type="button" class="btn btn-outline-danger btn-sm btn-remove">
+                                <i class="bi bi-trash3-fill"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+
+                $('#pegawaiTable tbody').append(newRow);
+                $('#modalTambahPegawai').modal('hide');
+
+                // reset isian modal
+                $('#modalTambahPegawai select, #modalTambahPegawai input').val('');
+            });
+
+            // hapus baris pegawai
+            $('#pegawaiTable').on('click', '.btn-remove', function() {
+                $(this).closest('tr').remove();
+            });
+
+            // validasi minimal 1 pegawai saat submit form
+            $('#suratTugasForm').on('submit', function(e) {
+                if ($('#pegawaiTable tbody tr').length === 0) {
+                    alert('Mohon tambahkan minimal 1 pegawai.');
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+
 
     <style>
         .card-header {
@@ -224,9 +279,9 @@
             width: auto;
         }
 
-        /* .select2 {
+        .select2 {
             width: 100% !important;
-        } */
+        }
 
         .btn-danger {
             background-color: #dc3545;
@@ -242,6 +297,46 @@
 
         .btn-secondary {
             background-color: #6c757d;
+        }
+
+        .select2-results__option {
+            padding: 4px 10px;
+        }
+
+        .select2-selection__rendered {
+            font-weight: 500;
+        }
+
+        #pegawaiTable th {
+            background-color: #580000;
+            color: #fff;
+            font-weight: 600;
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        #pegawaiTable td {
+            vertical-align: middle;
+        }
+
+        #pegawaiTable input[type="file"] {
+            font-size: 0.85rem;
+        }
+
+        .pegawai-row:hover {
+            background-color: #f5f5f5;
+            transition: 0.3s ease;
+        }
+
+        .btn-outline-danger.btn-sm {
+            border: none;
+            color: #dc3545;
+            background: transparent;
+        }
+
+        .btn-outline-danger.btn-sm:hover {
+            background-color: #dc3545;
+            color: #fff;
         }
     </style>
 @endsection

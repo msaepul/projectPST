@@ -136,11 +136,11 @@ class FormController extends Controller
             'tanggal_berangkat' => $request->tanggalBerangkat[$index],
             'tanggal_kembali'   => $request->tanggalKembali[$index],
             'estimasi'          => $request->estimasi[$index],
-            'acc_nm'            => $validatedData['cabangAsal'] === 'HO' ? 'oke' : null, // ← ini dia!
-
+            'acc_nm'            => $validatedData['cabangAsal'] === 'HO' ? 'oke' : 'pending', // <= ubah dari `null` ke default value
             'created_at'        => now(),
             'updated_at'        => now(),
         ];
+        
     }
 
     Nama_pegawai::insert($namaPegawais);
