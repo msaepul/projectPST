@@ -136,11 +136,11 @@ class FormController extends Controller
             'tanggal_berangkat' => $request->tanggalBerangkat[$index],
             'tanggal_kembali'   => $request->tanggalKembali[$index],
             'estimasi'          => $request->estimasi[$index],
-            'acc_nm'            => $validatedData['cabangAsal'] === 'HO' ? 'oke' : null, // ← ini dia!
-
+            'acc_nm'            => $validatedData['cabangAsal'] === 'HO' ? 'oke' : 'pending', // <= ubah dari `null` ke default value
             'created_at'        => now(),
             'updated_at'        => now(),
         ];
+        
     }
 
     Nama_pegawai::insert($namaPegawais);
@@ -304,15 +304,12 @@ public function index_keluar_ho(Request $request)
 
         if ($status === 'oke') {
             $query->where(function ($q) {
-                $q->where('acc_bm', 'oke')
-                  ->where('acc_ho', 'oke')
+                $q->where('acc_ho', 'oke')
                   ->where('acc_cabang', 'oke');
             });
         } elseif ($status === 'reject') {
             $query->where(function ($q) {
-                $q->where('acc_bm', 'reject')
-                  ->orWhere('acc_ho', 'reject')
-                  ->orWhere('acc_cabang', 'reject');
+                $q->Where('acc_cabang', 'reject');
             });
         } elseif ($status === 'cancel') {
             $query->where(function ($q) {

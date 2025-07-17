@@ -5,36 +5,51 @@
     @push('styles')
         <link rel="stylesheet" href="{{ asset('css/nice-forms.min.css') }}">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap5.min.css">
     @endpush
 
     <div class="card mt-4 rounded-3 shadow custom-card">
         <div class="card-body p-4">
 
             <!-- Filter Bar -->
-            <form method="GET" action="{{ route('formpst.index_keluar_ho') }}"
-                class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4 filter-bar">
+            <form method="GET" action="{{ route('formpst.index_keluar_ho') }}" class="mb-4">
                 <div class="d-flex flex-wrap align-items-center gap-2">
-                    <select name="cabang" class="form-select form-select-sm w-auto" disabled>
-                        <option value="HO" selected>Cabang HO</option>
-                    </select>
-                    <input type="hidden" name="cabang" value="HO">
+                    <button type="button"
+                        class="btn btn-sm btn-outline-primary px-3 d-inline-flex align-items-center gap-2 btn-animated-filter"
+                        data-bs-toggle="collapse" data-bs-target="#filterCollapse" aria-expanded="false"
+                        aria-controls="filterCollapse" data-bs-toggle="tooltip" title="Filter pencarian">
+                        <i class="bi bi-funnel"></i>
+                    </button>
 
-                    <select name="status" class="form-select form-select-sm w-auto">
-                        <option value="">Semua Status</option>
-                        <option value="oke" @selected(request('status') == 'oke')>Disetujui</option>
-                        <option value="reject" @selected(request('status') == 'reject')>Ditolak</option>
-                        <option value="cancel" @selected(request('status') == 'cancel')>Dibatalkan</option>
-                    </select>
-
-                    <input type="date" name="tanggal" value="{{ request('tanggal') }}"
-                        class="form-control form-control-sm w-auto">
-
-                    <button type="submit" class="btn btn-sm btn-outline-primary px-3">Filter</button>
-                    <a href="{{ route('formpst.form') }}" class="btn btn-sm btn-outline-primary px-3">
-                        + Buat Pengajuan
+                    <a href="{{ route('formpst.form') }}"
+                        class="btn btn-sm btn-outline-primary px-3 d-inline-flex align-items-center gap-2 btn-animated-envelope"
+                        data-bs-toggle="tooltip" title="Buat pengajuan baru">
+                        <i class="bi bi-envelope-plus animated-envelope"></i>
                     </a>
                 </div>
+
+                <!-- Filter collapse -->
+                <div class="collapse mt-3" id="filterCollapse">
+                    <div class="d-flex flex-wrap align-items-center gap-2 filter-bar">
+                        <input type="hidden" name="cabang" value="HO">
+
+                        <select name="status" class="form-select form-select-sm w-auto">
+                            <option value="">Semua Status</option>
+                            <option value="oke" @selected(request('status') == 'oke')>Disetujui</option>
+                            <option value="reject" @selected(request('status') == 'reject')>Ditolak</option>
+                            <option value="cancel" @selected(request('status') == 'cancel')>Dibatalkan</option>
+                        </select>
+
+                        <input type="date" name="tanggal" value="{{ request('tanggal') }}"
+                            class="form-control form-control-sm w-auto">
+
+                        <button type="submit" class="btn btn-sm btn-primary">
+                            <i class="bi bi-search"></i> Terapkan Filter
+                        </button>
+                    </div>
+                </div>
             </form>
+
 
             <!-- Table -->
             <div class="table-responsive">
@@ -53,11 +68,15 @@
                     </thead>
                     <tbody>
                         @forelse ($data as $item)
-                            <tr class="
-                                {{ $item->acc_cabang === 'oke' ? 'table-success' :
-                                    ($item->acc_bm === 'reject' || $item->acc_ho === 'reject' || $item->acc_cabang === 'reject' ? 'table-warning' :
-                                    ($item->acc_bm === 'cancel' || $item->acc_ho === 'cancel' || $item->acc_cabang === 'cancel' ? 'table-danger' : '') )
-                                }} hover-row">
+                            <tr
+                                class="
+                                {{ $item->acc_cabang === 'oke'
+                                    ? 'table-success'
+                                    : ($item->acc_bm === 'reject' || $item->acc_ho === 'reject' || $item->acc_cabang === 'reject'
+                                        ? 'table-warning'
+                                        : ($item->acc_bm === 'cancel' || $item->acc_ho === 'cancel' || $item->acc_cabang === 'cancel'
+                                            ? 'table-danger'
+                                            : '')) }} hover-row">
 
                                 <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}</td>
                                 <td>{{ $item->no_surat }}</td>
@@ -90,7 +109,7 @@
                                             <br><small>Alasan Cabang: {{ $item->alasan_cancel_cabang }}</small>
                                         @endif
                                     @elseif ($item->acc_ho == 'oke' && $item->acc_cabang != 'oke')
-                                        <span class="badge bg-warning text-dark">Menunggu Cabang</span>
+                                        <span class="badge bg-warning text-dark">konfirmasi Cabang</span>
                                     @elseif ($item->acc_bm == 'oke' && $item->acc_ho != 'oke')
                                         <span class="badge bg-warning text-dark">Menunggu HO</span>
                                     @elseif ($item->acc_bm != 'oke' && $item->acc_hrd == 'oke')
@@ -129,19 +148,21 @@
                                             <h5 class="modal-title" id="modalLabel{{ $item->id }}">
                                                 <i class="bi bi-people-fill me-2"></i>Daftar Pegawai
                                             </h5>
-                                            <button type="button" class="btn-close btn-close-white"
-                                                data-bs-dismiss="modal" aria-label="Tutup"></button>
+                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                                aria-label="Tutup"></button>
                                         </div>
                                         <div class="modal-body">
                                             @if ($item->nama_pegawais && count($item->nama_pegawais))
                                                 <div class="list-group list-group-flush">
                                                     @foreach ($item->nama_pegawais as $pegawai)
-                                                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                                                        <div
+                                                            class="list-group-item d-flex justify-content-between align-items-center">
                                                             <div>
                                                                 <i class="bi bi-person-circle me-2 text-secondary"></i>
                                                                 {{ $pegawai->nama_pegawai }}
                                                             </div>
-                                                            <span class="badge bg-info text-dark">{{ $pegawai->departemen }}</span>
+                                                            <span
+                                                                class="badge bg-info text-dark">{{ $pegawai->departemen }}</span>
                                                         </div>
                                                     @endforeach
                                                 </div>
@@ -171,8 +192,78 @@
         </div>
     </div>
 
+    @push('scripts')
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <!-- DataTables Core -->
+        <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+        <!-- DataTables Buttons -->
+        <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.bootstrap5.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+
+        <!-- Export Dependencies -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
+        <script>
+            $(document).ready(function() {
+                $('#dataTable').DataTable({
+                    dom: "<'row mb-3'<'col-sm-6'l><'col-sm-6 text-end'B>>" +
+                        "<'row'<'col-sm-12'tr>>" +
+                        "<'row mt-2'<'col-sm-5'i><'col-sm-7'p>>",
+                    buttons: [{
+                            extend: 'copy',
+                            className: 'btn btn-sm buttons-copy'
+                        },
+                        {
+                            extend: 'excel',
+                            className: 'btn btn-sm buttons-excel'
+                        },
+                        {
+                            extend: 'csv',
+                            className: 'btn btn-sm buttons-csv'
+                        },
+                        {
+                            extend: 'pdf',
+                            className: 'btn btn-sm buttons-pdf'
+                        },
+                        {
+                            extend: 'print',
+                            className: 'btn btn-sm buttons-print'
+                        }
+                    ],
+                    lengthMenu: [10, 25, 50, 100],
+                    language: {
+                        lengthMenu: "Tampilkan _MENU_ data per halaman",
+                        search: "Cari:",
+                        info: "Menampilkan _START_ hingga _END_ dari _TOTAL_ data",
+                        infoEmpty: "Tidak ada data",
+                        paginate: {
+                            first: "Awal",
+                            last: "Akhir",
+                            next: "Berikutnya",
+                            previous: "Sebelumnya"
+                        }
+                    }
+                });
+
+                const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                tooltipTriggerList.forEach(function(tooltipTriggerEl) {
+                    new bootstrap.Tooltip(tooltipTriggerEl)
+                });
+            });
+        </script>
+    @endpush
+
+
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $('#dataTable').DataTable({
                 lengthMenu: [10, 25, 50, 100],
                 language: {
@@ -187,15 +278,15 @@
                         previous: "Sebelumnya"
                     }
                 },
-                initComplete: function () {
+                initComplete: function() {
                     $('.dataTables_length select').addClass('form-select form-select-sm');
                 }
             });
         });
 
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-            tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+            tooltipTriggerList.forEach(function(tooltipTriggerEl) {
                 new bootstrap.Tooltip(tooltipTriggerEl)
             })
         });
@@ -203,14 +294,33 @@
 
     <style>
         .custom-card {
-            width: 100%;
             max-width: 2000px;
             margin: auto;
+        }
+
+        .custom-table {
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 12px;
+            overflow: hidden;
         }
 
         .custom-table thead tr {
             background-color: #6a5acd;
             color: white;
+        }
+
+        .custom-table thead th,
+        .custom-table tbody td {
+            padding: 12px 16px;
+        }
+
+        .custom-table tbody tr:nth-child(even) {
+            background-color: white;
+        }
+
+        .custom-table tbody tr:hover {
+            background-color: #e6e1ff;
         }
 
         .badge {
@@ -226,6 +336,237 @@
 
         .hover-row:hover {
             background-color: #e6e1ff !important;
+        }
+
+        .btn-animated-envelope:hover .animated-envelope {
+            transform: translateY(-3px) rotate(-5deg);
+        }
+
+        .btn-animated-filter i {
+            transition: transform 0.3s ease;
+        }
+
+        .btn-animated-filter:hover i {
+            transform: rotate(15deg);
+        }
+
+        .btn-animated-filter {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .btn-animated-filter:hover {
+            background-color: #4a69bd;
+            color: #fff;
+            border-color: #4a69bd;
+        }
+
+        #filterCollapse {
+            transition: all 0.3s ease-in-out;
+        }
+
+        div.dt-buttons {
+            display: inline-flex;
+            background-color: #6c757d;
+            border-radius: 8px;
+            padding: 6px 12px;
+            gap: 8px;
+        }
+
+        .dt-button {
+            background: none !important;
+            border: none !important;
+            color: white !important;
+            padding: 4px 10px !important;
+            font-weight: 500;
+            font-size: 14px;
+            transition: background-color 0.2s ease;
+            border-radius: 4px;
+        }
+
+        .dt-button:hover {
+            background-color: rgba(255, 255, 255, 0.2) !important;
+            color: white !important;
+        }
+
+        .dt-button:focus {
+            box-shadow: none !important;
+        }
+        .custom-card {
+            max-width: 2000px;
+            margin: auto;
+        }
+
+        .custom-table {
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .custom-table thead tr {
+            background-color: #6a5acd;
+            color: white;
+        }
+
+        .custom-table thead th,
+        .custom-table tbody td {
+            padding: 12px 16px;
+        }
+
+        .custom-table tbody tr:nth-child(even) {
+            background-color: white;
+        }
+
+        .custom-table tbody tr:hover {
+            background-color: #e6e1ff;
+        }
+
+        .badge {
+            font-size: 13px;
+            padding: 6px 10px;
+            border-radius: 8px;
+        }
+
+        .filter-bar select,
+        .filter-bar input[type="date"] {
+            min-width: 130px;
+        }
+
+        @media (max-width: 576px) {
+            .filter-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+
+        .modal-content {
+            border-radius: 14px;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+            border: none;
+        }
+
+        .modal-header {
+            border-top-left-radius: 14px;
+            border-top-right-radius: 14px;
+            background: #3b4d63;
+            /* abu gelap kebiruan */
+            color: #ffffff;
+        }
+
+        .modal-body {
+            font-size: 15px;
+            line-height: 1.6;
+            background-color: #f9fafb;
+            /* putih lembut */
+        }
+
+        .modal-footer {
+            border-bottom-right-radius: 14px;
+            border-bottom-left-radius: 14px;
+            background: #f0f2f5;
+        }
+
+        .list-group-item {
+            border: none;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 12px 0;
+            background-color: transparent;
+        }
+
+        .list-group-item:last-child {
+            border-bottom: none;
+        }
+
+        .modal-title i {
+            margin-right: 6px;
+        }
+
+        .btn-close-white {
+            filter: brightness(0) invert(1);
+            /* biar tombol close tetap kontras */
+        }
+
+        .badge {
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 8px;
+        }
+
+        .badge.bg-info {
+            background-color: #d0e2f2 !important;
+            color: #1c3c5a !important;
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: none;
+            border-radius: 6px;
+            padding: 12px;
+        }
+
+        /* untuk button ngirim surat */
+        .animated-envelope {
+            transition: transform 0.3s ease;
+        }
+
+        .btn-animated-envelope:hover .animated-envelope {
+            transform: translateY(-3px) rotate(-5deg);
+        }
+
+        /* untuk button filter */
+        .btn-animated-filter i {
+            transition: transform 0.3s ease;
+        }
+
+        .btn-animated-filter:hover i {
+            transform: rotate(15deg);
+        }
+
+        .btn-animated-filter {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .btn-animated-filter:hover {
+            background-color: #4a69bd;
+            color: #fff;
+            border-color: #4a69bd;
+        }
+
+        #filterCollapse {
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* buat export */
+        /* === Custom Export Button Container === */
+        div.dt-buttons {
+            display: inline-flex;
+            background-color: #6c757d;
+            border-radius: 8px;
+            padding: 6px 12px;
+            gap: 8px;
+        }
+
+        /* === Individual Buttons Style === */
+        .dt-button {
+            background: none !important;
+            border: none !important;
+            color: white !important;
+            padding: 4px 10px !important;
+            font-weight: 500;
+            font-size: 14px;
+            transition: background-color 0.2s ease;
+            border-radius: 4px;
+        }
+
+        .dt-button:hover {
+            background-color: rgba(255, 255, 255, 0.2) !important;
+            color: white !important;
+        }
+
+        /* Optional: Remove focus ring */
+        .dt-button:focus {
+            box-shadow: none !important;
         }
     </style>
 @endsection
