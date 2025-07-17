@@ -209,7 +209,7 @@
                                                     @if (
                                                         (auth()->user()->role === 'hrd' && auth()->user()->cabang_asal === 'HO') ||
                                                             (auth()->user()->role === 'nm' && auth()->user()->departemen === $item->departemen))
-                                                        @if ($form->acc_bm == 'oke' && $form->acc_hrd != 'reject' && $form->acc_bm != 'reject' && $item->acc_nm == null)
+                                                        @if ($form->acc_bm == 'oke' && $form->acc_hrd != 'reject' && $form->acc_bm != 'reject' && $item->acc_nm == 'pending')
                                                             <button class="btn btn-success btn-sm"
                                                                 onclick="updateStatus({{ $item->id }}, 'oke')">
                                                                 Proses

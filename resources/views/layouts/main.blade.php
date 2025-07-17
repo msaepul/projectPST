@@ -95,29 +95,30 @@
             opacity: 0.9;
         }
 
-/* Pastikan tinggi dan teks Select2 sejajar tengah */
-.select2-container--default .select2-selection--single {
-    height: 38px; /* atau samakan dengan input yang lain */
-    display: flex;
-    align-items: center;
-    padding-left: 10px;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-}
+        /* Pastikan tinggi dan teks Select2 sejajar tengah */
+        .select2-container--default .select2-selection--single {
+            height: 38px;
+            /* atau samakan dengan input yang lain */
+            display: flex;
+            align-items: center;
+            padding-left: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+        }
 
-/* Hilangkan offset atas dari teks */
-.select2-selection__rendered {
-    line-height: normal !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-}
+        /* Hilangkan offset atas dari teks */
+        .select2-selection__rendered {
+            line-height: normal !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
 
-/* Tanda panahnya tetap di kanan */
-.select2-selection__arrow {
-    height: 100% !important;
-    top: 0 !important;
-    right: 6px;
-}
+        /* Tanda panahnya tetap di kanan */
+        .select2-selection__arrow {
+            height: 100% !important;
+            top: 0 !important;
+            right: 6px;
+        }
 
 
         .form-group {
@@ -286,7 +287,7 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    
+
 
 
     <!-- AdminLTE App -->

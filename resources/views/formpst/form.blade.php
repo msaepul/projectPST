@@ -90,11 +90,11 @@
                         </div>
                     </div>
 
-                    <div class="card-body transparent-card p-3">
+                    <div class="card-body bg-body-tertiary p-4 rounded-bottom-4">
                         <div class="table-responsive">
-                            <table class="table table-striped table-hover align-middle table-sm" id="pegawaiTable">
-                                <thead class="table-light">
-                                    <tr>
+                            <table class="table table-bordered table-hover align-middle table-sm text-center shadow-sm" id="pegawaiTable">
+                                <thead class="table-light text-secondary fw-semibold">
+                                    <tr class="align-middle">
                                         <th>Nama</th>
                                         <th>Departemen</th>
                                         <th>NIK</th>
@@ -104,13 +104,12 @@
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
-                                <tbody></tbody>
-
+                                <tbody class="bg-white"></tbody>
                             </table>
                         </div>
                     </div>
+                    
                 </div>
-                <!-- Modal Tambah Pegawai -->
                 <!-- Modal Tambah Pegawai -->
                 <div class="modal fade" id="modalTambahPegawai" tabindex="-1" aria-labelledby="modalTambahPegawaiLabel"
                     aria-hidden="true">
@@ -142,14 +141,15 @@
                                         <label>Tanggal Berangkat</label>
                                         <input type="date" id="modalTanggalBerangkat" class="form-control">
                                     </div>
-                                    <div class="col-md-6">
-                                        <label>Tanggal Kembali</label>
-                                        <input type="date" id="modalTanggalKembali" class="form-control">
-                                    </div>
+
                                     <div class="col-md-6">
                                         <label>Estimasi Hari</label>
                                         <input type="number" id="modalEstimasi" class="form-control"
                                             placeholder="Jumlah hari">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label>Tanggal Kembali</label>
+                                        <input type="date" id="modalTanggalKembali" class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -207,42 +207,54 @@
                 }
 
                 let newRow = `
-                    <tr class="pegawai-row border-bottom align-middle">
-                        <td>
-                            <input type="text" name="namaPegawaiNama[]" class="form-control" value="${nama}" required>
-                            <input type="hidden" name="namaPegawai[]" value="${id}">
+                <tr class="pegawai-row align-middle border-bottom bg-white hover-shadow-sm">
+    <!-- Nama -->
+    <td class="px-2 py-1">
+        <input type="text" name="namaPegawaiNama[]" class="form-control form-control-sm" value="${nama}" required>
+        <input type="hidden" name="namaPegawai[]" value="${id}">
+    </td>
 
-                        </td>
+    <!-- Departemen -->
+    <td class="px-2 py-1">
+        <input type="text" name="departemen[]" class="form-control form-control-sm" value="${departemen}" required>
+    </td>
 
-                        <td>
-                            <input type="text" name="departemen[]" class="form-control" value="${departemen}" required>
-                        </td>
-                        <td>
-                            <input type="text" name="nik[]" class="form-control" value="${nik}" required>
-                        </td>
+    <!-- NIK -->
+    <td class="px-2 py-1">
+        <input type="text" name="nik[]" class="form-control form-control-sm" value="${nik}" required>
+    </td>
 
-                        <td>
-                            <input type="file" name="uploadFile[]" class="form-control form-control-sm bg-light" required>
-                        </td>
-                        <td>
-                            <div class="d-flex align-items-center gap-2">
-                                <input type="date" name="tanggalBerangkat[]" class="form-control form-control-sm bg-light" value="${tglBerangkat}" required>
-                                <span class="text-muted">s/d</span>
-                                <input type="date" name="tanggalKembali[]" class="form-control form-control-sm bg-light" value="${tglKembali}" required>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <input type="number" name="estimasi[]" class="form-control form-control-sm bg-light" value="${estimasi}" required style="width: 70px;">
-                                <span class="ms-1 text-muted">hari</span>
-                            </div>
-                        </td>
-                        <td class="text-center">
-                            <button type="button" class="btn btn-outline-danger btn-sm btn-remove">
-                                <i class="bi bi-trash3-fill"></i>
-                            </button>
-                        </td>
-                    </tr>
+    <!-- KTP Upload -->
+    <td class="px-2 py-1">
+        <input type="file" name="uploadFile[]" class="form-control form-control-sm bg-light border" required>
+    </td>
+
+    <!-- Lama Penugasan -->
+    <td class="px-2 py-1">
+        <div class="d-flex align-items-center gap-2">
+            <input type="date" name="tanggalBerangkat[]" class="form-control form-control-sm bg-light border text-center" value="${tglBerangkat}" required>
+            <span class="text-muted small">s/d</span>
+            <input type="date" name="tanggalKembali[]" class="form-control form-control-sm bg-light border text-center" value="${tglKembali}" required>
+        </div>
+    </td>
+
+    <!-- Estimasi -->
+    <td class="px-2 py-1 text-center">
+        <div class="d-flex align-items-center justify-content-center">
+            <input type="number" name="estimasi[]" class="form-control form-control-sm bg-light border text-center" value="${estimasi}" required style="width: 70px;">
+            <span class="ms-1 small text-muted">hari</span>
+        </div>
+    </td>
+
+    <!-- Aksi -->
+    <td class="px-2 py-1 text-center">
+        <button type="button" class="btn btn-sm btn-outline-danger btn-remove" title="Hapus Baris">
+            <i class="bi bi-trash3-fill"></i>
+        </button>
+    </td>
+</tr>
+
+
                 `;
 
                 $('#pegawaiTable tbody').append(newRow);
@@ -338,5 +350,11 @@
             background-color: #dc3545;
             color: #fff;
         }
+        tr.hover-shadow-sm:hover {
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    background-color: #f9f9f9;
+    transition: 0.2s;
+}
+
     </style>
 @endsection

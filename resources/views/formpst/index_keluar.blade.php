@@ -75,22 +75,25 @@
                         @forelse ($data as $item)
                             @php
                                 $user = auth()->user();
-                                $bolehTampil =
-                                    $user->role === 'admin' ||
-                                    ($user->role !== 'pegawai' &&
-                                        $item->nama_pegawais->contains('nama_pegawai', $user->nama_lengkap) &&
-                                        ($user->cabang_asal === $item->cabang_asal || $user->cabang_asal === 'HO'));
+                                $bolehTampil = false;
 
-                                if ($user->role === 'hrd') {
+                                if ($user->role === 'admin') {
+                                    $bolehTampil = true;
+                                } elseif ($user->role === 'hrd') {
                                     if ($user->cabang_asal === 'HO') {
-                                        // HRD HO hanya lihat yang sudah diverifikasi BM
                                         $bolehTampil = $item->acc_bm === 'oke';
                                     } else {
-                                        // HRD cabang hanya lihat surat dari cabangnya
                                         $bolehTampil = $item->cabang_asal === $user->cabang_asal;
+                                    }
+                                } elseif ($user->role !== 'pegawai') {
+                                    // Semua pengguna non-pegawai bisa melihat jika berasal dari cabang yang sama ATAU dia HO
+                                    if ($user->cabang_asal === $item->cabang_asal || $user->cabang_asal === 'HO') {
+                                        $bolehTampil = true;
                                     }
                                 }
                             @endphp
+
+
 
 
                             @if ($bolehTampil)

@@ -143,11 +143,36 @@
     margin-left: 10px;
     z-index: 1000;
 }
+
+/* === Animasi Slide + Fade untuk Sidebar === */
+/* .main-sidebar {
+    transition: all 0.4s ease-in-out;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: slideIn 0.5s forwards;
+} */
+
+@keyframes slideIn {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+.main-sidebar .nav-link:hover {
+    background-color: #e2e6ea;
+    color: #212529 !important;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.4);
+    transform: translateX(3px);
+    /* transition: all 0.3s ease; */
+}
+.main-sidebar .nav-link,
+.main-sidebar .nav-icon {
+    transition: all 0.3s ease-in-out;
+}
+
+
 </style>
 
-<button id="sidebarToggle" class="btn btn-link px-2 py-1 text-dark position-fixed" style="top: 10px; left: 10px; z-index: 999;">
-    <i class="fas fa-bars"></i>
-</button>
 
 
 <aside class="main-sidebar elevation-2">
@@ -209,15 +234,5 @@
     </nav>
 </aside>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const sidebar = document.querySelector('.main-sidebar');
-        const toggleBtn = document.getElementById('sidebarToggle');
 
-        toggleBtn.addEventListener('click', function () {
-            sidebar.classList.toggle('sidebar-collapsed');
-            sidebar.classList.toggle('sidebar-expanded');
-        });
-    });
-</script>
 
