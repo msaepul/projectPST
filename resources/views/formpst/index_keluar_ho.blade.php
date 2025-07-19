@@ -37,7 +37,7 @@
                             <option value="">Semua Status</option>
                             <option value="oke" @selected(request('status') == 'oke')>Disetujui</option>
                             <option value="reject" @selected(request('status') == 'reject')>Ditolak</option>
-                            <option value="cancel" @selected(request('status') == 'cancel')>Dibatalkan</option>
+                            <option value="reject" @selected(request('status') == 'reject')>Dibatalkan</option>
                         </select>
 
                         <input type="date" name="tanggal" value="{{ request('tanggal') }}"
@@ -78,58 +78,57 @@
                                             ? 'table-danger'
                                             : '')) }} hover-row">
 
+                                <!-- Tanggal dibuat -->
                                 <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}</td>
+
+                                <!-- No Surat -->
                                 <td>{{ $item->no_surat }}</td>
+
+                                <!-- Yang Menugaskan -->
                                 <td>{{ $item->yang_menugaskan }}</td>
+
+                                <!-- Cabang Asal -->
                                 <td>{{ $item->cabang_asal }}</td>
+
+                                <!-- Cabang Tujuan -->
                                 <td>{{ $item->cabang_tujuan }}</td>
+
+                                <!-- Tujuan -->
                                 <td>{{ $item->tujuan }}</td>
+
+                                <!-- Status -->
                                 <td class="text-center">
                                     @if ($item->acc_cabang == 'oke')
                                         <span class="badge bg-success">Selesai</span>
-                                    @elseif ($item->acc_ho == 'reject')
-                                        <span class="badge bg-danger">Ditolak HO</span>
-                                        @if ($item->reason_ho)
-                                            <br><small>Alasan: {{ $item->reason_ho }}</small>
+                                    @elseif ($item->acc_cabang == 'reject')
+                                        <span class="badge bg-danger">Verifikasi Ditolak Cabang</span>
+                                        @if ($item->alasan_cancel_cabang)
+                                            <br><small>Alasan: {{ $item->alasan_cancel_cabang }}</small>
                                         @endif
-                                    @elseif ($item->acc_bm == 'reject')
-                                        <span class="badge bg-danger">Ditolak BM</span>
-                                        @if ($item->reason_bm)
-                                            <br><small>Alasan: {{ $item->reason_bm }}</small>
-                                        @endif
-                                    @elseif (in_array($item->acc_bm, ['cancel', 'reject']) ||
-                                            in_array($item->acc_ho, ['cancel']) ||
-                                            in_array($item->acc_cabang, ['cancel']))
-                                        <span class="badge bg-danger">Cancel</span>
-                                        @if ($item->acc_bm == 'cancel' && $item->alasan_cancel_bm)
-                                            <br><small>Alasan BM: {{ $item->alasan_cancel_bm }}</small>
-                                        @elseif ($item->acc_ho == 'cancel' && $item->alasan_cancel_ho)
-                                            <br><small>Alasan HO: {{ $item->alasan_cancel_ho }}</small>
-                                        @elseif ($item->acc_cabang == 'cancel' && $item->alasan_cancel_cabang)
-                                            <br><small>Alasan Cabang: {{ $item->alasan_cancel_cabang }}</small>
-                                        @endif
-                                    @elseif ($item->acc_ho == 'oke' && $item->acc_cabang != 'oke')
-                                        <span class="badge bg-warning text-dark">konfirmasi Cabang</span>
-                                    @elseif ($item->acc_bm == 'oke' && $item->acc_ho != 'oke')
-                                        <span class="badge bg-warning text-dark">Menunggu HO</span>
-                                    @elseif ($item->acc_bm != 'oke' && $item->acc_hrd == 'oke')
-                                        <span class="badge bg-warning text-dark">Menunggu BM</span>
                                     @else
-                                        <span class="badge bg-danger">Belum Diverifikasi</span>
+                                        <span class="badge bg-warning text-dark">Belum Diverifikasi Cabang</span>
                                     @endif
                                 </td>
+
+
+                                <!-- Tombol Aksi -->
                                 <td class="text-center">
                                     <div class="d-flex justify-content-center gap-2">
+                                        <!-- Lihat Detail -->
                                         <a href="{{ route('formpst.show_nm', ['id' => $item->id]) }}"
                                             class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip"
                                             title="Lihat Detail">
                                             <i class="bi bi-eye"></i>
                                         </a>
+
+                                        <!-- Lihat Pegawai -->
                                         <button type="button" class="btn btn-sm btn-outline-secondary"
                                             data-bs-toggle="modal" data-bs-target="#modalPegawai{{ $item->id }}"
                                             title="Lihat Pegawai">
                                             <i class="bi bi-person-lines-fill"></i>
                                         </button>
+
+                                        <!-- Lihat Surat Tugas -->
                                         <a href="{{ route('formpst.surat_tugas', ['id' => $item->id]) }}"
                                             class="btn btn-sm btn-outline-success" data-bs-toggle="tooltip"
                                             title="Lihat Surat Tugas">
@@ -187,6 +186,7 @@
                             </tr>
                         @endforelse
                     </tbody>
+
                 </table>
             </div>
         </div>
@@ -196,9 +196,9 @@
         <!-- jQuery -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-        <!-- DataTables Core -->
-        <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-        <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+        <!-- DataTables core -->
+        <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
 
         <!-- DataTables Buttons -->
         <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
@@ -206,11 +206,10 @@
         <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
         <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
 
-        <!-- Export Dependencies -->
+        <!-- JSZip & PDFMake (untuk export Excel/PDF) -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-
         <script>
             $(document).ready(function() {
                 $('#dataTable').DataTable({
@@ -258,39 +257,14 @@
                     new bootstrap.Tooltip(tooltipTriggerEl)
                 });
             });
+            document.addEventListener('DOMContentLoaded', function() {
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+                tooltipTriggerList.forEach(function(tooltipTriggerEl) {
+                    new bootstrap.Tooltip(tooltipTriggerEl)
+                })
+            });
         </script>
     @endpush
-
-
-    <script>
-        $(document).ready(function() {
-            $('#dataTable').DataTable({
-                lengthMenu: [10, 25, 50, 100],
-                language: {
-                    lengthMenu: "Tampilkan _MENU_ data per halaman",
-                    search: "Cari:",
-                    info: "Menampilkan _START_ hingga _END_ dari _TOTAL_ data",
-                    infoEmpty: "Tidak ada data",
-                    paginate: {
-                        first: "Awal",
-                        last: "Akhir",
-                        next: "Berikutnya",
-                        previous: "Sebelumnya"
-                    }
-                },
-                initComplete: function() {
-                    $('.dataTables_length select').addClass('form-select form-select-sm');
-                }
-            });
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-            tooltipTriggerList.forEach(function(tooltipTriggerEl) {
-                new bootstrap.Tooltip(tooltipTriggerEl)
-            })
-        });
-    </script>
 
     <style>
         .custom-card {
@@ -391,6 +365,7 @@
         .dt-button:focus {
             box-shadow: none !important;
         }
+
         .custom-card {
             max-width: 2000px;
             margin: auto;
