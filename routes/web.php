@@ -44,7 +44,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/ho/departemen/edit/{id}', [HoController::class, 'editDepartemen'])->name('ho.departemen.edit');
         Route::put('/ho/departemen/update/{id}', [HoController::class, 'updateDepartemen'])->name('ho.departemen.update');
         Route::delete('/ho/departemen/delete/{id}', [HoController::class, 'destroyDepartemen'])->name('ho.departemen.destroy');
-        
+
         //routes for user
         Route::get('/ho/user', [HoController::class, 'user'])->name('ho.user');
         Route::get('/ho/user/add', [HoController::class, 'addUser'])->name('ho.user.add');
@@ -57,6 +57,7 @@ Route::middleware('auth')->group(function () {
         //routes for maskapai
         Route::get('/ho/maskapai', [HoController::class, 'maskapai'])->name('ho.maskapai');
         Route::post('/ho/maskapai', [HoController::class, 'store_Maskapai'])->name('ho.maskapai.store');
+        Route::get('/ho/maskapai/edit/{id}', [HoController::class, 'edit_Maskapai'])->name('ho.maskapai.edit');
         Route::delete('/ho/maskapai/delete/{id}', [HoController::class, 'destroy_Maskapai'])->name('ho.maskapai.destroy');
 
         //routes for transport
@@ -64,7 +65,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/ho/maskapai', [HoController::class, 'store_Maskapai'])->name('ho.maskapai.store');
 
 
-        
+
         Route::get('/formpst/show_pegawai/{form_id}', [HoController::class, 'show_pegawai'])->middleware(['auth', 'role:admin,user,hrd,bm,nm,pegawai'])->name('formpst.show_pegawai');
 
         // User Routes
