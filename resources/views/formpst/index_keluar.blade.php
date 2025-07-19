@@ -16,15 +16,17 @@
                     <button type="button"
                         class="btn btn-sm btn-outline-primary px-3 d-inline-flex align-items-center gap-2 btn-animated-filter"
                         data-bs-toggle="collapse" data-bs-target="#filterCollapse" aria-expanded="false"
-                        aria-controls="filterCollapse" data-bs-toggle="tooltip" title="filter pencarian">
+                        aria-controls="filterCollapse" title="Filter pencarian" id="toggleFilterBtn">
                         <i class="bi bi-funnel"></i>
                     </button>
 
-                    <a href="{{ route('formpst.form') }}"
-                        class="btn btn-sm btn-outline-primary px-3 d-inline-flex align-items-center gap-2 btn-animated-envelope"
-                        data-bs-toggle="tooltip" title="Buat pengajuan baru">
-                        <i class="bi bi-envelope-plus animated-envelope"></i>
-                    </a>
+                    @if (auth()->user()->cabang_asal != 'HO')
+                        <a href="{{ route('formpst.form') }}"
+                            class="btn btn-sm btn-outline-primary px-3 d-inline-flex align-items-center gap-2 btn-animated-envelope"
+                            data-bs-toggle="tooltip" title="Buat pengajuan baru">
+                            <i class="bi bi-envelope-plus animated-envelope"></i>
+                        </a>
+                    @endif
                 </div>
 
                 <!-- Elemen filter yang disembunyikan dulu -->
@@ -219,11 +221,6 @@
 
 
 
-    @push('styles')
-        <!-- DataTables Buttons CSS -->
-        <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap5.min.css">
-    @endpush
-
     @push('scripts')
         <!-- jQuery -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -286,10 +283,11 @@
                 });
 
                 // Tooltip init
-                const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
                 tooltipTriggerList.forEach(function(tooltipTriggerEl) {
                     new bootstrap.Tooltip(tooltipTriggerEl);
                 });
+
             });
         </script>
     @endpush

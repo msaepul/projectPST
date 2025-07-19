@@ -22,13 +22,7 @@
         <p>Surat Masuk</p>
     </a>
 </li>
-<li class="nav-item">
-    <a href="{{ route('formpst.index_surat') }}"
-       class="nav-link {{ request()->is('formpst/index_surat') ? 'active' : '' }}">
-        <i class="nav-icon fas fa-file-alt"></i>
-        <p>Surat Tugas</p>
-    </a>
-</li>
+
 
 <!-- === Section Title (opsional) === -->
 <li class="nav-header">TIKET</li>
