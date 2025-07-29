@@ -46,7 +46,6 @@
                                                 data-bs-target="#editModal-{{ $data->id }}">
                                                 <i class="bi bi-pencil-square"></i>
                                             </a>
-
                                             {{-- Tombol Delete --}}
                                             <form action="{{ route('cabang.destroy', $data->id) }}" method="POST"
                                                 onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');"

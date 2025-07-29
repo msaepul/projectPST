@@ -87,11 +87,11 @@
                 }
 
                 .issued {
-                    background: rgba(255, 255, 255, 0.1);
-                    backdrop-filter: blur(10px);
+                    background: #ffffff; /* Ganti dengan warna solid */
                     border-radius: 12px;
-                    border: 1px solid rgba(255, 255, 255, 0.2);
+                    border: 1px solid #dee2e6; /* Warna border abu-abu terang */
                 }
+                
 
                 h5,
                 h6 {
@@ -219,4 +219,69 @@
 .subtitle {
     font-style: italic; /* Italic style for subtitle */
     margin-bottom: 20px; /* Space below subtitle */
+}
+
+.marquee-wrapper {
+    position: relative;
+    overflow: hidden;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    padding: 12px 0;
+}
+.marquee-container {
+    overflow: hidden;
+    background-color: #580000;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    padding: 12px 0;
+    position: relative;
+    color: white;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.marquee-content {
+    display: inline-block;
+    white-space: nowrap;
+    animation: marquee-scroll 75s linear infinite;
+    padding-left: 100%;
+}
+
+@keyframes marquee-scroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+}
+
+.marquee-container::before,
+.marquee-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 80px;
+    height: 100%;
+    z-index: 2;
+}
+
+.marquee-container::before {
+    left: 0;
+    background: linear-gradient(to right, #811f01 0%, transparent 100%);
+}
+
+.marquee-container::after {
+    right: 0;
+    background: linear-gradient(to left, #811f01 0%, transparent 100%);
+}
+
+.editable-input {
+    width: 100%;
+    border: none;
+    background-color: transparent;
+    padding: 4px;
+    font-size: 14px;
+}
+
+.editable-input:focus {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    outline: none;
 }

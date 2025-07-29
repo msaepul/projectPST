@@ -123,6 +123,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/ticketing/detail/{id}', [FormController::class, 'getTicketDetails'])->name('ticketing.details');
         Route::get('/ticketing/detail/edit/{id}', [FormController::class, 'editTicketDetail'])->name('ticket.detail.edit');
         Route::put('/ticketing/detail/{id}', [FormController::class, 'updateTicketDetail'])->name('ticket.detail.update');
+        Route::get('/get-ticket-details/{id}', [FormController::class, 'getTicketDetails']);
+        Route::post('/update-ticket-detail/{id}', [FormController::class, 'updateDetail']);
+
+
 
 
         Route::get('/formpst/form_nm', [FormController::class, 'form_nm'])->name('formpst.form_nm');
