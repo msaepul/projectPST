@@ -370,6 +370,7 @@
     <!-- AdminLTE App -->
     <script src="{{ asset('dist/js/adminlte.js') }}"></script>
 
+
     <!-- Inisialisasi Plugin dan Fitur -->
     <script>
         $(function() {

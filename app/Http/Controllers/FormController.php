@@ -728,7 +728,7 @@ public function ticket($id = null)
         // Upload PDF dan set file_name ke array $tickets
         if ($request->hasFile('pdf_files')) {
             foreach ($request->file('pdf_files') as $index => $pdf) {
-                $filename = time() . '_' . $index . '_' . $pdf->getClientOriginalName();
+                $filename = time() . '' . $index . '' . $pdf->getClientOriginalName();
                 $pdf->storeAs('public/tickets', $filename);
 
                 if (isset($tickets[$index])) {
@@ -753,9 +753,6 @@ public function ticket($id = null)
 
         return redirect()->back()->with('success', 'Ticket dan detail berhasil disimpan.');
     }
-
-
-
 
 public function getPemohon($id)
 {
@@ -807,22 +804,21 @@ public function getTicketDetails($id)
     ]);
 }
 
-public function updateTicketDetail(Request $request, $id)
+public function updateDetail(Request $request, $id)
 {
-    $validated = $request->validate([
-        'passenger_name' => 'required|string|max:255',
-        'flight_number' => 'required|string|max:255',
-        'flight_date' => 'required|date',
-        'departure_time' => 'required|date_format:H:i',
-    ]);
     $detail = Ticket_detail::findOrFail($id);
-    $detail->update($validated);
-    return response()->json([
-        'success' => true,
-        'message' => 'Detail tiket berhasil diperbarui',
-        'detail' => $detail
+    $detail->update([
+        'passenger_name' => $request->passenger_name,
+        'flight_number' => $request->flight_number,
+        'flight_date' => $request->flight_date,
+        'departure_time' => $request->departure_time,
+        'departure_airport' => $request->departure_airport,
+        'arrival_airport' => $request->arrival_airport,
     ]);
+
+    return response()->json(['success' => true]);
 }
+
 
 
 public function exportCSV($id)

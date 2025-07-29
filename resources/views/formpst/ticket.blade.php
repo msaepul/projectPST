@@ -12,11 +12,17 @@
     <div class="container">
         {{-- ========== FORM PENGAJUAN TIKET ========== --}}
         <div class="card shadow-lg my-4">
-            <div class="card-header bg-info text-white text-center">
-                <h4>FORM PENGAJUAN TIKET</h4>
+            <div class="card-header marquee-container">
+                <div class="marquee-content">
+                    <span id="current-date"></span> -
+                    <span id="current-time"></span> &nbsp; | &nbsp;
+                    FORM PENGAJUAN TIKET &nbsp; | &nbsp; Selamat Beraktivitas
+                    {{ Auth::user()->name }} !!!
+                </div>
             </div>
-            <div class="card-body main-card-body"
-                style="background: url('{{ asset('dist/img/flight.jpg') }}') no-repeat center center; background-size: cover;">
+
+
+            <div class="card-body main-card-body">
 
                 <form action="{{ route('store_ticket') }}" method="POST" enctype="multipart/form-data" id="ticketForm">
                     @csrf
@@ -38,18 +44,26 @@
                                         <option value="lainnya">lainnya</option>
                                     </select>
                                 </div>
+
                             </div>
+
+                            <div class="form-group mb-3" id="manualNoSuratContainer" style="display: none;">
+                                <label for="manual_no_surat" class="form-label">Masukkan No. Surat</label>
+                                <input type="text" id="manual_no_surat" name="manual_no_surat" class="form-control"
+                                    placeholder="Contoh: B-123/UNIV/2025">
+                            </div>
+
 
                             <div class="form-group mb-3">
                                 <label for="nama_pemohon" class="form-label">Nama Pemohon</label>
                                 <input type="text" id="nama_pemohon" name="nama_pemohon" class="form-control"
-                                    value="{{ old('nama_pemohon', $prefill->nama_pemohon ?? '') }}">
+                                    value="{{ old('nama_pemohon', $prefill->nama_pemohon ?? '') }}" readonly>
                             </div>
 
                             <div class="form-group mb-3">
                                 <label for="yang_menugaskan" class="form-label">Ditugaskan Oleh</label>
                                 <input type="text" id="yang_menugaskan" name="assigned_By" class="form-control"
-                                    value="{{ old('yang_menugaskan', $prefill->yang_menugaskan ?? '') }}">
+                                    value="{{ old('yang_menugaskan', $prefill->yang_menugaskan ?? '') }}" readonly>
                             </div>
 
                         </div>
@@ -65,7 +79,20 @@
                             </div>
                             <div id="pegawaiContainer">
                                 <!-- Pegawai terpilih akan ditambahkan di sini -->
+                                <div id="manualPegawaiSection" style="display: none;">
+                                    <div id="pegawaiInputs">
+                                        <div class="input-group mb-2">
+                                            <input type="text" name="pegawai_nama[]" class="form-control"
+                                                placeholder="Nama Pegawai">
+                                            <input type="text" name="pegawai_departemen[]" class="form-control"
+                                                placeholder="Departemen">
+                                        </div>
+                                    </div>
+                                    <button type="button" id="tambahPegawaiBtn" class="btn btn-sm btn-primary mt-2">+
+                                        Tambah Pegawai</button>
+                                </div>
                             </div>
+
                         </div>
                     </div>
 
@@ -181,9 +208,11 @@
                             </div> --}}
                             <div class="upload-section">
                                 <label for="pdf_files" class="form-label">Upload File Tiket PDF</label>
-                                <input type="file" name="pdf_files[]" id="pdf_files" class="form-control" accept="application/pdf" multiple required>
+                                <input type="file" name="pdf_files[]" id="pdf_files" class="form-control"
+                                    accept="application/pdf" multiple required>
                             </div>
-                            
+
+
                             <div class="error-message" id="error-message"></div>
 
                             <div class="tabel-section">
@@ -219,41 +248,7 @@
 
 
     <script>
-                document.getElementById("ticketForm").addEventListener("submit", function(e) {
-            const tableRows = document.querySelectorAll("#tickets-table-body tr");
-            const parsedTickets = [];
-    
-            tableRows.forEach(row => {
-                const cells = row.querySelectorAll("td");
-                parsedTickets.push({
-                    nama_file: row.dataset.filename || cells[0]?.innerText || "",
-                    nama_penumpang: cells[1]?.innerText || "",
-                    nomor_penerbangan: cells[2]?.innerText || "",
-                    tanggal: cells[3]?.innerText || "",
-                    waktu_berangkat: cells[4]?.innerText || "",
-                    bandara_asal: cells[5]?.innerText || "",
-                    bandara_tujuan: cells[6]?.innerText || ""
-                });
-            });
-    
-            document.getElementById("tickets_data").value = JSON.stringify(parsedTickets);
-    
-            const container = document.getElementById('pegawaiContainer');
-            container.innerHTML = '';
-    
-            const pegawaiList = document.querySelectorAll("#listPegawai .list-group-item");
-    
-            pegawaiList.forEach(function(item, index) {
-                const nama = item.dataset.nama;
-                const departemen = item.dataset.departemen;
-    
-                container.innerHTML += `
-                    <input type="hidden" name="pegawai[${index}][nama_pegawai]" value="${nama}">
-                    <input type="hidden" name="pegawai[${index}][departemen]" value="${departemen}">
-                `;
-            });
-        });
-    
+        
         @if (empty($prefill))
             $('#no_surat').on('change', function() {
                 let form_id = $(this).val();
@@ -274,7 +269,7 @@
                                 alert('Gagal mengambil data pemohon');
                             }
                         });
-    
+
                         $.ajax({
                             url: '{{ url('/get-employees') }}/' + form_id,
                             type: 'GET',
@@ -302,67 +297,72 @@
                 }
             });
         @endif
-        document.getElementById("ticketForm").addEventListener("submit", function(e) {
-            const tableRows = document.querySelectorAll("#tickets-table-body tr");
-            const parsedTickets = [];
-    
-            tableRows.forEach(row => {
-                const cells = row.querySelectorAll("td");
-                parsedTickets.push({
-                    nama_file: row.dataset.filename || cells[0]?.innerText || "",
-                    nama_penumpang: cells[1]?.innerText || "",
-                    nomor_penerbangan: cells[2]?.innerText || "",
-                    tanggal: cells[3]?.innerText || "",
-                    waktu_berangkat: cells[4]?.innerText || "",
-                    bandara_asal: cells[5]?.innerText || "",
-                    bandara_tujuan: cells[6]?.innerText || ""
-                });
-            });
-    
-            document.getElementById("tickets_data").value = JSON.stringify(parsedTickets);
-    
-            const container = document.getElementById('pegawaiContainer');
-            container.innerHTML = '';
-    
-            const pegawaiList = document.querySelectorAll("#listPegawai .list-group-item");
-            pegawaiList.forEach(function(item, index) {
-                const nama = item.dataset.nama;
-                const departemen = item.dataset.departemen;
-    
-                container.innerHTML += `
-                    <input type="hidden" name="pegawai[${index}][nama_pegawai]" value="${nama}">
-                    <input type="hidden" name="pegawai[${index}][departemen]" value="${departemen}">
-                `;
-            });
+        function handleTicketFormSubmit(e) {
+    const tableRows = document.querySelectorAll("#tickets-table-body tr");
+    const parsedTickets = [];
+
+    tableRows.forEach(row => {
+        const cells = row.querySelectorAll("td");
+        parsedTickets.push({
+            nama_file: row.dataset.filename || cells[0]?.innerText || "",
+            nama_penumpang: cells[1]?.innerText || "",
+            nomor_penerbangan: cells[2]?.innerText || "",
+            tanggal: cells[3]?.innerText || "",
+            waktu_berangkat: cells[4]?.innerText || "",
+            bandara_asal: cells[5]?.innerText || "",
+            bandara_tujuan: cells[6]?.innerText || ""
         });
-    
+    });
+
+    document.getElementById("tickets_data").value = JSON.stringify(parsedTickets);
+
+    const container = document.getElementById('pegawaiContainer');
+    container.innerHTML = '';
+
+    const pegawaiList = document.querySelectorAll("#listPegawai .list-group-item");
+    pegawaiList.forEach(function(item, index) {
+        const nama = item.dataset.nama;
+        const departemen = item.dataset.departemen;
+
+        container.innerHTML += `
+            <input type="hidden" name="pegawai[${index}][nama_pegawai]" value="${nama}">
+            <input type="hidden" name="pegawai[${index}][departemen]" value="${departemen}">
+        `;
+    });
+}
+
+document.getElementById("ticketForm").addEventListener("submit", handleTicketFormSubmit);
+
+
         const pdfInput = document.getElementById('pdf_files');
         const errorMessage = document.getElementById('error-message');
-    
+
         pdfInput.addEventListener('change', async () => {
             errorMessage.style.display = 'none';
             document.getElementById('tickets-table-body').innerHTML = '';
-    
+
             const files = pdfInput.files;
             if (!files.length) return;
-    
+
             for (const file of files) {
                 if (file.type !== 'application/pdf') {
                     showError('Semua file harus berformat PDF.');
                     continue;
                 }
-    
+
                 try {
                     const arrayBuffer = await file.arrayBuffer();
-                    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-    
+                    const pdf = await pdfjsLib.getDocument({
+                        data: arrayBuffer
+                    }).promise;
+
                     let fullText = '';
-    
+
                     for (let i = 1; i <= pdf.numPages; i++) {
                         const page = await pdf.getPage(i);
                         const content = await page.getTextContent();
                         const texts = content.items.map(item => item.str).join(' ');
-    
+
                         if (texts.trim()) {
                             fullText += texts + ' ';
                         } else {
@@ -370,7 +370,7 @@
                             fullText += ocrText + ' ';
                         }
                     }
-    
+
                     parseTicketText(fullText, file.name);
                 } catch (e) {
                     console.error(e);
@@ -378,23 +378,23 @@
                 }
             }
         });
-    
+
         function showError(msg) {
             errorMessage.textContent = msg;
             errorMessage.style.display = 'block';
         }
-    
+
         function parseTicketText(text, fileName) {
             const t = text.toUpperCase().replace(/\s+/g, ' ');
             console.log("Text for parsing:", t);
-    
+
             const flightNumber = extractFlightNumber(t) || detectFlightNumberByAirline(t);
             const passengerName = extractPassengerName(t) || '-';
             const flightDate = extractFlightDate(t) || '-';
             const departureTime = extractDepartureTime(t) || '-';
             const departureAirport = extractDepartureAirport(t) || '-';
             const arrivalAirport = extractArrivalAirport(t) || '-';
-    
+
             renderInfoRow({
                 fileName,
                 passengerName,
@@ -405,14 +405,14 @@
                 arrivalAirport
             });
         }
-    
+
         function renderInfoRow(data) {
             const tbody = document.getElementById('tickets-table-body');
             const rowIndex = tbody.querySelectorAll('tr').length;
-    
+
             const row = document.createElement('tr');
             row.dataset.filename = data.fileName;
-    
+
             row.innerHTML = `
                 <td>${data.fileName}<input type="hidden" name="tickets[${rowIndex}][file_name]" value="${data.fileName}"></td>
                 <td>${data.passengerName}<input type="hidden" name="tickets[${rowIndex}][passenger_name]" value="${data.passengerName}"></td>
@@ -422,28 +422,37 @@
                 <td>${data.departureAirport}<input type="hidden" name="tickets[${rowIndex}][departure_airport]" value="${data.departureAirport}"></td>
                 <td>${data.arrivalAirport}<input type="hidden" name="tickets[${rowIndex}][arrival_airport]" value="${data.arrivalAirport}"></td>
             `;
-    
+
             tbody.appendChild(row);
         }
-    
+
         async function runOCR(page) {
-            const viewport = page.getViewport({ scale: 2 });
+            const viewport = page.getViewport({
+                scale: 2
+            });
             const canvas = document.getElementById('ocr-canvas');
             const context = canvas.getContext('2d');
-    
+
             canvas.width = viewport.width;
             canvas.height = viewport.height;
-    
-            await page.render({ canvasContext: context, viewport }).promise;
-    
+
+            await page.render({
+                canvasContext: context,
+                viewport
+            }).promise;
+
             const imageDataUrl = canvas.toDataURL('image/png');
-            const { data: { text } } = await Tesseract.recognize(imageDataUrl, 'eng', {
+            const {
+                data: {
+                    text
+                }
+            } = await Tesseract.recognize(imageDataUrl, 'eng', {
                 logger: m => console.log(m)
             });
-    
+
             return text;
         }
-    
+
         function detectFlightNumberByAirline(text) {
             const airlinePrefixes = {
                 'GARUDA': 'GA',
@@ -454,7 +463,7 @@
                 'SRIWIJAYA': 'SJ',
                 'SUPER AIR': 'IU'
             };
-    
+
             for (const keyword in airlinePrefixes) {
                 if (text.includes(keyword)) {
                     const regex = new RegExp(`\\b${airlinePrefixes[keyword]}[-\\s]?(\\d{2,4})\\b`);
@@ -462,15 +471,15 @@
                     if (match) return `${airlinePrefixes[keyword]} ${match[1]}`;
                 }
             }
-    
+
             return null;
         }
-    
+
         function extractFlightNumber(text) {
             const match = text.match(/\b([A-Z]{2})[-\s]?(\d{1,4})\b/);
             return match ? `${match[1]} ${match[2]}` : null;
         }
-    
+
         function extractPassengerName(text) {
             const regexes = [
                 /1\s*\.\s*Tn\.?\s+([A-Z\s]+)/i,
@@ -483,7 +492,7 @@
                 /\b(MR|MRS|MS|MSTR|MISS)\s+([A-Z\s]{3,})\b/i,
                 /(?:\d+\s*\.\s*Tn\.?|Mr\.?|Mrs\.?|Miss)?\s*([A-Z]+(?:\s+[A-Z]+)+)/
             ];
-    
+
             for (const regex of regexes) {
                 const match = text.match(regex);
                 if (match) {
@@ -498,31 +507,42 @@
             }
             return null;
         }
-    
+
         function extractFlightDate(text) {
             let match = text.match(/\b(\d{1,2})\/(\d{1,2})\/(\d{4})\b/);
             if (match) return `${match[1].padStart(2, '0')}/${match[2].padStart(2, '0')}/${match[3]}`;
-    
+
             match = text.match(/\b(\d{1,2})-(\d{1,2})-(\d{4})\b/);
             if (match) return `${match[1].padStart(2, '0')}-${match[2].padStart(2, '0')}-${match[3]}`;
-    
+
             match = text.match(/\b(\d{1,2})\s+(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\s+(\d{4})\b/i);
             if (match) return `${match[1].padStart(2, '0')} ${match[2].toUpperCase()} ${match[3]}`;
-    
-            match = text.match(/\b(?:MING|SEN|SEL|RAB|KAM|JUM|SAB|MINGGU|SENIN|SELASA|RABU|KAMIS|JUMAT|SABTU)\s+(\d{1,2})\s+([A-Z]+)\s+(\d{4})/);
+
+            match = text.match(
+                /\b(?:MING|SEN|SEL|RAB|KAM|JUM|SAB|MINGGU|SENIN|SELASA|RABU|KAMIS|JUMAT|SABTU)\s+(\d{1,2})\s+([A-Z]+)\s+(\d{4})/
+                );
             if (match) {
                 const bulanMap = {
-                    'januari': 'JAN', 'februari': 'FEB', 'maret': 'MAR', 'april': 'APR', 'mei': 'MAY',
-                    'juni': 'JUN', 'juli': 'JUL', 'agustus': 'AUG', 'september': 'SEP',
-                    'oktober': 'OCT', 'november': 'NOV', 'desember': 'DEC'
+                    'januari': 'JAN',
+                    'februari': 'FEB',
+                    'maret': 'MAR',
+                    'april': 'APR',
+                    'mei': 'MAY',
+                    'juni': 'JUN',
+                    'juli': 'JUL',
+                    'agustus': 'AUG',
+                    'september': 'SEP',
+                    'oktober': 'OCT',
+                    'november': 'NOV',
+                    'desember': 'DEC'
                 };
                 const bulan = bulanMap[match[2].toLowerCase()];
                 return bulan ? `${match[1].padStart(2, '0')} ${bulan} ${match[3]}` : null;
             }
-    
+
             return null;
         }
-    
+
         function extractDepartureTime(text) {
             let match = text.match(/\b(\d{2}):(\d{2})\b/);
             if (match) return `${match[1]}:${match[2]}`;
@@ -532,23 +552,38 @@
             }
             return null;
         }
-    
+
         function extractDepartureAirport(text) {
-            let airports = text.match(/\b(CGK|SUB|DPS|JKT|BDO|LOP|SOC|HLP|KNO|UPG|DJJ|PLM|PNK|PKU|JOG|SRG|BPN|BDJ|MDC|KOE|LBJ|TIM|AMQ)\b/);
+            let airports = text.match(
+                /\b(CGK|SUB|DPS|JKT|BDO|LOP|SOC|HLP|KNO|UPG|DJJ|PLM|PNK|PKU|JOG|SRG|BPN|BDJ|MDC|KOE|LBJ|TIM|AMQ)\b/);
             if (airports) return airports[0];
             let match = text.match(/(?:DEP|FROM|ORIGIN)[:\s]*([A-Z]{3})/);
             return match ? match[1] : null;
         }
-    
+
         function extractArrivalAirport(text) {
-            let airports = text.match(/\b(CGK|SUB|DPS|JKT|BDO|LOP|SOC|HLP|KNO|UPG|DJJ|PLM|PNK|PKU|JOG|SRG|BPN|BDJ|MDC|KOE|LBJ|TIM|AMQ)\b/gi);
+            let airports = text.match(
+                /\b(CGK|SUB|DPS|JKT|BDO|LOP|SOC|HLP|KNO|UPG|DJJ|PLM|PNK|PKU|JOG|SRG|BPN|BDJ|MDC|KOE|LBJ|TIM|AMQ)\b/gi);
             return airports && airports.length > 1 ? airports[1] : null;
         }
-    
+
         function capitalizeWords(str) {
             return str.toLowerCase().replace(/\b[a-z]/g, c => c.toUpperCase());
         }
-    </script>
-    
 
+
+        function updateDateTime() {
+            const now = new Date();
+            const options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            document.getElementById('current-date').textContent = now.toLocaleDateString('id-ID', options);
+            document.getElementById('current-time').textContent = now.toLocaleTimeString('id-ID');
+        }
+        setInterval(updateDateTime, 1000);
+        updateDateTime(); // panggil sekali di awal
+    </script>
 @endsection
