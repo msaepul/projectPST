@@ -112,14 +112,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/formpst/surat_tugas/{id}', [FormController::class, 'surat_tugas'])->name('formpst.surat_tugas');
         Route::post('/update-status/{itemId}/{status}', [FormController::class, 'updateStatus'])->name('update.status');
 
-        Route::get('/formpst/ticket', [FormController::class, 'ticket'])->name('formpst.ticket');
-        Route::get('/formpst/ticket/{id?}', [FormController::class, 'ticket'])->name('formpst.ticket');
+        Route::get('/formpst/tiket/ticket', [FormController::class, 'ticket'])->name('formpst.ticket');
+        Route::get('/formpst/tiket/ticket/{id?}', [FormController::class, 'ticket'])->name('formpst.ticket');
         Route::get('/formpst/show_ticket', [FormController::class, 'show_ticket'])->name('formpst.show_ticket');
         Route::get('/formpst/detail_ticket', [FormController::class, 'detail_ticket'])->name('formpst.detail_ticket');
         Route::post('/formpst/ticketing', [FormController::class, 'store_ticket'])->name('store_ticket');
         Route::get('/get-pemohon/{id}', [FormController::class, 'getPemohon'])->name('get.pemohon');
         Route::get('/get-employees/{formId}', [FormController::class, 'getEmployeesByFormId']);
-        Route::post('/store-ticket', [FormController::class, 'store_ticket'])->name('store-ticket');
         Route::get('/ticketing/detail/{id}', [FormController::class, 'getTicketDetails'])->name('ticketing.details');
         Route::get('/ticketing/detail/edit/{id}', [FormController::class, 'editTicketDetail'])->name('ticket.detail.edit');
         Route::put('/ticketing/detail/{id}', [FormController::class, 'updateTicketDetail'])->name('ticket.detail.update');

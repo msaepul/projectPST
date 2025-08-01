@@ -285,3 +285,17 @@
     border: 1px solid #ccc;
     outline: none;
 }
+
+td[contenteditable="true"] {
+    background-color: #fefbe0;
+    cursor: text;
+}
+
+/* #dropdown-pesawat,
+#dropdown-kereta {
+    margin-top: 0.75rem;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    border: 1px solid #dee2e6;
+    background-color: #f8f9fa;
+} */

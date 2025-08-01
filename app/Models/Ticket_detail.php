@@ -8,21 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Ticket_detail extends Model
 {
     use HasFactory;
+
+    protected $table = 'ticket_details'; // opsional, kalau kamu memang pakai nama tabel ini
     protected $fillable = [
-        'ticket_id',
-        'file_name',
-        'passenger_name',
-        'flight_number',
-        'flight_date',
-        'departure_time',
-        'departure_airport',
-        'arrival_airport',
+        'ticket_id', 'file_name', 'passenger_name', 'flight_number',
+        'flight_date', 'departure_time', 'departure_airport', 'arrival_airport'
     ];
+    
+
     public function ticketing()
     {
-        return $this->belongsTo(Ticketing::class, 'ticket_id', 'id');
+        return $this->belongsTo(Ticketing::class, 'ticket_id');
     }
-    
-    
-    
 }

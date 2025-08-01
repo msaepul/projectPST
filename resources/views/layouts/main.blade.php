@@ -55,6 +55,15 @@
     <!-- Bootstrap Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
+        <!-- Tailwind (CDN) -->
+        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="{{ asset('css/ticket.css') }}">
+    
+        @yield('head')
+    
+
     <style>
         :root {
             --main-bg: #f4f6f9;

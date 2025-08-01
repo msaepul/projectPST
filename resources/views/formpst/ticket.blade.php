@@ -233,11 +233,10 @@
                                 </table>
                             </div>
 
-                            <input type="hidden" name="tickets_data" id="tickets_data">
 
                             <div class="d-flex justify-content-end gap-2 mt-4">
                                 <button type="submit" class="btn btn-success">Submit Semua</button>
-                                <button type="reset" class="btn btn-danger" id="resetBtn">Cancel</button>
+                                <button type="reset" class="btn btn-danger" id="resetBtn">Reset</button>
                             </div>
                         </div>
                     </div>
@@ -248,90 +247,73 @@
 
 
     <script>
-        
-        @if (empty($prefill))
-            $('#no_surat').on('change', function() {
-                let form_id = $(this).val();
-                if (form_id) {
-                    if (form_id === 'lainnya') {
-                        $('#lampiranSection').show();
-                    } else {
-                        $.ajax({
-                            url: '{{ url('/get-pemohon') }}/' + form_id,
-                            type: 'GET',
-                            dataType: 'json',
-                            success: function(data) {
-                                $('#nama_pemohon').val(data.nama_pemohon);
-                                $('#yang_menugaskan').val(data.yang_menugaskan);
-                                $('#lampiranSection').hide();
-                            },
-                            error: function() {
-                                alert('Gagal mengambil data pemohon');
-                            }
-                        });
-
-                        $.ajax({
-                            url: '{{ url('/get-employees') }}/' + form_id,
-                            type: 'GET',
-                            dataType: 'json',
-                            success: function(employees) {
-                                const listPegawai = $('#listPegawai');
-                                listPegawai.empty();
-                                if (employees.length > 0) {
-                                    employees.forEach(employee => {
-                                        listPegawai.append(
-                                            `<li class="list-group-item" data-nama="${employee.nama_pegawai}" data-departemen="${employee.departemen}"> ${employee.nama_pegawai} - ${employee.departemen}</li>`
-                                        );
-                                    });
-                                } else {
-                                    listPegawai.append(
-                                        '<li class="list-group-item">Tidak ada pegawai yang ditemukan.</li>'
-                                    );
+        $(document).ready(function() {
+            $('.select2').select2();
+            @if (empty($prefill))
+                $('#no_surat').on('change', function() {
+                    let form_id = $(this).val();
+                    if (form_id) {
+                        if (form_id === 'lainnya') {
+                            $('#lampiranSection').show();
+                        } else {
+                            $.ajax({
+                                url: '{{ url('/get-pemohon') }}/' + form_id,
+                                type: 'GET',
+                                dataType: 'json',
+                                success: function(data) {
+                                    $('#nama_pemohon').val(data.nama_pemohon);
+                                    $('#yang_menugaskan').val(data.yang_menugaskan);
+                                    $('#lampiranSection').hide();
+                                },
+                                error: function() {
+                                    alert('Gagal mengambil data pemohon');
                                 }
-                            },
-                            error: function() {
-                                alert('Gagal mengambil data pegawai');
-                            }
-                        });
+                            });
+
+                            $.ajax({
+                                url: '{{ url('/get-employees') }}/' + form_id,
+                                type: 'GET',
+                                dataType: 'json',
+                                success: function(employees) {
+                                    const listPegawai = $('#listPegawai');
+                                    listPegawai.empty();
+                                    if (employees.length > 0) {
+                                        employees.forEach(employee => {
+                                            listPegawai.append(
+                                                `<li class="list-group-item" data-nama="${employee.nama_pegawai}" data-departemen="${employee.departemen}"> ${employee.nama_pegawai} - ${employee.departemen}</li>`
+                                            );
+                                        });
+                                    } else {
+                                        listPegawai.append(
+                                            '<li class="list-group-item">Tidak ada pegawai yang ditemukan.</li>'
+                                        );
+                                    }
+                                },
+                                error: function() {
+                                    alert('Gagal mengambil data pegawai');
+                                }
+                            });
+                        }
                     }
-                }
-            });
-        @endif
-        function handleTicketFormSubmit(e) {
-    const tableRows = document.querySelectorAll("#tickets-table-body tr");
-    const parsedTickets = [];
+                });
+            @endif
+            function handleTicketFormSubmit(e) {
+                const container = document.getElementById('pegawaiContainer');
+                container.innerHTML = '';
 
-    tableRows.forEach(row => {
-        const cells = row.querySelectorAll("td");
-        parsedTickets.push({
-            nama_file: row.dataset.filename || cells[0]?.innerText || "",
-            nama_penumpang: cells[1]?.innerText || "",
-            nomor_penerbangan: cells[2]?.innerText || "",
-            tanggal: cells[3]?.innerText || "",
-            waktu_berangkat: cells[4]?.innerText || "",
-            bandara_asal: cells[5]?.innerText || "",
-            bandara_tujuan: cells[6]?.innerText || ""
-        });
-    });
+                const pegawaiList = document.querySelectorAll("#listPegawai .list-group-item");
+                pegawaiList.forEach(function(item, index) {
+                    const nama = item.dataset.nama;
+                    const departemen = item.dataset.departemen;
 
-    document.getElementById("tickets_data").value = JSON.stringify(parsedTickets);
-
-    const container = document.getElementById('pegawaiContainer');
-    container.innerHTML = '';
-
-    const pegawaiList = document.querySelectorAll("#listPegawai .list-group-item");
-    pegawaiList.forEach(function(item, index) {
-        const nama = item.dataset.nama;
-        const departemen = item.dataset.departemen;
-
-        container.innerHTML += `
+                    container.innerHTML += `
             <input type="hidden" name="pegawai[${index}][nama_pegawai]" value="${nama}">
             <input type="hidden" name="pegawai[${index}][departemen]" value="${departemen}">
         `;
-    });
-}
-
-document.getElementById("ticketForm").addEventListener("submit", handleTicketFormSubmit);
+                });
+            }
+            document.getElementById("ticketForm").addEventListener("submit", handleTicketFormSubmit);
+        });
 
 
         const pdfInput = document.getElementById('pdf_files');
@@ -414,17 +396,18 @@ document.getElementById("ticketForm").addEventListener("submit", handleTicketFor
             row.dataset.filename = data.fileName;
 
             row.innerHTML = `
-                <td>${data.fileName}<input type="hidden" name="tickets[${rowIndex}][file_name]" value="${data.fileName}"></td>
-                <td>${data.passengerName}<input type="hidden" name="tickets[${rowIndex}][passenger_name]" value="${data.passengerName}"></td>
-                <td>${data.flightNumber}<input type="hidden" name="tickets[${rowIndex}][flight_number]" value="${data.flightNumber}"></td>
-                <td>${data.flightDate}<input type="hidden" name="tickets[${rowIndex}][flight_date]" value="${data.flightDate}"></td>
-                <td>${data.departureTime}<input type="hidden" name="tickets[${rowIndex}][departure_time]" value="${data.departureTime}"></td>
-                <td>${data.departureAirport}<input type="hidden" name="tickets[${rowIndex}][departure_airport]" value="${data.departureAirport}"></td>
-                <td>${data.arrivalAirport}<input type="hidden" name="tickets[${rowIndex}][arrival_airport]" value="${data.arrivalAirport}"></td>
-            `;
+        <td><input type="text" class="form-control" name="tickets[${rowIndex}][file_name]" value="${data.fileName}"></td>
+        <td><input type="text" class="form-control" name="tickets[${rowIndex}][passenger_name]" value="${data.passengerName}"></td>
+        <td><input type="text" class="form-control" name="tickets[${rowIndex}][flight_number]" value="${data.flightNumber}"></td>
+        <td><input type="text" class="form-control" name="tickets[${rowIndex}][flight_date]" value="${data.flightDate}"></td>
+        <td><input type="text" class="form-control" name="tickets[${rowIndex}][departure_time]" value="${data.departureTime}"></td>
+        <td><input type="text" class="form-control" name="tickets[${rowIndex}][departure_airport]" value="${data.departureAirport}"></td>
+        <td><input type="text" class="form-control" name="tickets[${rowIndex}][arrival_airport]" value="${data.arrivalAirport}"></td>
+    `;
 
             tbody.appendChild(row);
         }
+
 
         async function runOCR(page) {
             const viewport = page.getViewport({
@@ -520,7 +503,7 @@ document.getElementById("ticketForm").addEventListener("submit", handleTicketFor
 
             match = text.match(
                 /\b(?:MING|SEN|SEL|RAB|KAM|JUM|SAB|MINGGU|SENIN|SELASA|RABU|KAMIS|JUMAT|SABTU)\s+(\d{1,2})\s+([A-Z]+)\s+(\d{4})/
-                );
+            );
             if (match) {
                 const bulanMap = {
                     'januari': 'JAN',
@@ -585,5 +568,13 @@ document.getElementById("ticketForm").addEventListener("submit", handleTicketFor
         }
         setInterval(updateDateTime, 1000);
         updateDateTime(); // panggil sekali di awal
+        document.getElementById('resetBtn').addEventListener('click', function() {
+            document.getElementById('tickets-table-body').innerHTML = '';
+            document.getElementById('tickets_data').value = '';
+            document.getElementById('pegawaiContainer').innerHTML = '';
+            document.getElementById('listPegawai').innerHTML =
+                '<li class="list-group-item">Pilih No. Surat untuk melihat pegawai.</li>';
+            document.getElementById('manualNoSuratContainer').style.display = 'none';
+        });
     </script>
 @endsection
