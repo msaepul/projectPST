@@ -9,19 +9,18 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('nama_pegawai_ts', function (Blueprint $table) {
-                $table->id();
-                $table->unsignedBigInteger('ticket_id'); //foreign key ke tiket
-                $table->string('nama_pegawai')->default('');
-                $table->string('departemen')->default('');
-
-                $table->timestamps();
-        
-                $table->foreign('ticket_id')->references('id')->on('ticketings')->onDelete('cascade');
+            $table->id();
+            $table->unsignedBigInteger('ticket_id');
+            $table->string('nama_pegawai');
+            $table->string('departemen');
+            $table->timestamps();
     
-            });
+            // Relasi
+            $table->foreign('ticket_id')->references('id')->on('ticketings')->onDelete('cascade');
+        });
     }
 
     /**

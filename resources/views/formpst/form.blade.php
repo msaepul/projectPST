@@ -203,11 +203,11 @@
 
                 let newRow = `
                 <tr class="pegawai-row align-middle border-bottom bg-white hover-shadow-sm">
-                    <td><input type="text" name="namaPegawaiNama[]" class="form-control form-control-sm" value="${nama}" required>
+                    <td><input type="text" name="namaPegawaiNama[]" class="form-control form-control-sm" value="${nama}" required readonly>
                         <input type="hidden" name="namaPegawai[]" value="${id}">
                     </td>
-                    <td><input type="text" name="departemen[]" class="form-control form-control-sm" value="${departemen}" required></td>
-                    <td><input type="text" name="nik[]" class="form-control form-control-sm" value="${nik}" required></td>
+                    <td><input type="text" name="departemen[]" class="form-control form-control-sm" value="${departemen}" required readonly></td>
+                    <td><input type="text" name="nik[]" class="form-control form-control-sm" value="${nik}" required readonly></td>
                     <td><input type="file" name="uploadFile[]" class="form-control form-control-sm bg-light border" required></td>
                     <td>
                         <div class="d-flex align-items-center gap-2">

@@ -647,11 +647,11 @@ public function ticket($id = null)
         if ($id) {
             $prefill = Form::find($id);
             if (!$prefill) {
-                return redirect()->route('formpst.ticket')->with('error', 'Data not found');
+                return redirect()->route('formpst.tiket.ticket')->with('error', 'Data not found');
             }
         }
 
-        return view('formpst.ticket', compact(
+        return view('formpst.tiket.ticket', compact(
             'cabangs',
             'tujuans',
             'departemens',
@@ -662,97 +662,288 @@ public function ticket($id = null)
         ));
     }
 
+    // public function store_ticket(Request $request)
+    // {
+    //     $validated = $request->validate([
+    //         'no_surat' => 'required|string',
+    //         'nama_pemohon' => 'required|string',
+    //         'assigned_By' => 'required|string',
+    //         'invoice' => 'required|string',
+    //         'issued' => 'required|date',
+    //         'nominal' => 'required|numeric|min:0',
+    //         'beban_biaya' => 'required|string',
+    //         'agent' => 'required|string',
+    //         'maskapai' => 'required|string',
+    //         'class' => 'required|string',
 
-    public function store_ticket(Request $request)
-    {
-        $validated = $request->validate([
-            'no_surat' => 'required|string',
-            'nama_pemohon' => 'required|string',
-            'assigned_By' => 'required|string',
-            'invoice' => 'required|string',
-            'issued' => 'required|date',
-            'nominal' => 'required|numeric|min:0',
-            'beban_biaya' => 'required|string',
-            'agent' => 'required|string',
-            'maskapai' => 'required|string',
-            'class' => 'required|string',
+    //         'pegawai' => 'nullable|array',
+    //         'pegawai.*.nama_pegawai' => 'required_with:pegawai|string',
+    //         'pegawai.*.departemen' => 'required_with:pegawai|string',
 
-            'pegawai' => 'nullable|array',
-            'pegawai.*.nama_pegawai' => 'required_with:pegawai|string',
-            'pegawai.*.departemen' => 'required_with:pegawai|string',
+    //         'tickets' => 'nullable|array',
+    //         'tickets.*.file_name' => 'nullable|string',
+    //         'tickets.*.passenger_name' => 'required_with:tickets|string',
+    //         'tickets.*.flight_number' => 'required_with:tickets|string',
+    //         'tickets.*.flight_date' => 'required_with:tickets|string',
+    //         'tickets.*.departure_time' => 'required_with:tickets|string',
+    //         'tickets.*.departure_airport' => 'required_with:tickets|string',
+    //         'tickets.*.arrival_airport' => 'required_with:tickets|string',
+    //     ]);
 
-            'tickets' => 'nullable|array',
-            'tickets.*.file_name' => 'nullable|string',
-            'tickets.*.passenger_name' => 'required_with:tickets|string',
-            'tickets.*.flight_number' => 'required_with:tickets|string',
-            'tickets.*.flight_date' => 'required_with:tickets|string',
-            'tickets.*.departure_time' => 'required_with:tickets|string',
-            'tickets.*.departure_airport' => 'required_with:tickets|string',
-            'tickets.*.arrival_airport' => 'required_with:tickets|string',
-        ]);
+    //     $forms = Form::find($request->no_surat);
+    //     $noSuratTeks = $forms ? $forms->no_surat : null;
 
-        $forms = Form::find($request->no_surat);
-        $noSuratTeks = $forms ? $forms->no_surat : null;
+    //     $ticket = new Ticketing();
+    //     $ticket->no_surat = $noSuratTeks;
+    //     $ticket->nama_pemohon = $request->nama_pemohon;
+    //     $ticket->assigned_By = $request->assigned_By;
+    //     $ticket->invoice = $request->invoice;
+    //     $ticket->issued = $request->issued;
+    //     $ticket->nominal = $request->nominal;
+    //     $ticket->beban_biaya = $request->beban_biaya;
+    //     $ticket->agent = $request->agent;
 
-        $ticket = new Ticketing();
-        $ticket->no_surat = $noSuratTeks;
-        $ticket->nama_pemohon = $request->nama_pemohon;
-        $ticket->assigned_By = $request->assigned_By;
-        $ticket->invoice = $request->invoice;
-        $ticket->issued = $request->issued;
-        $ticket->nominal = $request->nominal;
-        $ticket->beban_biaya = $request->beban_biaya;
-        $ticket->agent = $request->agent;
+    //     $kendaraan = $request->input('kendaraan');
+    //     $ticket->kendaraan = is_array($kendaraan) ? implode(',', $kendaraan) : $kendaraan;
 
-        $kendaraan = $request->input('kendaraan');
-        $ticket->kendaraan = is_array($kendaraan) ? implode(',', $kendaraan) : $kendaraan;
+    //     $ticket->maskapai = $request->maskapai;
+    //     $ticket->class = $request->class;
+    //     $ticket->save();
 
-        $ticket->maskapai = $request->maskapai;
-        $ticket->class = $request->class;
-        $ticket->save();
+    //     // Simpan data pegawai
+    //     if ($request->filled('pegawai')) {
+    //         foreach ($request->pegawai as $p) {
+    //             Nama_pegawai_t::create([
+    //                 'ticket_id' => $ticket->id,
+    //                 'nama_pegawai' => $p['nama_pegawai'],
+    //                 'departemen' => $p['departemen'],
+    //             ]);
+    //         }
+    //     }
 
-        // Simpan data pegawai
-        if ($request->filled('pegawai')) {
-            foreach ($request->pegawai as $p) {
-                Nama_pegawai_t::create([
-                    'ticket_id' => $ticket->id,
-                    'nama_pegawai' => $p['nama_pegawai'],
-                    'departemen' => $p['departemen'],
-                ]);
-            }
-        }
+    //     // Ambil data tiket
+    //     $tickets = $request->input('tickets', []);
 
-        // Ambil data tiket
-        $tickets = $request->input('tickets', []);
+    //     // Upload PDF dan set file_name ke array $tickets
+    //     if ($request->hasFile('pdf_files')) {
+    //         foreach ($request->file('pdf_files') as $index => $pdf) {
+    //             $filename = time() . '' . $index . '' . $pdf->getClientOriginalName();
+    //             $pdf->storeAs('public/tickets', $filename);
 
-        // Upload PDF dan set file_name ke array $tickets
-        if ($request->hasFile('pdf_files')) {
-            foreach ($request->file('pdf_files') as $index => $pdf) {
-                $filename = time() . '' . $index . '' . $pdf->getClientOriginalName();
-                $pdf->storeAs('public/tickets', $filename);
+    //             if (isset($tickets[$index])) {
+    //                 $tickets[$index]['file_name'] = $filename;
+    //             }
+    //         }
+    //     }
 
-                if (isset($tickets[$index])) {
-                    $tickets[$index]['file_name'] = $filename;
-                }
-            }
-        }
+    //     // Simpan tiket detail ke tabel
+    //     foreach ($tickets as $detail) {
+    //         Ticket_detail::create([
+    //             'ticket_id' => $ticket->id,
+    //             'file_name' => $detail['file_name'] ?? null,
+    //             'passenger_name' => $detail['passenger_name'],
+    //             'flight_number' => $detail['flight_number'],
+    //             'flight_date' => $detail['flight_date'],
+    //             'departure_time' => $detail['departure_time'],
+    //             'departure_airport' => $detail['departure_airport'],
+    //             'arrival_airport' => $detail['arrival_airport'],
+    //         ]);
+    //     }
 
-        // Simpan tiket detail ke tabel
-        foreach ($tickets as $detail) {
-            Ticket_detail::create([
+    //     return redirect()->back()->with('success', 'Ticket dan detail berhasil disimpan.');
+    // }
+//     public function store_ticket(Request $request)
+// {
+//     // dd($request->all());
+
+//     // 1. Validasi data
+//     $validated = $request->validate([
+//         'no_surat' => 'required|string',
+//         'nama_pemohon' => 'required|string',
+//         'assigned_By' => 'required|string',
+//         'invoice' => 'required|string',
+//         'issued' => 'required|date',
+//         'nominal' => 'required|numeric|min:0',
+//         'beban_biaya' => 'required|string',
+//         'agent' => 'required|string',
+//         'bus' => 'required|string',
+//         'kereta' => 'required|string',
+//         'maskapai' => 'required|string',
+//         'class' => 'required|string',
+
+//         'pegawai' => 'nullable|array',
+//         'pegawai.*.nama_pegawai' => 'required_with:pegawai|string',
+//         'pegawai.*.departemen' => 'required_with:pegawai|string',
+
+//         'tickets' => 'nullable|array',
+//         'tickets.*.file_name' => 'nullable|string',
+//         'tickets.*.passenger_name' => 'required_with:tickets|string',
+//         'tickets.*.flight_number' => 'required_with:tickets|string',
+//         'tickets.*.flight_date' => 'required_with:tickets|string',
+//         'tickets.*.departure_time' => 'required_with:tickets|string',
+//         'tickets.*.departure_airport' => 'required_with:tickets|string',
+//         'tickets.*.arrival_airport' => 'required_with:tickets|string',
+//     ]);
+
+//     try {
+//         // 2. Ambil no_surat asli dari tabel forms
+//         $forms = Form::where('no_surat', $request->no_surat)->first();
+//         $noSuratTeks = $forms ? $forms->no_surat : $request->no_surat;
+
+//         // 3. Simpan ke tabel ticketings
+//         $ticket = Ticketing::create([
+//             'no_surat' => $noSuratTeks,
+//             'nama_pemohon' => $request->nama_pemohon,
+//             'assigned_By' => $request->assigned_By,
+//             'invoice' => $request->invoice,
+//             'issued' => $request->issued,
+//             'nominal' => $request->nominal,
+//             'beban_biaya' => $request->beban_biaya,
+//             'agent' => $request->agent,
+//             'kendaraan' => is_array($request->kendaraan) ? implode(',', $request->kendaraan) : $request->kendaraan,
+//             'bus' => $request->bus,
+//             'kereta' => $request->kereta,
+//             'maskapai' => $request->maskapai,
+//             'class' => $request->class,
+//         ]);
+
+//         // 4. Simpan data pegawai (jika ada)
+//         if ($request->filled('pegawai')) {
+//             foreach ($request->pegawai as $p) {
+//                 Nama_pegawai_t::create([
+//                     'ticket_id' => $ticket->id,
+//                     'nama_pegawai' => $p['nama_pegawai'],
+//                     'departemen' => $p['departemen'],
+//                 ]);
+//             }
+//         }
+
+//         // 5. Simpan file PDF (jika ada) & update ke tickets
+//         $tickets = $request->input('tickets', []);
+//         if ($request->hasFile('pdf_files')) {
+//             foreach ($request->file('pdf_files') as $index => $pdf) {
+//                 $filename = time() . '_' . $index . '_' . $pdf->getClientOriginalName();
+//                 $pdf->storeAs('public/tickets', $filename);
+
+//                 if (isset($tickets[$index])) {
+//                     $tickets[$index]['file_name'] = $filename;
+//                 }
+//             }
+//         }
+
+//         // 6. Simpan data tiket detail (jika ada)
+//         foreach ($tickets as $detail) {
+//             Ticket_detail::create([
+//                 'ticket_id' => $ticket->id,
+//                 'file_name' => $detail['file_name'] ?? null,
+//                 'passenger_name' => $detail['passenger_name'],
+//                 'flight_number' => $detail['flight_number'],
+//                 'flight_date' => date('Y-m-d', strtotime($detail['flight_date'])),
+//                 'departure_time' => date('H:i:s', strtotime($detail['departure_time'])),
+//                 'departure_airport' => $detail['departure_airport'],
+//                 'arrival_airport' => $detail['arrival_airport'],
+//             ]);
+//         }
+
+//         return redirect()->back()->with('success', 'Ticket dan detail berhasil disimpan.');
+//     } catch (\Throwable $e) {
+//         return redirect()->back()->with('error', 'Gagal menyimpan data: ' . $e->getMessage());
+//     }
+// }
+
+public function store_ticket(Request $request)
+{
+    // Validasi utama
+    $validated = $request->validate([
+        'no_surat' => 'required|string',
+        'nama_pemohon' => 'required|string',
+        'assigned_By' => 'required|string',
+        'invoice' => 'required|string',
+        'issued' => 'required|date',
+        'nominal' => 'required|numeric|min:0',
+        'beban_biaya' => 'required|string',
+        'agent' => 'required|string',
+        'class' => 'required|string',
+        'kendaraan' => 'required|array',
+    ]);
+
+    // Simpan ke tabel ticketing
+    $ticket = Ticketing::create([
+        'no_surat' => $request->no_surat,
+        'nama_pemohon' => $request->nama_pemohon,
+        'assigned_By' => $request->assigned_By,
+        'invoice' => $request->invoice,
+        'issued' => $request->issued,
+        'nominal' => $request->nominal,
+        'beban_biaya' => $request->beban_biaya,
+        'agent' => $request->agent,
+        'class' => $request->class,
+        'transport' => implode(', ', $request->kendaraan),
+        'maskapai' => $request->maskapai ?? null,
+        'kereta' => $request->kereta ?? null,
+        'bus' => $request->bus ?? null,
+    ]);
+
+    // Simpan data pegawai (jika ada)
+    if ($request->has('pegawai')) {
+        foreach ($request->pegawai as $pegawai) {
+            Nama_pegawai_t::create([
                 'ticket_id' => $ticket->id,
-                'file_name' => $detail['file_name'] ?? null,
-                'passenger_name' => $detail['passenger_name'],
-                'flight_number' => $detail['flight_number'],
-                'flight_date' => $detail['flight_date'],
-                'departure_time' => $detail['departure_time'],
-                'departure_airport' => $detail['departure_airport'],
-                'arrival_airport' => $detail['arrival_airport'],
+                'nama_pegawai' => $pegawai['nama_pegawai'],
+                'departemen' => $pegawai['departemen'],
             ]);
         }
-
-        return redirect()->back()->with('success', 'Ticket dan detail berhasil disimpan.');
     }
+
+    // Gabungkan semua tiket dari berbagai jenis transportasi
+    $allTickets = [];
+
+    if ($request->has('tickets')) {
+        foreach ($request->tickets as $t) {
+            $allTickets[] = $t;
+        }
+    }
+
+    if ($request->has('train_tickets')) {
+        foreach ($request->train_tickets as $t) {
+            $allTickets[] = $t;
+        }
+    }
+
+    // Ambil file upload dari train_tickets
+    $uploadedTrainFiles = $request->file('train_tickets', []);
+
+    // Simpan semua detail tiket
+    foreach ($allTickets as $index => $t) {
+        $fileName = $t['file_name'] ?? null;
+
+        // Jika dari train_tickets dan ada file upload
+        if (isset($uploadedTrainFiles[$index]['file_upload']) && 
+            $uploadedTrainFiles[$index]['file_upload'] instanceof \Illuminate\Http\UploadedFile) {
+
+            $uploadedFile = $uploadedTrainFiles[$index]['file_upload'];
+            $storedPath = $uploadedFile->store('tiket_manual'); // storage/app/tiket_manual
+            $fileName = basename($storedPath);
+        }
+
+        Ticket_detail::create([
+            'ticket_id' => $ticket->id,
+            'file_name' => $fileName,
+            'passenger_name' => $t['passenger_name'],
+            'flight_number' => $t['flight_number'],
+            'flight_date' => $t['flight_date'],
+            'departure_time' => $t['departure_time'],
+            'departure_airport' => $t['departure_airport'],
+            'arrival_airport' => $t['arrival_airport'],
+        ]);
+    }
+
+    return redirect()->back()->with('success', 'Data tiket berhasil disimpan.');
+}
+
+
+
+
 
 public function getPemohon($id)
 {

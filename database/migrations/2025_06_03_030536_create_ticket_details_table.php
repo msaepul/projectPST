@@ -13,21 +13,17 @@ return new class extends Migration
     {
         Schema::create('ticket_details', function (Blueprint $table) {
             $table->id();
-        
-            // Buat kolom ticket_id dulu
             $table->unsignedBigInteger('ticket_id');
-        
-            // Baru bikin foreign key
-            $table->foreign('ticket_id')->references('id')->on('ticketings')->onDelete('cascade');
-        
-            $table->string('file_name')->nullable();
+            $table->string('file_name');
             $table->string('passenger_name');
-            $table->string('flight_number');
-            $table->string('flight_date');
-            $table->string('departure_time');
-            $table->string('departure_airport');
-            $table->string('arrival_airport');
+            $table->string('flight_number')->nullable();
+            $table->string('flight_date')->nullable();
+            $table->string('departure_time')->nullable();
+            $table->string('departure_airport')->nullable();
+            $table->string('arrival_airport')->nullable();
             $table->timestamps();
+    
+            $table->foreign('ticket_id')->references('id')->on('ticketings')->onDelete('cascade');
         });
         
     }
